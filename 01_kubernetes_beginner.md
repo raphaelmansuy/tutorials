@@ -118,6 +118,61 @@ Managing this manually becomes overwhelming quickly (imagine coordinating thousa
 
 **Think of Kubernetes like a shipping company:**
 
+```mermaid
+block-beta
+    columns 3
+    
+    block:control["Control Plane (AWS Managed)"]:2
+        columns 2
+        apiServer["API Server"]
+        etcd[("etcd Database")]
+        scheduler["Scheduler"]
+        controller["Controller Manager"]
+    end
+    
+    yourMachine["Your Machine<br/>kubectl + OpenLens"]
+    
+    space:3
+    
+    block:workers["Worker Nodes (EC2 Instances)"]:3
+        columns 3
+        node1["Node 1<br/>kubelet + kube-proxy"]
+        node2["Node 2<br/>kubelet + kube-proxy"]
+        nodeN["Node N<br/>kubelet + kube-proxy"]
+        
+        pod1[("Pod")]
+        pod2[("Pod")]
+        pod3[("Pod")]
+        
+        container1["Container"]
+        container2["Container"]
+        container3["Container"]
+    end
+    
+    yourMachine --> apiServer
+    apiServer --> etcd
+    scheduler --> node1
+    controller --> node1
+    scheduler --> node2
+    controller --> node2
+    
+    node1 --> pod1
+    node2 --> pod2
+    nodeN --> pod3
+    
+    pod1 --> container1
+    pod2 --> container2
+    pod3 --> container3
+    
+    classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef worker fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef user fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    
+    class control controlPlane
+    class workers worker
+    class yourMachine user
+```
+
 - **Control Plane (Master):** The headquarters that makes decisions
   - Plans where containers should be placed
   - Monitors the health of the entire system
@@ -145,9 +200,114 @@ Managing this manually becomes overwhelming quickly (imagine coordinating thousa
 - **Node:** A machine (VM or physical) that runs Pods. Like a dock at the port.
 - **Cluster:** All the nodes and control plane together. Like the whole shipping yard.
 
+### Complete Tutorial Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "Your Local Machine"
+        DEV[Developer Workstation]
+        TOOLS[kubectl + AWS CLI + eksctl + OpenLens]
+    end
+    
+    subgraph "AWS Cloud"
+        subgraph "EKS Cluster"
+            subgraph "Control Plane (AWS Managed)"
+                API[API Server]
+                ETCD[(etcd)]
+                SCHED[Scheduler]
+                CTRL[Controller Manager]
+            end
+            
+            subgraph "Worker Nodes (EC2)"
+                subgraph "Node 1"
+                    NGINX1[Nginx Pod 1]
+                    KUBELET1[kubelet]
+                end
+                subgraph "Node 2"
+                    NGINX2[Nginx Pod 2]
+                    KUBELET2[kubelet]
+                end
+                SVC[Nginx Service]
+            end
+        end
+        
+        ALB[Application Load Balancer]
+        VPC[VPC with Subnets]
+    end
+    
+    USERS[Internet Users]
+    
+    %% Connections
+    DEV --> TOOLS
+    TOOLS --> API
+    API --> ETCD
+    API --> SCHED
+    API --> CTRL
+    SCHED --> KUBELET1
+    SCHED --> KUBELET2
+    SVC --> NGINX1
+    SVC --> NGINX2
+    ALB --> SVC
+    USERS --> ALB
+    
+    %% Styling
+    classDef local fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef aws fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef control fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef worker fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef user fill:#ffebee,stroke:#c62828,stroke-width:2px
+    
+    class DEV,TOOLS local
+    class ALB,VPC aws
+    class API,ETCD,SCHED,CTRL control
+    class NGINX1,NGINX2,KUBELET1,KUBELET2,SVC worker
+    class USERS user
+```
+
 ---
 
 ## 3. Getting Started with AWS
+
+### AWS Setup Process Overview
+
+```mermaid
+flowchart TD
+    A[Start Setup Process] --> B[Install AWS CLI]
+    B --> C[Create AWS Account]
+    C --> D[Configure AWS Credentials]
+    D --> E[Install kubectl]
+    E --> F[Install eksctl]
+    F --> G[Install OpenLens]
+    G --> H[Verify All Tools]
+    H --> I[Setup Complete ✅]
+    
+    %% Error paths
+    B -.-> B1[AWS CLI Installation Failed]
+    D -.-> D1[Credentials Configuration Failed]
+    E -.-> E1[kubectl Installation Failed]
+    F -.-> F1[eksctl Installation Failed]
+    G -.-> G1[OpenLens Installation Failed]
+    
+    B1 --> B2[Check System Requirements]
+    D1 --> D2[Verify AWS Account & Permissions]
+    E1 --> E2[Check Kubernetes Version Compatibility]
+    F1 --> F2[Verify AWS CLI Configuration]
+    G1 --> G2[Check System Requirements]
+    
+    B2 --> B
+    D2 --> D
+    E2 --> E
+    F2 --> F
+    G2 --> G
+    
+    style A fill:#e1f5fe
+    style I fill:#e8f5e8
+    style B1 fill:#ffebee
+    style D1 fill:#ffebee
+    style E1 fill:#ffebee
+    style F1 fill:#ffebee
+    style G1 fill:#ffebee
+```
 
 ### Step 1: Create an AWS Account
 
@@ -285,6 +445,47 @@ These commands help you inspect, troubleshoot, and manage your Kubernetes resour
 
 ## 5. Provisioning an EKS Cluster with eksctl
 
+### EKS Cluster Creation Process
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant eksctl
+    participant AWS_API
+    participant CloudFormation
+    participant EKS
+    participant EC2
+    participant VPC
+    
+    User->>eksctl: eksctl create cluster
+    eksctl->>AWS_API: Authenticate with AWS
+    AWS_API-->>eksctl: Authentication successful
+    
+    eksctl->>CloudFormation: Create cluster stack
+    CloudFormation->>VPC: Create VPC and subnets
+    VPC-->>CloudFormation: VPC created
+    
+    CloudFormation->>EKS: Create EKS control plane
+    EKS-->>CloudFormation: Control plane creating...
+    
+    CloudFormation->>EC2: Create worker node group
+    EC2-->>CloudFormation: Nodes launching...
+    
+    Note over EKS: Control plane setup (5-10 min)
+    EKS-->>CloudFormation: Control plane ready
+    
+    Note over EC2: Worker nodes joining cluster
+    EC2-->>CloudFormation: Nodes ready
+    
+    CloudFormation-->>eksctl: Cluster creation complete
+    eksctl->>User: Update kubeconfig
+    eksctl-->>User: Cluster ready! ✅
+    
+    User->>eksctl: kubectl get nodes
+    eksctl->>EKS: Query cluster
+    EKS-->>User: Show worker nodes
+```
+
 ### Step 1: Create Your EKS Cluster
 
 ```sh
@@ -324,6 +525,48 @@ You should see your EKS nodes listed.
 ---
 
 ## 6. Deploying Your First Application (Nginx) to EKS
+
+### Application Deployment Process
+
+```mermaid
+flowchart TD
+    A[Create YAML Deployment File] --> B[Apply Deployment]
+    B --> C[Kubernetes API Server]
+    C --> D[Scheduler]
+    D --> E[Select Available Nodes]
+    E --> F[kubelet on Node]
+    F --> G[Pull Container Image]
+    G --> H[Create Pod]
+    H --> I[Start Container]
+    I --> J[Pod Running ✅]
+    
+    %% Verification steps
+    J --> K[Verify Deployment]
+    K --> L[Check Pod Status]
+    L --> M[View Logs]
+    
+    %% Error handling
+    G -.-> G1[Image Pull Failed]
+    H -.-> H1[Pod Creation Failed]
+    I -.-> I1[Container Start Failed]
+    
+    G1 --> G2[Check Image Name/Registry]
+    H1 --> H2[Check Node Resources]
+    I1 --> I3[Check Container Config]
+    
+    G2 --> G
+    H2 --> H
+    I3 --> I
+    
+    style A fill:#e1f5fe
+    style J fill:#e8f5e8
+    style K fill:#fff3e0
+    style L fill:#fff3e0
+    style M fill:#fff3e0
+    style G1 fill:#ffebee
+    style H1 fill:#ffebee
+    style I1 fill:#ffebee
+```
 
 ### Step 1: Create a Deployment YAML File
 
@@ -378,6 +621,43 @@ kubectl logs <pod-name>
 ---
 
 ## 7. Exposing Your Application to the Internet
+
+### Service Exposure Architecture
+
+```mermaid
+flowchart LR
+    User[Internet User] --> ALB[AWS Application Load Balancer]
+    ALB --> SVC[Kubernetes Service]
+    SVC --> POD1[Nginx Pod 1]
+    SVC --> POD2[Nginx Pod 2]
+    
+    subgraph "AWS Cloud"
+        ALB
+        subgraph "EKS Cluster"
+            subgraph "Worker Node 1"
+                POD1
+            end
+            subgraph "Worker Node 2"
+                POD2
+            end
+            SVC
+        end
+    end
+    
+    %% Traffic flow annotations
+    User -.->|HTTP Request| ALB
+    ALB -.->|Load Balances| SVC
+    SVC -.->|Routes to healthy pods| POD1
+    SVC -.->|Routes to healthy pods| POD2
+    POD1 -.->|HTTP Response| User
+    POD2 -.->|HTTP Response| User
+    
+    style User fill:#e3f2fd
+    style ALB fill:#fff3e0
+    style SVC fill:#f3e5f5
+    style POD1 fill:#e8f5e8
+    style POD2 fill:#e8f5e8
+```
 
 ### Step 1: Create a Service YAML File
 
@@ -469,6 +749,66 @@ Now, open your browser and go to [http://localhost:8080](http://localhost:8080) 
 ---
 
 ## 9. Enhanced Troubleshooting & Next Steps
+
+### Troubleshooting Decision Tree
+
+```mermaid
+flowchart TD
+    A[Application Not Working] --> B{Can you access kubectl?}
+    B -->|No| C[Check kubeconfig & AWS credentials]
+    B -->|Yes| D{Are pods running?}
+    
+    C --> C1[aws sts get-caller-identity]
+    C1 --> C2[eksctl utils describe-stacks]
+    C2 --> D
+    
+    D -->|No pods| E{Deployment exists?}
+    D -->|Pods pending| F[Check node resources]
+    D -->|Pods failing| G{What's the status?}
+    D -->|Pods running| H{Can you reach service?}
+    
+    E -->|No| E1[Create deployment]
+    E -->|Yes| E2[Check deployment events]
+    E1 --> D
+    E2 --> D
+    
+    F --> F1[kubectl top nodes]
+    F1 --> F2[Scale cluster or pods]
+    F2 --> D
+    
+    G -->|ImagePullBackOff| G1[Check image name/registry]
+    G -->|CrashLoopBackOff| G2[Check pod logs]
+    G -->|Error| G3[kubectl describe pod]
+    
+    G1 --> G4[Fix image reference]
+    G2 --> G5[Fix application config]
+    G3 --> G6[Address specific error]
+    G4 --> D
+    G5 --> D
+    G6 --> D
+    
+    H -->|No| I{Service exists?}
+    H -->|Yes| J{LoadBalancer ready?}
+    
+    I -->|No| I1[Create service]
+    I -->|Yes| I2[Check service endpoints]
+    I1 --> H
+    I2 --> H
+    
+    J -->|Pending| J1[Wait or check AWS Console]
+    J -->|Error| J2[Check security groups & subnets]
+    J -->|Ready| K[Application accessible! ✅]
+    
+    J1 --> J
+    J2 --> J
+    
+    style A fill:#ffebee
+    style K fill:#e8f5e8
+    style C fill:#fff3e0
+    style F1 fill:#e3f2fd
+    style G2 fill:#e3f2fd
+    style I2 fill:#e3f2fd
+```
 
 ### Common Issues & Solutions
 
