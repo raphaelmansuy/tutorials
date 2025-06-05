@@ -29,12 +29,13 @@
 2. [Core Kubernetes Concepts (Simple Analogies)](#2-core-kubernetes-concepts-simple-analogies)
 3. [Getting Started with AWS](#3-getting-started-with-aws)
 4. [Setting Up Your Local Machine (System Requirements & Tools)](#4-setting-up-your-local-machine-system-requirements--tools)
-5. [Provisioning an EKS Cluster with eksctl](#5-provisioning-an-eks-cluster-with-eksctl)
-6. [Deploying Your First Application (Nginx) to EKS](#6-deploying-your-first-application-nginx-to-eks)
-7. [Exposing Your Application to the Internet](#7-exposing-your-application-to-the-internet)
-8. [Visualizing & Managing with OpenLens](#8-visualizing--managing-with-openlens)
-9. [Basic Troubleshooting & Next Steps](#9-basic-troubleshooting--next-steps)
-10. [Cleaning Up AWS Resources (Avoid Charges)](#10-cleaning-up-aws-resources-avoid-charges)
+5. [How to: Use Essential kubectl Commands](#how-to-use-essential-kubectl-commands)
+6. [Provisioning an EKS Cluster with eksctl](#5-provisioning-an-eks-cluster-with-eksctl)
+7. [Deploying Your First Application (Nginx) to EKS](#6-deploying-your-first-application-nginx-to-eks)
+8. [Exposing Your Application to the Internet](#7-exposing-your-application-to-the-internet)
+9. [Visualizing & Managing with OpenLens](#8-visualizing--managing-with-openlens)
+10. [Basic Troubleshooting & Next Steps](#9-basic-troubleshooting--next-steps)
+11. [Cleaning Up AWS Resources (Avoid Charges)](#10-cleaning-up-aws-resources-avoid-charges)
 
 ---
 
@@ -156,6 +157,51 @@ sudo mv kubectl /usr/local/bin/
 ```sh
 kubectl version --client
 ```
+
+---
+
+## How to: Use Essential kubectl Commands
+
+Kubernetes is managed from the command line using `kubectl`. Here are the most useful commands for everyday tasks:
+
+- **Check cluster nodes:**  
+  ```sh
+  kubectl get nodes
+  ```
+- **List all pods:**  
+  ```sh
+  kubectl get pods
+  ```
+- **See pod details:**  
+  ```sh
+  kubectl describe pod <pod-name>
+  ```
+- **View pod logs:**  
+  ```sh
+  kubectl logs <pod-name>
+  ```
+- **Execute a shell in a pod:**  
+  ```sh
+  kubectl exec -it <pod-name> -- /bin/sh
+  ```
+- **List deployments:**  
+  ```sh
+  kubectl get deployments
+  ```
+- **Apply a YAML file:**  
+  ```sh
+  kubectl apply -f <file.yaml>
+  ```
+- **Delete a resource:**  
+  ```sh
+  kubectl delete <resource-type> <name>
+  ```
+- **Port-forward a service to your local machine:**  
+  ```sh
+  kubectl port-forward service/<service-name> 8080:80
+  ```
+
+These commands help you inspect, troubleshoot, and manage your Kubernetes resources quickly and efficiently. For more, see the [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/).
 
 ---
 
@@ -293,6 +339,20 @@ kubectl get service nginx-service
 
 Look for the `EXTERNAL-IP` column. It may take a few minutes to appear. If it stays `<pending>`, check your AWS Console for issues (e.g., VPC/subnet setup).
 Visit the URL in your browser to see the Nginx welcome page.
+
+---
+
+### Accessing Your Application Locally with Port Forwarding
+
+If you want to access your deployed application from your local machine (without waiting for a LoadBalancer or for testing), you can use `kubectl port-forward`. This command forwards a local port to a port on a Pod or Service in your cluster.
+
+For example, to forward your local port 8080 to port 80 on the Nginx service:
+
+```sh
+kubectl port-forward service/nginx-service 8080:80
+```
+
+Now, open your browser and go to [http://localhost:8080](http://localhost:8080) to view your app. Press `Ctrl+C` to stop forwarding.
 
 ---
 
