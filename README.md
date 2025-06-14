@@ -117,7 +117,6 @@ Comprehensive guides for mastering Google Cloud Platform, especially for AWS pro
 - DevOps & CI/CD
 - Monitoring & Observability
 
----
 
 ---
 
