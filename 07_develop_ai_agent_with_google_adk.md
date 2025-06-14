@@ -18,11 +18,11 @@ Traditional AI interactions follow a simple pattern: you ask, it responds, conve
 
 ### The Economic Reality
 
-According to industry analysis, companies implementing intelligent agent systems are seeing:
+According to research and industry studies, companies implementing AI automation systems are seeing significant benefits:
 
-- 40-60% reduction in routine task completion time[^1]
-- 300% ROI within the first year of deployment[^13]
-- 85% improvement in customer satisfaction scores[^14]
+- Software developers using AI coding assistants complete tasks up to 55% faster[^1a]
+- Generative AI could increase productivity by 0.1 to 0.6 percentage points annually[^1b]
+- Customer service applications show substantial improvements in efficiency and satisfaction[^14]
 
 But here's the kicker: most organizations are still treating AI like a fancy search engine rather than the autonomous workforce multiplier it can be[^2].
 
@@ -162,7 +162,8 @@ Let's build something more sophisticated—an agent that can search the web, exe
 import datetime
 from zoneinfo import ZoneInfo
 from google.adk.agents import Agent
-from google.adk.tools import google_search, code_exec
+from google.adk.tools import google_search
+from google.adk.code_executors import BuiltInCodeExecutor
 
 def get_current_time(timezone: str = "UTC") -> str:
     """Get current time in specified timezone."""
@@ -185,12 +186,24 @@ multi_tool_agent = Agent(
     3. Provide comprehensive, well-structured responses
     4. Remember context from previous conversations""",
     
-    description="Advanced research assistant with multiple capabilities",
-    tools=[google_search, code_exec, get_current_time]
+    description="Advanced research assistant with search and timing capabilities",
+    tools=[google_search, get_current_time]
+)
+
+# Separate code execution agent (due to ADK built-in tool limitations)
+code_agent = LlmAgent(
+    name="code_agent",
+    model="gemini-2.5-pro",
+    instruction="You are a code execution specialist. Execute Python code for calculations and data analysis.",
+    description="Code execution and mathematical analysis specialist", 
+    code_executor=BuiltInCodeExecutor()
+)
 )
 ```
 
 **Test this agent with**: "Research the latest developments in quantum computing, calculate the potential market size growth rate, and remind me to follow up on this next week."
+
+> **Important**: ADK currently supports only one built-in tool per agent. To use both search and code execution, create separate agents and coordinate them using multi-agent patterns.
 
 ### The Magic of Deep Think Mode
 
@@ -220,7 +233,7 @@ research_agent = LlmAgent(
     model="gemini-2.5-pro",
     instruction="Conduct thorough research using available tools. Provide detailed, accurate information.",
     description="Handles complex research tasks",
-    tools=[google_search, code_exec]
+    tools=[google_search]
 )
 
 # Custom task execution agent
@@ -353,7 +366,7 @@ code_reviewer = Agent(
     3. Suggest improvements and optimizations
     4. Search for relevant documentation or examples when helpful
     5. Provide educational explanations for your suggestions""",
-    tools=[google_search, code_exec]
+    tools=[google_search]
 )
 ```
 
@@ -517,7 +530,7 @@ tier2_agent = LlmAgent(
     
     Use all available tools to diagnose and resolve issues.
     Escalate to Tier 3 only for critical system-level problems.""",
-    tools=[google_search, code_exec]
+    tools=[google_search]
 )
 
 # Knowledge base agent
@@ -1489,7 +1502,9 @@ Welcome to the agent revolution. Let's build the future together.
 
 <div style="text-align: center">⁂</div>
 
-[^1]: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
+[^1a]: https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/
+
+[^1b]: https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier
 
 [^2]: https://google.github.io/adk-docs/
 
@@ -1512,8 +1527,6 @@ Welcome to the agent revolution. Let's build the future together.
 [^11]: https://valanor.co/design-patterns-for-ai-agents/
 
 [^12]: https://docs.databricks.com/aws/en/generative-ai/guide/agent-system-design-patterns
-
-[^13]: https://blogs.infoservices.com/google-cloud/smart-ai-agents-google-agent-development-kit/
 
 [^14]: https://www.squareshift.co/post/best-practices-for-building-agent-apps-with-vertex-ai
 
