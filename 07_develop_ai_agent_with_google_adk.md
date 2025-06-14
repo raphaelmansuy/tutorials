@@ -88,7 +88,24 @@ adk --version
 
 ### Step 2: Your First Agent (3 minutes)
 
-Create a file called `weather_assistant.py`:
+First, create the proper project structure:
+
+```bash
+# Create project structure
+mkdir weather_assistant
+cd weather_assistant
+touch __init__.py
+touch agent.py
+touch .env
+```
+
+Create `__init__.py`:
+
+```python
+from . import agent
+```
+
+Create `agent.py`:
 
 ```python
 from google.adk.agents import Agent
@@ -103,6 +120,9 @@ weather_agent = Agent(
     tools=[google_search]
 )
 
+# Export as root_agent for ADK discovery
+root_agent = weather_agent
+
 if __name__ == "__main__":
     weather_agent.run()
 ```
@@ -111,6 +131,9 @@ if __name__ == "__main__":
 ### Step 3: Test It Out
 
 ```bash
+# Navigate to parent directory (important!)
+cd ..
+
 # Start the development server
 adk web
 ```
@@ -177,7 +200,7 @@ def get_current_time(timezone: str = "UTC") -> str:
 # Create a more sophisticated agent
 multi_tool_agent = Agent(
     name="research_assistant",
-    model="gemini-2.5-pro",  # Using the more powerful model
+    model="gemini-2.5-pro-preview-06-05",  # Using the more powerful model
     instruction="""You are a brilliant research assistant with access to web search, 
     code execution, and time functions. When users ask questions:
     
@@ -193,23 +216,24 @@ multi_tool_agent = Agent(
 # Separate code execution agent (due to ADK built-in tool limitations)
 code_agent = LlmAgent(
     name="code_agent",
-    model="gemini-2.5-pro",
+    model="gemini-2.5-pro-preview-06-05",
     instruction="You are a code execution specialist. Execute Python code for calculations and data analysis.",
     description="Code execution and mathematical analysis specialist", 
-    code_executor=BuiltInCodeExecutor()
-)
+    code_executor=[BuiltInCodeExecutor]
 )
 ```
 
 **Test this agent with**: "Research the latest developments in quantum computing, calculate the potential market size growth rate, and remind me to follow up on this next week."
 
-> **Important**: ADK currently supports only one built-in tool per agent. To use both search and code execution, create separate agents and coordinate them using multi-agent patterns.
+> **Important**: Each agent can only use one built-in tool. To use both search and code execution, create separate agents and coordinate them using `agent_tool.AgentTool()` pattern.
 
-### The Magic of Deep Think Mode
+### The Magic of Advanced Reasoning
 
-Gemini 2.5's Deep Think Mode is like having a colleague who actually pauses to think before speaking. Instead of immediately generating the first plausible response, it internally evaluates multiple possibilities[^6].
+Gemini 2.5 models offer enhanced thinking capabilities when configured appropriately. Models like `gemini-2.5-flash-preview-05-20` support adaptive thinking, which allows the model to pause and consider multiple possibilities before responding[^6].
 
 **Example**: Ask your agent a complex question like "Should I invest in renewable energy stocks given the current political climate?" Watch how it considers multiple angles before responding.
+
+**Note**: Thinking capabilities vary by model version and may require specific configuration.
 
 ## 5. Multi-Agent Orchestration: Building Your AI Team
 
@@ -219,6 +243,7 @@ Think of multi-agent systems like a high-end restaurant kitchen. You wouldn't wa
 
 ```python
 from google.adk.agents import LlmAgent, BaseAgent
+import datetime
 
 # Specialized agents for different tasks
 greeter_agent = LlmAgent(
@@ -230,7 +255,7 @@ greeter_agent = LlmAgent(
 
 research_agent = LlmAgent(
     name="researcher", 
-    model="gemini-2.5-pro",
+    model="gemini-2.5-pro-preview-06-05",
     instruction="Conduct thorough research using available tools. Provide detailed, accurate information.",
     description="Handles complex research tasks",
     tools=[google_search]
@@ -253,7 +278,7 @@ task_agent = TaskExecutor()
 # Coordinator that manages the team
 coordinator = LlmAgent(
     name="team_coordinator",
-    model="gemini-2.5-pro",
+    model="gemini-2.5-pro-preview-06-05",
     instruction="""You coordinate a team of specialists:
     - customer_greeter: handles welcomes and initial interactions
     - researcher: conducts detailed research and analysis  
@@ -271,6 +296,9 @@ coordinator = LlmAgent(
 Let's build a practical multi-agent system for travel planning:
 
 ```python
+from google.adk.agents import LlmAgent
+from google.adk.tools import google_search
+
 # Flight specialist
 flight_agent = LlmAgent(
     name="flight_specialist",
@@ -304,7 +332,7 @@ activity_agent = LlmAgent(
 # Master travel coordinator
 travel_coordinator = LlmAgent(
     name="travel_planner",
-    model="gemini-2.5-pro",
+    model="gemini-2.5-pro-preview-06-05",
     instruction="""You are a master travel coordinator managing specialists:
     - flight_specialist: handles flight research and recommendations
     - hotel_specialist: handles accommodation research  
@@ -334,7 +362,7 @@ from google.adk.tools import google_search
 
 visual_analyst = Agent(
     name="visual_analyst",
-    model="gemini-2.5-pro",
+    model="gemini-2.5-pro-preview-06-05",
     instruction="""You are an expert visual analyst. When users share images:
     1. Analyze the visual content in detail
     2. Identify objects, people, scenes, text, or data visualizations
@@ -358,7 +386,7 @@ visual_analyst = Agent(
 ```python
 code_reviewer = Agent(
     name="code_reviewer",
-    model="gemini-2.5-pro", 
+    model="gemini-2.5-pro-preview-06-05", 
     instruction="""You are a senior software engineer providing code reviews.
     When users share code:
     1. Analyze for bugs, security issues, and performance problems
@@ -412,7 +440,7 @@ vertexai.init(
 
 # Wrap your agent for deployment
 app = reasoning_engines.AdkApp(
-    agent=simple_agent,  # Your ADK agent
+    agent=root_agent,  # Your ADK agent
     enable_tracing=True,  # Enable observability
 )
 
@@ -427,13 +455,11 @@ for event in app.stream_query(
 
 # Deploy to Agent Engine
 remote_agent = agent_engines.create(
-    agent_engine=simple_agent,
+    agent_engine=root_agent,
     requirements=[
         "google-cloud-aiplatform[adk,agent_engines]>=1.88.0",
         "google-adk>=1.0.0"
-    ],
-    display_name="production_agent",
-    description="Production ADK agent for customer support"
+    ]
 )
 
 print(f"Deployed agent: {remote_agent.resource_name}")
@@ -474,7 +500,7 @@ async def monitored_query(remote_agent, user_id: str, message: str):
         
         for event in remote_agent.stream_query(
             user_id=user_id,
-            session_id=session["id"],
+            session_id=session["id"],  # Note: session["id"], not session.id
             message=message
         ):
             print(event)
