@@ -28,8 +28,9 @@ Start here if you're new to cloud computing:
 ### 🚀 **Intermediate**
 If you have some cloud experience:
 1. [GCP Crash Course for AWS Users](#-cloud-platforms--migration)
-2. [Advanced Storage Solutions](#-storage--data-management)
-3. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
+2. [Deploy Next.js Applications to GCP](#-application-deployment)
+3. [Advanced Storage Solutions](#-storage--data-management)
+4. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
 
 ### 🎓 **Advanced**
 For experienced professionals:
@@ -118,7 +119,38 @@ Comprehensive guides for mastering Google Cloud Platform, especially for AWS pro
 
 ---
 
+---
+
+### 🚀 **Application Deployment**
+
+Master modern deployment strategies for web applications on Google Cloud Platform.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 Deploy Next.js to GCP: From Novice to Practitioner](./06_deploy_nextjs_to_gcp.md) | Beginner to Advanced | 3-4 hours | English | Complete guide to deploying Next.js applications on GCP with professional-grade practices |
+
+**What you'll learn:**
+
+- **Multiple deployment strategies** (Firebase Hosting, Cloud Run, Compute Engine)
+- **Docker containerization** with multi-stage builds for optimization
+- **CI/CD pipelines** with GitHub Actions
+- **Performance optimization** and security hardening
+- **Monitoring and alerting** setup
+- **Cost management** and auto-scaling
+- **Enterprise deployment** patterns
+- **Troubleshooting and debugging** techniques
+
+**Key Features:**
+
+- From 5-minute static deployments to enterprise-grade systems
+- Real-world examples and production-ready configurations
+- Interactive exercises and hands-on challenges
+- Comprehensive troubleshooting guides
+
+---
+
 ### 🤖 **Artificial Intelligence & Machine Learning**
+
 Advanced ML training with Google Cloud's Vertex AI platform.
 
 | Tutorial | Level | Duration | Language | Description |
@@ -126,6 +158,7 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 | [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md) | Advanced | 6-8 hours | English | Complete machine learning pipeline using Google Cloud Vertex AI |
 
 **What you'll learn:**
+
 - **Vertex AI architecture** and unified ML platform
 - **AutoML** for no-code machine learning solutions
 - **Custom training** for advanced ML models
@@ -136,6 +169,7 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 - **Cost optimization** for ML workloads
 
 **Key Features:**
+
 - From data engineering to model deployment
 - Real-world examples and best practices
 - Collaborative ML workflows
@@ -146,23 +180,33 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 ## 🎯 Learning Paths
 
 ### Path 1: Cloud Beginner to Professional
-```
-1. Install Google Cloud CLI → 2. Kubernetes Basics → 3. GCP Storage → 4. GCP Crash Course
+
+```text
+1. Install Google Cloud CLI → 2. Kubernetes Basics → 3. GCP Storage → 4. GCP Crash Course → 5. Next.js Deployment
 ```
 
 ### Path 2: AWS to GCP Migration
-```
-1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Vertex AI (if ML focused)
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Next.js Deployment → 4. Vertex AI (if ML focused)
 ```
 
 ### Path 3: ML/AI Specialization
-```
+
+```text
 1. Install Google Cloud CLI → 2. GCP Storage → 3. GCP Crash Course → 4. Vertex AI Complete Course
 ```
 
 ### Path 4: DevOps & Containers Focus
+
+```text
+1. Install Google Cloud CLI → 2. Kubernetes Beginner → 3. Next.js Deployment → 4. GCP Crash Course (Container modules)
 ```
-1. Install Google Cloud CLI → 2. Kubernetes Beginner → 3. GCP Crash Course (Container modules)
+
+### Path 5: Frontend Developer to Full-Stack
+
+```text
+1. Install Google Cloud CLI → 2. Next.js Deployment → 3. GCP Storage → 4. GCP Crash Course
 ```
 
 ---
@@ -193,6 +237,7 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 | Kubernetes on EKS | $0-5 USD | ⚠️ Mostly covered, cleanup promptly |
 | GCP Storage Bucket | $0-2 USD | ✅ Free tier generous |
 | GCP Crash Course | $0-10 USD | ✅ Most labs covered |
+| Next.js Deployment to GCP | $0-5 USD | ✅ Firebase free, Cloud Run generous free tier |
 | Vertex AI Course | $5-20 USD | ⚠️ Some advanced features cost extra |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
@@ -241,6 +286,7 @@ Track your progress through the training:
 - [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
 - [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutions
 - [ ] ☁️ **Cloud Professional** - Completed GCP crash course
+- [ ] 🚀 **Deployment Expert** - Mastered Next.js deployment strategies on GCP
 - [ ] 🤖 **ML Engineer** - Built end-to-end ML pipeline with Vertex AI
 
 ---
