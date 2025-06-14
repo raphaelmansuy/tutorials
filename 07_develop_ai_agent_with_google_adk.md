@@ -2,7 +2,7 @@
 
 ## Introduction: The Agent Revolution is Upon Us
 
-Picture this: It's 2 AM on a Sunday night, and Sarah, a startup founder, receives an urgent email from her biggest client about a critical system failure. Instead of frantically waking up her entire engineering team, she simply sends a message to her AI agent. Within minutes, the agent has diagnosed the issue, coordinated with the development team's tools, deployed a fix, and sent a comprehensive report to the client. By Monday morning, what could have been a company-threatening crisis has been resolved seamlessly[^1].
+Picture this: It's 2 AM on a Sunday night, and Sarah, a startup founder, receives an urgent email from her biggest client about a critical system failure. Instead of frantically waking up her entire engineering team, she simply sends a message to her AI agent. Within minutes, the agent has diagnosed the issue, coordinated with the development team's tools, deployed a fix, and sent a comprehensive report to the client. By Monday morning, what could have been a company-threatening crisis has been resolved seamlessly[^1a].
 
 This isn't science fiction—this is the reality that Google's Agent Development Kit (ADK), Vertex AI, and Gemini 2.5 models are making possible today.
 
