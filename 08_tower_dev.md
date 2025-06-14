@@ -167,7 +167,7 @@ name = "my-data-pipeline"
 script = "./pipeline.py"
 source = [
     "./**/*.py",
-    "./requirements.txt"
+    "./pyproject.toml"
 ]
 
 [[parameters]]
@@ -219,6 +219,29 @@ Environments in Tower.dev allow you to define different configurations for diffe
 
 ## Chapter 2: Your First Steps - Building Your First Tower.dev Application
 
+### Prerequisites: Modern Python Tooling
+
+Before we dive into Tower.dev, let's ensure you have the right tools installed. This tutorial uses `uv`, the fast Python package manager and project manager that's quickly becoming the industry standard.
+
+**Why uv?**
+- **Speed**: 10-100x faster than pip for package resolution and installation
+- **Reliability**: Better dependency resolution than pip
+- **Modern**: Built-in virtual environment management and project scaffolding
+- **Compatible**: Works with existing Python ecosystem and Tower.dev
+
+**Install uv:**
+
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or using pip if you prefer
+pip install uv
+```
+
 ### The "Hello World" That Actually Matters
 
 Let's start with something more useful than printing "Hello World" to the console. We'll build a simple data quality checker that validates CSV files – something every data engineer needs.
@@ -231,8 +254,8 @@ This example demonstrates core Tower.dev concepts while solving a real problem. 
 First, let's get Tower.dev installed and configured:
 
 ```bash
-# Install Tower CLI
-pip install tower
+# Install Tower CLI using uv
+uv add tower
 
 # Login to Tower (this opens a browser window)
 tower login
@@ -244,11 +267,17 @@ tower apps create --name="data-quality-checker"
 
 #### Step 2: Creating Your First Application
 
-Create a new directory and the core files:
+Create a new directory and initialize with uv:
 
 ```bash
 mkdir data-quality-checker
 cd data-quality-checker
+
+# Initialize a new uv project
+uv init
+
+# Add required dependencies
+uv add "pandas>=1.5.0"
 ```
 
 Create the `Towerfile`:
@@ -259,7 +288,7 @@ name = "data-quality-checker"
 script = "./quality_check.py"
 source = [
     "./quality_check.py",
-    "./requirements.txt",
+    "./pyproject.toml",
     "./sample_data.csv"
 ]
 
@@ -272,12 +301,6 @@ default = "sample_data.csv"
 name = "required_columns"
 description = "Comma-separated list of required columns"
 default = "id,name,email"
-```
-
-Create `requirements.txt`:
-
-```txt
-pandas>=1.5.0
 ```
 
 Now, create the main application file `quality_check.py`:
@@ -390,7 +413,7 @@ if __name__ == "__main__":
 
 #### Step 3: Testing Locally
 
-Tower.dev's beauty is that you can test your app locally before deploying:
+Tower.dev's beauty is that you can test your app locally before deploying. Since we're using `uv`, we can run our script in the managed virtual environment:
 
 ```bash
 # Create a sample CSV file for testing
@@ -401,8 +424,8 @@ id,name,email,age
 3,Bob Johnson,,35
 EOF
 
-# Run locally
-python quality_check.py
+# Run locally using uv
+uv run quality_check.py
 ```
 
 You should see output like:
@@ -577,7 +600,7 @@ name = "ecommerce-etl"
 script = "./pipeline.py"
 source = [
     "./**/*.py",
-    "./requirements.txt",
+    "./pyproject.toml",
     "./schemas/"
 ]
 
@@ -597,12 +620,14 @@ description = "Target table in Snowflake"
 default = "sales_data"
 ```
 
-Create `requirements.txt`:
+Initialize the project with uv and add dependencies:
 
-```txt
-dlt[snowflake]>=0.4.0
-requests>=2.31.0
-pandas>=1.5.0
+```bash
+# Initialize uv project
+uv init
+
+# Add required dependencies
+uv add "dlt[snowflake]>=0.4.0" "requests>=2.31.0" "pandas>=1.5.0"
 ```
 
 Now, create the main pipeline file `pipeline.py`:
@@ -792,7 +817,7 @@ tower secrets create --name SNOWFLAKE_SCHEMA --value "your-schema"
 
 ```bash
 # Test locally (will use sample data)
-python pipeline.py
+uv run pipeline.py
 
 # Deploy to Tower
 tower deploy
@@ -894,6 +919,10 @@ Create a new project:
 ```bash
 mkdir stock-analytics
 cd stock-analytics
+
+# Initialize uv project and add dependencies
+uv init
+uv add "tower[iceberg,ai]>=0.3.0" "polars>=0.20.0" "pyarrow>=10.0.0" "requests>=2.31.0" "pandas>=1.5.0"
 ```
 
 Create the `Towerfile`:
@@ -904,7 +933,7 @@ name = "stock-analytics"
 script = "./stock_pipeline.py"
 source = [
     "./**/*.py",
-    "./requirements.txt"
+    "./pyproject.toml"
 ]
 
 [[parameters]]
@@ -921,16 +950,6 @@ default = "2024-06-14"
 name = "enable_llm_analysis"
 description = "Enable LLM-powered analysis"
 default = "true"
-```
-
-Create `requirements.txt`:
-
-```txt
-tower[iceberg,ai]>=0.3.0
-polars>=0.20.0
-pyarrow>=10.0.0
-requests>=2.31.0
-pandas>=1.5.0
 ```
 
 Create the main pipeline file `stock_pipeline.py`:
@@ -1284,7 +1303,7 @@ name = "github-issue-processor"
 script = "./issue_processor.py"
 source = [
     "./**/*.py",
-    "./requirements.txt"
+    "./pyproject.toml"
 ]
 
 [[parameters]]
@@ -1301,6 +1320,16 @@ default = "10"
 name = "model_mode"
 description = "Model execution mode: local or serverless"
 default = "local"
+```
+
+Initialize the project and add dependencies:
+
+```bash
+# Initialize uv project
+uv init
+
+# Add required dependencies
+uv add tower requests
 ```
 
 Create the main pipeline:
@@ -1788,6 +1817,48 @@ if __name__ == "__main__":
 ```
 
 
+### Development Workflow Best Practices
+
+#### Why uv + Tower.dev is a Winning Combination
+
+Using `uv` with Tower.dev provides several key advantages:
+
+**1. Consistent Dependency Resolution**
+- `uv` creates lock files that ensure identical dependency versions across all environments
+- No more "works on my machine" issues between local development and Tower.dev execution
+
+**2. Fast Development Iteration**
+- `uv run` provides instant execution without virtual environment activation
+- Dependencies are cached and resolved quickly, speeding up development cycles
+
+**3. Modern Python Project Structure**
+- `pyproject.toml` replaces the need for separate `requirements.txt`, `setup.py`, and configuration files
+- Built-in support for modern Python packaging standards
+
+**4. Simplified CI/CD**
+- Tower.dev automatically handles `pyproject.toml` files
+- Your local development environment matches production exactly
+
+**Example Development Workflow:**
+
+```bash
+# 1. Initialize new project
+mkdir my-tower-app && cd my-tower-app
+uv init
+
+# 2. Add dependencies
+uv add tower "pandas>=1.5.0" requests
+
+# 3. Develop and test locally
+uv run my_script.py
+
+# 4. Deploy to Tower.dev
+tower deploy
+
+# 5. Run in production
+tower run
+```
+
 ### Production Best Practices
 
 #### Monitoring and Alerting
@@ -1897,7 +1968,7 @@ export DATABASE_URL="your-local-db-url"
 export API_KEY="your-dev-api-key"
 
 # Run your app locally with the same parameters as production
-python your_app.py
+uv run your_app.py
 
 # This ensures zero surprises when deploying to Tower.dev
 ```
@@ -2906,6 +2977,17 @@ Create a production-ready data pipeline that:
 3. **Start with Hello World**: Follow the quickstart guide to deploy your first app 
 4. **Build your challenge project**: Use the patterns from this article
 5. **Share your results**: Join the Tower.dev community and share your experience
+
+### Why uv + Tower.dev is the Modern Data Engineering Stack
+
+Throughout this tutorial, we've used `uv` as our Python package manager alongside Tower.dev. This combination represents the cutting edge of Python development tooling:
+
+- **Speed**: `uv` resolves dependencies 10-100x faster than pip, meaning faster development cycles
+- **Reliability**: Deterministic dependency resolution prevents the "dependency hell" that plagues many data projects
+- **Simplicity**: One tool (`uv`) handles virtual environments, dependency management, and project scaffolding
+- **Future-proof**: Both `uv` and Tower.dev are built with modern Python standards and best practices
+
+This isn't just about using the latest tools – it's about removing friction from your development workflow so you can focus on what matters: solving business problems with data.
 
 ### The Future of Data Engineering
 
