@@ -55,7 +55,7 @@ mindmap
 
 ### ADK: The Framework That Changes Everything
 
-The Agent Development Kit isn't just another Python library—it's the same framework powering agents inside Google products like Agentspace and Customer Engagement Suite[^1][^2]. Think of it as the Django for AI agents: opinionated, batteries-included, and designed for rapid development.
+The Agent Development Kit isn't just another Python library—it's the same framework powering agents inside Google products like Agentspace and Customer Engagement Suite[^1a][^2]. Think of it as the Django for AI agents: opinionated, batteries-included, and designed for rapid development.
 
 **Pro Tip**: Unlike other agent frameworks that require extensive boilerplate, ADK lets you build production-ready agents in under 100 lines of code[^3].
 
@@ -378,6 +378,8 @@ Share a code snippet and get expert-level feedback instantly[^9].
 
 Moving from prototype to production is where many AI projects fail. Vertex AI Agent Engine eliminates this gap by providing enterprise-grade deployment infrastructure[^16].
 
+> **Important**: Agent Engine requires the `vertexai` SDK, not `google.cloud.aiplatform`. The agent must be wrapped with `reasoning_engines.AdkApp()` before deployment.
+
 ```mermaid
 flowchart LR
     A[Development] --> B[Local Testing]
@@ -392,1115 +394,137 @@ flowchart LR
 ### Deployment Configuration
 
 ```python
-# agent_config.py
-from google.cloud import aiplatform
+# deployment.py
+import vertexai
+from vertexai import agent_engines  
+from vertexai.preview import reasoning_engines
 
-# Configure deployment settings
-deployment_config = {
-    "display_name": "production_agent",
-    "model_name": "gemini-2.5-pro", 
-    "requirements": [
-        "google-cloud-aiplatform[agent_engines,adk]>=1.77.0",
+# Initialize Vertex AI
+PROJECT_ID = "your-project-id"
+LOCATION = "us-central1"  # Choose from supported regions
+STAGING_BUCKET = "gs://your-staging-bucket"
+
+vertexai.init(
+    project=PROJECT_ID,
+    location=LOCATION,
+    staging_bucket=STAGING_BUCKET,
+)
+
+# Wrap your agent for deployment
+app = reasoning_engines.AdkApp(
+    agent=simple_agent,  # Your ADK agent
+    enable_tracing=True,  # Enable observability
+)
+
+# Test locally first
+session = app.create_session(user_id="test_user")
+for event in app.stream_query(
+    user_id="test_user",
+    session_id=session.id,
+    message="Test query"
+):
+    print(event)
+
+# Deploy to Agent Engine
+remote_agent = agent_engines.create(
+    agent_engine=simple_agent,
+    requirements=[
+        "google-cloud-aiplatform[adk,agent_engines]>=1.88.0",
         "google-adk>=1.0.0"
     ],
-    "environment_variables": {
-        "GOOGLE_CLOUD_PROJECT": "your-project-id",
-        "AGENT_MODE": "production"
-    },
-    "resource_limits": {
-        "cpu": "2",
-        "memory": "8Gi"
-    }
-}
+    display_name="production_agent",
+    description="Production ADK agent for customer support"
+)
 
-# Deploy to Vertex AI Agent Engine
-def deploy_agent(agent_path: str):
-    aiplatform.init(project="your-project-id")
-    
-    engine = aiplatform.AgentEngine.create(
-        display_name=deployment_config["display_name"],
-        agent_path=agent_path,
-        requirements=deployment_config["requirements"],
-        environment_variables=deployment_config["environment_variables"]
-    )
-    
-    return engine
+print(f"Deployed agent: {remote_agent.resource_name}")
 ```
 
 
-### Monitoring and Analytics
+### Monitoring and Observability
+
+Agent Engine provides built-in observability through Google Cloud's monitoring stack:
 
 ```python
-# monitoring.py
+# observability.py
 import logging
-from google.cloud import monitoring_v3
+from google.cloud import trace_v1
 
-def setup_agent_monitoring():
-    client = monitoring_v3.MetricServiceClient()
-    project_name = f"projects/{PROJECT_ID}"
-    
-    # Define custom metrics
-    metrics = [
-        "agent_response_time",
-        "agent_success_rate", 
-        "tool_usage_frequency",
-        "user_satisfaction_score"
-    ]
-    
-    for metric in metrics:
-        descriptor = monitoring_v3.MetricDescriptor(
-            type=f"custom.googleapis.com/{metric}",
-            display_name=metric.replace("_", " ").title()
-        )
-        client.create_metric_descriptor(
-            name=project_name, 
-            metric_descriptor=descriptor
-        )
-```
+# Built-in tracing (enabled via enable_tracing=True in AdkApp)
+# No additional setup required - traces appear automatically in Cloud Trace
 
-
-## 8. Advanced Patterns and Best Practices
-
-### The Hierarchical Pattern
-
-```mermaid
-graph TD
-    A[CEO Agent] --> B[Department Manager 1]
-    A --> C[Department Manager 2] 
-    A --> D[Department Manager 3]
-    B --> E[Specialist 1A]
-    B --> F[Specialist 1B]
-    C --> G[Specialist 2A]
-    C --> H[Specialist 2B]
-    D --> I[Specialist 3A]
-    D --> J[Specialist 3B]
-```
-
-This pattern works well for complex organizational tasks where clear chains of command improve coordination[^10].
-
-### The Collaborative Pattern
-
-```mermaid
-graph LR
-    A[Agent 1] <--> B[Agent 2]
-    B <--> C[Agent 3]
-    C <--> A
-    A <--> D[Shared Memory]
-    B <--> D
-    C <--> D
-```
-
-Perfect for creative tasks or problem-solving where peer collaboration generates better results[^11].
-
-### Example 6: The Enterprise Customer Support System
-
-```python
-# Complete enterprise-grade customer support system
-import asyncio
-from datetime import datetime
-from google.adk.agents import LlmAgent, Agent
-from google.adk.tools import google_search
-
-# Tier 1 support - handles common issues
-tier1_agent = LlmAgent(
-    name="tier1_support",
-    model="gemini-2.0-flash",
-    instruction="""You are a Tier 1 customer support specialist.
-    Handle common questions about:
-    - Account issues
-    - Billing inquiries  
-    - Basic troubleshooting
-    - Product information
-    
-    If you cannot resolve an issue, escalate to Tier 2.
-    Always be helpful, professional, and empathetic.""",
-    tools=[google_search]
-)
-
-# Tier 2 support - handles complex technical issues
-tier2_agent = LlmAgent(
-    name="tier2_support", 
-    model="gemini-2.5-pro",
-    instruction="""You are a Tier 2 technical support specialist.
-    Handle complex issues including:
-    - Advanced troubleshooting
-    - Integration problems
-    - Performance optimization
-    - Custom configurations
-    
-    Use all available tools to diagnose and resolve issues.
-    Escalate to Tier 3 only for critical system-level problems.""",
-    tools=[google_search]
-)
-
-# Knowledge base agent
-knowledge_agent = LlmAgent(
-    name="knowledge_specialist",
-    model="gemini-2.5-pro", 
-    instruction="""You maintain and search the company knowledge base.
-    Provide accurate information from documentation, FAQs, and internal resources.
-    Flag outdated information and suggest updates.""",
-    tools=[google_search]
-)
-
-# Escalation manager
-escalation_manager = LlmAgent(
-    name="escalation_manager",
-    model="gemini-2.5-pro",
-    instruction="""You manage support escalations and coordinate responses.
-    Route tickets to appropriate specialists based on:
-    - Issue complexity
-    - Customer tier/priority
-    - Agent availability
-    - Escalation policies
-    
-    Track resolution times and customer satisfaction.""",
-    sub_agents=[tier1_agent, tier2_agent, knowledge_agent]
-)
-```
-
-
-### Performance Optimization Strategies
-
-**1. Model Selection Strategy**
-
-- Use Gemini 2.0 Flash for simple, fast responses
-- Use Gemini 2.5 Pro for complex reasoning tasks
-- Consider cost vs. performance trade-offs[^6]
-
-**2. Caching Strategy**
-
-```python
-from functools import lru_cache
-
-@lru_cache(maxsize=128)
-def cached_search(query: str) -> dict:
-    """Cache frequent search results to reduce API calls"""
-    return google_search(query)
-```
-
-**3. Async Processing**
-
-```python
-async def process_multiple_requests(requests):
-    """Handle multiple requests concurrently"""
-    tasks = [agent.handle_request(req) for req in requests]
-    return await asyncio.gather(*tasks)
-```
-
-**Pro Tip**: Monitor your agent's token usage and response times. Aim for sub-2-second responses for user-facing interactions[^17].
-
-## 9. Common Pitfalls and How to Avoid Them
-
-### Pitfall 1: The "Swiss Army Knife" Agent
-
-**Wrong Approach**: Creating one agent that tries to do everything
-
-```python
-# Don't do this
-super_agent = Agent(
-    name="everything_agent",
-    instruction="You can handle customer support, write code, plan travel, analyze data, manage calendars, write marketing copy, and do financial analysis...",
-    tools=[every_tool_imaginable]
-)
-```
-
-**Right Approach**: Specialized agents with clear purposes
-
-```python
-# Do this instead
-support_agent = Agent(name="support_specialist", ...)
-code_agent = Agent(name="code_reviewer", ...)
-travel_agent = Agent(name="travel_planner", ...)
-```
-
-
-### Pitfall 2: Prompt Overengineering
-
-**Wrong**: 500-word prompts with contradictory instructions
-**Right**: Clear, concise instructions focused on the agent's core purpose[^18]
-
-### Pitfall 3: Ignoring Error Handling
-
-```python
-# Always include error handling
-class RobustAgent(Agent):
-    async def handle_request(self, request):
-        try:
-            return await super().handle_request(request)
-        except Exception as e:
-            logger.error(f"Agent error: {e}")
-            return {
-                "error": "I encountered an issue. Let me try a different approach.",
-                "fallback_response": self.generate_fallback(request)
-            }
-```
-
-
-### Pitfall 4: Not Testing Edge Cases
-
-Create comprehensive test suites for your agents:
-
-```python
-# test_agent.py
-import pytest
-from your_agent import travel_coordinator
-
-@pytest.mark.asyncio
-async def test_invalid_dates():
-    response = await travel_coordinator.handle_request(
-        "Plan a trip from yesterday to last week"
-    )
-    assert "invalid" in response.lower()
-
-@pytest.mark.asyncio  
-async def test_budget_constraints():
-    response = await travel_coordinator.handle_request(
-        "Plan a luxury trip to Mars for $50"
-    )
-    assert "budget" in response.lower()
-```
-
-
-## 10. Security and Compliance
-
-### Data Protection Strategies
-
-```python
-import hashlib
-from cryptography.fernet import Fernet
-
-class SecureAgent(Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.encryption_key = Fernet.generate_key()
-        self.cipher = Fernet(self.encryption_key)
-    
-    def sanitize_input(self, user_input: str) -> str:
-        """Remove PII and sensitive information"""
-        # Implement PII detection and masking
-        return sanitized_input
-    
-    def log_interaction(self, request, response):
-        """Log interactions with privacy protection"""
-        sanitized_request = self.sanitize_input(request)
-        log_entry = {
-            "timestamp": datetime.now().isoformat(),
-            "request_hash": hashlib.sha256(sanitized_request.encode()).hexdigest(),
-            "response_length": len(response),
-            "agent_name": self.name
+# Custom metrics (optional)
+def log_agent_metrics(response_time: float, success: bool):
+    """Log custom metrics for agent performance"""
+    logging.info(
+        "Agent response",
+        extra={
+            "response_time_ms": response_time * 1000,
+            "success": success,
+            "agent_version": "1.0.0"
         }
-        # Store in secure logging system
-```
+    )
 
-
-### Access Control
-
-```python
-from google.cloud import iam
-from functools import wraps
-
-def require_permission(permission: str):
-    def decorator(func):
-        @wraps(func)
-        async def wrapper(self, request, user_id):
-            if not self.check_permission(user_id, permission):
-                return {"error": "Insufficient permissions"}
-            return await func(self, request, user_id)
-        return wrapper
-    return decorator
-
-class SecureCustomerAgent(Agent):
-    @require_permission("customer_data:read")
-    async def get_customer_info(self, request, user_id):
-        # Implementation here
-        pass
-```
-
-
-## 11. Real-World Case Studies
-
-### Case Study 1: E-commerce Customer Service Revolution
-
-**The Challenge**: A major e-commerce company was drowning in customer support tickets, with 72-hour response times and 40% customer satisfaction scores.
-
-**The Solution**: Multi-agent customer service system using ADK and Vertex AI
-
-- **Order Status Agent**: Handled order tracking and shipping inquiries
-- **Return Processing Agent**: Managed returns and refunds
-- **Product Recommendation Agent**: Provided personalized product suggestions
-- **Escalation Manager**: Coordinated complex issues
-
-**Results**:
-
-- Response time reduced to 30 seconds
-- Customer satisfaction increased to 92%
-- Support costs reduced by 60%[^14]
-
-
-### Case Study 2: Financial Advisory Firm Automation
-
-**The Challenge**: A financial advisory firm needed to provide 24/7 client support while maintaining compliance with financial regulations.
-
-**The Solution**: Regulated AI agent system
-
-- **Portfolio Analysis Agent**: Analyzed investment performance
-- **Compliance Monitor Agent**: Ensured all advice met regulatory requirements
-- **Market Research Agent**: Provided real-time market insights
-- **Client Communication Agent**: Managed client interactions
-
-**Key Features**:
-
-```python
-compliance_agent = Agent(
-    name="compliance_monitor",
-    model="gemini-2.5-pro",
-    instruction="""You are a compliance officer ensuring all financial advice 
-    meets SEC regulations. Review all recommendations for:
-    - Suitability requirements
-    - Disclosure obligations
-    - Risk assessment accuracy
-    - Documentation requirements""",
-    tools=[regulatory_search, compliance_check]
-)
-```
-
-
-## 12. Integration Patterns
-
-### REST API Integration
-
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class ChatRequest(BaseModel):
-    message: str
-    user_id: str
-    context: dict = {}
-
-class ChatResponse(BaseModel):
-    response: str
-    agent_used: str
-    confidence: float
-
-@app.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest):
+# Query deployed agent with monitoring
+async def monitored_query(remote_agent, user_id: str, message: str):
+    import time
+    start_time = time.time()
+    
     try:
-        response = await coordinator.handle_request(
-            request.message,
-            user_id=request.user_id,
-            context=request.context
-        )
+        session = remote_agent.create_session(user_id=user_id)
         
-        return ChatResponse(
-            response=response["message"],
-            agent_used=response["agent"],
-            confidence=response["confidence"]
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-```
-
-
-### Webhook Integration
-
-```python
-@app.post("/webhook")
-async def handle_webhook(webhook_data: dict):
-    """Handle incoming webhook events"""
-    event_type = webhook_data.get("type")
-    
-    if event_type == "customer_inquiry":
-        await support_agent.handle_request(webhook_data["message"])
-    elif event_type == "order_update":
-        await order_agent.process_update(webhook_data["order_data"])
-    
-    return {"status": "processed"}
-```
-
-
-### Slack Bot Integration
-
-```python
-from slack_bolt import App
-from slack_bolt.adapter.fastapi import SlackRequestHandler
-
-slack_app = App(token="your-bot-token")
-
-@slack_app.message("help")
-async def handle_help(message, say):
-    response = await support_agent.handle_request(
-        f"User needs help: {message['text']}"
-    )
-    await say(response["message"])
-
-handler = SlackRequestHandler(slack_app)
-
-@app.post("/slack/events")
-async def slack_events(req):
-    return await handler.handle(req)
-```
-
-
-## 13. Performance Monitoring and Analytics
-
-### Key Metrics to Track
-
-```python
-class AgentMetrics:
-    def __init__(self):
-        self.response_times = []
-        self.success_rates = {}
-        self.user_satisfaction = []
-        self.cost_per_interaction = []
-    
-    def log_interaction(self, agent_name, response_time, success, cost):
-        self.response_times.append(response_time)
-        
-        if agent_name not in self.success_rates:
-            self.success_rates[agent_name] = []
-        self.success_rates[agent_name].append(success)
-        
-        self.cost_per_interaction.append(cost)
-    
-    def get_analytics_dashboard(self):
-        return {
-            "avg_response_time": sum(self.response_times) / len(self.response_times),
-            "overall_success_rate": sum(self.success_rates.values()) / len(self.success_rates),
-            "avg_cost_per_interaction": sum(self.cost_per_interaction) / len(self.cost_per_interaction)
-        }
-```
-
-
-### A/B Testing Framework
-
-```python
-import random
-
-class AgentABTest:
-    def __init__(self, agent_a, agent_b, split_ratio=0.5):
-        self.agent_a = agent_a
-        self.agent_b = agent_b
-        self.split_ratio = split_ratio
-        self.results = {"A": [], "B": []}
-    
-    async def handle_request(self, request, user_id):
-        # Route traffic based on split ratio
-        if random.random() < self.split_ratio:
-            agent = self.agent_a
-            variant = "A"
-        else:
-            agent = self.agent_b
-            variant = "B"
-        
-        start_time = time.time()
-        response = await agent.handle_request(request)
-        response_time = time.time() - start_time
-        
-        self.results[variant].append({
-            "response_time": response_time,
-            "user_id": user_id,
-            "response_quality": self.evaluate_response(response)
-        })
-        
-        return response
-```
-
-
-## 14. Advanced Topics
-
-### Custom Tool Development
-
-```python
-from google.adk.tools import Tool
-import requests
-
-class DatabaseTool(Tool):
-    """Custom tool for database operations"""
-    
-    def __init__(self, db_connection_string):
-        super().__init__(name="database_query")
-        self.db_connection = db_connection_string
-    
-    async def execute(self, query: str, parameters: dict = None):
-        """Execute database query safely"""
-        # Implement safe query execution
-        # Include SQL injection prevention
-        # Add logging and monitoring
-        pass
-
-class APIIntegrationTool(Tool):
-    """Tool for third-party API integration"""
-    
-    def __init__(self, api_key, base_url):
-        super().__init__(name="api_integration")
-        self.api_key = api_key
-        self.base_url = base_url
-    
-    async def execute(self, endpoint: str, method: str = "GET", data: dict = None):
-        headers = {"Authorization": f"Bearer {self.api_key}"}
-        response = requests.request(method, f"{self.base_url}/{endpoint}", 
-                                  headers=headers, json=data)
-        return response.json()
-```
-
-
-### Memory and State Management
-
-```python
-from google.adk.memory import ConversationMemory, LongTermMemory
-
-class StatefulAgent(Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.conversation_memory = ConversationMemory()
-        self.long_term_memory = LongTermMemory()
-    
-    async def handle_request(self, request, user_id):
-        # Retrieve conversation history
-        context = await self.conversation_memory.get_context(user_id)
-        
-        # Get relevant long-term memories
-        relevant_memories = await self.long_term_memory.search(
-            query=request, 
-            user_id=user_id
-        )
-        
-        # Process request with full context
-        response = await super().handle_request(
-            request, 
-            context=context,
-            memories=relevant_memories
-        )
-        
-        # Store new interaction
-        await self.conversation_memory.add_interaction(
+        for event in remote_agent.stream_query(
             user_id=user_id,
-            request=request, 
-            response=response
-        )
+            session_id=session["id"],
+            message=message
+        ):
+            print(event)
         
-        return response
-```
-
-
-## 15. The Economics of AI Agents
-
-### Cost Optimization Strategies
-
-```mermaid
-graph TD
-    A[Cost Optimization] --> B[Model Selection]
-    A --> C[Caching Strategy]
-    A --> D[Request Batching]
-    A --> E[Smart Routing]
-    
-    B --> B1[Gemini 2.0 Flash for Simple Tasks]
-    B --> B2[Gemini 2.5 Pro for Complex Tasks]
-    
-    C --> C1[Response Caching]
-    C --> C2[Context Caching]
-    
-    D --> D1[Batch Similar Requests]
-    D --> D2[Optimize Token Usage]
-    
-    E --> E1[Route to Cheapest Capable Model]
-    E --> E2[Use Local Processing When Possible]
-```
-
-
-### ROI Calculation Framework
-
-```python
-class AgentROICalculator:
-    def __init__(self):
-        self.development_costs = 0
-        self.operational_costs = 0
-        self.time_savings = 0
-        self.quality_improvements = 0
-        
-    def calculate_roi(self, time_period_months: int):
-        total_costs = self.development_costs + (self.operational_costs * time_period_months)
-        
-        # Time savings value (assuming $50/hour average cost)
-        time_value = self.time_savings * 50 * time_period_months
-        
-        # Quality improvement value (reduced errors, customer satisfaction)
-        quality_value = self.quality_improvements * time_period_months
-        
-        total_benefits = time_value + quality_value
-        
-        roi = ((total_benefits - total_costs) / total_costs) * 100
-        return {
-            "roi_percentage": roi,
-            "payback_period_months": total_costs / (total_benefits / time_period_months),
-            "net_benefit": total_benefits - total_costs
-        }
-```
-
-
-## 16. Testing and Quality Assurance
-
-### Comprehensive Testing Strategy
-
-```python
-import pytest
-from unittest.mock import Mock, patch
-
-class AgentTestSuite:
-    def __init__(self, agent):
-        self.agent = agent
-        
-    @pytest.mark.asyncio
-    async def test_basic_functionality(self):
-        """Test basic agent responses"""
-        test_cases = [
-            ("Hello", "greeting response expected"),
-            ("What's the weather?", "weather information expected"),
-            ("Help me plan a trip", "travel planning response expected")
-        ]
-        
-        for input_msg, expected_type in test_cases:
-            response = await self.agent.handle_request(input_msg)
-            assert response is not None
-            assert len(response) > 10  # Ensure substantive response
-    
-    @pytest.mark.asyncio
-    async def test_error_handling(self):
-        """Test agent behavior with invalid inputs"""
-        error_cases = [
-            "",  # Empty input
-            "x" * 10000,  # Extremely long input
-            "SELECT * FROM users; DROP TABLE users;",  # Injection attempt
-        ]
-        
-        for error_input in error_cases:
-            response = await self.agent.handle_request(error_input)
-            assert "error" in response.lower() or "sorry" in response.lower()
-    
-    @pytest.mark.asyncio
-    async def test_performance(self):
-        """Test response time performance"""
-        import time
-        
-        start_time = time.time()
-        await self.agent.handle_request("Quick test question")
         response_time = time.time() - start_time
+        log_agent_metrics(response_time, True)
         
-        assert response_time < 5.0  # Should respond within 5 seconds
+    except Exception as e:
+        response_time = time.time() - start_time
+        log_agent_metrics(response_time, False)
+        logging.error(f"Agent query failed: {e}")
+        raise
 ```
 
+**Built-in monitoring includes:**
 
-### Load Testing
+- Request/response tracing in Cloud Trace
+- Error logging in Cloud Logging  
+- Performance metrics in Cloud Monitoring
+- Resource usage tracking
+
+
+### Resource Management
 
 ```python
-import asyncio
-import aiohttp
-from concurrent.futures import ThreadPoolExecutor
+# cleanup.py
+# Clean up deployed resources to avoid charges
 
-async def load_test_agent(num_concurrent_requests=100):
-    """Test agent under load"""
-    
-    async def make_request(session, request_id):
-        async with session.post('/chat', json={
-            "message": f"Test request {request_id}",
-            "user_id": f"user_{request_id}"
-        }) as response:
-            return await response.json()
-    
-    async with aiohttp.ClientSession() as session:
-        tasks = [make_request(session, i) for i in range(num_concurrent_requests)]
-        start_time = time.time()
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        total_time = time.time() - start_time
-        
-        successful_requests = [r for r in results if not isinstance(r, Exception)]
-        
-        print(f"Completed {len(successful_requests)}/{num_concurrent_requests} requests")
-        print(f"Total time: {total_time:.2f}s")
-        print(f"Requests per second: {len(successful_requests)/total_time:.2f}")
+# Delete the deployed agent
+remote_agent.delete(force=True)  # force=True deletes child resources like sessions
+
+# List and clean up sessions if needed
+sessions = remote_agent.list_sessions(user_id="user_123")
+for session_id in sessions.session_ids:
+    remote_agent.delete_session(user_id="user_123", session_id=session_id)
 ```
 
-
-## 17. Debugging and Troubleshooting
-
-### Debug Mode Implementation
-
-```python
-import logging
-from typing import Any, Dict
-
-class DebuggableAgent(Agent):
-    def __init__(self, *args, debug=False, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.debug = debug
-        if debug:
-            logging.basicConfig(level=logging.DEBUG)
-            self.logger = logging.getLogger(self.name)
-    
-    async def handle_request(self, request: str, **kwargs) -> Dict[str, Any]:
-        if self.debug:
-            self.logger.debug(f"Received request: {request}")
-            self.logger.debug(f"Context: {kwargs}")
-        
-        try:
-            start_time = time.time()
-            response = await super().handle_request(request, **kwargs)
-            processing_time = time.time() - start_time
-            
-            if self.debug:
-                self.logger.debug(f"Generated response in {processing_time:.2f}s")
-                self.logger.debug(f"Response preview: {str(response)[:100]}...")
-            
-            return response
-            
-        except Exception as e:
-            if self.debug:
-                self.logger.error(f"Error processing request: {e}", exc_info=True)
-            raise
-```
-
-
-### Common Issues and Solutions
-
-```python
-class AgentTroubleshooter:
-    """Common issues and their solutions"""
-    
-    def diagnose_slow_response(self, agent, test_request):
-        """Diagnose why agent is responding slowly"""
-        import cProfile
-        import pstats
-        
-        profiler = cProfile.Profile()
-        profiler.enable()
-        
-        # Run the agent
-        response = asyncio.run(agent.handle_request(test_request))
-        
-        profiler.disable()
-        stats = pstats.Stats(profiler)
-        stats.sort_stats('cumulative')
-        stats.print_stats(10)  # Top 10 slowest functions
-        
-        return response
-    
-    def check_token_usage(self, agent, requests_sample):
-        """Monitor token consumption"""
-        total_tokens = 0
-        for request in requests_sample:
-            # This would integrate with your token counting logic
-            tokens = self.count_tokens(request)
-            total_tokens += tokens
-            
-        avg_tokens = total_tokens / len(requests_sample)
-        print(f"Average tokens per request: {avg_tokens}")
-        
-        if avg_tokens > 1000:
-            print("WARNING: High token usage detected")
-            print("Consider optimizing prompts or using cheaper models")
-```
-
-
-## 18. Future-Proofing Your Agents
-
-### Version Management Strategy
-
-```python
-class VersionedAgent:
-    def __init__(self, agent_configs: Dict[str, Agent]):
-        self.versions = agent_configs
-        self.current_version = max(agent_configs.keys())
-        
-    async def handle_request(self, request: str, version: str = None):
-        if version is None:
-            version = self.current_version
-            
-        if version not in self.versions:
-            version = self.current_version
-            
-        agent = self.versions[version]
-        return await agent.handle_request(request)
-    
-    def rollback_to_version(self, version: str):
-        if version in self.versions:
-            self.current_version = version
-            return True
-        return False
-```
-
-
-### Continuous Learning Framework
-
-```python
-class LearningAgent(Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.feedback_store = []
-        self.performance_metrics = {}
-        
-    async def handle_request_with_learning(self, request: str, user_id: str):
-        response = await self.handle_request(request)
-        
-        # Store interaction for learning
-        interaction = {
-            "timestamp": datetime.now(),
-            "user_id": user_id,
-            "request": request,
-            "response": response,
-            "response_time": time.time()
-        }
-        
-        self.feedback_store.append(interaction)
-        
-        # Trigger learning if we have enough data
-        if len(self.feedback_store) % 100 == 0:
-            await self.update_from_feedback()
-            
-        return response
-    
-    async def update_from_feedback(self):
-        """Update agent behavior based on feedback"""
-        # Analyze recent interactions
-        recent_feedback = self.feedback_store[-100:]
-        
-        # Identify patterns in successful vs unsuccessful interactions
-        # This is where you'd implement your learning logic
-        pass
-```
-
-
-## 19. Your 24-Hour Challenge
-
-**Congratulations!** You've absorbed a comprehensive guide to building intelligent agents with Google ADK, Vertex AI, and Gemini 2.5. Now it's time to put this knowledge into action.
-
-### The Challenge: Build Your Personal Assistant Agent
-
-**Objective**: Create and deploy a multi-functional personal assistant that can:
-
-1. Check weather and provide clothing recommendations
-2. Search for and summarize news on topics you care about
-3. Help plan your daily schedule
-4. Answer questions about your local area
-
-### Step-by-Step Implementation
-
-**Hour 1-2: Environment Setup**
-
-```bash
-# Set up your development environment
-python -m venv agent_challenge
-source agent_challenge/bin/activate
-pip install google-adk google-cloud-aiplatform
-```
-
-**Hour 3-6: Core Agent Development**
-
-```python
-# personal_assistant.py
-from google.adk.agents import LlmAgent
-from google.adk.tools import google_search
-import datetime
-
-weather_agent = LlmAgent(
-    name="weather_specialist",
-    model="gemini-2.0-flash", 
-    instruction="""You specialize in weather information and clothing recommendations.
-    When users ask about weather, search for current conditions and provide:
-    1. Current weather summary
-    2. Appropriate clothing suggestions
-    3. Any weather-related advice""",
-    tools=[google_search]
-)
-
-news_agent = LlmAgent(
-    name="news_specialist",
-    model="gemini-2.0-flash",
-    instruction="""You specialize in finding and summarizing news.
-    Search for recent news on requested topics and provide:
-    1. Key headlines
-    2. Brief summaries of important stories  
-    3. Links to full articles""",
-    tools=[google_search]
-)
-
-schedule_agent = LlmAgent(
-    name="schedule_specialist", 
-    model="gemini-2.0-flash",
-    instruction="""You help with schedule planning and time management.
-    Provide suggestions for:
-    1. Daily schedule optimization
-    2. Time blocking for tasks
-    3. Productivity tips""",
-    tools=[google_search]
-)
-
-personal_assistant = LlmAgent(
-    name="personal_assistant",
-    model="gemini-2.5-pro",
-    instruction="""You are a helpful personal assistant coordinating specialists:
-    - weather_specialist: weather and clothing advice
-    - news_specialist: news research and summaries
-    - schedule_specialist: schedule planning and productivity
-    
-    Route requests to appropriate specialists and provide comprehensive assistance.""",
-    sub_agents=[weather_agent, news_agent, schedule_agent]
-)
-
-if __name__ == "__main__":
-    personal_assistant.run()
-```
-
-**Hour 7-12: Testing and Refinement**
-
-```python
-# test_assistant.py
-import asyncio
-
-async def test_personal_assistant():
-    test_queries = [
-        "What's the weather like today and what should I wear?",
-        "Find me the latest news about artificial intelligence",
-        "Help me plan my schedule for tomorrow - I have 3 meetings and need time for focused work",
-        "What are some good restaurants near me for lunch?"
-    ]
-    
-    for query in test_queries:
-        print(f"\nTesting: {query}")
-        response = await personal_assistant.handle_request(query)
-        print(f"Response: {response}")
-
-if __name__ == "__main__":
-    asyncio.run(test_personal_assistant())
-```
-
-**Hour 13-20: Web Interface**
-
-```python
-# web_app.py
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-import uvicorn
-
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-
-@app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.post("/chat")
-async def chat(request: dict):
-    response = await personal_assistant.handle_request(request["message"])
-    return {"response": response}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-```
-
-**Hour 21-24: Deployment and Documentation**
-
-Deploy your agent to Vertex AI Agent Engine and create documentation for others to use.
-
-### Success Criteria
-
-By the end of 24 hours, you should have:
-
-- ✅ A working personal assistant agent
-- ✅ At least 3 specialized sub-agents
-- ✅ A web interface for interaction
-- ✅ Test cases demonstrating functionality
-- ✅ Deployment to Google Cloud (optional but recommended)
-
-
-### Share Your Success
-
-Once you complete the challenge:
-
-1. Share your agent on social media with \#ADKChallenge
-2. Join the ADK community discussions
-3. Contribute your agent to the Agent Garden
-
-## 20. What's Next? Your Journey Continues
-
-### Advanced Learning Path
-
-**Month 1: Master the Fundamentals**
-
-- Build 10+ different agent types
-- Experiment with all multi-agent patterns
-- Master tool integration and custom tool development
-
-**Month 2: Production Excellence**
-
-- Deploy agents to production
-- Implement comprehensive monitoring
-- Master security and compliance patterns
-
-**Month 3: Innovation and Specialization**
-
-- Contribute to open-source agent projects
-- Develop industry-specific agent solutions
-- Share knowledge with the community
-
-
-### Resources for Continued Learning
-
-**Official Documentation**
-
-- [Google ADK Documentation](https://google.github.io/adk-docs/)[^2]
-- [Vertex AI Agent Builder Guide](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview)[^4]
-- [Gemini 2.5 Model Documentation](https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/)[^6]
-
-**Community Resources**
-
-- GitHub repositories with example agents[^9]
-- ADK tutorials and codelabs[^7][^8]
-- Community forums and discussion groups
-
-**Professional Development**
-
-- Google Cloud certifications
-- AI/ML specialization programs
-- Industry conferences and workshops
-
-
-## Conclusion: You're Ready to Build the Future
-
-The agent revolution isn't coming—it's here. And now you have the knowledge, tools, and practical experience to be part of it[^1][^2].
-
-You've learned:
-
-- **Why** agents represent a fundamental shift in AI capabilities
-- **What** makes Google's ADK, Vertex AI, and Gemini 2.5 uniquely powerful
-- **How** to build everything from simple assistants to complex multi-agent systems
-- **When** to apply different patterns and architectures
-
-But knowledge without action is just entertainment. The real transformation happens when you start building[^11].
-
-### Your Agent Journey Starts Now
-
-The 24-hour challenge isn't just an exercise—it's your first step toward becoming a proficient agent developer. Whether you're building the next unicorn startup, revolutionizing your company's operations, or just exploring the fascinating world of AI agents, you now have everything you need to succeed[^18].
-
-The future belongs to those who can orchestrate intelligence, not just consume it. You're no longer just a user of AI—you're a builder of intelligent systems that can think, reason, and act autonomously[^6].
-
-**The question isn't whether AI agents will transform how we work and live. The question is: Will you be the one building them, or just watching from the sidelines?**
-
-Your 24-hour challenge starts now. The future is waiting.
-
----
-
-*Ready to build your first agent? Set a timer, open your code editor, and let's make some AI magic happen. The revolution starts with a single line of code: `from google.adk.agents import Agent`*
-
-**Pro Tip**: Don't try to build the perfect agent on your first attempt. Start simple, iterate fast, and remember—every expert was once a beginner who refused to give up[^12].
-
-Welcome to the agent revolution. Let's build the future together.
-
-<div style="text-align: center">⁂</div>
+### Production Checklist
+
+Before deploying to production, ensure:
+
+- ✅ **Authentication**: Service account has proper IAM roles
+- ✅ **Monitoring**: Tracing enabled (`enable_tracing=True`)
+- ✅ **Security**: VPC-SC configured if required
+- ✅ **Dependencies**: All requirements pinned to specific versions
+- ✅ **Testing**: Agent tested locally with `AdkApp`
+- ✅ **Regions**: Deployed in [supported regions](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview#supported-regions)
+- ✅ **Quotas**: Within [Agent Engine limits](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview#quota)
+
+## References
 
 [^1a]: https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/
 
@@ -1538,41 +562,8 @@ Welcome to the agent revolution. Let's build the future together.
 
 [^18]: https://www.anthropic.com/engineering/building-effective-agents
 
-[^19]: https://www.linkedin.com/pulse/googles-new-agent-development-kit-adk-here-prasun-sarkar-hmpee
+---
 
-[^20]: https://www.aalpha.net/blog/google-agent-development-kit-adk-for-multi-agent-applications/
+*Ready to build your first agent? Set a timer, open your code editor, and let's make some AI magic happen. The revolution starts with a single line of code: `from google.adk.agents import Agent`*
 
-[^21]: https://iblnews.org/google-cloud-launched-vertex-ai-agent-builder/
-
-[^22]: https://www.aibase.com/news/www.aibase.com/news/16989
-
-[^23]: https://codelabs.developers.google.com/devsite/codelabs/building-ai-agents-vertexai
-
-[^24]: https://www.youtube.com/watch?v=H6nUoszwcrM
-
-[^25]: https://www.voiceflow.com/blog/vertex-ai
-
-[^26]: https://cloudyrathor.com/building-ai-agents-with-googles-adk-python-a-hands-on-guide/
-
-[^27]: https://www.cloudskillsboost.google/course_templates/1162
-
-[^28]: https://www.youtube.com/watch?v=yVIWyKJPTKo
-
-[^29]: https://www.restack.io/p/vertex-ai-agent-builder-answer-cat-ai
-
-[^30]: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
-
-[^31]: https://www.restack.io/p/agent-oriented-programming-answer-best-practices-2023-cat-ai
-
-[^32]: https://www.telecomtrainer.com/describe-the-benefits-of-using-google-cloud-ai-and-machine-learning-services/
-
-[^33]: https://blog.google/technology/google-deepmind/google-gemini-updates-io-2025/
-
-[^34]: https://colab.research.google.com/github/google/adk-docs/blob/main/examples/python/tutorial/agent_team/adk_tutorial.ipynb
-
-[^35]: https://smythos.com/developers/agent-development/multi-agent-system-architecture/
-
-[^36]: https://www.pluralsight.com/courses/deploying-ai-agents-production-environments
-
-[^37]: https://dev.to/rohan_jee_085655230/google-cloud-aiml-advantages-unlocking-the-future-of-ai-1bp3
 
