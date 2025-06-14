@@ -195,7 +195,7 @@ One of Tower.dev's most powerful features is its secrets management system . Ins
 
 ```bash
 # Set a secret
-tower secrets set DATABASE_URL "postgresql://user:pass@host:5432/db"
+tower secrets create --name DATABASE_URL --value "postgresql://user:pass@host:5432/db"
 
 # Use in your Python code
 import os
@@ -259,7 +259,8 @@ name = "data-quality-checker"
 script = "./quality_check.py"
 source = [
     "./quality_check.py",
-    "./requirements.txt"
+    "./requirements.txt",
+    "./sample_data.csv"
 ]
 
 [[parameters]]
@@ -778,12 +779,12 @@ Before running the pipeline, you need to configure Snowflake credentials as secr
 
 ```bash
 # Set Snowflake connection details
-tower secrets set SNOWFLAKE_ACCOUNT "your-account.snowflakecomputing.com"
-tower secrets set SNOWFLAKE_USER "your-username"
-tower secrets set SNOWFLAKE_PASSWORD "your-password"
-tower secrets set SNOWFLAKE_WAREHOUSE "your-warehouse"
-tower secrets set SNOWFLAKE_DATABASE "your-database"
-tower secrets set SNOWFLAKE_SCHEMA "your-schema"
+tower secrets create --name SNOWFLAKE_ACCOUNT --value "your-account.snowflakecomputing.com"
+tower secrets create --name SNOWFLAKE_USER --value "your-username"
+tower secrets create --name SNOWFLAKE_PASSWORD --value "your-password"
+tower secrets create --name SNOWFLAKE_WAREHOUSE --value "your-warehouse"
+tower secrets create --name SNOWFLAKE_DATABASE --value "your-database"
+tower secrets create --name SNOWFLAKE_SCHEMA --value "your-schema"
 ```
 
 
@@ -1722,9 +1723,9 @@ tower environments create --name="staging"
 tower environments create --name="production"
 
 # Set environment-specific secrets
-tower secrets set --environment="development" DATABASE_URL "dev-database-url"
-tower secrets set --environment="staging" DATABASE_URL "staging-database-url"
-tower secrets set --environment="production" DATABASE_URL "prod-database-url"
+tower secrets create --name DATABASE_URL --value "dev-database-url" --environment="development"
+tower secrets create --name DATABASE_URL --value "staging-database-url" --environment="staging"
+tower secrets create --name DATABASE_URL --value "prod-database-url" --environment="production"
 
 # Share environments with team members
 tower environments share --name="development" --user="teammate@company.com"
@@ -2323,7 +2324,7 @@ import os
 def get_secure_config():
     """Get configuration with proper secret management."""
     
-    # Use Tower.dev secrets (set via tower secrets set)
+    # Use Tower.dev secrets (set via tower secrets create)
     config = {
         "database_url": os.environ.get('DATABASE_URL'),
         "api_key": os.environ.get('API_KEY'),
