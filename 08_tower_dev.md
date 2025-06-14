@@ -944,6 +944,10 @@ import json
 from typing import List, Dict, Any
 import tower
 
+# Note: This example uses Tower.dev's correct API patterns:
+# - tower.tables() for Iceberg table operations
+# - External LLM inference classes for AI functionality
+
 def fetch_stock_data(symbols: List[str], date: str) -> List[Dict[str, Any]]:
     """
     Fetch stock data for given symbols and date.
@@ -1013,12 +1017,14 @@ def write_to_iceberg_table(data: List[Dict[str, Any]], table_name: str) -> None:
     
     # Use Tower.dev's Iceberg integration
     try:
-        # Create or append to Iceberg table
-        tower.create_table(
-            table_name=table_name,
-            data=df,
-            mode="append"  # Use "overwrite" for full refresh
-        )
+        # Create table schema
+        schema = df.to_arrow().schema
+        
+        # Create or get table reference
+        table = tower.tables(table_name).create_if_not_exists(schema)
+        
+        # Insert data
+        table.insert(df.to_arrow())
         
         print(f"✅ Successfully wrote data to {table_name}")
         
@@ -1129,11 +1135,15 @@ def generate_llm_insights(analysis_results: Dict[str, Any]) -> str:
     - Total Volume: {analysis_results['summary']['total_volume']:,}
     """
     
-    # Use Tower.dev's LLM integration (DeepSeek R1 model)
+    # Use external LLM service for inference
+    # Note: Tower.dev supports LLM inference through external providers
     try:
-        llm_response = tower.llms.generate(
-            model="deepseek-r1",
-            prompt=f"""
+        # Example using custom inference class (as shown in Tower.dev examples)
+        from core.inference.huggingface import InferWithHuggingfaceHub
+        
+        messages = [
+            {"role": "system", "content": "You are a financial analyst providing investment insights."},
+            {"role": "user", "content": f"""
             Based on this stock analysis data, provide a brief investment insight summary:
             
             {context}
@@ -1145,7 +1155,21 @@ def generate_llm_insights(analysis_results: Dict[str, Any]) -> str:
             4. General market sentiment
             
             Keep the response concise and actionable for investors.
-            """,
+            """}
+        ]
+        
+        # Get API key from environment (set as Tower.dev secret)
+        HF_TOKEN = os.environ.get("HF_TOKEN")
+        
+        # Use Hugging Face Hub for inference
+        infer_with_hf_hub = InferWithHuggingfaceHub(
+            provider="together", 
+            api_key=HF_TOKEN
+        )
+        
+        llm_response = infer_with_hf_hub(
+            inputs=messages, 
+            model="deepseek-ai/DeepSeek-R1",
             max_tokens=500
         )
         
@@ -1341,28 +1365,35 @@ def process_with_ai(issues: List[Dict[str, Any]], model_mode: str) -> List[Dict[
         
         # Use different model configurations based on mode
         if model_mode == "local":
-            # Use local DeepSeek R1 model
-            analysis = tower.llms.generate(
-                model="deepseek-r1",
-                prompt=f"""
+            # Use local inference with Ollama
+            from core.inference.ollama import InferWithOllamaChat
+            
+            messages = [
+                {"role": "system", "content": "You are a technical project manager analyzing GitHub issues."},
+                {"role": "user", "content": f"""
                 Analyze this GitHub issue and provide:
-                1. A brief summary (2-3 sentences)
-                2. Priority level (High/Medium/Low)
-                3. Category (Bug/Feature/Documentation/etc.)
-                4. Suggested action items
+                1. Priority level (High/Medium/Low)
+                2. Category (Bug/Feature/Documentation/Other)
+                3. Estimated effort (Small/Medium/Large)
+                4. Brief summary of the issue
+                5. Suggested action items
                 
-                Issue: {context}
+                Issue details:
+                {context}
                 
-                Format your response as JSON with keys: summary, priority, category, action_items
-                """,
-                mode="local",
-                max_tokens=300
-            )
+                Please respond in JSON format.
+                """}
+            ]
+            
+            infer_with_ollama = InferWithOllamaChat()
+            analysis = infer_with_ollama(model="deepseek-r1:14b", messages=messages)
         else:
-            # Use serverless model via Together.ai
-            analysis = tower.llms.generate(
-                model="deepseek-r1",
-                prompt=f"""
+            # Use serverless inference via Hugging Face Hub
+            from core.inference.huggingface import InferWithHuggingfaceHub
+            
+            messages = [
+                {"role": "system", "content": "You are a technical project manager analyzing GitHub issues."},
+                {"role": "user", "content": f"""
                 Analyze this GitHub issue and provide:
                 1. A brief summary (2-3 sentences)
                 2. Priority level (High/Medium/Low)
@@ -1372,8 +1403,18 @@ def process_with_ai(issues: List[Dict[str, Any]], model_mode: str) -> List[Dict[
                 Issue: {context}
                 
                 Format your response as JSON.
-                """,
-                mode="serverless",
+                """}
+            ]
+            
+            HF_TOKEN = os.environ.get("HF_TOKEN")
+            infer_with_hf_hub = InferWithHuggingfaceHub(
+                provider="together",
+                api_key=HF_TOKEN
+            )
+            
+            analysis = infer_with_hf_hub(
+                inputs=messages,
+                model="deepseek-ai/DeepSeek-R1",
                 max_tokens=300
             )
         
@@ -1446,11 +1487,17 @@ def main():
         print(f"   Category Distribution: {category_counts}")
         
         # Step 4: Save to Iceberg table
+        import pyarrow as pa
+        
         table_name = "github_issues_processed"
-        tower.create_table(
-            table_name=table_name,
-            data=processed_issues,
-            mode="append"
+        
+        # Convert to Arrow format
+        df = pd.DataFrame(processed_issues)
+        arrow_table = pa.Table.from_pandas(df)
+        
+        # Create table with proper schema
+        table = tower.tables(table_name).create_if_not_exists(arrow_table.schema)
+        table.insert(arrow_table)
         )
         
         print(f"\n✅ Results saved to table: {table_name}")
@@ -1951,11 +1998,15 @@ class IncrementalProcessor:
         }
         
         # Save state to Iceberg table
-        tower.create_table(
-            table_name=self.state_table,
-            data=[state_record],
-            mode="append"
-        )
+        import pyarrow as pa
+        
+        # Convert to Arrow format
+        df = pd.DataFrame([state_record])
+        arrow_table = pa.Table.from_pandas(df)
+        
+        # Create or get table reference
+        table = tower.tables(self.state_table).create_if_not_exists(arrow_table.schema)
+        table.insert(arrow_table)
         
         print(f"💾 Updated state: {pipeline_name} -> {timestamp}")
 
@@ -2062,11 +2113,14 @@ def process_data_with_schema_evolution(raw_data: List[Dict[str, Any]]):
     df = schema_handler.adapt_dataframe_schema(df)
     
     # Save to Iceberg table
-    tower.create_table(
-        table_name="my_table",
-        data=df,
-        mode="append"
-    )
+    import pyarrow as pa
+    
+    # Convert to Arrow format
+    arrow_table = df.to_arrow()
+    
+    # Create or get table reference
+    table = tower.tables("my_table").create_if_not_exists(arrow_table.schema)
+    table.insert(arrow_table)
 ```
 
 
@@ -2431,11 +2485,14 @@ class DataStackIntegrator:
             processed_df = self.process_with_tower(source_df, processing_logic)
             
             # Store processed data in Iceberg for analytics
-            tower.create_table(
-                table_name=f"iceberg_{target_table}",
-                data=processed_df,
-                mode="overwrite"
-            )
+            import pyarrow as pa
+            
+            # Convert to Arrow format
+            arrow_table = processed_df.to_arrow()
+            
+            # Create or get table reference
+            table = tower.tables(f"iceberg_{target_table}").create_if_not_exists(arrow_table.schema)
+            table.upsert(arrow_table)  # Use upsert for overwrite behavior
             
             # Also load to warehouse for BI tools
             self.load_to_warehouse(processed_df, target_table)
@@ -2727,9 +2784,21 @@ class DataMeshCoordinator:
         table_name = f"data_product_{product_id.replace('.', '_')}"
         
         # Store in Iceberg with governance metadata
-        tower.create_table(
-            table_name=table_name,
-            data=data,
+        import pyarrow as pa
+        import pandas as pd
+        
+        # Convert data to Arrow format
+        if isinstance(data, pd.DataFrame):
+            arrow_table = pa.Table.from_pandas(data)
+        elif isinstance(data, list):
+            df = pd.DataFrame(data)
+            arrow_table = pa.Table.from_pandas(df)
+        else:
+            arrow_table = data
+        
+        # Create or get table reference
+        table = tower.tables(table_name).create_if_not_exists(arrow_table.schema)
+        table.insert(arrow_table)
             mode="overwrite",
             metadata={
                 "data_product_id": product_id,
