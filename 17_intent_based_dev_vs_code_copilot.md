@@ -238,6 +238,80 @@ Successful intent-based developers master four fundamental pillars:
 
 **Pro Tip**: The most common mistake new intent-based developers make is trying to be too specific about implementation details. Trust the AI to handle the "how" while you focus on the "what" and "why."
 
+```mermaid
+---
+title: Four Pillars of Intent-Based Mastery
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#E8F4FD"
+    primaryTextColor: "#1A365D"
+    primaryBorderColor: "#2B6CB0"
+    lineColor: "#4A5568"
+    secondaryColor: "#F0FFF4"
+    tertiaryColor: "#FFF5F5"
+    background: "#FAFAFA"
+    mainBkg: "#E8F4FD"
+    secondBkg: "#F0FFF4"
+    tertiaryBkg: "#FFF5F5"
+---
+flowchart TD
+    A["`**INTENT-BASED MASTERY**
+    🎯 Four Fundamental Pillars`"]:::centerTitle
+    
+    A --> B["`**1. Intent Articulation** 🎯
+    The ability to clearly express:
+    • Goals & objectives
+    • Constraints & requirements  
+    • Success criteria
+    • Context & background`"]:::pillar1
+    
+    A --> C["`**2. AI Collaboration** 🤝
+    Understanding how to work
+    effectively with AI agents:
+    • Partner relationship
+    • Trust & validation
+    • Iterative refinement
+    • Feedback loops`"]:::pillar2
+    
+    A --> D["`**3. Context Management** 📋
+    Maintaining & leveraging
+    project context:
+    • State awareness
+    • History tracking
+    • Knowledge transfer
+    • Continuous alignment`"]:::pillar3
+    
+    A --> E["`**4. Quality Assurance** ✅
+    Validating & refining
+    AI-generated solutions:
+    • Code review
+    • Testing strategies
+    • Performance validation
+    • Security assessment`"]:::pillar4
+    
+    F["`⚠️ **PRO TIP**
+    The most common mistake new intent-based 
+    developers make is trying to be too specific 
+    about implementation details.
+    
+    🎯 **Focus on the 'WHAT' and 'WHY'**
+    🤖 **Trust AI to handle the 'HOW'**`"]:::protip
+    
+    B -.-> F
+    C -.-> F
+    D -.-> F
+    E -.-> F
+    
+    %% Styling classes
+    classDef centerTitle fill:#E8F4FD,stroke:#2B6CB0,stroke-width:3px,color:#1A365D,font-weight:bold,font-size:16px
+    classDef pillar1 fill:#F0FFF4,stroke:#38A169,stroke-width:2px,color:#1A202C,font-size:14px
+    classDef pillar2 fill:#FFF5F5,stroke:#E53E3E,stroke-width:2px,color:#1A202C,font-size:14px
+    classDef pillar3 fill:#FFFBEB,stroke:#D69E2E,stroke-width:2px,color:#1A202C,font-size:14px
+    classDef pillar4 fill:#F7FAFC,stroke:#4299E1,stroke-width:2px,color:#1A202C,font-size:14px
+    classDef protip fill:#EDF2F7,stroke:#805AD5,stroke-width:3px,color:#2D3748,font-weight:bold,font-size:13px
+```
+
 ## Chapter 3: VS Code Copilot Agent Mastery - Your AI Development Partner
 
 ### Agent Mode Deep Dive: Understanding Your AI Collaborator
