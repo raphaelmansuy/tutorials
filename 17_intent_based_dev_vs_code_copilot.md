@@ -87,68 +87,25 @@ config:
     textColor: "#1F2937"
 ---
 flowchart TD
-    A["`**The Three Laws of**
-    **AI-Augmented Development**`"]:::title
+    A["The Three Laws of AI-Augmented Development"]:::title
 
-    A --> B["`**Law 1: The Law of Specificity**
+    A --> B["Law 1: The Law of Specificity<br/><br/>The quality of your output is<br/>directly proportional to the<br/>clarity of your input"]:::law1
 
-    *The quality of your output is*
-    *directly proportional to the*
-    *clarity of your input*`"]:::law1
+    A --> C["Law 2: The Law of Iteration<br/><br/>Complex solutions emerge through<br/>progressive refinement,<br/>not single prompts"]:::law2
 
-    A --> C["`**Law 2: The Law of Iteration**
+    A --> D["Law 3: The Law of Understanding<br/><br/>Always comprehend what you implement<br/>AI amplifies intelligence,<br/>not replaces it"]:::law3
 
-    *Complex solutions emerge through*
-    *progressive refinement,*
-    *not single prompts*`"]:::law2
+    B --> E["🎯 Clear Input<br/><br/>• Specific requirements<br/>• Detailed context<br/>• Explicit constraints<br/>• Expected outcomes"]:::detail1
 
-    A --> D["`**Law 3: The Law of Understanding**
+    B --> F["✨ Quality Output<br/><br/>• Precise solutions<br/>• Relevant code<br/>• Targeted results<br/>• Efficient implementation"]:::detail1
 
-    *Always comprehend what you implement*
-    *AI amplifies intelligence,*
-    *not replaces it*`"]:::law3
+    C --> G["🔄 Iterative Process<br/><br/>• Start simple<br/>• Refine gradually<br/>• Test frequently<br/>• Improve continuously"]:::detail2
 
-    B --> E["`🎯 **Clear Input**
+    C --> H["🚀 Progressive Enhancement<br/><br/>• Build incrementally<br/>• Learn from feedback<br/>• Adapt and evolve<br/>• Achieve complexity"]:::detail2
 
-    • Specific requirements
-    • Detailed context
-    • Explicit constraints
-    • Expected outcomes`"]:::detail1
+    D --> I["🧠 Human Intelligence<br/><br/>• Critical thinking<br/>• Code review<br/>• Design decisions<br/>• Strategic planning"]:::detail3
 
-    B --> F["`✨ **Quality Output**
-
-    • Precise solutions
-    • Relevant code
-    • Targeted results
-    • Efficient implementation`"]:::detail1
-
-    C --> G["`🔄 **Iterative Process**
-
-    • Start simple
-    • Refine gradually
-    • Test frequently
-    • Improve continuously`"]:::detail2
-
-    C --> H["`🚀 **Progressive Enhancement**
-
-    • Build incrementally
-    • Learn from feedback
-    • Adapt and evolve
-    • Achieve complexity`"]:::detail2
-
-    D --> I["`🧠 **Human Intelligence**
-
-    • Critical thinking
-    • Code review
-    • Design decisions
-    • Strategic planning`"]:::detail3
-
-    D --> J["`🤖 **AI Amplification**
-
-    • Code generation
-    • Pattern recognition
-    • Rapid prototyping
-    • Documentation help`"]:::detail3
+    D --> J["🤖 AI Amplification<br/><br/>• Code generation<br/>• Pattern recognition<br/>• Rapid prototyping<br/>• Documentation help"]:::detail3
 
     E -.-> F
     G -.-> H
