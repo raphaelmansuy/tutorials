@@ -245,6 +245,39 @@ Enterprise-grade API management, security, and authentication solutions.
 
 ---
 
+### ☁️ **Cloud Migration & Infrastructure**
+
+Strategic migration guides and infrastructure transformation patterns.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 HAProxy to AWS Migration: Complete Guide](./13_migration_from_haproxy_to_aws_managed_services.md) | Advanced | 8-10 hours | English | Comprehensive migration from HAProxy to AWS managed services including ALB, NLB, API Gateway, and CloudFront |
+
+**What you'll learn:**
+
+- **Migration assessment** and planning frameworks
+- **AWS Application Load Balancer (ALB)** implementation and configuration
+- **Network Load Balancer (NLB)** for high-performance scenarios
+- **API Gateway** for microservices and API management
+- **CloudFront CDN** for global content delivery
+- **AWS WAF** for web application security
+- **Cost optimization** strategies and techniques
+- **Performance tuning** and monitoring setup
+- **Infrastructure as Code** with AWS CDK and TypeScript
+- **Blue-green deployment** strategies
+- **Traffic splitting** and canary deployments
+- **Troubleshooting** common migration issues
+
+**Key Features:**
+
+- Real-world migration scenarios and case studies
+- Step-by-step implementation guides
+- Cost comparison and optimization techniques
+- Performance benchmarking and testing
+- Production-ready Infrastructure as Code examples
+
+---
+
 ## 🎯 Learning Paths
 
 ### Path 1: Cloud Beginner to Professional
@@ -301,6 +334,12 @@ Enterprise-grade API management, security, and authentication solutions.
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management
 ```
 
+### Path 10: Cloud Migration & Infrastructure
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. HAProxy to AWS Migration → 4. Apigee API Management
+```
+
 ---
 
 ## 🛠️ Prerequisites
@@ -317,7 +356,7 @@ Enterprise-grade API management, security, and authentication solutions.
 
 ### **Cloud Accounts Needed**
 - **Google Cloud Platform** account (free tier available)
-- **AWS** account (for Kubernetes tutorial, free tier available)
+- **AWS** account (for Kubernetes and HAProxy migration tutorials, free tier available)
 
 ---
 
@@ -336,6 +375,7 @@ Enterprise-grade API management, security, and authentication solutions.
 | Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
 | OAuth2 Authentication | $0-5 USD | ✅ Most examples use free services |
 | OpenID Connect (OIDC) | $0-5 USD | ✅ Free identity providers available |
+| HAProxy to AWS Migration | $10-25 USD | ⚠️ AWS services usage, cleanup after tutorial |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -390,6 +430,7 @@ Track your progress through the training:
 - [ ] 🌐 **API Management Expert** - Implemented enterprise API solutions with Apigee
 - [ ] 🔐 **OAuth2 Security Specialist** - Mastered authentication and authorization patterns
 - [ ] 🔑 **OpenID Connect Expert** - Implemented enterprise identity and authentication solutions
+- [ ] 🚀 **Cloud Migration Specialist** - Successfully migrated infrastructure to AWS managed services
 
 ---
 
