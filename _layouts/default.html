@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Title and Description -->
+    <title>{{ page.title | default: site.title }}</title>
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <meta name="keywords" content="{{ page.keywords | join: ', ' }}">
+    <meta name="author" content="{{ site.author }}">
+    
+    <!-- Open Graph Protocol -->
+    <meta property="og:title" content="{{ page.title | default: site.title }}" />
+    <meta property="og:description" content="{{ page.description | default: site.description }}" />
+    <meta property="og:image" content="{{ site.url }}{{ site.baseurl }}/assets/images/{{ page.featured_image | default: 'social-preview.png' }}" />
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
+    <meta property="og:site_name" content="{{ site.title }}" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page.title | default: site.title }}">
+    <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+    <meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}/assets/images/{{ page.featured_image | default: 'social-preview.png' }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/images/favicon-32x32.png' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/images/favicon-16x16.png' | relative_url }}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ '/assets/css/substack-style.css' | relative_url }}">
+    
+    <!-- RSS Feed -->
+    {% feed_meta %}
+    
+    <!-- Jekyll SEO Tag -->
+    {% seo %}
+    
+    <!-- Structured Data for Articles -->
+    {% if page.layout == 'post' %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "{{ page.title }}",
+      "description": "{{ page.description | default: page.excerpt | strip_html | truncate: 160 }}",
+      "author": {
+        "@type": "Person",
+        "name": "{{ site.author }}",
+        "url": "{{ site.url }}"
+      },
+      "datePublished": "{{ page.date | date_to_xmlschema }}",
+      "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ site.url }}{{ page.url }}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "{{ site.title }}",
+        "url": "{{ site.url }}",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ site.url }}{{ site.baseurl }}/assets/images/logo.png"
+        }
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "{{ site.url }}{{ site.baseurl }}/assets/images/{{ page.featured_image | default: 'social-preview.png' }}"
+      },
+      "keywords": [{% for tag in page.tags %}"{{ tag }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
+    }
+    </script>
+    {% endif %}
+</head>
+<body>
+    <!-- Reading Progress Bar -->
+    {% if page.layout == 'post' %}
+    <div class="reading-progress">
+        <div class="progress-bar" id="reading-progress"></div>
+    </div>
+    {% endif %}
+    
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="site-branding">
+                    <h1 class="site-title">
+                        <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
+                    </h1>
+                    <p class="site-tagline">{{ site.description }}</p>
+                </div>
+                <nav class="main-navigation">
+                    <ul>
+                        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                        <li><a href="{{ '/archive' | relative_url }}">Archive</a></li>
+                        <li><a href="{{ '/newsletter' | relative_url }}">Newsletter</a></li>
+                        <li><a href="{{ '/about' | relative_url }}">About</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="{% if page.layout == 'post' %}content-container{% else %}container{% endif %}">
+            {{ content }}
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; {{ 'now' | date: "%Y" }} {{ site.author }}. All rights reserved.</p>
+                <p>
+                    <a href="{{ '/feed.xml' | relative_url }}">RSS</a> • 
+                    <a href="{{ '/newsletter' | relative_url }}">Newsletter</a> • 
+                    <a href="mailto:{{ site.email }}">Contact</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Reading Progress Script -->
+    {% if page.layout == 'post' %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBar = document.getElementById('reading-progress');
+        const article = document.querySelector('.post-content');
+        
+        if (progressBar && article) {
+            function updateProgress() {
+                const articleTop = article.offsetTop;
+                const articleHeight = article.offsetHeight;
+                const windowHeight = window.innerHeight;
+                const scrollTop = window.pageYOffset;
+                
+                const progress = Math.min(
+                    Math.max((scrollTop - articleTop + windowHeight / 2) / articleHeight, 0), 
+                    1
+                );
+                
+                progressBar.style.width = (progress * 100) + '%';
+            }
+            
+            window.addEventListener('scroll', updateProgress);
+            updateProgress(); // Initial call
+        }
+    });
+    </script>
+    {% endif %}
+    
+    <!-- Analytics (replace with your tracking code) -->
+    {% if site.google_analytics %}
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ site.google_analytics }}');
+    </script>
+    {% endif %}
+</body>
+</html>

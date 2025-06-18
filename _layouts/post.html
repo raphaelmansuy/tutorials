@@ -1,0 +1,178 @@
+---
+layout: default
+---
+
+<article class="post-content">
+    <!-- Post Header -->
+    <header class="post-header">
+        <h1 class="post-title">{{ page.title }}</h1>
+        {% if page.subtitle %}
+            <p class="post-subtitle">{{ page.subtitle }}</p>
+        {% endif %}
+        
+        <div class="post-meta">
+            {% if page.author %}
+                <div class="author-info">
+                    {% if page.author_avatar %}
+                        <img src="{{ page.author_avatar }}" alt="{{ page.author }}" class="author-avatar">
+                    {% endif %}
+                    <span>By {{ page.author }}</span>
+                </div>
+            {% endif %}
+            
+            {% if page.date %}
+                <time datetime="{{ page.date | date_to_xmlschema }}">
+                    {{ page.date | date: "%B %d, %Y" }}
+                </time>
+            {% endif %}
+            
+            {% if page.reading_time %}
+                <span class="reading-time">{{ page.reading_time }} min read</span>
+            {% endif %}
+        </div>
+        
+        {% if page.tags.size > 0 %}
+            <div class="post-tags">
+                {% for tag in page.tags %}
+                    <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </header>
+    
+    <!-- Featured Image -->
+    {% if page.featured_image %}
+        <div class="featured-image">
+            <img src="{{ '/assets/images/' | append: page.featured_image | relative_url }}" 
+                 alt="{{ page.title }}" 
+                 loading="lazy">
+        </div>
+    {% endif %}
+    
+    <!-- Post Content -->
+    <div class="post-body">
+        {{ content }}
+    </div>
+    
+    <!-- Newsletter Signup -->
+    {% unless page.hide_newsletter %}
+        <div class="newsletter-signup">
+            <div class="newsletter-content">
+                <h3>Subscribe to {{ site.title }}</h3>
+                <p>Get the latest tutorials and insights delivered to your inbox weekly</p>
+                
+                <!-- Replace with your actual newsletter signup form -->
+                <form class="subscription-form" action="#" method="post">
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe</button>
+                    </div>
+                </form>
+                
+                <div class="subscription-stats">
+                    <span class="subscriber-count">Join our growing community of learners</span>
+                </div>
+            </div>
+        </div>
+    {% endunless %}
+    
+    <!-- Social Sharing -->
+    <div class="post-sharing">
+        <h4>Share this post</h4>
+        <div class="sharing-buttons">
+            <a href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&url={{ site.url }}{{ page.url }}" 
+               class="share-button twitter" 
+               target="_blank" 
+               rel="noopener">
+                🐦 Twitter
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ site.url }}{{ page.url }}" 
+               class="share-button linkedin" 
+               target="_blank" 
+               rel="noopener">
+                💼 LinkedIn
+            </a>
+            <a href="mailto:?subject={{ page.title | uri_escape }}&body=I thought you might find this interesting: {{ site.url }}{{ page.url }}" 
+               class="share-button email">
+                📧 Email
+            </a>
+            <a href="javascript:void(0)" 
+               class="share-button copy" 
+               onclick="copyToClipboard('{{ site.url }}{{ page.url }}')">
+                🔗 Copy Link
+            </a>
+        </div>
+    </div>
+    
+    <!-- Related Posts -->
+    {% if site.related_posts.size > 0 %}
+        <div class="related-posts">
+            <h4>You might also like</h4>
+            <div class="related-posts-grid">
+                {% for post in site.related_posts limit:3 %}
+                    <article class="related-post">
+                        <h5><a href="{{ post.url }}">{{ post.title }}</a></h5>
+                        <div class="post-meta">
+                            <time datetime="{{ post.date | date_to_xmlschema }}">
+                                {{ post.date | date: "%b %d, %Y" }}
+                            </time>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Comments (GitHub Discussions) -->
+    {% unless page.hide_comments %}
+        <div class="post-comments">
+            <h4>Comments</h4>
+            <!-- Replace with your actual repository info -->
+            <script src="https://giscus.app/client.js"
+                    data-repo="{{ site.github_username }}/{{ site.github_repo }}"
+                    data-repo-id="{{ site.giscus_repo_id }}"
+                    data-category="General"
+                    data-category-id="{{ site.giscus_category_id }}"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="bottom"
+                    data-theme="light"
+                    data-lang="en"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+    {% endunless %}
+</article>
+
+<!-- Copy to clipboard functionality -->
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success message
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = '✅ Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }).catch(function() {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = '✅ Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    });
+}
+</script>

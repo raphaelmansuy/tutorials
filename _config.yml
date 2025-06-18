@@ -1,0 +1,149 @@
+# Jekyll Configuration for Substack-like Blog
+
+title: "Cloud & DevOps Training Hub"
+description: "A comprehensive collection of hands-on tutorials covering cloud computing, DevOps, and modern development practices"
+author: "Your Name"
+email: "your-email@example.com"
+
+# Site URL (replace with your actual GitHub Pages URL)
+url: "https://your-username.github.io"
+baseurl: "/tutorials"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /:year/:month/:day/:title/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+# Pagination
+paginate: 5
+paginate_path: "/page:num/"
+
+# Social Media & Analytics
+github_username: your-username
+github_repo: tutorials
+twitter_username: your-twitter
+linkedin_username: your-linkedin
+google_analytics: G-XXXXXXXXXX
+
+# Newsletter & Comments (Giscus)
+giscus_repo_id: "your-repo-id"
+giscus_category_id: "your-category-id"
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - .github/
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - .vscode/
+  - .pytest_cache/
+  - .venv/
+  - node_modules/
+  - package.json
+  - package-lock.json
+
+# Include files
+include:
+  - _pages
+  - assets
+
+# Collections
+collections:
+  tutorials:
+    output: true
+    permalink: /:collection/:name/
+
+# Default values for all pages
+defaults:
+  # Posts
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Your Name"
+      comments: true
+  
+  # Tutorial files (your existing .md files)
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "post"
+      author: "Your Name"
+      comments: true
+  
+  # Pages
+  - scope:
+      path: "_pages"
+      type: "pages"
+    values:
+      layout: "default"
+
+# SEO and Social
+twitter:
+  username: your-twitter
+  card: summary_large_image
+
+social:
+  name: Your Name
+  links:
+    - https://twitter.com/your-twitter
+    - https://github.com/your-username
+    - https://linkedin.com/in/your-linkedin
+
+# Logo and social preview
+logo: "/assets/images/logo.png"
+social_preview: "/assets/images/social-preview.png"
+
+# Reading time calculation
+reading_time: true
+
+# Features
+show_excerpts: true
+show_reading_time: true
+show_social_sharing: true
+show_newsletter_signup: true
+show_related_posts: true
+
+# Comments via Giscus (GitHub Discussions)
+comments:
+  provider: "giscus"
+  giscus:
+    repo: "your-username/tutorials"
+    repo_id: "your-repo-id"
+    category: "General"
+    category_id: "your-category-id"
+    mapping: "pathname"
+    reactions_enabled: true
+    theme: "light"
+
+# Newsletter integration
+newsletter:
+  provider: "convertkit" # or "mailchimp", "buttondown", etc.
+  convertkit:
+    form_id: "your-form-id"
+  
+# Analytics
+analytics:
+  google: "G-XXXXXXXXXX"
+  
+# Performance
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: [html, head, body]
+
+# Development settings
+incremental: true
+livereload: true
+open_url: true
