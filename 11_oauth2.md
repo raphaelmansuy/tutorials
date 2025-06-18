@@ -28,14 +28,14 @@ Imagine you're running the most exclusive nightclub in town. Before OAuth2, here
 - It expires after tonight
 - Even if stolen, the thief can't access their house, bank account, or anything else
 
-This isn't just a cute analogy – it's exactly what happens millions of times per day when you use apps like Spotify (accessing your Facebook friends), Canva (uploading from Google Drive), or Slack (connecting to GitHub)[^1_4].
+This isn't just a cute analogy – it's exactly what happens millions of times per day when you use apps like Spotify (accessing your Facebook friends), Canva (uploading from Google Drive), or Slack (connecting to GitHub).
 
 ### The Real-World Impact
 
 Consider these statistics that'll make your security team's coffee go cold:
 
 - 81% of data breaches involve weak or stolen passwords
-- Companies using OAuth2 properly see 60% fewer account takeovers[^1_7]
+- Companies using OAuth2 properly see 60% fewer account takeovers
 - The average data breach costs \$4.45 million – OAuth2 implementation costs a fraction of that
 
 **Pro Tip**: When I consult for startups, I can predict with 90% accuracy which ones will face security incidents by looking at their authentication implementation. OAuth2 isn't just about convenience – it's about survival.
@@ -116,7 +116,7 @@ sequenceDiagram
 5. **Token Exchange**: DesignApp trades the code + secret for an access token
 6. **Resource Access**: DesignApp uses the token to get Sarah's profile
 
-**Pro Tip**: Notice that DesignApp never sees Sarah's Google password. This is OAuth2's superpower – delegated authorization without credential sharing[^1_13].
+**Pro Tip**: Notice that DesignApp never sees Sarah's Google password. This is OAuth2's superpower – delegated authorization without credential sharing.
 
 ```javascript
 // What the DesignApp's redirect looks like
@@ -151,7 +151,7 @@ sequenceDiagram
 
 **The Beauty of Machine-to-Machine**
 
-This is OAuth2's Client Credentials flow – perfect when no human is clicking buttons[^1_14]. The dashboard authenticates itself (not a user) and gets permission to access specific data.
+This is OAuth2's Client Credentials flow – perfect when no human is clicking buttons. The dashboard authenticates itself (not a user) and gets permission to access specific data.
 
 ```python
 # Client Credentials Flow in Python
@@ -208,7 +208,7 @@ sequenceDiagram
 ```
 
 **Why PKCE Matters**:
-Without PKCE, malicious apps could intercept authorization codes. PKCE adds a cryptographic proof that only the original app can complete the flow[^1_15][^1_16].
+Without PKCE, malicious apps could intercept authorization codes. PKCE adds a cryptographic proof that only the original app can complete the flow.
 
 ```javascript
 // PKCE implementation in JavaScript
@@ -256,7 +256,7 @@ stateDiagram-v2
     Revoked --> [*]
 ```
 
-**Pro Tip**: Access tokens should be short-lived (5-30 minutes) while refresh tokens can last weeks or months. This limits the damage if an access token is compromised[^1_17][^1_18].
+**Pro Tip**: Access tokens should be short-lived (5-30 minutes) while refresh tokens can last weeks or months. This limits the damage if an access token is compromised.
 
 ```python
 # Handling token refresh automatically
@@ -290,7 +290,7 @@ class OAuth2Client:
 
 ### Scopes: The Principle of Least Privilege
 
-Scopes are like the specific permissions written on that hotel keycard. Instead of "access everything," you specify exactly what you need[^1_19].
+Scopes are like the specific permissions written on that hotel keycard. Instead of "access everything," you specify exactly what you need.
 
 **Good Scope Design**:
 
@@ -364,7 +364,7 @@ await SecureStore.setItemAsync('access_token', token); // Encrypted keychain
 
 **Pro Tips from the Trenches**:
 
-✅ **Always use HTTPS** - OAuth2 over HTTP is like sending your house keys via postcard[^1_7]
+✅ **Always use HTTPS** - OAuth2 over HTTP is like sending your house keys via postcard
 
 ✅ **Validate redirect URIs strictly** - No wildcards, no HTTP in production
 
@@ -380,7 +380,7 @@ await SecureStore.setItemAsync('access_token', token); // Encrypted keychain
 
 ❌ **Never log tokens** - I've seen production logs with access tokens. Don't be that person.
 
-❌ **Don't use implicit flow** - It's deprecated for good reasons[^1_20]
+❌ **Don't use implicit flow** - It's deprecated for good reasons
 
 ❌ **Don't store secrets in client-side code** - View source reveals all
 
@@ -529,7 +529,7 @@ app.get('/api/drive-files', async (req, res) => {
 - State parameter for CSRF protection
 - Secure token storage (encrypt in production!)
 - Proper error handling
-- Minimal scope requests[^1_21]
+- Minimal scope requests
 
 
 ## Troubleshooting: Common Issues and Solutions
@@ -683,7 +683,7 @@ Create a simple web app that:
 ### Resources to Get Started:
 
 - Google Cloud Console: https://console.cloud.google.com/
-- Google OAuth2 Documentation[^1_21]
+- Google OAuth2 Documentation
 - Test with localhost (remember to configure redirect URIs!)
 
 
@@ -714,7 +714,7 @@ More importantly, you've seen real code, real examples, and real war stories fro
 
 OAuth2 mastery doesn't end here. As you build more integrations, you'll encounter:
 
-- OpenID Connect (OAuth2's authentication-focused cousin)[^1_12]
+- OpenID Connect (OAuth2's authentication-focused cousin)
 - Advanced flows like Device Flow for smart TVs
 - Token introspection and revocation endpoints
 - Custom scope designs for your own APIs
@@ -740,63 +740,63 @@ The digital world needs more developers who understand security, authorization, 
 
 <div style="text-align: center">⁂</div>
 
-[^1_1]: https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2
+: https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2
 
-[^1_2]: https://www.youtube.com/watch?v=ZV5yTm4pT8g
+: https://www.youtube.com/watch?v=ZV5yTm4pT8g
 
-[^1_3]: https://www.tutorialspoint.com/oauth2.0/index.htm
+: https://www.tutorialspoint.com/oauth2.0/index.htm
 
-[^1_4]: https://igventurelli.io/oauth2-in-action-real-world-use-cases-and-examples/
+: https://igventurelli.io/oauth2-in-action-real-world-use-cases-and-examples/
 
-[^1_5]: https://www.youtube.com/watch?v=RROVLdfGmuE
+: https://www.youtube.com/watch?v=RROVLdfGmuE
 
-[^1_6]: https://stackoverflow.com/questions/67633463/real-world-examples-of-websites-using-oauth2-for-authorization
+: https://stackoverflow.com/questions/67633463/real-world-examples-of-websites-using-oauth2-for-authorization
 
-[^1_7]: https://dev.to/hamzakhan/mastering-oauth-20-in-modern-web-applications-security-best-practices-for-2024-26ed
+: https://dev.to/hamzakhan/mastering-oauth-20-in-modern-web-applications-security-best-practices-for-2024-26ed
 
-[^1_8]: https://blog.stackademic.com/common-mistakes-with-oauth-in-flutter-eed741f02ad8
+: https://blog.stackademic.com/common-mistakes-with-oauth-in-flutter-eed741f02ad8
 
-[^1_9]: https://infisical.com/blog/guide-to-implementing-oauth2
+: https://infisical.com/blog/guide-to-implementing-oauth2
 
-[^1_10]: https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
+: https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
 
-[^1_11]: https://codezup.com/oauth-2-0-authentication-guide/
+: https://codezup.com/oauth-2-0-authentication-guide/
 
-[^1_12]: https://stackshare.io/stackups/oauth2-vs-openid-connect
+: https://stackshare.io/stackups/oauth2-vs-openid-connect
 
-[^1_13]: https://aaronparecki.com/oauth-2-simplified/
+: https://aaronparecki.com/oauth-2-simplified/
 
-[^1_14]: https://curity.io/resources/learn/oauth-client-credentials-flow/
+: https://curity.io/resources/learn/oauth-client-credentials-flow/
 
-[^1_15]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce
+: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce
 
-[^1_16]: https://developer.okta.com/blog/2019/08/22/okta-authjs-pkce
+: https://developer.okta.com/blog/2019/08/22/okta-authjs-pkce
 
-[^1_17]: https://docs.x.com/resources/fundamentals/authentication/oauth-2-0/authorization-code
+: https://docs.x.com/resources/fundamentals/authentication/oauth-2-0/authorization-code
 
-[^1_18]: https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
+: https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
 
-[^1_19]: https://fusionauth.io/blog/how-to-design-oauth-scopes
+: https://fusionauth.io/blog/how-to-design-oauth-scopes
 
-[^1_20]: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-implicit-grant-flow
+: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-implicit-grant-flow
 
-[^1_21]: https://developers.google.com/identity/protocols/oauth2/web-server
+: https://developers.google.com/identity/protocols/oauth2/web-server
 
-[^1_22]: https://www.authlete.com/developers/tutorial/oauth/
+: https://www.authlete.com/developers/tutorial/oauth/
 
-[^1_23]: https://backstage.forgerock.com/docs/am/7/oauth2-guide/oauth2-implementing-flows.html
+: https://backstage.forgerock.com/docs/am/7/oauth2-guide/oauth2-implementing-flows.html
 
-[^1_24]: https://curity.io/resources/learn/oauth-code-flow/
+: https://curity.io/resources/learn/oauth-code-flow/
 
-[^1_25]: https://springdoc.cn/spring-security-oauth2-tutorial-authorization-code-flow-with-pkce/
+: https://springdoc.cn/spring-security-oauth2-tutorial-authorization-code-flow-with-pkce/
 
-[^1_26]: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
+: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
-[^1_27]: https://docs.oracle.com/en-us/iaas/Content/Identity/api-getstarted/OATOAuthClientWebApp.htm
+: https://docs.oracle.com/en-us/iaas/Content/Identity/api-getstarted/OATOAuthClientWebApp.htm
 
-[^1_28]: https://auth0.com/intro-to-iam/what-is-oauth-2
+: https://auth0.com/intro-to-iam/what-is-oauth-2
 
-[^1_29]: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
+: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
 
-[^1_30]: https://www.sivalabs.in/spring-security-oauth2-tutorial-authorization-code-flow-with-pkce/
+: https://www.sivalabs.in/spring-security-oauth2-tutorial-authorization-code-flow-with-pkce/
 

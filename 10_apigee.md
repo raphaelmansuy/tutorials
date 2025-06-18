@@ -6,7 +6,7 @@ Picture this: It's Black Friday 2023, and you're the CTO of a major e-commerce c
 
 ### The Uncomfortable Truth About Modern Business
 
-Here's what keeps CTOs awake at night: In today's digital-first world, the average enterprise manages over 15,000 APIs [^1_1]. That's not a typo. Your business likely depends on hundreds of internal APIs, thousands of third-party integrations, and millions of API calls flowing through your systems every hour.
+Here's what keeps CTOs awake at night: In today's digital-first world, the average enterprise manages over 15,000 APIs . That's not a typo. Your business likely depends on hundreds of internal APIs, thousands of third-party integrations, and millions of API calls flowing through your systems every hour.
 
 **Think of APIs as the nervous system of your digital business** - they carry critical information between your applications, databases, and external services. Without proper management, this nervous system becomes chaotic, unreliable, and vulnerable to attacks.
 
@@ -36,21 +36,21 @@ graph TB
 
 ## What is Apigee? (The Google-Powered API Management Platform That Changed Everything)
 
-Imagine if Google's infrastructure team - the same people who handle billions of search queries daily - built an API management platform. That's exactly what Apigee is [^1_1][^1_2].
+Imagine if Google's infrastructure team - the same people who handle billions of search queries daily - built an API management platform. That's exactly what Apigee is .
 
 **Apigee is like having a sophisticated traffic control system for your APIs.** Just as a traffic control center manages thousands of vehicles, monitors traffic flow, prevents accidents, and optimizes routes, Apigee manages your API traffic, monitors performance, prevents security breaches, and optimizes data flow.
 
 ### The Three Core Pillars of Apigee
 
-**1. API Services:** The traffic control center that routes, processes, and manages all API requests [^1_15]
+**1. API Services:** The traffic control center that routes, processes, and manages all API requests 
 
-**2. Analytics Services:** The monitoring system that tracks performance, usage patterns, and identifies bottlenecks [^1_16][^1_10]
+**2. Analytics Services:** The monitoring system that tracks performance, usage patterns, and identifies bottlenecks 
 
-**3. Developer Services:** The customer service center that helps developers discover, understand, and consume your APIs [^1_13]
+**3. Developer Services:** The customer service center that helps developers discover, understand, and consume your APIs 
 
 ### Real-World Impact: The Walgreens Success Story
 
-Walgreens, America's largest pharmacy chain, transformed their mobile experience using Apigee [^1_6]. Before Apigee, their mobile app was slow, unreliable, and couldn't handle peak traffic during flu season. After implementing Apigee:
+Walgreens, America's largest pharmacy chain, transformed their mobile experience using Apigee . Before Apigee, their mobile app was slow, unreliable, and couldn't handle peak traffic during flu season. After implementing Apigee:
 
 - **40% faster prescription refills**
 - **60% reduction in mobile app crashes**
@@ -71,7 +71,7 @@ Let's start with the most fundamental concept in Apigee: the **API Proxy**.
 - Logs the conversation
 - Ensures proper etiquette
 
-Similarly, an API proxy sits between your client applications and backend services, handling translation, security, logging, and protocol management [^1_17][^1_2].
+Similarly, an API proxy sits between your client applications and backend services, handling translation, security, logging, and protocol management .
 
 ### Your First API Proxy: The "Hello World" Example
 
@@ -94,7 +94,7 @@ sequenceDiagram
 
 **Step 1: Create the Basic Proxy**
 
-1. Navigate to **Develop > API Proxies** in the Apigee console [^1_18]
+1. Navigate to **Develop > API Proxies** in the Apigee console 
 2. Click **+ Create**
 3. Select **Reverse Proxy (Most Common)**
 4. Configure these settings:
@@ -118,29 +118,29 @@ https://your-org-eval.apigee.net/weather
 
 ## Policies: The Swiss Army Knife of API Management
 
-If API proxies are the diplomatic translators, then **policies are their superpowers**. Policies allow you to add functionality to your APIs without writing a single line of code [^1_19][^1_5].
+If API proxies are the diplomatic translators, then **policies are their superpowers**. Policies allow you to add functionality to your APIs without writing a single line of code .
 
 ### The Four Types of Policies (Think: Traffic, Security, Translation, Custom)
 
-**1. Traffic Management Policies** - Like traffic lights and speed limits [^1_3][^1_4]
+**1. Traffic Management Policies** - Like traffic lights and speed limits 
 
 - **Quota:** "You can make 1000 calls per day, then you're blocked"
 - **Rate Limiting:** "Maximum 10 calls per second, please"
 - **Spike Arrest:** "Sudden traffic spike detected, smoothing it out"
 
-**2. Security Policies** - Like airport security checkpoints [^1_20][^1_21]
+**2. Security Policies** - Like airport security checkpoints 
 
 - **API Key Validation:** "Show me your credentials"
 - **OAuth:** "Prove you have permission to access this resource"
 - **Threat Protection:** "Scanning for malicious content"
 
-**3. Mediation Policies** - Like Google Translate for data formats [^1_3]
+**3. Mediation Policies** - Like Google Translate for data formats 
 
 - **JSON to XML:** Converting data formats
 - **Message Transformation:** Restructuring data
 - **Header Manipulation:** Adding or removing information
 
-**4. Extension Policies** - Like custom plugins [^1_19]
+**4. Extension Policies** - Like custom plugins 
 
 - **JavaScript:** Execute custom logic
 - **Service Callouts:** Connect to external services
@@ -301,7 +301,7 @@ curl -X GET "https://your-org.apigee.net/v1/customers/12345" \
 }
 ```
 
-**Pro Tip:** Always test your APIs with tools like Apigee's built-in trace tool [^1_12]. It shows you exactly how each policy executes and helps identify performance bottlenecks.
+**Pro Tip:** Always test your APIs with tools like Apigee's built-in trace tool . It shows you exactly how each policy executes and helps identify performance bottlenecks.
 
 ---
 
@@ -389,7 +389,7 @@ function maskCreditCard(cardNumber) {
 
 ### Real-World Security Success: AT\&T's API Strategy
 
-AT\&T implemented Apigee's security features across their telecommunications APIs, resulting in [^1_6]:
+AT\&T implemented Apigee's security features across their telecommunications APIs, resulting in :
 
 - **Zero security breaches** in 2 years of operation
 - **50% reduction** in fraudulent API calls
@@ -503,7 +503,7 @@ if (shouldInvalidateCache(lastModified)) {
 
 ## Analytics and Monitoring: Your API's Health Dashboard
 
-**Imagine flying a plane without instruments** - no altimeter, no fuel gauge, no engine temperature. That's what running APIs without proper analytics feels like [^1_16][^1_10].
+**Imagine flying a plane without instruments** - no altimeter, no fuel gauge, no engine temperature. That's what running APIs without proper analytics feels like .
 
 ### The Three Levels of API Observability
 
@@ -554,7 +554,7 @@ context.setVariable("analytics.custom_data", JSON.stringify(customData));
 
 ### Real-World Monitoring Success Story
 
-A major retailer implemented Apigee analytics and discovered that their mobile app API was 300% slower during lunch hours. Investigation revealed that their recommendation engine was making unnecessary database calls. After optimization [^1_22]:
+A major retailer implemented Apigee analytics and discovered that their mobile app API was 300% slower during lunch hours. Investigation revealed that their recommendation engine was making unnecessary database calls. After optimization :
 
 - **70% reduction in response time**
 - **40% increase in mobile conversions**
@@ -564,7 +564,7 @@ A major retailer implemented Apigee analytics and discovered that their mobile a
 
 ### Debugging with Apigee's Trace Tool
 
-The trace tool is like having X-ray vision for your APIs [^1_12]. Here's how to use it effectively:
+The trace tool is like having X-ray vision for your APIs . Here's how to use it effectively:
 
 ```javascript
 // Adding debug information to your policies
@@ -649,7 +649,7 @@ if (customerTier === "premium" || orderValue > 1000) {
 
 ### Application Integration with Google Cloud
 
-Modern API management isn't just about proxying requests - it's about orchestrating complex business processes [^1_14]. Here's how Apigee integrates with Application Integration:
+Modern API management isn't just about proxying requests - it's about orchestrating complex business processes . Here's how Apigee integrates with Application Integration:
 
 ```javascript
 // Trigger complex integration flow
@@ -674,7 +674,7 @@ Let's examine how industry leaders leverage Apigee to solve complex business cha
 
 ### Case Study 1: Walgreens - Transforming Healthcare APIs
 
-**The Challenge:** Walgreens needed to modernize their prescription system, integrate with insurance providers, and provide real-time health data to millions of customers [^1_6].
+**The Challenge:** Walgreens needed to modernize their prescription system, integrate with insurance providers, and provide real-time health data to millions of customers .
 
 **The Solution:**
 
@@ -708,7 +708,7 @@ function maskHealthData(patientData) {
 
 ### Case Study 2: eBay - Scaling Marketplace APIs
 
-**The Challenge:** Handle millions of API calls for listings, searches, payments, and seller tools across global markets [^1_6].
+**The Challenge:** Handle millions of API calls for listings, searches, payments, and seller tools across global markets .
 
 **The Solution:**
 
@@ -775,7 +775,7 @@ if (fraudScore > 0.8) {
 
 ## Performance Optimization: Making Your APIs Lightning Fast
 
-**Speed is the ultimate feature.** Users abandon apps that take more than 3 seconds to load, and every 100ms delay can cost you 1% of revenue [^1_9].
+**Speed is the ultimate feature.** Users abandon apps that take more than 3 seconds to load, and every 100ms delay can cost you 1% of revenue .
 
 ### The Performance Optimization Hierarchy
 
@@ -1214,7 +1214,7 @@ graph LR
 
 - Complete the 24-hour challenge
 - Build 2-3 additional practice APIs
-- Explore Apigee's developer documentation [^1_17]
+- Explore Apigee's developer documentation 
 
 **Month 1: Deepen Your Skills**
 
@@ -1241,13 +1241,13 @@ Choose your focus area:
 
 **Official Resources:**
 
-- Google Cloud Apigee Documentation [^1_1][^1_2]
+- Google Cloud Apigee Documentation 
 - Apigee Community Forum
-- Google Cloud Training Courses [^1_23]
+- Google Cloud Training Courses 
 
 **Hands-On Practice:**
 
-- GitHub API Platform Samples [^1_24]
+- GitHub API Platform Samples 
 - Build integrations with popular services (Salesforce, Stripe, etc.)
 - Contribute to open-source API projects
 
@@ -1315,83 +1315,83 @@ The same is true for your Apigee journey. The best time to become an API expert 
 
 <div style="text-align: center">⁂</div>
 
-[^1_1]: https://cloud.google.com/apigee
+: https://cloud.google.com/apigee
 
-[^1_2]: https://cloud.google.com/apigee/docs/api-platform/get-started/what-apigee
+: https://cloud.google.com/apigee/docs/api-platform/get-started/what-apigee
 
-[^1_3]: https://docs.apigee.com/api-platform/reference/policies/reference-overview-policy
+: https://docs.apigee.com/api-platform/reference/policies/reference-overview-policy
 
-[^1_4]: https://cloud.google.com/apigee/docs/api-platform/reference/policies/reference-overview-policy
+: https://cloud.google.com/apigee/docs/api-platform/reference/policies/reference-overview-policy
 
-[^1_5]: https://cloud.google.com/apigee/docs/api-platform/develop/policy-attachment-and-enforcement
+: https://cloud.google.com/apigee/docs/api-platform/develop/policy-attachment-and-enforcement
 
-[^1_6]: https://moldstud.com/articles/p-what-are-some-real-world-examples-of-companies-using-apigee-for-api-management
+: https://moldstud.com/articles/p-what-are-some-real-world-examples-of-companies-using-apigee-for-api-management
 
-[^1_7]: https://docs.apigee.com/api-platform/publish/portal/portal-best-practices
+: https://docs.apigee.com/api-platform/publish/portal/portal-best-practices
 
-[^1_8]: https://www.expertia.ai/career-tips/common-mistakes-to-avoid-for-a-successful-career-as-an-apigee-consultant-15121v
+: https://www.expertia.ai/career-tips/common-mistakes-to-avoid-for-a-successful-career-as-an-apigee-consultant-15121v
 
-[^1_9]: https://moldstud.com/articles/p-optimizing-performance-in-apigee-tips-and-best-practices
+: https://moldstud.com/articles/p-optimizing-performance-in-apigee-tips-and-best-practices
 
-[^1_10]: https://cloud.google.com/apigee/docs/api-monitoring/compare
+: https://cloud.google.com/apigee/docs/api-monitoring/compare
 
-[^1_11]: https://cloud.google.com/apigee/docs/api-platform/get-started/understand-apigee-observability
+: https://cloud.google.com/apigee/docs/api-platform/get-started/understand-apigee-observability
 
-[^1_12]: https://cloud.google.com/apigee/docs/api-platform/debug/trace-overview
+: https://cloud.google.com/apigee/docs/api-platform/debug/trace-overview
 
-[^1_13]: https://cloud.google.com/blog/products/api-management/improving-developer-experience-with-enhanced-apigee-developer-portal
+: https://cloud.google.com/blog/products/api-management/improving-developer-experience-with-enhanced-apigee-developer-portal
 
-[^1_14]: https://www.googlecloudcommunity.com/gc/Cloud-Product-Articles/Application-Integration-and-Apigee-A-Powerful-Synergy-for/ta-p/847616
+: https://www.googlecloudcommunity.com/gc/Cloud-Product-Articles/Application-Integration-and-Apigee-A-Powerful-Synergy-for/ta-p/847616
 
-[^1_15]: https://www.youtube.com/watch?v=aHVFon44sCw
+: https://www.youtube.com/watch?v=aHVFon44sCw
 
-[^1_16]: https://docs.apigee.com/api-platform/analytics/analytics-services-overview
+: https://docs.apigee.com/api-platform/analytics/analytics-services-overview
 
-[^1_17]: https://docs.apigee.com
+: https://docs.apigee.com
 
-[^1_18]: https://cloud.google.com/apigee/docs/api-platform/get-started/create-proxy
+: https://cloud.google.com/apigee/docs/api-platform/get-started/create-proxy
 
-[^1_19]: https://docs.apigee.com/api-platform/develop/policy-attachment-and-enforcement
+: https://docs.apigee.com/api-platform/develop/policy-attachment-and-enforcement
 
-[^1_20]: https://www.googlecloudcommunity.com/gc/Cloud-Product-Articles/How-to-Automatically-Flag-and-Block-Suspicious-API-Traffic-with/ta-p/842645
+: https://www.googlecloudcommunity.com/gc/Cloud-Product-Articles/How-to-Automatically-Flag-and-Block-Suspicious-API-Traffic-with/ta-p/842645
 
-[^1_21]: https://www.youtube.com/watch?v=IrdK1Yklq-M
+: https://www.youtube.com/watch?v=IrdK1Yklq-M
 
-[^1_22]: https://moldstud.com/articles/p-successful-apigee-monitoring-implementations-real-world-examples
+: https://moldstud.com/articles/p-successful-apigee-monitoring-implementations-real-world-examples
 
-[^1_23]: https://cloud.google.com/learn/training/api-management
+: https://cloud.google.com/learn/training/api-management
 
-[^1_24]: https://github.com/apigee/api-platform-samples
+: https://github.com/apigee/api-platform-samples
 
-[^1_25]: https://www.youtube.com/watch?v=kpyo_CYzzUY
+: https://www.youtube.com/watch?v=kpyo_CYzzUY
 
-[^1_26]: https://redocly.com/docs-legacy/developer-portal/guides/apigee-integration-portal/setup-apigee-proxy
+: https://redocly.com/docs-legacy/developer-portal/guides/apigee-integration-portal/setup-apigee-proxy
 
-[^1_27]: https://hkrtrainings.com/apigee-tutorial
+: https://hkrtrainings.com/apigee-tutorial
 
-[^1_28]: https://expertbeacon.com/a-comprehensive-guide-to-apigee-policies-for-api-management/
+: https://expertbeacon.com/a-comprehensive-guide-to-apigee-policies-for-api-management/
 
-[^1_29]: https://docs.apigee.com/api-platform/samples/samples-reference
+: https://docs.apigee.com/api-platform/samples/samples-reference
 
-[^1_30]: https://apipark.com/techblog/en/10-real-world-examples-of-graphql-in-action/
+: https://apipark.com/techblog/en/10-real-world-examples-of-graphql-in-action/
 
-[^1_31]: https://cloud.google.com/apigee/docs/api-platform/analytics/analytics-services-overview
+: https://cloud.google.com/apigee/docs/api-platform/analytics/analytics-services-overview
 
-[^1_32]: https://www.youtube.com/watch?v=YOU_C0gJY5I
+: https://www.youtube.com/watch?v=YOU_C0gJY5I
 
-[^1_33]: https://www.youtube.com/watch?v=jlQBy7mivp4
+: https://www.youtube.com/watch?v=jlQBy7mivp4
 
-[^1_34]: https://apidocs.apigee.com
+: https://apidocs.apigee.com
 
-[^1_35]: https://www.youtube.com/watch?v=mwcAjZXZrjg
+: https://www.youtube.com/watch?v=mwcAjZXZrjg
 
-[^1_36]: https://github.com/apigee/apigee-partner-se-bootcamp/blob/master/labs/API Services Lesson 3 - Adding Resources and Policies/README.md
+: https://github.com/apigee/apigee-partner-se-bootcamp/blob/master/labs/API Services Lesson 3 - Adding Resources and Policies/README.md
 
-[^1_37]: https://cloud.google.com/blog/products/api-management/top-apigee-customer-stories-of-2018
+: https://cloud.google.com/blog/products/api-management/top-apigee-customer-stories-of-2018
 
-[^1_38]: https://roshancloudarchitect.me/api-gateway-strategies-for-microservices-comparing-apigee-apim-and-kong-in-real-world-scenarios-19cbd2690383
+: https://roshancloudarchitect.me/api-gateway-strategies-for-microservices-comparing-apigee-apim-and-kong-in-real-world-scenarios-19cbd2690383
 
-[^1_39]: https://www.featuredcustomers.com/vendor/apigee/case-studies
+: https://www.featuredcustomers.com/vendor/apigee/case-studies
 
-[^1_40]: https://www.cloudskillsboost.google/paths/27/course_templates/169/video/419572?locale=zh_TW
+: https://www.cloudskillsboost.google/paths/27/course_templates/169/video/419572?locale=zh_TW
 

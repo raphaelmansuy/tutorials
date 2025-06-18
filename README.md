@@ -28,7 +28,7 @@ Start here if you're new to cloud computing:
 ### 🚀 **Intermediate**
 If you have some cloud experience:
 1. [GCP Crash Course for AWS Users](#-cloud-platforms--migration)
-2. [Deploy Next.js Applications to GCP](#-application-deployment)
+2. [Deploy Applications to Cloud Platforms](#-application-deployment--saas-development)
 3. [Advanced Storage Solutions](#-storage--data-management)
 4. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
 
@@ -120,15 +120,18 @@ Comprehensive guides for mastering Google Cloud Platform, especially for AWS pro
 
 ---
 
-### 🚀 **Application Deployment**
+### 🚀 **Application Deployment & SaaS Development**
 
-Master modern deployment strategies for web applications on Google Cloud Platform.
+Master modern deployment strategies and build production-ready SaaS platforms with enterprise-grade architecture.
 
 | Tutorial | Level | Duration | Language | Description |
 |----------|-------|----------|----------|-------------|
 | [📖 Deploy Next.js to GCP: From Novice to Practitioner](./06_deploy_nextjs_to_gcp.md) | Beginner to Advanced | 3-4 hours | English | Complete guide to deploying Next.js applications on GCP with professional-grade practices |
+| [📖 AWS ECS Fargate SaaS Development: Complete Masterclass](./14_developing_a_saas_using_aws_and_ecs_fargate.md) | Intermediate to Advanced | 24 hours | English | Build production-ready SaaS platforms using AWS ECS Fargate, CDK TypeScript, and microservices architecture |
 
 **What you'll learn:**
+
+#### Next.js Deployment (GCP Focus)
 
 - **Multiple deployment strategies** (Firebase Hosting, Cloud Run, Compute Engine)
 - **Docker containerization** with multi-stage builds for optimization
@@ -139,12 +142,27 @@ Master modern deployment strategies for web applications on Google Cloud Platfor
 - **Enterprise deployment** patterns
 - **Troubleshooting and debugging** techniques
 
+#### SaaS Development (AWS Focus)
+
+- **Microservices architecture** with 4 core services (Auth, User Management, Payment, Notifications)
+- **AWS ECS Fargate** containerization and serverless compute
+- **CDK (Cloud Development Kit) with TypeScript** for Infrastructure as Code
+- **Production-ready patterns** for security, monitoring, and reliability
+- **Auto-scaling capabilities** handling traffic from 10 to 100,000+ users
+- **Multi-database strategy** (PostgreSQL, DynamoDB, Redis, ElastiCache)
+- **Advanced CI/CD pipelines** with CodePipeline and blue-green deployments
+- **Custom CDK constructs** for reusable infrastructure components
+- **Cost optimization** strategies saving thousands monthly
+- **Enterprise features** including WAF, multi-region deployments, and observability
+
 **Key Features:**
 
-- From 5-minute static deployments to enterprise-grade systems
+- From 5-minute static deployments to enterprise-grade SaaS systems
 - Real-world examples and production-ready configurations
 - Interactive exercises and hands-on challenges
 - Comprehensive troubleshooting guides
+- **24-hour challenge** to build complete SaaS platform
+- Business impact focus with ROI calculations
 
 ---
 
@@ -334,7 +352,13 @@ Strategic migration guides and infrastructure transformation patterns.
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management
 ```
 
-### Path 10: Cloud Migration & Infrastructure
+### Path 10: SaaS Development & Enterprise Architecture
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. AWS ECS Fargate SaaS Development → 5. HAProxy to AWS Migration
+```
+
+### Path 11: Cloud Migration & Infrastructure
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. HAProxy to AWS Migration → 4. Apigee API Management
@@ -355,8 +379,9 @@ Strategic migration guides and infrastructure transformation patterns.
 - Text editor or IDE
 
 ### **Cloud Accounts Needed**
+
 - **Google Cloud Platform** account (free tier available)
-- **AWS** account (for Kubernetes and HAProxy migration tutorials, free tier available)
+- **AWS** account (for Kubernetes, SaaS development, and HAProxy migration tutorials, free tier available)
 
 ---
 
@@ -375,6 +400,7 @@ Strategic migration guides and infrastructure transformation patterns.
 | Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
 | OAuth2 Authentication | $0-5 USD | ✅ Most examples use free services |
 | OpenID Connect (OIDC) | $0-5 USD | ✅ Free identity providers available |
+| AWS ECS Fargate SaaS Development | $15-50 USD | ⚠️ Multiple AWS services, 24-hour comprehensive project |
 | HAProxy to AWS Migration | $10-25 USD | ⚠️ AWS services usage, cleanup after tutorial |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
@@ -424,6 +450,7 @@ Track your progress through the training:
 - [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutions
 - [ ] ☁️ **Cloud Professional** - Completed GCP crash course
 - [ ] 🚀 **Deployment Expert** - Mastered Next.js deployment strategies on GCP
+- [ ] 🏢 **SaaS Architect** - Built complete production-ready SaaS platform with AWS ECS Fargate and CDK
 - [ ] 🤖 **ML Engineer** - Built end-to-end ML pipeline with Vertex AI
 - [ ] 🧠 **AI Agent Developer** - Created intelligent AI agents with Google ADK and Gemini
 - [ ] 🏗️ **Data Platform Engineer** - Mastered Tower.dev for data engineering

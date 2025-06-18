@@ -6,7 +6,7 @@
 
 Picture this: It's 3 AM, and your phone is buzzing with alerts. Your HAProxy server—the one you've lovingly configured and maintained for years—is struggling under an unexpected traffic spike. You're scrambling to scale up, configure new backend servers, and update DNS records while your application users are experiencing timeouts.
 
-Now imagine a different scenario: It's the same 3 AM spike, but this time, AWS Application Load Balancer automatically scales to handle the traffic, your Auto Scaling Groups spin up new instances based on demand, and you sleep peacefully through the night[^1_1].
+Now imagine a different scenario: It's the same 3 AM spike, but this time, AWS Application Load Balancer automatically scales to handle the traffic, your Auto Scaling Groups spin up new instances based on demand, and you sleep peacefully through the night.
 
 This is the fundamental difference between managing your own load balancing infrastructure and leveraging AWS managed services. It's not just about technology—it's about transforming how you think about infrastructure, reliability, and operational excellence.
 
@@ -14,20 +14,20 @@ This is the fundamental difference between managing your own load balancing infr
 
 The answer lies in three compelling benefits that I've witnessed across hundreds of successful migrations:
 
-1. **Operational Efficiency**: No more 3 AM wake-up calls for infrastructure issues[^1_2]
-2. **Automatic Scalability**: Handle traffic spikes without manual intervention[^1_1]
-3. **Cost Optimization**: Pay only for what you use, not what you provision[^1_3]
+1. **Operational Efficiency**: No more 3 AM wake-up calls for infrastructure issues
+2. **Automatic Scalability**: Handle traffic spikes without manual intervention
+3. **Cost Optimization**: Pay only for what you use, not what you provision
 
 ### The Netflix Analogy: From DVD to Streaming
 
-Think of this migration like Netflix's transformation from DVD-by-mail to streaming. Netflix didn't just digitize their DVD catalog—they completely reimagined how content delivery should work. They built a global content delivery network, implemented intelligent caching, and created personalized recommendation engines[^1_4].
+Think of this migration like Netflix's transformation from DVD-by-mail to streaming. Netflix didn't just digitize their DVD catalog—they completely reimagined how content delivery should work. They built a global content delivery network, implemented intelligent caching, and created personalized recommendation engines.
 
 Similarly, migrating from HAProxy to AWS isn't just about replacing one load balancer with another. It's about embracing a cloud-native approach that includes:
 
-- **Intelligent routing** with AWS ALB's content-based routing[^1_5]
-- **Global performance** with CloudFront's edge locations[^1_4]
-- **API-first architecture** with API Gateway's comprehensive features[^1_6]
-- **Ultra-low latency** with Network Load Balancer's Layer 4 optimization[^1_7]
+- **Intelligent routing** with AWS ALB's content-based routing
+- **Global performance** with CloudFront's edge locations
+- **API-first architecture** with API Gateway's comprehensive features
+- **Ultra-low latency** with Network Load Balancer's Layer 4 optimization
 
 **Pause and Reflect**: Before we dive deeper, think about your current HAProxy setup. What challenges are you facing? Traffic spikes? Maintenance overhead? Geographic distribution? Keep these pain points in mind as we explore solutions.
 
@@ -35,10 +35,10 @@ Similarly, migrating from HAProxy to AWS isn't just about replacing one load bal
 
 By the end of this article, you'll have:
 
-- **Assessment Framework**: A systematic approach to evaluate your current HAProxy configuration[^1_1]
-- **Migration Strategy**: Step-by-step processes for different migration scenarios[^1_1]
-- **Cost Optimization**: Techniques to reduce infrastructure costs by up to 40%[^1_3]
-- **Performance Tuning**: Methods to improve application response times and reliability[^1_7]
+- **Assessment Framework**: A systematic approach to evaluate your current HAProxy configuration
+- **Migration Strategy**: Step-by-step processes for different migration scenarios
+- **Cost Optimization**: Techniques to reduce infrastructure costs by up to 40%
+- **Performance Tuning**: Methods to improve application response times and reliability
 - **Practical Examples**: Five real-world migration scenarios with detailed implementations
 
 **Pro Tip**: The most successful migrations I've guided follow the "Example-First" principle. Instead of starting with theory, we'll dive into practical scenarios that you can immediately relate to your environment.
@@ -70,9 +70,9 @@ mindmap
 
 ### HAProxy: The Foundation You're Building On
 
-HAProxy has been the backbone of internet infrastructure for decades, and for good reason. It's like the reliable Toyota Camry of load balancers—not flashy, but incredibly dependable and efficient[^1_8][^1_9].
+HAProxy has been the backbone of internet infrastructure for decades, and for good reason. It's like the reliable Toyota Camry of load balancers—not flashy, but incredibly dependable and efficient.
 
-Let me share a story that illustrates HAProxy's strengths: I once worked with a e-commerce company that processed millions of transactions during Black Friday using a single HAProxy instance handling 100,000+ concurrent connections[^1_8]. The configuration was elegant in its simplicity:
+Let me share a story that illustrates HAProxy's strengths: I once worked with a e-commerce company that processed millions of transactions during Black Friday using a single HAProxy instance handling 100,000+ concurrent connections. The configuration was elegant in its simplicity:
 
 ```haproxy
 global
@@ -102,10 +102,10 @@ backend web_servers
 
 This configuration demonstrates HAProxy's core strengths:
 
-1. **High Performance**: Event-driven architecture handles massive concurrent connections[^1_8]
-2. **SSL Termination**: Offloads encryption/decryption from backend servers[^1_10]
-3. **Health Checking**: Automatically removes failed servers from rotation[^1_11]
-4. **Session Persistence**: Maintains user sessions across requests[^1_12]
+1. **High Performance**: Event-driven architecture handles massive concurrent connections
+2. **SSL Termination**: Offloads encryption/decryption from backend servers
+3. **Health Checking**: Automatically removes failed servers from rotation
+4. **Session Persistence**: Maintains user sessions across requests
 
 ### Common HAProxy Scenarios: The Patterns You Know
 
@@ -120,7 +120,7 @@ backend web_tier
     server app2 192.168.1.11:8080 check
 ```
 
-**AWS Equivalent**: Application Load Balancer with target groups[^1_13]
+**AWS Equivalent**: Application Load Balancer with target groups
 
 #### Pattern 2: SSL Termination with Backend Encryption
 
@@ -133,7 +133,7 @@ backend secure_backend
     server app1 192.168.1.10:8443 ssl check
 ```
 
-**AWS Equivalent**: ALB with ACM certificates and end-to-end encryption[^1_14]
+**AWS Equivalent**: ALB with ACM certificates and end-to-end encryption
 
 #### Pattern 3: Content-Based Routing
 
@@ -146,7 +146,7 @@ frontend main
     default_backend web_servers
 ```
 
-**AWS Equivalent**: ALB with path-based routing rules[^1_5]
+**AWS Equivalent**: ALB with path-based routing rules
 
 #### Pattern 4: TCP Load Balancing
 
@@ -159,7 +159,7 @@ listen mysql_cluster
     server db2 10.0.2.11:3306 check
 ```
 
-**AWS Equivalent**: Network Load Balancer for TCP traffic[^1_7]
+**AWS Equivalent**: Network Load Balancer for TCP traffic
 
 **Quick Quiz**: Which HAProxy pattern matches your current primary use case? Understanding this will help you choose the right AWS service for migration.
 
@@ -201,11 +201,11 @@ tail -n 1000 /var/log/haproxy.log | awk '{print $6}' | sort | uniq -c | sort -nr
 
 **Features In Use**:
 
-- SSL/TLS termination configurations[^1_10]
-- Load balancing algorithms (roundrobin, leastconn, etc.)[^1_15]
-- Health check mechanisms[^1_11]
-- Session persistence methods[^1_12]
-- ACL rules and content routing[^1_15]
+- SSL/TLS termination configurations
+- Load balancing algorithms (roundrobin, leastconn, etc.)
+- Health check mechanisms
+- Session persistence methods
+- ACL rules and content routing
 
 **Configuration Audit Checklist**:
 
@@ -272,7 +272,7 @@ This assessment framework provides the foundation for your migration strategy. W
 
 ### AWS ALB: The Application Whisperer
 
-Application Load Balancer is like having a multilingual translator at a international conference—it understands the nuances of HTTP/HTTPS traffic and can make intelligent routing decisions based on content[^1_14][^1_13].
+Application Load Balancer is like having a multilingual translator at a international conference—it understands the nuances of HTTP/HTTPS traffic and can make intelligent routing decisions based on content.
 
 Let me tell you about a fintech startup I helped migrate. They had a complex HAProxy setup routing different API versions to different backend services. With HAProxy, they needed intricate ACL rules:
 
@@ -289,7 +289,7 @@ use_backend mobile_v2 if is_v2_api is_mobile
 use_backend web_v2 if is_v2_api is_web
 ```
 
-With AWS ALB, this became elegantly simple through the AWS console interface, with visual rule builders and no complex syntax to maintain[^1_5].
+With AWS ALB, this became elegantly simple through the AWS console interface, with visual rule builders and no complex syntax to maintain.
 
 #### ALB's Superpowers
 
@@ -307,21 +307,21 @@ Unlike HAProxy's basic health checks, ALB provides:
 - Custom health check paths
 - Adjustable intervals and timeouts
 - Detailed health check metrics
-- Integration with CloudWatch alarms[^1_16]
+- Integration with CloudWatch alarms
 
 **3. Native AWS Integration**
 
 - Auto Scaling Groups integration
 - ECS/EKS container support
 - Lambda function targets
-- ACM certificate management[^1_14]
+- ACM certificate management
 
 **4. Advanced Load Balancing Features**
 
-- Automatic Target Weights (ATW) for better traffic distribution[^1_14]
+- Automatic Target Weights (ATW) for better traffic distribution
 - WebSocket and HTTP/2 support
 - Server Name Indication (SNI) for multiple SSL certificates
-- Sticky sessions without custom configuration[^1_14]
+- Sticky sessions without custom configuration
 
 
 #### ALB Migration Example: E-commerce Platform
@@ -433,7 +433,7 @@ Resources:
 
 ### AWS NLB: The Speed Demon
 
-Network Load Balancer is like a Formula 1 race car—built for pure speed and performance at Layer 4[^1_7][^1_17]. If your HAProxy is primarily handling TCP traffic or you need ultra-low latency, NLB is your migration target.
+Network Load Balancer is like a Formula 1 race car—built for pure speed and performance at Layer 4. If your HAProxy is primarily handling TCP traffic or you need ultra-low latency, NLB is your migration target.
 
 I remember working with a gaming company that needed to migrate their HAProxy setup handling millions of concurrent TCP connections for their multiplayer game servers. The requirements were unforgiving:
 
@@ -461,13 +461,13 @@ listen game_servers
 
 #### NLB's Performance Advantages
 
-**Ultra-Low Latency**: NLB operates at Layer 4, adding minimal processing overhead (~100ms vs 400ms for ALB)[^1_7]
+**Ultra-Low Latency**: NLB operates at Layer 4, adding minimal processing overhead (~100ms vs 400ms for ALB)
 
-**Massive Scale**: Capable of handling millions of requests per second while maintaining consistent performance[^1_7]
+**Massive Scale**: Capable of handling millions of requests per second while maintaining consistent performance
 
-**Static IP Addresses**: Each Availability Zone gets a static IP, perfect for firewall whitelisting[^1_7]
+**Static IP Addresses**: Each Availability Zone gets a static IP, perfect for firewall whitelisting
 
-**Source IP Preservation**: Backend servers see the original client IP without additional configuration[^1_17]
+**Source IP Preservation**: Backend servers see the original client IP without additional configuration
 
 #### Gaming Platform Migration Example
 
@@ -512,13 +512,13 @@ Resources:
 - **Automatic failover** in under 10 seconds
 - **50% reduction** in infrastructure costs
 
-**Pro Tip**: NLB's flow hash algorithm ensures that connections from the same client consistently reach the same backend server, which is crucial for stateful applications like games or database connections[^1_7].
+**Pro Tip**: NLB's flow hash algorithm ensures that connections from the same client consistently reach the same backend server, which is crucial for stateful applications like games or database connections.
 
 **Quick Quiz**: Does your application need to preserve client IP addresses? If yes, NLB might be your optimal choice over ALB.
 
 ### AWS API Gateway: The Intelligent Router
 
-API Gateway is like having a sophisticated API management platform built into your load balancer[^1_6]. If your HAProxy is primarily routing API traffic, API Gateway offers features that would require significant custom development with HAProxy.
+API Gateway is like having a sophisticated API management platform built into your load balancer. If your HAProxy is primarily routing API traffic, API Gateway offers features that would require significant custom development with HAProxy.
 
 Let me share a transformation story: A SaaS company was using HAProxy to route API requests to different microservices. They had built custom rate limiting, authentication, and caching mechanisms:
 
@@ -542,27 +542,27 @@ This worked, but required constant maintenance and custom logic. With API Gatewa
 
 #### API Gateway's Advanced Features
 
-**Built-in Rate Limiting and Throttling**[^1_6]:
+**Built-in Rate Limiting and Throttling**:
 
 - Per-client rate limiting
 - Burst handling
 - Different limits for different API methods
 
-**Comprehensive Authentication**[^1_6]:
+**Comprehensive Authentication**:
 
 - AWS IAM integration
 - API Keys management
 - Lambda authorizers for custom authentication
 - Cognito User Pools integration
 
-**Request/Response Transformation**[^1_6]:
+**Request/Response Transformation**:
 
 - Body mapping templates
 - Header manipulation
 - Query parameter transformation
 - Request validation
 
-**Caching and Performance**[^1_6]:
+**Caching and Performance**:
 
 - Built-in caching layer
 - TTL configuration per endpoint
@@ -666,11 +666,11 @@ Resources:
 - **API analytics** provided detailed usage insights
 - **Developer portal** for API documentation
 
-**Cost Consideration**: API Gateway is more expensive per request than ALB, but provides significantly more features[^1_3]. For high-traffic, simple routing scenarios, ALB might be more cost-effective. For complex API management needs, API Gateway's feature set justifies the cost.
+**Cost Consideration**: API Gateway is more expensive per request than ALB, but provides significantly more features. For high-traffic, simple routing scenarios, ALB might be more cost-effective. For complex API management needs, API Gateway's feature set justifies the cost.
 
 ### AWS CloudFront: The Global Accelerator
 
-CloudFront is like having a network of local stores worldwide instead of shipping everything from a single warehouse[^1_4]. If your HAProxy setup includes static content delivery or you're serving global users, CloudFront can dramatically improve performance.
+CloudFront is like having a network of local stores worldwide instead of shipping everything from a single warehouse. If your HAProxy setup includes static content delivery or you're serving global users, CloudFront can dramatically improve performance.
 
 I worked with a media company that was using HAProxy to serve video content globally. Their users in Asia were experiencing 3-4 second load times for video thumbnails, while US users saw sub-second loads. They had tried adding HAProxy instances in different regions, but the operational complexity was overwhelming.
 
@@ -700,13 +700,13 @@ backend cdn_servers
 
 #### CloudFront's Global Performance Features
 
-**Edge Locations**: 400+ edge locations worldwide for content caching[^1_4]
+**Edge Locations**: 400+ edge locations worldwide for content caching
 
-**Dynamic Content Acceleration**: Optimizes delivery of dynamic content through AWS's global network[^1_4]
+**Dynamic Content Acceleration**: Optimizes delivery of dynamic content through AWS's global network
 
-**Security Integration**: Built-in DDoS protection with AWS Shield and WAF integration[^1_4]
+**Security Integration**: Built-in DDoS protection with AWS Shield and WAF integration
 
-**Advanced Caching**: Sophisticated caching rules based on headers, query parameters, and cookies[^1_4]
+**Advanced Caching**: Sophisticated caching rules based on headers, query parameters, and cookies
 
 #### Media Platform Migration Example
 
@@ -774,7 +774,7 @@ Resources:
 
 ### The 4-Phase Migration Model
 
-After guiding hundreds of migrations, I've developed a proven 4-phase model that minimizes risk while maximizing success. Think of it like renovating a house while living in it—you need to maintain functionality while systematically upgrading each component[^1_1].
+After guiding hundreds of migrations, I've developed a proven 4-phase model that minimizes risk while maximizing success. Think of it like renovating a house while living in it—you need to maintain functionality while systematically upgrading each component.
 
 ```mermaid
 flowchart TD
@@ -1435,7 +1435,7 @@ aws cloudformation wait stack-create-complete \
 # Get the target group ARN
 TARGET_GROUP_ARN=$(aws cloudformation describe-stacks \
     --stack-name techstart-migration \
-    --query 'Stacks[^1_0].Outputs[?OutputKey==`TargetGroupArn`].OutputValue' \
+    --query 'Stacks.Outputs[?OutputKey==`TargetGroupArn`].OutputValue' \
     --output text)
 
 # Register existing backend servers
@@ -2050,8 +2050,8 @@ def lambda_handler(event, context):
     This runs at CloudFront edge locations
     """
     
-    request = event['Records'][^1_0]['cf']['request']
-    response = event['Records'][^1_0]['cf']['response']
+    request = event['Records']['cf']['request']
+    response = event['Records']['cf']['response']
     headers = response['headers']
     
     # Add security headers (PCI compliance)
@@ -3197,105 +3197,105 @@ This API service migration example shows how AWS managed services can replace co
 
 <div style="text-align: center">⁂</div>
 
-[^1_1]: https://aws.amazon.com/blogs/networking-and-content-delivery/load-balancer-migration-to-aws-recommended-strategies-and-best-practices/
+: https://aws.amazon.com/blogs/networking-and-content-delivery/load-balancer-migration-to-aws-recommended-strategies-and-best-practices/
 
-[^1_2]: https://www.cloudtechtiq.com/blog/what-are-benefits-aws-managed-services
+: https://www.cloudtechtiq.com/blog/what-are-benefits-aws-managed-services
 
-[^1_3]: https://undercodetesting.com/aws-alb-vs-api-gateway-cost-analysis-for-high-throughput-and-large-payloads/
+: https://undercodetesting.com/aws-alb-vs-api-gateway-cost-analysis-for-high-throughput-and-large-payloads/
 
-[^1_4]: https://www.flexsin.com/blog/harness-amazon-cloudfront-cdns-features-for-dynamic-content-delivery/
+: https://www.flexsin.com/blog/harness-amazon-cloudfront-cdns-features-for-dynamic-content-delivery/
 
-[^1_5]: https://www.cloudoptimo.com/blog/what-you-need-to-know-about-aws-application-load-balancer/
+: https://www.cloudoptimo.com/blog/what-you-need-to-know-about-aws-application-load-balancer/
 
-[^1_6]: https://digitalcloud.training/amazon-api-gateway/
+: https://digitalcloud.training/amazon-api-gateway/
 
-[^1_7]: https://jayendrapatil.com/aws-elb-network-load-balancer/
+: https://jayendrapatil.com/aws-elb-network-load-balancer/
 
-[^1_8]: https://www.masterdc.com/haproxy-load-balancing/
+: https://www.masterdc.com/haproxy-load-balancing/
 
-[^1_9]: https://www.haproxy.com/blog/what-is-load-balancing
+: https://www.haproxy.com/blog/what-is-load-balancing
 
-[^1_10]: https://www.ssldragon.com/blog/haproxy-ssl-termination/
+: https://www.ssldragon.com/blog/haproxy-ssl-termination/
 
-[^1_11]: https://www.digitalocean.com/community/tutorials/an-introduction-to-haproxy-and-load-balancing-concepts
+: https://www.digitalocean.com/community/tutorials/an-introduction-to-haproxy-and-load-balancing-concepts
 
-[^1_12]: https://drdroid.io/stack-diagnosis/haproxy-sticky-sessions-not-working
+: https://drdroid.io/stack-diagnosis/haproxy-sticky-sessions-not-working
 
-[^1_13]: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
+: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
 
-[^1_14]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer/
+: https://aws.amazon.com/elasticloadbalancing/application-load-balancer/
 
-[^1_15]: https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers
+: https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers
 
-[^1_16]: https://www.bitslovers.com/aws-application-load-balancer/
+: https://www.bitslovers.com/aws-application-load-balancer/
 
-[^1_17]: https://aws.amazon.com/elasticloadbalancing/network-load-balancer/
+: https://aws.amazon.com/elasticloadbalancing/network-load-balancer/
 
-[^1_18]: https://convesio.com/knowledgebase/article/the-ultimate-guide-to-haproxy-load-balancer/
+: https://convesio.com/knowledgebase/article/the-ultimate-guide-to-haproxy-load-balancer/
 
-[^1_19]: https://infohub.delltechnologies.com/l/ecs-with-haproxy-load-balancer-2/haproxy-configuration-for-single-setup/
+: https://infohub.delltechnologies.com/l/ecs-with-haproxy-load-balancer-2/haproxy-configuration-for-single-setup/
 
-[^1_20]: https://docs.percona.com/percona-operator-for-mysql/ps/haproxy-conf.html
+: https://docs.percona.com/percona-operator-for-mysql/ps/haproxy-conf.html
 
-[^1_21]: https://kemptechnologies.com/cloud-load-balancer/aws/application-load-balancer-feature-guide
+: https://kemptechnologies.com/cloud-load-balancer/aws/application-load-balancer-feature-guide
 
-[^1_22]: https://www.reddit.com/r/aws/comments/eb0i72/replace_alb_with_ec2_haproxy_and/
+: https://www.reddit.com/r/aws/comments/eb0i72/replace_alb_with_ec2_haproxy_and/
 
-[^1_23]: https://www.haproxy.com/blog/haproxy-amazon-aws-best-practices-part-1
+: https://www.haproxy.com/blog/haproxy-amazon-aws-best-practices-part-1
 
-[^1_24]: https://stackoverflow.com/questions/67244375/haproxy-vs-alb-or-any-other-load-balancer-which-one-to-use
+: https://stackoverflow.com/questions/67244375/haproxy-vs-alb-or-any-other-load-balancer-which-one-to-use
 
-[^1_25]: https://www.haproxy.com/blog/haproxy-on-aws-best-practices-part-2
+: https://www.haproxy.com/blog/haproxy-on-aws-best-practices-part-2
 
-[^1_26]: https://stackoverflow.com/questions/66322502/aws-alb-nlb-rewriting-requests-to-haproxy-instances
+: https://stackoverflow.com/questions/66322502/aws-alb-nlb-rewriting-requests-to-haproxy-instances
 
-[^1_27]: https://stackoverflow.com/questions/45302937/what-settings-on-haproxy-needed-to-work-with-aws-alb-application-load-balancer
+: https://stackoverflow.com/questions/45302937/what-settings-on-haproxy-needed-to-work-with-aws-alb-application-load-balancer
 
-[^1_28]: https://github.com/shuaibiyy/haproxy-config-generator
+: https://github.com/shuaibiyy/haproxy-config-generator
 
-[^1_29]: https://stackoverflow.com/questions/62935547/using-cloudfront-as-a-haproxy-backend-server-with-https
+: https://stackoverflow.com/questions/62935547/using-cloudfront-as-a-haproxy-backend-server-with-https
 
-[^1_30]: https://tech.bedrockstreaming.com/2019/03/11/Migrating-production-apps-from-on-premise-to-the-cloud-with-no-downtime.html
+: https://tech.bedrockstreaming.com/2019/03/11/Migrating-production-apps-from-on-premise-to-the-cloud-with-no-downtime.html
 
-[^1_31]: https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-basic-upgrade-guidance
+: https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-basic-upgrade-guidance
 
-[^1_32]: https://cloud.google.com/load-balancing/docs/https/migrate-to-global
+: https://cloud.google.com/load-balancing/docs/https/migrate-to-global
 
-[^1_33]: https://www.itential.com/case-study-load-balancer-migrations/
+: https://www.itential.com/case-study-load-balancer-migrations/
 
-[^1_34]: https://www.device42.com/cloud-migration-best-practices/
+: https://www.device42.com/cloud-migration-best-practices/
 
-[^1_35]: https://www.relianoid.com/top-load-balancers/haproxy-alternative/
+: https://www.relianoid.com/top-load-balancers/haproxy-alternative/
 
-[^1_36]: https://www.qovery.com/blog/the-complete-guide-to-aws-load-balancers/
+: https://www.qovery.com/blog/the-complete-guide-to-aws-load-balancers/
 
-[^1_37]: https://sharegate.com/blog/smoother-cloud-migration-with-sharegate
+: https://sharegate.com/blog/smoother-cloud-migration-with-sharegate
 
-[^1_38]: https://www.reddit.com/r/aws/comments/z0o47i/what_is_the_difference_between_an_application/
+: https://www.reddit.com/r/aws/comments/z0o47i/what_is_the_difference_between_an_application/
 
-[^1_39]: https://aws.amazon.com/compare/the-difference-between-the-difference-between-application-network-and-gateway-load-balancing/
+: https://aws.amazon.com/compare/the-difference-between-the-difference-between-application-network-and-gateway-load-balancing/
 
-[^1_40]: https://aws.amazon.com/elasticloadbalancing/pricing/
+: https://aws.amazon.com/elasticloadbalancing/pricing/
 
-[^1_41]: https://www.linkedin.com/posts/theburningmonk_api-gateway-vs-application-load-balancer-activity-7187459071115972608-7oSk
+: https://www.linkedin.com/posts/theburningmonk_api-gateway-vs-application-load-balancer-activity-7187459071115972608-7oSk
 
-[^1_42]: https://dev.to/aws-builders/understanding-aws-pricing-amazon-cloudfront-388o
+: https://dev.to/aws-builders/understanding-aws-pricing-amazon-cloudfront-388o
 
-[^1_43]: https://www.g2.com/products/haproxy/pricing
+: https://www.g2.com/products/haproxy/pricing
 
-[^1_44]: https://www.cloudzero.com/blog/cloudfront-pricing/
+: https://www.cloudzero.com/blog/cloudfront-pricing/
 
-[^1_45]: https://www.haproxy.org
+: https://www.haproxy.org
 
-[^1_46]: https://www.sumologic.com/blog/aws-elb-alb
+: https://www.sumologic.com/blog/aws-elb-alb
 
-[^1_47]: https://discourse.haproxy.org/t/aws-network-load-balancer-haproxy-redirect-to-443-port/5990
+: https://discourse.haproxy.org/t/aws-network-load-balancer-haproxy-redirect-to-443-port/5990
 
-[^1_48]: https://www.techrxiv.org/users/923181/articles/1298410-load-balancing-and-vm-migration-strategies-in-multi-cloud-environments-a-systematic-survey
+: https://www.techrxiv.org/users/923181/articles/1298410-load-balancing-and-vm-migration-strategies-in-multi-cloud-environments-a-systematic-survey
 
-[^1_49]: https://learn.microsoft.com/en-us/answers/questions/2147420/basic-load-balancer-migration
+: https://learn.microsoft.com/en-us/answers/questions/2147420/basic-load-balancer-migration
 
-[^1_50]: https://aws.plainenglish.io/310-api-gateway-or-application-load-balancer-which-is-cost-effective-d4a20aea1056
+: https://aws.plainenglish.io/310-api-gateway-or-application-load-balancer-which-is-cost-effective-d4a20aea1056
 
 
 ---
@@ -3322,7 +3322,7 @@ This API service migration example shows how AWS managed services can replace co
 
 Picture this: It's 3 AM, and your phone is buzzing with alerts. Your HAProxy server—the one you've lovingly configured and maintained for years—is struggling under an unexpected traffic spike. You're scrambling to scale up, configure new backend servers, and update DNS records while your application users are experiencing timeouts.
 
-Now imagine a different scenario: It's the same 3 AM spike, but this time, AWS Application Load Balancer automatically scales to handle the traffic, AWS WAF blocks malicious requests before they reach your servers, and you sleep peacefully through the night [^2_1].
+Now imagine a different scenario: It's the same 3 AM spike, but this time, AWS Application Load Balancer automatically scales to handle the traffic, AWS WAF blocks malicious requests before they reach your servers, and you sleep peacefully through the night .
 
 This is the fundamental difference between managing your own load balancing infrastructure and leveraging AWS managed services. It's not just about technology—it's about transforming how you think about infrastructure, reliability, and operational excellence.
 
@@ -3332,7 +3332,7 @@ The answer lies in four compelling benefits that I've witnessed across hundreds 
 
 1. **Operational Efficiency**: No more 3 AM wake-up calls for infrastructure issues
 2. **Automatic Scalability**: Handle traffic spikes without manual intervention
-3. **Built-in Security**: AWS WAF provides comprehensive protection against web threats [^2_1]
+3. **Built-in Security**: AWS WAF provides comprehensive protection against web threats 
 4. **Cost Optimization**: Pay only for what you use, not what you provision
 
 ### The Netflix Analogy: From DVD to Streaming
@@ -3345,7 +3345,7 @@ Similarly, migrating from HAProxy to AWS isn't just about replacing one load bal
 - **Global performance** with CloudFront's edge locations
 - **API-first architecture** with API Gateway's comprehensive features
 - **Ultra-low latency** with Network Load Balancer's Layer 4 optimization
-- **Advanced security** with AWS WAF's managed rules and bot protection [^2_2]
+- **Advanced security** with AWS WAF's managed rules and bot protection 
 
 **Pause and Reflect**: Before we dive deeper, think about your current HAProxy setup. What challenges are you facing? Traffic spikes? Maintenance overhead? Security threats? Keep these pain points in mind as we explore solutions.
 
@@ -3354,13 +3354,13 @@ Similarly, migrating from HAProxy to AWS isn't just about replacing one load bal
 By the end of this article, you'll have:
 
 - **Assessment Framework**: A systematic approach to evaluate your current HAProxy configuration
-- **Migration Strategy**: Step-by-step processes for different migration scenarios using AWS CDK TypeScript [^2_3]
-- **Security Integration**: How to implement AWS WAF for comprehensive protection [^2_4]
+- **Migration Strategy**: Step-by-step processes for different migration scenarios using AWS CDK TypeScript 
+- **Security Integration**: How to implement AWS WAF for comprehensive protection 
 - **Cost Optimization**: Techniques to reduce infrastructure costs by up to 40%
 - **Performance Tuning**: Methods to improve application response times and reliability
 - **Practical Examples**: Five real-world migration scenarios with detailed CDK implementations
 
-**Pro Tip**: The most successful migrations I've guided follow the "Example-First" principle. Instead of starting with theory, we'll dive into practical scenarios using AWS CDK TypeScript that you can immediately apply to your environment [^2_3].
+**Pro Tip**: The most successful migrations I've guided follow the "Example-First" principle. Instead of starting with theory, we'll dive into practical scenarios using AWS CDK TypeScript that you can immediately apply to your environment .
 
 ```mermaid
 mindmap
@@ -3429,7 +3429,7 @@ This configuration demonstrates HAProxy's core strengths:
 
 ### Common HAProxy Scenarios: The Patterns You Know
 
-Before we migrate to AWS, let's identify the common patterns you're likely using with HAProxy. Understanding these patterns is crucial because each maps to specific AWS services and WAF configurations [^2_2]:
+Before we migrate to AWS, let's identify the common patterns you're likely using with HAProxy. Understanding these patterns is crucial because each maps to specific AWS services and WAF configurations :
 
 #### Pattern 1: Basic HTTP Load Balancing
 
@@ -3453,7 +3453,7 @@ backend secure_backend
     server app1 192.168.1.10:8443 ssl check
 ```
 
-**AWS Equivalent**: ALB with ACM certificates and WAF for advanced security headers [^2_5]
+**AWS Equivalent**: ALB with ACM certificates and WAF for advanced security headers 
 
 #### Pattern 3: Content-Based Routing
 
@@ -3545,13 +3545,13 @@ grep "server" /etc/haproxy/haproxy.cfg | wc -l
 grep -E "acl|http-request deny|block" /etc/haproxy/haproxy.cfg
 ```
 
-**Pro Tip**: The most challenging migrations involve complex ACL rules, custom header manipulation, and security configurations. Document these carefully—they'll map to specific AWS WAF rules [^2_5].
+**Pro Tip**: The most challenging migrations involve complex ACL rules, custom header manipulation, and security configurations. Document these carefully—they'll map to specific AWS WAF rules .
 
 ## Meet Your AWS Migration Targets
 
 ### AWS ALB: The Application Whisperer
 
-Application Load Balancer is like having a multilingual translator at an international conference—it understands the nuances of HTTP/HTTPS traffic and can make intelligent routing decisions based on content [^2_6].
+Application Load Balancer is like having a multilingual translator at an international conference—it understands the nuances of HTTP/HTTPS traffic and can make intelligent routing decisions based on content .
 
 Let me tell you about a fintech startup I helped migrate. They had a complex HAProxy setup routing different API versions to different backend services. With HAProxy, they needed intricate ACL rules, but with AWS ALB and WAF, this became elegantly simple through infrastructure as code.
 
@@ -3579,7 +3579,7 @@ Unlike HAProxy's basic health checks, ALB provides:
 - ECS/EKS container support
 - Lambda function targets
 - ACM certificate management
-- **One-click WAF integration** for immediate protection [^2_6]
+- **One-click WAF integration** for immediate protection 
 
 **4. Advanced Load Balancing Features**
 
@@ -3605,7 +3605,7 @@ Network Load Balancer is like a Formula 1 race car—built for pure speed and pe
 
 ### AWS API Gateway: The Intelligent Router
 
-API Gateway is like having a sophisticated API management platform built into your load balancer. If your HAProxy is primarily routing API traffic, API Gateway offers features that would require significant custom development with HAProxy [^2_7].
+API Gateway is like having a sophisticated API management platform built into your load balancer. If your HAProxy is primarily routing API traffic, API Gateway offers features that would require significant custom development with HAProxy .
 
 #### API Gateway's Advanced Features
 
@@ -3654,9 +3654,9 @@ CloudFront is like having a network of local stores worldwide instead of shippin
 
 ### Understanding AWS WAF: The Digital Bouncer
 
-AWS WAF is like having a highly intelligent security guard at the entrance of your digital property [^2_1]. Unlike traditional firewalls that work at the network level, AWS WAF operates at the application layer (Layer 7), giving it deep insight into HTTP/HTTPS traffic patterns and the ability to make sophisticated decisions about what constitutes legitimate versus malicious traffic [^2_8].
+AWS WAF is like having a highly intelligent security guard at the entrance of your digital property . Unlike traditional firewalls that work at the network level, AWS WAF operates at the application layer (Layer 7), giving it deep insight into HTTP/HTTPS traffic patterns and the ability to make sophisticated decisions about what constitutes legitimate versus malicious traffic .
 
-Think of AWS WAF as the evolution of all those custom security rules you've probably built into your HAProxy configuration over the years—IP blocking, rate limiting, pattern matching—except now it's a managed service with machine learning capabilities and threat intelligence that updates automatically [^2_1].
+Think of AWS WAF as the evolution of all those custom security rules you've probably built into your HAProxy configuration over the years—IP blocking, rate limiting, pattern matching—except now it's a managed service with machine learning capabilities and threat intelligence that updates automatically .
 
 ### Why WAF is Essential for Modern Applications
 
@@ -3669,15 +3669,15 @@ Think of AWS WAF as the evolution of all those custom security rules you've prob
 
 **WAF's Protection Layers**:
 
-1. **Managed Rule Groups**: AWS-curated rules that protect against OWASP Top 10 threats [^2_4]
-2. **Bot Control**: Advanced bot detection using machine learning and behavioral analysis [^2_9]
-3. **Rate Limiting**: Intelligent throttling that distinguishes between legitimate traffic spikes and attacks [^2_10]
+1. **Managed Rule Groups**: AWS-curated rules that protect against OWASP Top 10 threats 
+2. **Bot Control**: Advanced bot detection using machine learning and behavioral analysis 
+3. **Rate Limiting**: Intelligent throttling that distinguishes between legitimate traffic spikes and attacks 
 4. **Geo-blocking**: Regional restrictions with granular control
 5. **Custom Rules**: Tailored protection for your specific application needs
 
 ### WAF Integration Points: Where Protection Happens
 
-AWS WAF can protect multiple AWS services, making it perfect for our migration scenarios [^2_8]:
+AWS WAF can protect multiple AWS services, making it perfect for our migration scenarios :
 
 - **CloudFront Distributions**: Global protection at edge locations
 - **Application Load Balancers**: Regional protection for web applications
@@ -3688,7 +3688,7 @@ AWS WAF can protect multiple AWS services, making it perfect for our migration s
 
 ### AWS Managed Rules: Expert-Curated Protection
 
-One of WAF's biggest advantages over custom HAProxy security rules is AWS Managed Rules—pre-configured rule groups maintained by AWS's security team [^2_1]. These rule groups are like having a team of security experts constantly updating your protection based on the latest threat intelligence [^2_2].
+One of WAF's biggest advantages over custom HAProxy security rules is AWS Managed Rules—pre-configured rule groups maintained by AWS's security team . These rule groups are like having a team of security experts constantly updating your protection based on the latest threat intelligence .
 
 **Key Managed Rule Groups**:
 
@@ -3704,7 +3704,7 @@ One of WAF's biggest advantages over custom HAProxy security rules is AWS Manage
 
 ### Challenge and CAPTCHA Actions: Smart Bot Mitigation
 
-Unlike traditional block/allow decisions, AWS WAF offers Challenge and CAPTCHA actions that can distinguish between legitimate users and sophisticated bots [^2_9].
+Unlike traditional block/allow decisions, AWS WAF offers Challenge and CAPTCHA actions that can distinguish between legitimate users and sophisticated bots .
 
 **Challenge Action**: Runs a silent computational challenge that legitimate browsers can solve automatically but increases costs for bot operators.
 
@@ -3715,12 +3715,12 @@ These actions are particularly powerful because they:
 - Require fully-functional JavaScript execution (blocking simple HTTP bots)
 - Generate unique tokens for legitimate clients
 - Provide client fingerprinting for advanced threat detection
-- Increase operational costs for attackers [^2_9]
+- Increase operational costs for attackers 
 
 
 ### WAF Cost Structure: Understanding the Economics
 
-WAF pricing consists of three components [^2_4]:
+WAF pricing consists of three components :
 
 1. **Web ACL**: \$1.00 per month per Web ACL
 2. **Rules**: \$0.60 per month per rule (first 10 managed rules are free)
@@ -3750,7 +3750,7 @@ Compare this to the cost of:
 
 ### WAF Performance Impact: Speed vs Security
 
-A common concern when introducing WAF is latency impact. AWS WAF is designed for minimal performance overhead [^2_5]:
+A common concern when introducing WAF is latency impact. AWS WAF is designed for minimal performance overhead :
 
 **Latency Measurements**:
 
@@ -3761,7 +3761,7 @@ A common concern when introducing WAF is latency impact. AWS WAF is designed for
 
 **Optimization Strategies**:
 
-1. **Rule Ordering**: Place most restrictive rules first to terminate evaluation early [^2_5]
+1. **Rule Ordering**: Place most restrictive rules first to terminate evaluation early 
 2. **Scope-Down Statements**: Apply expensive rules only to relevant traffic
 3. **Caching**: Leverage rule result caching for repeated patterns
 4. **Rate-Based Rules**: Use efficient counting mechanisms
@@ -3772,7 +3772,7 @@ The performance impact is typically negligible compared to the protection value,
 
 ### The 4-Phase Migration Model with WAF Integration
 
-After guiding hundreds of migrations, I've developed a proven 4-phase model that minimizes risk while maximizing success. This enhanced framework now includes AWS WAF security considerations from day one, ensuring your migration isn't just about load balancing but comprehensive application protection [^2_11].
+After guiding hundreds of migrations, I've developed a proven 4-phase model that minimizes risk while maximizing success. This enhanced framework now includes AWS WAF security considerations from day one, ensuring your migration isn't just about load balancing but comprehensive application protection .
 
 ```mermaid
 flowchart TD
@@ -4049,9 +4049,9 @@ This enhanced 4-phase approach ensures that security considerations are built in
 
 ### Example 1: Simple Web Application Migration with WAF Protection
 
-Let's start with the most common scenario: a basic web application currently load-balanced by HAProxy, now enhanced with comprehensive WAF protection. This example demonstrates the power of Infrastructure as Code with AWS CDK TypeScript [^2_3].
+Let's start with the most common scenario: a basic web application currently load-balanced by HAProxy, now enhanced with comprehensive WAF protection. This example demonstrates the power of Infrastructure as Code with AWS CDK TypeScript .
 
-**The Story**: TechStart, a growing SaaS company, runs their customer portal behind a simple HAProxy setup. They're experiencing growing pains—manual server additions, SSL certificate management headaches, security incidents from bot attacks, and sleepless nights during traffic spikes [^2_6].
+**The Story**: TechStart, a growing SaaS company, runs their customer portal behind a simple HAProxy setup. They're experiencing growing pains—manual server additions, SSL certificate management headaches, security incidents from bot attacks, and sleepless nights during traffic spikes .
 
 **Current HAProxy Configuration**:
 
@@ -4445,14 +4445,14 @@ aws logs describe-log-groups --log-group-name-prefix aws-waf-logs
 
 **Security Improvements**:
 
-- **Managed Protection**: Replaced custom HAProxy rules with AWS-managed security rules [^2_4]
-- **Bot Detection**: Advanced bot control beyond simple user-agent blocking [^2_9]
-- **Rate Limiting**: Sophisticated rate limiting with IP-based tracking [^2_10]
-- **Threat Intelligence**: Automatic updates to IP reputation lists [^2_2]
+- **Managed Protection**: Replaced custom HAProxy rules with AWS-managed security rules 
+- **Bot Detection**: Advanced bot control beyond simple user-agent blocking 
+- **Rate Limiting**: Sophisticated rate limiting with IP-based tracking 
+- **Threat Intelligence**: Automatic updates to IP reputation lists 
 
 **Operational Improvements**:
 
-- **Infrastructure as Code**: Entire infrastructure defined in TypeScript [^2_3]
+- **Infrastructure as Code**: Entire infrastructure defined in TypeScript 
 - **Automatic SSL**: Free certificates with automatic renewal
 - **Monitoring**: Built-in CloudWatch metrics and alarms
 - **High Availability**: Multi-AZ deployment with automatic failover
@@ -4477,11 +4477,11 @@ Total: $225/month
 Monthly savings: $1,662 (88% reduction!)
 ```
 
-**Pro Tip**: The biggest savings come from automation and reduced security incidents. WAF's managed rules eliminate the need for constant manual security updates [^2_1].
+**Pro Tip**: The biggest savings come from automation and reduced security incidents. WAF's managed rules eliminate the need for constant manual security updates .
 
 ### Example 2: API Service Migration with Advanced WAF Protection
 
-API services represent one of the most complex migration scenarios but offer the greatest potential for security enhancements. Let me share the story of DataFlow, a B2B SaaS company that migrated their API infrastructure from HAProxy to API Gateway with comprehensive WAF protection [^2_7].
+API services represent one of the most complex migration scenarios but offer the greatest potential for security enhancements. Let me share the story of DataFlow, a B2B SaaS company that migrated their API infrastructure from HAProxy to API Gateway with comprehensive WAF protection .
 
 **The Challenge**: DataFlow's HAProxy setup was handling:
 
@@ -4940,21 +4940,21 @@ deployAndTest().catch(console.error);
 
 **Security Enhancements**:
 
-- **Managed Rules**: Replaced 500+ lines of custom HAProxy security logic with AWS-managed rules [^2_4]
-- **Advanced Bot Protection**: Machine learning-based bot detection beyond simple pattern matching [^2_9]
-- **API-Specific Protection**: Tailored rules for API endpoints with JSON response handling [^2_10]
-- **Comprehensive Logging**: Detailed WAF logs for security analysis and compliance [^2_7]
+- **Managed Rules**: Replaced 500+ lines of custom HAProxy security logic with AWS-managed rules 
+- **Advanced Bot Protection**: Machine learning-based bot detection beyond simple pattern matching 
+- **API-Specific Protection**: Tailored rules for API endpoints with JSON response handling 
+- **Comprehensive Logging**: Detailed WAF logs for security analysis and compliance 
 
 **Feature Improvements**:
 
-- **Built-in Rate Limiting**: Sophisticated rate limiting with multiple aggregation keys [^2_10]
+- **Built-in Rate Limiting**: Sophisticated rate limiting with multiple aggregation keys 
 - **Usage Plans**: Customer tier management without custom logic
 - **Request Validation**: Automatic request/response validation with OpenAPI schemas
 - **Caching**: Built-in response caching with configurable TTL
 
 **Operational Benefits**:
 
-- **Infrastructure as Code**: Complete API and security configuration in TypeScript [^2_3]
+- **Infrastructure as Code**: Complete API and security configuration in TypeScript 
 - **Automated Deployments**: Consistent deployments across environments
 - **Monitoring**: Native CloudWatch integration with custom metrics
 - **Scalability**: Automatic scaling without infrastructure management
@@ -4980,11 +4980,11 @@ Total: $779.90/month
 Monthly savings: $9,020.10 (92% reduction!)
 ```
 
-**Pro Tip**: The combination of API Gateway's built-in features and WAF's managed rules eliminates most custom development while providing enterprise-grade security that exceeds what's practical with HAProxy [^2_7].
+**Pro Tip**: The combination of API Gateway's built-in features and WAF's managed rules eliminates most custom development while providing enterprise-grade security that exceeds what's practical with HAProxy .
 
 ### Example 3: Global Content Delivery with CloudFront and WAF
 
-For applications serving global users, the combination of CloudFront and WAF provides unmatched performance and security. Let me share the migration story of MediaStream, a video streaming platform that needed to replace their HAProxy-based content delivery system [^2_12].
+For applications serving global users, the combination of CloudFront and WAF provides unmatched performance and security. Let me share the migration story of MediaStream, a video streaming platform that needed to replace their HAProxy-based content delivery system .
 
 **The Challenge**: MediaStream was using HAProxy for content routing and basic security, but faced:
 
@@ -5507,9 +5507,9 @@ new MediaStreamMonitoringStack(app, 'MediaStreamMonitoringStack', {
 **Security Enhancements**:
 
 - **DDoS Protection**: Built-in AWS Shield Standard protection at all edge locations
-- **Geographic Controls**: Flexible geo-blocking capabilities [^2_4]
-- **Bot Protection**: Advanced bot detection with CAPTCHA challenges [^2_9]
-- **Rate Limiting**: Sophisticated rate limiting with media-specific rules [^2_10]
+- **Geographic Controls**: Flexible geo-blocking capabilities 
+- **Bot Protection**: Advanced bot detection with CAPTCHA challenges 
+- **Rate Limiting**: Sophisticated rate limiting with media-specific rules 
 
 **Operational Benefits**:
 
@@ -5539,13 +5539,13 @@ Total: $925.60/month
 Monthly savings: $8,174.40 (90% reduction!)
 ```
 
-**Pro Tip**: The combination of CloudFront's global edge network and WAF's intelligent protection provides performance and security that would be extremely expensive to replicate with traditional infrastructure [^2_12].
+**Pro Tip**: The combination of CloudFront's global edge network and WAF's intelligent protection provides performance and security that would be extremely expensive to replicate with traditional infrastructure .
 
 ## Cost Optimization and Performance
 
 ### Understanding the Total Cost of Ownership
 
-When evaluating the migration from HAProxy to AWS managed services, it's crucial to consider the complete Total Cost of Ownership (TCO), not just infrastructure costs. The hidden costs of HAProxy often far exceed the visible server expenses [^2_11].
+When evaluating the migration from HAProxy to AWS managed services, it's crucial to consider the complete Total Cost of Ownership (TCO), not just infrastructure costs. The hidden costs of HAProxy often far exceed the visible server expenses .
 
 #### HAProxy Hidden Costs Analysis
 
@@ -6030,17 +6030,17 @@ Total: $5,750/month
 Savings: $19,250/month (77% reduction)
 ```
 
-**Pro Tip**: The largest cost savings typically come from reduced operational overhead and improved security posture, not just infrastructure costs. Factor in the value of reduced downtime, faster feature delivery, and enhanced security when calculating ROI [^2_11].
+**Pro Tip**: The largest cost savings typically come from reduced operational overhead and improved security posture, not just infrastructure costs. Factor in the value of reduced downtime, faster feature delivery, and enhanced security when calculating ROI .
 
 ## Common Pitfalls and Solutions
 
 ### Configuration Mistakes That Cost Time and Money
 
-After guiding hundreds of HAProxy to AWS migrations, I've identified the most common pitfalls that can derail your project. Learning from these mistakes will save you weeks of troubleshooting and thousands in costs [^2_11].
+After guiding hundreds of HAProxy to AWS migrations, I've identified the most common pitfalls that can derail your project. Learning from these mistakes will save you weeks of troubleshooting and thousands in costs .
 
 #### Pitfall 1: Incorrect WAF Rule Ordering
 
-**The Problem**: WAF rules are evaluated in priority order, and incorrect ordering can cause performance issues or false positives [^2_5].
+**The Problem**: WAF rules are evaluated in priority order, and incorrect ordering can cause performance issues or false positives .
 
 **Common Mistake**:
 
@@ -6181,7 +6181,7 @@ export class WAFRuleOptimizer {
 }
 ```
 
-**Cost Impact**: Proper rule ordering can reduce WAF evaluation costs by 40-60% and improve response times by 20-30ms [^2_5].
+**Cost Impact**: Proper rule ordering can reduce WAF evaluation costs by 40-60% and improve response times by 20-30ms .
 
 #### Pitfall 2: Inadequate Health Check Configuration
 
@@ -6714,7 +6714,7 @@ export class WAFFalsePositiveResolver {
 }
 ```
 
-**Pro Tip**: Always start with WAF rules in "Count" mode during migration to identify false positives before switching to "Block" mode. This prevents legitimate traffic disruption during the learning period [^2_5].
+**Pro Tip**: Always start with WAF rules in "Count" mode during migration to identify false positives before switching to "Block" mode. This prevents legitimate traffic disruption during the learning period .
 
 ### Security Considerations and Best Practices
 
@@ -6829,7 +6829,7 @@ export class SecurityAssessmentTool {
 }
 ```
 
-The key to successful migration is thorough planning, comprehensive testing, and gradual rollout. Each pitfall I've outlined here can be avoided with proper preparation and understanding of AWS service behaviors [^2_11].
+The key to successful migration is thorough planning, comprehensive testing, and gradual rollout. Each pitfall I've outlined here can be avoided with proper preparation and understanding of AWS service behaviors .
 
 **Remember**: The goal isn't to replicate HAProxy exactly, but to leverage AWS managed services to achieve better security, performance, and operational efficiency. Sometimes this means changing your approach to take advantage of cloud-native capabilities.
 
@@ -6837,7 +6837,7 @@ The key to successful migration is thorough planning, comprehensive testing, and
 
 ### Hybrid Deployments: Bridging On-Premises and Cloud
 
-Many organizations can't migrate everything to AWS at once due to regulatory requirements, legacy system dependencies, or gradual transformation strategies. Hybrid deployments allow you to leverage AWS managed services while maintaining some on-premises infrastructure [^2_12].
+Many organizations can't migrate everything to AWS at once due to regulatory requirements, legacy system dependencies, or gradual transformation strategies. Hybrid deployments allow you to leverage AWS managed services while maintaining some on-premises infrastructure .
 
 #### Scenario 1: Gradual Data Center Migration
 
@@ -7031,41 +7031,41 @@ export class HybridMigrationStack extends Stack {
 
 <div style="text-align: center">⁂</div>
 
-[^2_1]: https://aws.amazon.com/waf/
-[^2_2]: https://dev.to/aws-builders/aws-waf-a-comprehensive-guide-to-web-application-protection-5ab1
-[^2_3]: https://docs.aws.amazon.com/cdk/v2/guide/work-with-cdk-typescript.html
-[^2_4]: https://aws.amazon.com/waf/features/
-[^2_5]: https://aws.github.io/aws-security-services-best-practices/guides/waf/configuring-waf-rules/docs/
-[^2_6]: https://aws.amazon.com/about-aws/whats-new/2024/02/aws-application-load-balancer-one-click-waf-integrations/
-[^2_7]: https://www.ranthebuilder.cloud/post/protect-your-api-gateway-with-aws-waf-using-cdk
-[^2_8]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html
-[^2_9]: https://aws.amazon.com/blogs/networking-and-content-delivery/protect-against-bots-with-aws-waf-challenge-and-captcha-actions/
-[^2_10]: https://conermurphy.com/blog/aws-waf-throttle-api-gateway-rest-api-requests/
-[^2_11]: https://aws.amazon.com/blogs/devops/easily-protect-your-aws-cdk-defined-infrastructure-with-aws-wafv2/
-[^2_12]: https://www.haproxy.com/blog/haproxy-amazon-aws-best-practices-part-1
-[^2_13]: https://www.amazonaws.cn/en/waf/features/
-[^2_14]: https://conermurphy.com/blog/create-aws-api-gateway-rest-api-typescript-types-via-openapi-aws-cdk/
-[^2_15]: https://github.com/aws-samples/aws-cdk-examples/blob/main/typescript/waf/waf-cloudfront.ts
-[^2_16]: https://gist.github.com/statik/f1ac9d6227d98d30c7a7cec0c83f4e64
-[^2_17]: https://docs.aws.amazon.com/amplify/latest/userguide/amplify-waf-CDK.html
-[^2_18]: https://devopschat.co/articles/easily-protect-your-aws-cdk-defined-infrastructure-with-aws-wafv2
-[^2_19]: https://stackoverflow.com/questions/76964773/is-it-possible-to-add-waf-to-applicationloadbalancedfargateservice-using-aws-cdk
-[^2_20]: https://repost.aws/questions/QUL0IRvhtiTDq4zJziarAbmw/using-cdk-to-create-waf-rules-with-firewall-manager
-[^2_21]: https://awstip.com/aws-cdk-go-dev-environment-with-waf-for-api-gateway-d38609258829?gi=9fff0f808072
-[^2_22]: https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_wafv2/CfnWebACL.html
-[^2_23]: https://github.com/aws-samples/aws-cdk-examples
-[^2_24]: https://docs.aws.amazon.com/zh_tw/cdk/v2/guide/work-with-cdk-typescript.html
-[^2_25]: https://github.com/aws-samples/cdk-typescript-lambda
-[^2_26]: https://www.youtube.com/watch?v=Fa3PfnaK5dc
-[^2_27]: https://repost.aws/zh-Hant/questions/QUyiUmFAvYQaylmG_UkfJZrA/creating-a-cloudfront-function-in-typescript-using-the-cdk
-[^2_28]: https://aws.github.io/aws-pdk/developer_guides/type-safe-api/custom_integration_ecs.html
-[^2_29]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-migrating-why-migrate.html
-[^2_30]: https://repost.aws/questions/QUyiUmFAvYQaylmG_UkfJZrA/creating-a-cloudfront-function-in-typescript-using-the-cdk
-[^2_31]: https://stackoverflow.com/questions/62935547/using-cloudfront-as-a-haproxy-backend-server-with-https
-[^2_32]: https://serverfault.com/questions/1025482/using-cloudfront-as-a-haproxy-backend-server-using-https
-[^2_33]: https://www.haproxy.com/user-spotlight-series/how-haproxy-accelerated-our-migration-to-the-cloud
-[^2_34]: https://k21academy.com/amazon-web-services/aws-certified-security-specialty-amazon-web-services/aws-waf/
-[^2_35]: https://docs.aws.amazon.com/cdk/v2/guide/home.html
-[^2_36]: https://www.trustradius.com/compare-products/amazon-cloudfront-vs-haproxy-community-edition
-[^2_37]: https://github.com/haproxy/haproxy/issues/1489```
+: https://aws.amazon.com/waf/
+: https://dev.to/aws-builders/aws-waf-a-comprehensive-guide-to-web-application-protection-5ab1
+: https://docs.aws.amazon.com/cdk/v2/guide/work-with-cdk-typescript.html
+: https://aws.amazon.com/waf/features/
+: https://aws.github.io/aws-security-services-best-practices/guides/waf/configuring-waf-rules/docs/
+: https://aws.amazon.com/about-aws/whats-new/2024/02/aws-application-load-balancer-one-click-waf-integrations/
+: https://www.ranthebuilder.cloud/post/protect-your-api-gateway-with-aws-waf-using-cdk
+: https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html
+: https://aws.amazon.com/blogs/networking-and-content-delivery/protect-against-bots-with-aws-waf-challenge-and-captcha-actions/
+: https://conermurphy.com/blog/aws-waf-throttle-api-gateway-rest-api-requests/
+: https://aws.amazon.com/blogs/devops/easily-protect-your-aws-cdk-defined-infrastructure-with-aws-wafv2/
+: https://www.haproxy.com/blog/haproxy-amazon-aws-best-practices-part-1
+: https://www.amazonaws.cn/en/waf/features/
+: https://conermurphy.com/blog/create-aws-api-gateway-rest-api-typescript-types-via-openapi-aws-cdk/
+: https://github.com/aws-samples/aws-cdk-examples/blob/main/typescript/waf/waf-cloudfront.ts
+: https://gist.github.com/statik/f1ac9d6227d98d30c7a7cec0c83f4e64
+: https://docs.aws.amazon.com/amplify/latest/userguide/amplify-waf-CDK.html
+: https://devopschat.co/articles/easily-protect-your-aws-cdk-defined-infrastructure-with-aws-wafv2
+: https://stackoverflow.com/questions/76964773/is-it-possible-to-add-waf-to-applicationloadbalancedfargateservice-using-aws-cdk
+: https://repost.aws/questions/QUL0IRvhtiTDq4zJziarAbmw/using-cdk-to-create-waf-rules-with-firewall-manager
+: https://awstip.com/aws-cdk-go-dev-environment-with-waf-for-api-gateway-d38609258829?gi=9fff0f808072
+: https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_wafv2/CfnWebACL.html
+: https://github.com/aws-samples/aws-cdk-examples
+: https://docs.aws.amazon.com/zh_tw/cdk/v2/guide/work-with-cdk-typescript.html
+: https://github.com/aws-samples/cdk-typescript-lambda
+: https://www.youtube.com/watch?v=Fa3PfnaK5dc
+: https://repost.aws/zh-Hant/questions/QUyiUmFAvYQaylmG_UkfJZrA/creating-a-cloudfront-function-in-typescript-using-the-cdk
+: https://aws.github.io/aws-pdk/developer_guides/type-safe-api/custom_integration_ecs.html
+: https://docs.aws.amazon.com/waf/latest/developerguide/waf-migrating-why-migrate.html
+: https://repost.aws/questions/QUyiUmFAvYQaylmG_UkfJZrA/creating-a-cloudfront-function-in-typescript-using-the-cdk
+: https://stackoverflow.com/questions/62935547/using-cloudfront-as-a-haproxy-backend-server-with-https
+: https://serverfault.com/questions/1025482/using-cloudfront-as-a-haproxy-backend-server-using-https
+: https://www.haproxy.com/user-spotlight-series/how-haproxy-accelerated-our-migration-to-the-cloud
+: https://k21academy.com/amazon-web-services/aws-certified-security-specialty-amazon-web-services/aws-waf/
+: https://docs.aws.amazon.com/cdk/v2/guide/home.html
+: https://www.trustradius.com/compare-products/amazon-cloudfront-vs-haproxy-community-edition
+: https://github.com/haproxy/haproxy/issues/1489```
 
