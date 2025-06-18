@@ -5,11 +5,13 @@ Welcome to your comprehensive collection of cloud computing and DevOps tutorials
 ## 📚 Purpose
 
 This project offers a curated list of **actionable training tutorials** designed to take you from beginner to advanced in cloud computing, specifically focusing on:
+
 - **Google Cloud Platform (GCP)** services and tools
 - **Kubernetes** container orchestr- [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
 - [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
 - [ ] 🔧 **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
 - [ ] 🧠 **AI-Powered Developer** - Mastered Amazon Q for code generation and development acceleration
+- [ ] 🤖 **Intent-Based Development Master** - Transformed development workflow using VS Code Copilot Agent and natural language programming
 - [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutionsn
 - **Machine Learning** with Vertex AI
 - **Cloud storage** and data management
@@ -24,13 +26,17 @@ Each tutorial is designed to be practical, with step-by-step instructions and re
 Choose your learning path based on your experience level:
 
 ### 🔰 **Complete Beginner**
+
 Start here if you're new to cloud computing:
-1. [Install Google Cloud CLI](#-cloud-tools--setup) 
+
+1. [Install Google Cloud CLI](#-cloud-tools--setup)
 2. [Kubernetes Basics](#-container-orchestration)
 3. [Create Your First GCP Storage](#-storage--data-management)
 
 ### 🚀 **Intermediate**
+
 If you have some cloud experience:
+
 1. [GCP Crash Course for AWS Users](#-cloud-platforms--migration)
 2. [AI-Powered Development with Amazon Q](#-ai-powered-developer-tools)
 3. [CI/CD Automation with GitLab and AWS](#-devops--cicd-automation)
@@ -39,7 +45,9 @@ If you have some cloud experience:
 6. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
 
 ### 🎓 **Advanced**
+
 For experienced professionals:
+
 1. [Complete ML Production Pipeline](#-artificial-intelligence--machine-learning)
 2. [Multi-language tutorials](#-storage--data-management)
 
@@ -48,13 +56,15 @@ For experienced professionals:
 ## 📋 Training Categories
 
 ### 🔧 **Cloud Tools & Setup**
+
 Essential tools and installation guides for getting started with cloud development.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 How to Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | Beginner | 30-45 min | English | Complete guide to installing and configuring Google Cloud CLI across macOS, Linux, and Windows |
+| Tutorial                                                                  | Level    | Duration  | Language | Description                                                                                    |
+| ------------------------------------------------------------------------- | -------- | --------- | -------- | ---------------------------------------------------------------------------------------------- |
+| [📖 How to Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | Beginner | 30-45 min | English  | Complete guide to installing and configuring Google Cloud CLI across macOS, Linux, and Windows |
 
 **What you'll learn:**
+
 - Multiple installation methods (package managers, interactive installer, manual)
 - Post-installation setup and verification
 - Authentication and configuration
@@ -63,13 +73,15 @@ Essential tools and installation guides for getting started with cloud developme
 ---
 
 ### 📦 **Container Orchestration**
+
 Learn containerization and Kubernetes from the ground up.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Kubernetes for Absolute Beginners](./01_kubernetes_beginner.md) | Beginner | 2-3 hours | English | Deploy your first app on Amazon EKS with OpenLens |
+| Tutorial                                                            | Level    | Duration  | Language | Description                                       |
+| ------------------------------------------------------------------- | -------- | --------- | -------- | ------------------------------------------------- |
+| [📖 Kubernetes for Absolute Beginners](./01_kubernetes_beginner.md) | Beginner | 2-3 hours | English  | Deploy your first app on Amazon EKS with OpenLens |
 
 **What you'll learn:**
+
 - Kubernetes fundamentals and core concepts
 - Setting up Amazon EKS clusters
 - Deploying applications to Kubernetes
@@ -82,14 +94,16 @@ Learn containerization and Kubernetes from the ground up.
 ---
 
 ### 💾 **Storage & Data Management**
+
 Master cloud storage solutions and data handling strategies.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Create GCP Storage Bucket (English)](./02_create_gcp_bucket_en.md) | Beginner | 1-2 hours | English | Set up Google Cloud Storage for conversational agents |
-| [📖 Créer un Bucket GCP (Français)](./02_create_gcp_bucket.md) | Beginner | 1-2 hours | French | Configuration d'un bucket Google Cloud Storage |
+| Tutorial                                                               | Level    | Duration  | Language | Description                                           |
+| ---------------------------------------------------------------------- | -------- | --------- | -------- | ----------------------------------------------------- |
+| [📖 Create GCP Storage Bucket (English)](./02_create_gcp_bucket_en.md) | Beginner | 1-2 hours | English  | Set up Google Cloud Storage for conversational agents |
+| [📖 Créer un Bucket GCP (Français)](./02_create_gcp_bucket.md)         | Beginner | 1-2 hours | French   | Configuration d'un bucket Google Cloud Storage        |
 
 **What you'll learn:**
+
 - Google Cloud Storage bucket creation and configuration
 - Permission management and security best practices
 - Data upload and organization strategies
@@ -99,13 +113,15 @@ Master cloud storage solutions and data handling strategies.
 ---
 
 ### ☁️ **Cloud Platforms & Migration**
+
 Comprehensive guides for mastering Google Cloud Platform, especially for AWS professionals.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 GCP Crash Course for AWS Professionals](./04_gcp_crash_course.md) | Intermediate | 4-6 hours | English | Complete transition guide from AWS to GCP with hands-on examples |
+| Tutorial                                                              | Level        | Duration  | Language | Description                                                      |
+| --------------------------------------------------------------------- | ------------ | --------- | -------- | ---------------------------------------------------------------- |
+| [📖 GCP Crash Course for AWS Professionals](./04_gcp_crash_course.md) | Intermediate | 4-6 hours | English  | Complete transition guide from AWS to GCP with hands-on examples |
 
 **What you'll learn:**
+
 - **12 comprehensive modules** covering all major GCP services
 - Direct AWS-to-GCP service mapping and translations
 - Hands-on labs for each service category
@@ -113,6 +129,7 @@ Comprehensive guides for mastering Google Cloud Platform, especially for AWS pro
 - Cost optimization strategies
 
 **Modules include:**
+
 - Identity & Access Management
 - Compute Services (Compute Engine, App Engine, Cloud Run)
 - Storage & Databases
@@ -123,17 +140,16 @@ Comprehensive guides for mastering Google Cloud Platform, especially for AWS pro
 - DevOps & CI/CD
 - Monitoring & Observability
 
-
 ---
 
 ### 🚀 **Application Deployment & SaaS Development**
 
 Master modern deployment strategies and build production-ready SaaS platforms with enterprise-grade architecture.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Deploy Next.js to GCP: From Novice to Practitioner](./06_deploy_nextjs_to_gcp.md) | Beginner to Advanced | 3-4 hours | English | Complete guide to deploying Next.js applications on GCP with professional-grade practices |
-| [📖 AWS ECS Fargate SaaS Development: Complete Masterclass](./14_developing_a_saas_using_aws_and_ecs_fargate.md) | Intermediate to Advanced | 24 hours | English | Build production-ready SaaS platforms using AWS ECS Fargate, CDK TypeScript, and microservices architecture |
+| Tutorial                                                                                                         | Level                    | Duration  | Language | Description                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------ | --------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| [📖 Deploy Next.js to GCP: From Novice to Practitioner](./06_deploy_nextjs_to_gcp.md)                            | Beginner to Advanced     | 3-4 hours | English  | Complete guide to deploying Next.js applications on GCP with professional-grade practices                   |
+| [📖 AWS ECS Fargate SaaS Development: Complete Masterclass](./14_developing_a_saas_using_aws_and_ecs_fargate.md) | Intermediate to Advanced | 24 hours  | English  | Build production-ready SaaS platforms using AWS ECS Fargate, CDK TypeScript, and microservices architecture |
 
 **What you'll learn:**
 
@@ -176,9 +192,9 @@ Master modern deployment strategies and build production-ready SaaS platforms wi
 
 Master continuous integration and deployment with modern DevOps practices and automation tools.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 GitLab CI/CD with AWS ECR: From Novice to Practitioner](./15_ci_cd_gitlab_ecr.md) | Beginner to Advanced | 6-8 hours | English | Complete guide to building automated Docker image pipelines with GitLab CI/CD and AWS ECR |
+| Tutorial                                                                              | Level                | Duration  | Language | Description                                                                               |
+| ------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | ----------------------------------------------------------------------------------------- |
+| [📖 GitLab CI/CD with AWS ECR: From Novice to Practitioner](./15_ci_cd_gitlab_ecr.md) | Beginner to Advanced | 6-8 hours | English  | Complete guide to building automated Docker image pipelines with GitLab CI/CD and AWS ECR |
 
 **What you'll learn:**
 
@@ -202,15 +218,18 @@ Master continuous integration and deployment with modern DevOps practices and au
 
 ---
 
-### � **AI-Powered Developer Tools**
+### 🧠 **AI-Powered Developer Tools**
 
 Leverage artificial intelligence to accelerate development workflow and boost productivity.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Amazon Q for the Impatient: From Novice to Practitioner](./16_amazon_q.md) | Beginner to Advanced | 4-6 hours | English | Master AI-powered code generation, security scanning, and development acceleration with Amazon Q |
+| Tutorial                                                                                              | Level                | Duration  | Language | Description                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| [📖 Amazon Q for the Impatient: From Novice to Practitioner](./16_amazon_q.md)                        | Beginner to Advanced | 4-6 hours | English  | Master AI-powered code generation, security scanning, and development acceleration with Amazon Q                                 |
+| [📖 Intent-Based Development Using VSCode Copilot AI Agent](./17_intent_based_dev_vs_code_copilot.md) | Beginner to Advanced | 6-8 hours | English  | Master the revolutionary approach to software development using natural language and AI collaboration with VS Code Copilot Agent |
 
 **What you'll learn:**
+
+#### Amazon Q Developer
 
 - **Amazon Q Developer fundamentals** and ecosystem understanding
 - **AI-powered code generation** from natural language prompts
@@ -221,26 +240,42 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Performance optimization** and benchmarking techniques
 - **Real-world development workflows** with AI assistance
 
+#### Intent-Based Development with VS Code Copilot
+
+- **Intent-based programming paradigm** and natural language development
+- **VS Code Copilot Agent Mode** mastery and advanced configuration
+- **MCP (Model Context Protocol) servers** integration and custom tooling
+- **AI-collaborative workflows** for architecture, documentation, and testing
+- **Agent-driven development** from concept to production deployment
+- **Quality assurance patterns** for AI-generated code validation
+- **Production deployment** with AI-optimized CI/CD pipelines
+- **Advanced prompt engineering** for complex software architecture
+- **Context management** for large-scale project development
+- **Documentation automation** with living, synchronized project docs
+
 **Key Features:**
 
-- From simple code completion to complex application generation
+- From simple code completion to complete application generation
 - Multi-language support (Python, JavaScript, Java, C#, and more)
 - IDE integration with popular development environments
 - Command-line interface for terminal-based workflows
 - **24-hour challenge** to transform your development process
 - Security-first approach with built-in code reviews
 - Enterprise features for team collaboration
+- **Revolutionary workflow transformation** from implementation-focused to intention-focused development
+- **Natural language as code** interface for software creation
+- **Autonomous AI agent collaboration** for complex development tasks
 
 ---
 
-### �🤖 **Artificial Intelligence & Machine Learning**
+###🤖 **Artificial Intelligence & Machine Learning**
 
 Advanced ML training with Google Cloud's Vertex AI platform and AI agent development.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md) | Advanced | 6-8 hours | English | Complete machine learning pipeline using Google Cloud Vertex AI |
-| [📖 Developing AI Agents with Google ADK and Vertex AI](./07_develop_ai_agent_with_google_adk.md) | Advanced | 8-10 hours | English | Build intelligent AI agents using Google ADK, Vertex AI, and Gemini 2.5 models |
+| Tutorial                                                                                          | Level    | Duration   | Language | Description                                                                    |
+| ------------------------------------------------------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------------------ |
+| [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md)                             | Advanced | 6-8 hours  | English  | Complete machine learning pipeline using Google Cloud Vertex AI                |
+| [📖 Developing AI Agents with Google ADK and Vertex AI](./07_develop_ai_agent_with_google_adk.md) | Advanced | 8-10 hours | English  | Build intelligent AI agents using Google ADK, Vertex AI, and Gemini 2.5 models |
 
 **What you'll learn:**
 
@@ -269,9 +304,9 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 
 Modern data platform development and management solutions.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Tower.dev: From Novice to Practitioner](./08_tower_dev.md) | Intermediate | 4-6 hours | English | Master modern data platform development with Tower.dev for simplified data engineering |
+| Tutorial                                                       | Level        | Duration  | Language | Description                                                                            |
+| -------------------------------------------------------------- | ------------ | --------- | -------- | -------------------------------------------------------------------------------------- |
+| [📖 Tower.dev: From Novice to Practitioner](./08_tower_dev.md) | Intermediate | 4-6 hours | English  | Master modern data platform development with Tower.dev for simplified data engineering |
 
 **What you'll learn:**
 
@@ -296,11 +331,11 @@ Modern data platform development and management solutions.
 
 Enterprise-grade API management, security, and authentication solutions.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md) | Intermediate | 5-7 hours | English | Complete guide to API management, security, and analytics with Google Cloud Apigee |
-| [📖 OAuth2: From Novice to Practitioner](./11_oauth2.md) | Intermediate | 4-6 hours | English | Master OAuth2 authentication and authorization with real-world examples and security best practices |
-| [📖 OpenID Connect: Complete Authentication Guide](./12_oidc_connect.md) | Intermediate to Advanced | 6-8 hours | English | Comprehensive OpenID Connect tutorial covering identity authentication, token management, and production implementation |
+| Tutorial                                                                 | Level                    | Duration  | Language | Description                                                                                                             |
+| ------------------------------------------------------------------------ | ------------------------ | --------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md)         | Intermediate             | 5-7 hours | English  | Complete guide to API management, security, and analytics with Google Cloud Apigee                                      |
+| [📖 OAuth2: From Novice to Practitioner](./11_oauth2.md)                 | Intermediate             | 4-6 hours | English  | Master OAuth2 authentication and authorization with real-world examples and security best practices                     |
+| [📖 OpenID Connect: Complete Authentication Guide](./12_oidc_connect.md) | Intermediate to Advanced | 6-8 hours | English  | Comprehensive OpenID Connect tutorial covering identity authentication, token management, and production implementation |
 
 **What you'll learn:**
 
@@ -334,9 +369,9 @@ Enterprise-grade API management, security, and authentication solutions.
 
 Strategic migration guides and infrastructure transformation patterns.
 
-| Tutorial | Level | Duration | Language | Description |
-|----------|-------|----------|----------|-------------|
-| [📖 HAProxy to AWS Migration: Complete Guide](./13_migration_from_haproxy_to_aws_managed_services.md) | Advanced | 8-10 hours | English | Comprehensive migration from HAProxy to AWS managed services including ALB, NLB, API Gateway, and CloudFront |
+| Tutorial                                                                                              | Level    | Duration   | Language | Description                                                                                                  |
+| ----------------------------------------------------------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| [📖 HAProxy to AWS Migration: Complete Guide](./13_migration_from_haproxy_to_aws_managed_services.md) | Advanced | 8-10 hours | English  | Comprehensive migration from HAProxy to AWS managed services including ALB, NLB, API Gateway, and CloudFront |
 
 **What you'll learn:**
 
@@ -392,13 +427,13 @@ Strategic migration guides and infrastructure transformation patterns.
 ### Path 5: AI-Powered Development
 
 ```text
-1. Amazon Q Developer → 2. Install Google Cloud CLI → 3. GCP Crash Course → 4. GitLab CI/CD with AWS ECR → 5. Vertex AI Complete Course
+1. Amazon Q Developer → 2. Intent-Based Development with VS Code Copilot → 3. Install Google Cloud CLI → 4. GCP Crash Course → 5. GitLab CI/CD with AWS ECR → 6. Vertex AI Complete Course
 ```
 
 ### Path 6: Frontend Developer to Full-Stack
 
 ```text
-1. Install Google Cloud CLI → 2. Amazon Q Developer → 3. Next.js Deployment → 4. GCP Storage → 5. GCP Crash Course
+1. Install Google Cloud CLI → 2. Amazon Q Developer → 3. Intent-Based Development with VS Code Copilot → 4. Next.js Deployment → 5. GCP Storage → 6. GCP Crash Course
 ```
 
 ### Path 7: Data Engineering Specialization
@@ -437,16 +472,24 @@ Strategic migration guides and infrastructure transformation patterns.
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. HAProxy to AWS Migration → 4. Apigee API Management
 ```
 
+### Path 13: Intent-Based Development Mastery
+
+```text
+1. Intent-Based Development with VS Code Copilot → 2. Amazon Q Developer → 3. Install Google Cloud CLI → 4. GCP Crash Course → 5. Next.js Deployment → 6. GitLab CI/CD with AWS ECR
+```
+
 ---
 
 ## 🛠️ Prerequisites
 
 ### **General Requirements**
+
 - Computer with **8GB+ RAM** and **10GB+ free disk space**
 - Stable internet connection
 - Credit card for cloud provider signup (most tutorials use free tiers)
 
 ### **Software Requirements**
+
 - Terminal/Command Line access
 - Web browser
 - Text editor or IDE
@@ -460,23 +503,24 @@ Strategic migration guides and infrastructure transformation patterns.
 
 ## 💰 Cost Estimates
 
-| Tutorial | Estimated Cost | Free Tier Coverage |
-|----------|---------------|-------------------|
-| Google Cloud CLI Installation | $0 | ✅ Completely Free |
-| Kubernetes on EKS | $0-5 USD | ⚠️ Mostly covered, cleanup promptly |
-| GCP Storage Bucket | $0-2 USD | ✅ Free tier generous |
-| GCP Crash Course | $0-10 USD | ✅ Most labs covered |
-| Next.js Deployment to GCP | $0-5 USD | ✅ Firebase free, Cloud Run generous free tier |
-| GitLab CI/CD with AWS ECR | $0-10 USD | ✅ GitLab free tier, AWS ECR free for 500MB storage |
-| Amazon Q Developer | $0 | ✅ Generous free tier with unlimited code suggestions |
-| Vertex AI Course | $5-20 USD | ⚠️ Some advanced features cost extra |
-| AI Agent Development | $10-30 USD | ⚠️ Gemini API calls and compute costs |
-| Tower.dev Platform | $0-15 USD | ⚠️ Platform usage and compute resources |
-| Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
-| OAuth2 Authentication | $0-5 USD | ✅ Most examples use free services |
-| OpenID Connect (OIDC) | $0-5 USD | ✅ Free identity providers available |
-| AWS ECS Fargate SaaS Development | $15-50 USD | ⚠️ Multiple AWS services, 24-hour comprehensive project |
-| HAProxy to AWS Migration | $10-25 USD | ⚠️ AWS services usage, cleanup after tutorial |
+| Tutorial                                      | Estimated Cost | Free Tier Coverage                                                                          |
+| --------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------- |
+| Google Cloud CLI Installation                 | $0             | ✅ Completely Free                                                                          |
+| Kubernetes on EKS                             | $0-5 USD       | ⚠️ Mostly covered, cleanup promptly                                                         |
+| GCP Storage Bucket                            | $0-2 USD       | ✅ Free tier generous                                                                       |
+| GCP Crash Course                              | $0-10 USD      | ✅ Most labs covered                                                                        |
+| Next.js Deployment to GCP                     | $0-5 USD       | ✅ Firebase free, Cloud Run generous free tier                                              |
+| GitLab CI/CD with AWS ECR                     | $0-10 USD      | ✅ GitLab free tier, AWS ECR free for 500MB storage                                         |
+| Amazon Q Developer                            | $0             | ✅ Generous free tier with unlimited code suggestions                                       |
+| Intent-Based Development with VS Code Copilot | $0-20 USD      | ✅ GitHub Copilot subscription required ($10/month for individuals, $19/month for business) |
+| Vertex AI Course                              | $5-20 USD      | ⚠️ Some advanced features cost extra                                                        |
+| AI Agent Development                          | $10-30 USD     | ⚠️ Gemini API calls and compute costs                                                       |
+| Tower.dev Platform                            | $0-15 USD      | ⚠️ Platform usage and compute resources                                                     |
+| Apigee API Management                         | $0-10 USD      | ✅ Evaluation tier available                                                                |
+| OAuth2 Authentication                         | $0-5 USD       | ✅ Most examples use free services                                                          |
+| OpenID Connect (OIDC)                         | $0-5 USD       | ✅ Free identity providers available                                                        |
+| AWS ECS Fargate SaaS Development              | $15-50 USD     | ⚠️ Multiple AWS services, 24-hour comprehensive project                                     |
+| HAProxy to AWS Migration                      | $10-25 USD     | ⚠️ AWS services usage, cleanup after tutorial                                               |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -495,6 +539,7 @@ Strategic migration guides and infrastructure transformation patterns.
 ## 🤝 Contributing
 
 This is a living collection of tutorials. If you:
+
 - Find errors or outdated information
 - Have suggestions for improvements
 - Want to contribute new tutorials
@@ -522,8 +567,8 @@ Track your progress through the training:
 
 - [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
 - [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
-- [ ] � **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
-- [ ] �💾 **Storage Architect** - Set up and managed cloud storage solutions
+- [ ] **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
+- [ ]💾 **Storage Architect** - Set up and managed cloud storage solutions
 - [ ] ☁️ **Cloud Professional** - Completed GCP crash course
 - [ ] 🚀 **Deployment Expert** - Mastered Next.js deployment strategies on GCP
 - [ ] 🏢 **SaaS Architect** - Built complete production-ready SaaS platform with AWS ECS Fargate and CDK
@@ -539,4 +584,4 @@ Track your progress through the training:
 
 **Happy Learning! 🎓**
 
-*Last updated: June 2025*
+_Last updated: June 2025_
