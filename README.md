@@ -6,7 +6,11 @@ Welcome to your comprehensive collection of cloud computing and DevOps tutorials
 
 This project offers a curated list of **actionable training tutorials** designed to take you from beginner to advanced in cloud computing, specifically focusing on:
 - **Google Cloud Platform (GCP)** services and tools
-- **Kubernetes** container orchestration
+- **Kubernetes** container orchestr- [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
+- [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
+- [ ] 🔧 **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
+- [ ] 🧠 **AI-Powered Developer** - Mastered Amazon Q for code generation and development acceleration
+- [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutionsn
 - **Machine Learning** with Vertex AI
 - **Cloud storage** and data management
 - **DevOps** best practices
@@ -28,9 +32,11 @@ Start here if you're new to cloud computing:
 ### 🚀 **Intermediate**
 If you have some cloud experience:
 1. [GCP Crash Course for AWS Users](#-cloud-platforms--migration)
-2. [Deploy Applications to Cloud Platforms](#-application-deployment--saas-development)
-3. [Advanced Storage Solutions](#-storage--data-management)
-4. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
+2. [AI-Powered Development with Amazon Q](#-ai-powered-developer-tools)
+3. [CI/CD Automation with GitLab and AWS](#-devops--cicd-automation)
+4. [Deploy Applications to Cloud Platforms](#-application-deployment--saas-development)
+5. [Advanced Storage Solutions](#-storage--data-management)
+6. [Machine Learning with Vertex AI](#-artificial-intelligence--machine-learning)
 
 ### 🎓 **Advanced**
 For experienced professionals:
@@ -166,7 +172,68 @@ Master modern deployment strategies and build production-ready SaaS platforms wi
 
 ---
 
-### 🤖 **Artificial Intelligence & Machine Learning**
+### 🔧 **DevOps & CI/CD Automation**
+
+Master continuous integration and deployment with modern DevOps practices and automation tools.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 GitLab CI/CD with AWS ECR: From Novice to Practitioner](./15_ci_cd_gitlab_ecr.md) | Beginner to Advanced | 6-8 hours | English | Complete guide to building automated Docker image pipelines with GitLab CI/CD and AWS ECR |
+
+**What you'll learn:**
+
+- **GitLab CI/CD fundamentals** and pipeline architecture
+- **Docker image automation** with multi-stage builds and optimization
+- **AWS ECR integration** for secure container registry management
+- **Authentication and security** best practices for CI/CD
+- **Production-ready pipelines** with testing, security scanning, and monitoring
+- **Advanced patterns** including environment-specific deployments
+- **Troubleshooting techniques** for common CI/CD issues
+- **Performance optimization** and cost management strategies
+
+**Key Features:**
+
+- From basic pipelines to enterprise-grade automation
+- Real-world examples with Node.js and Python applications
+- Security scanning and vulnerability management
+- Environment-specific deployment strategies
+- **24-hour challenge** to build complete CI/CD pipeline
+- Comprehensive troubleshooting and debugging guides
+
+---
+
+### � **AI-Powered Developer Tools**
+
+Leverage artificial intelligence to accelerate development workflow and boost productivity.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 Amazon Q for the Impatient: From Novice to Practitioner](./16_amazon_q.md) | Beginner to Advanced | 4-6 hours | English | Master AI-powered code generation, security scanning, and development acceleration with Amazon Q |
+
+**What you'll learn:**
+
+- **Amazon Q Developer fundamentals** and ecosystem understanding
+- **AI-powered code generation** from natural language prompts
+- **Intelligent code completion** and suggestion optimization
+- **Automated security scanning** and vulnerability detection
+- **Code transformation and modernization** capabilities
+- **Custom plugin development** and enterprise integration
+- **Performance optimization** and benchmarking techniques
+- **Real-world development workflows** with AI assistance
+
+**Key Features:**
+
+- From simple code completion to complex application generation
+- Multi-language support (Python, JavaScript, Java, C#, and more)
+- IDE integration with popular development environments
+- Command-line interface for terminal-based workflows
+- **24-hour challenge** to transform your development process
+- Security-first approach with built-in code reviews
+- Enterprise features for team collaboration
+
+---
+
+### �🤖 **Artificial Intelligence & Machine Learning**
 
 Advanced ML training with Google Cloud's Vertex AI platform and AI agent development.
 
@@ -319,46 +386,52 @@ Strategic migration guides and infrastructure transformation patterns.
 ### Path 4: DevOps & Containers Focus
 
 ```text
-1. Install Google Cloud CLI → 2. Kubernetes Beginner → 3. Next.js Deployment → 4. GCP Crash Course (Container modules)
+1. Install Google Cloud CLI → 2. Kubernetes Beginner → 3. Amazon Q Developer → 4. GitLab CI/CD with AWS ECR → 5. Next.js Deployment → 6. GCP Crash Course (Container modules)
 ```
 
-### Path 5: Frontend Developer to Full-Stack
+### Path 5: AI-Powered Development
 
 ```text
-1. Install Google Cloud CLI → 2. Next.js Deployment → 3. GCP Storage → 4. GCP Crash Course
+1. Amazon Q Developer → 2. Install Google Cloud CLI → 3. GCP Crash Course → 4. GitLab CI/CD with AWS ECR → 5. Vertex AI Complete Course
 ```
 
-### Path 6: Data Engineering Specialization
+### Path 6: Frontend Developer to Full-Stack
+
+```text
+1. Install Google Cloud CLI → 2. Amazon Q Developer → 3. Next.js Deployment → 4. GCP Storage → 5. GCP Crash Course
+```
+
+### Path 7: Data Engineering Specialization
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Tower.dev Platform → 4. Vertex AI (for ML pipelines)
 ```
 
-### Path 7: API Management & Integration
+### Path 8: API Management & Integration
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management → 6. Next.js Deployment
 ```
 
-### Path 8: Advanced AI & Data Platform
+### Path 9: Advanced AI & Data Platform
 
 ```text
 1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. OAuth2 & OIDC → 6. Apigee Integration
 ```
 
-### Path 9: Authentication & Security Mastery
+### Path 10: Authentication & Security Mastery
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management
 ```
 
-### Path 10: SaaS Development & Enterprise Architecture
+### Path 11: SaaS Development & Enterprise Architecture
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. AWS ECS Fargate SaaS Development → 5. HAProxy to AWS Migration
 ```
 
-### Path 11: Cloud Migration & Infrastructure
+### Path 12: Cloud Migration & Infrastructure
 
 ```text
 1. Install Google Cloud CLI → 2. GCP Crash Course → 3. HAProxy to AWS Migration → 4. Apigee API Management
@@ -394,6 +467,8 @@ Strategic migration guides and infrastructure transformation patterns.
 | GCP Storage Bucket | $0-2 USD | ✅ Free tier generous |
 | GCP Crash Course | $0-10 USD | ✅ Most labs covered |
 | Next.js Deployment to GCP | $0-5 USD | ✅ Firebase free, Cloud Run generous free tier |
+| GitLab CI/CD with AWS ECR | $0-10 USD | ✅ GitLab free tier, AWS ECR free for 500MB storage |
+| Amazon Q Developer | $0 | ✅ Generous free tier with unlimited code suggestions |
 | Vertex AI Course | $5-20 USD | ⚠️ Some advanced features cost extra |
 | AI Agent Development | $10-30 USD | ⚠️ Gemini API calls and compute costs |
 | Tower.dev Platform | $0-15 USD | ⚠️ Platform usage and compute resources |
@@ -447,7 +522,8 @@ Track your progress through the training:
 
 - [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
 - [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
-- [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutions
+- [ ] � **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
+- [ ] �💾 **Storage Architect** - Set up and managed cloud storage solutions
 - [ ] ☁️ **Cloud Professional** - Completed GCP crash course
 - [ ] 🚀 **Deployment Expert** - Mastered Next.js deployment strategies on GCP
 - [ ] 🏢 **SaaS Architect** - Built complete production-ready SaaS platform with AWS ECS Fargate and CDK
