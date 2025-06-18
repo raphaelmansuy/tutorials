@@ -150,11 +150,12 @@ Master modern deployment strategies for web applications on Google Cloud Platfor
 
 ### 🤖 **Artificial Intelligence & Machine Learning**
 
-Advanced ML training with Google Cloud's Vertex AI platform.
+Advanced ML training with Google Cloud's Vertex AI platform and AI agent development.
 
 | Tutorial | Level | Duration | Language | Description |
 |----------|-------|----------|----------|-------------|
 | [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md) | Advanced | 6-8 hours | English | Complete machine learning pipeline using Google Cloud Vertex AI |
+| [📖 Developing AI Agents with Google ADK and Vertex AI](./07_develop_ai_agent_with_google_adk.md) | Advanced | 8-10 hours | English | Build intelligent AI agents using Google ADK, Vertex AI, and Gemini 2.5 models |
 
 **What you'll learn:**
 
@@ -164,6 +165,8 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 - **Model deployment** and endpoint management
 - **MLOps** with Vertex AI Pipelines
 - **Generative AI** and Model Garden
+- **AI Agent development** with Google ADK
+- **Gemini 2.5 model integration** and optimization
 - **Production monitoring** and management
 - **Cost optimization** for ML workloads
 
@@ -173,6 +176,62 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 - Real-world examples and best practices
 - Collaborative ML workflows
 - Scalable infrastructure utilization
+- Intelligent agent development and deployment
+
+---
+
+### 🏗️ **Data Engineering & Platforms**
+
+Modern data platform development and management solutions.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 Tower.dev: From Novice to Practitioner](./08_tower_dev.md) | Intermediate | 4-6 hours | English | Master modern data platform development with Tower.dev for simplified data engineering |
+
+**What you'll learn:**
+
+- **Tower.dev platform** architecture and capabilities
+- **Data pipeline development** with simplified workflows
+- **Environment consistency** and deployment automation
+- **Kubernetes-based** data platform management
+- **Cost optimization** for data infrastructure
+- **Production-ready** data engineering practices
+- **Team collaboration** and development workflows
+
+**Key Features:**
+
+- Simplified data platform management
+- Infrastructure-as-code for data engineering
+- Real-world data pipeline examples
+- Performance optimization techniques
+
+---
+
+### 🌐 **API Management & Integration**
+
+Enterprise-grade API management and security solutions.
+
+| Tutorial | Level | Duration | Language | Description |
+|----------|-------|----------|----------|-------------|
+| [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md) | Intermediate | 5-7 hours | English | Complete guide to API management, security, and analytics with Google Cloud Apigee |
+
+**What you'll learn:**
+
+- **Apigee architecture** and API gateway fundamentals
+- **API security** and authentication strategies
+- **Traffic management** and rate limiting
+- **Analytics and monitoring** for API performance
+- **Developer portal** setup and management
+- **API monetization** and policy enforcement
+- **Integration patterns** with GCP services
+- **Production deployment** and scaling strategies
+
+**Key Features:**
+
+- Enterprise API management patterns
+- Security best practices and compliance
+- Performance optimization and analytics
+- Real-world integration scenarios
 
 ---
 
@@ -193,7 +252,7 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 ### Path 3: ML/AI Specialization
 
 ```text
-1. Install Google Cloud CLI → 2. GCP Storage → 3. GCP Crash Course → 4. Vertex AI Complete Course
+1. Install Google Cloud CLI → 2. GCP Storage → 3. GCP Crash Course → 4. Vertex AI Complete Course → 5. AI Agent Development
 ```
 
 ### Path 4: DevOps & Containers Focus
@@ -206,6 +265,24 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 
 ```text
 1. Install Google Cloud CLI → 2. Next.js Deployment → 3. GCP Storage → 4. GCP Crash Course
+```
+
+### Path 6: Data Engineering Specialization
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Tower.dev Platform → 4. Vertex AI (for ML pipelines)
+```
+
+### Path 7: API Management & Integration
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Apigee API Management → 4. Next.js Deployment
+```
+
+### Path 8: Advanced AI & Data Platform
+
+```text
+1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. Apigee Integration
 ```
 
 ---
@@ -238,6 +315,9 @@ Advanced ML training with Google Cloud's Vertex AI platform.
 | GCP Crash Course | $0-10 USD | ✅ Most labs covered |
 | Next.js Deployment to GCP | $0-5 USD | ✅ Firebase free, Cloud Run generous free tier |
 | Vertex AI Course | $5-20 USD | ⚠️ Some advanced features cost extra |
+| AI Agent Development | $10-30 USD | ⚠️ Gemini API calls and compute costs |
+| Tower.dev Platform | $0-15 USD | ⚠️ Platform usage and compute resources |
+| Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -287,6 +367,9 @@ Track your progress through the training:
 - [ ] ☁️ **Cloud Professional** - Completed GCP crash course
 - [ ] 🚀 **Deployment Expert** - Mastered Next.js deployment strategies on GCP
 - [ ] 🤖 **ML Engineer** - Built end-to-end ML pipeline with Vertex AI
+- [ ] 🧠 **AI Agent Developer** - Created intelligent AI agents with Google ADK and Gemini
+- [ ] 🏗️ **Data Platform Engineer** - Mastered Tower.dev for data engineering
+- [ ] 🌐 **API Management Expert** - Implemented enterprise API solutions with Apigee
 
 ---
 
