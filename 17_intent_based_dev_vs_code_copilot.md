@@ -503,9 +503,9 @@ export const UserDashboard: React.FC = () => {
 
 **Custom Instructions for Your Project:**
 
-Create project-specific instructions that guide the agent's behavior :
+Create project-specific instructions that guide the agent's behavior:
 
-```markdown
+`````markdown
 <!-- .vscode/instructions.md -->
 # Project Development Guidelines
 
@@ -532,7 +532,7 @@ Create project-specific instructions that guide the agent's behavior :
 - Authentication required for sensitive operations
 - Secrets managed through environment variables
 - Regular dependency security audits
-```
+`````
 
 **Model Selection Strategy:**
 
@@ -581,9 +581,9 @@ For intent-based development, the choice of AI model significantly impacts resul
 
 *Symptom*: Agent forgets previous conversation context or project details
 
-*Solution*: Implement context anchoring :
+*Solution*: Implement context anchoring:
 
-```markdown
+`````markdown
 <!-- Create .vscode/context.md -->
 # Project Context Anchor
 
@@ -601,15 +601,15 @@ For intent-based development, the choice of AI model significantly impacts resul
 - Memory leak in user session cleanup
 - API rate limiting implementation needed
 - Frontend state management refactoring required
-```
+`````
 
 **Issue 2: Inconsistent Code Quality**
 
 *Symptom*: Generated code doesn't match project standards
 
-*Solution*: Implement quality gates through prompt files :
+*Solution*: Implement quality gates through prompt files:
 
-```markdown
+`````markdown
 <!-- .github/prompts/code-review.prompt.md -->
 # Code Review Standards
 
@@ -623,7 +623,7 @@ Before generating any code, ensure:
 6. **Security**: Validate all inputs, sanitize outputs
 
 Review the generated code against these standards and refactor if necessary.
-```
+`````
 
 **Issue 3: MCP Server Connection Failures**
 
@@ -775,9 +775,9 @@ Your `settings.json` file serves as the neural network configuration for AI-assi
 
 ### Custom Instructions: Programming Your AI Partner
 
-The `.vscode/instructions.md` file is where you program your AI partner's behavior to match your project's specific needs :
+The `.vscode/instructions.md` file is where you program your AI partner's behavior to match your project's specific needs:
 
-```markdown
+`````markdown
 # AI Development Instructions
 
 ## Primary Objective
@@ -848,16 +848,16 @@ You are collaborating on a modern TypeScript-based microservices platform with e
 - Reference existing codebase patterns
 - Maintain consistency with established conventions
 - Consider impact on existing functionality
-```
+`````
 
 
 ### Prompt Files: Reusable AI Instructions
 
-Create specialized prompt files for common development scenarios :
+Create specialized prompt files for common development scenarios:
 
 **`.github/prompts/feature-development.prompt.md`:**
 
-```markdown
+`````markdown
 # Feature Development Template
 
 You are implementing a new feature in our TypeScript microservices platform.
@@ -892,11 +892,11 @@ You are implementing a new feature in our TypeScript microservices platform.
 
 ## Output Format
 Provide a summary of changes, test results, and any architectural implications.
-```
+`````
 
 **`.github/prompts/bug-fix.prompt.md`:**
 
-```markdown
+`````markdown
 # Bug Fix Template
 
 You are investigating and fixing a bug in our production system.
@@ -933,7 +933,7 @@ You are investigating and fixing a bug in our production system.
 - Perform regression testing
 
 Reference existing bug reports: #file:.github/ISSUE_TEMPLATE/bug_report.md
-```
+`````
 
 
 ### AI Model Selection Strategy: Choosing Your AI Partner
@@ -1116,7 +1116,7 @@ touch docs/architecture/overview.md
 
 Before starting development, establish clear context:
 
-```markdown
+`````markdown
 <!-- docs/context/project-overview.md -->
 # Project Context Document
 
@@ -1147,7 +1147,7 @@ Building a real-time collaboration platform for distributed teams with emphasis 
 - <100ms response time for API calls
 - Zero data security incidents
 - 95% user satisfaction score
-```
+`````
 
 **Phase 3: Intent Articulation Framework**
 
@@ -1194,7 +1194,7 @@ Limitations:
 
 *Solution*: Balance guidance with flexibility:
 
-```markdown
+`````markdown
 <!-- Good: Balanced guidance -->
 ## Code Style Preferences
 - Prefer functional programming patterns where appropriate
@@ -1208,7 +1208,7 @@ Limitations:
 - Variable names must follow exact camelCase with prefixes
 - Only use arrow functions, never function declarations
 - Every line must have an inline comment
-```
+`````
 
 **Pitfall 2: Neglecting MCP Server Security**
 
@@ -1299,7 +1299,7 @@ sequenceDiagram
 
 *Claude Sonnet 4 Response*:
 
-```markdown
+`````markdown
 # ADR-003: State Management Solution for React Application
 
 ## Status
@@ -1438,7 +1438,7 @@ We will use **Zustand** for client-side state management.
 *Generated with Claude Sonnet 4 on 2025-06-18*
 *Reviewed by: [Developer Name]*
 *Next Review Date: 2025-09-18*
-```
+`````
 
 
 ### Living Documentation Strategy: Documentation That Evolves
@@ -1479,7 +1479,7 @@ graph TB
 
 Create a `.github/prompts/documentation-sync.prompt.md` file:
 
-```markdown
+`````markdown
 # Documentation Synchronization Prompt
 
 You are responsible for maintaining synchronized documentation across our project.
@@ -1535,7 +1535,7 @@ You are responsible for maintaining synchronized documentation across our projec
 - List of documents updated
 - Validation results
 - Recommendations for manual review
-```
+`````
 
 
 ### Advanced Documentation Techniques: Multi-Modal Knowledge Creation
@@ -1845,7 +1845,7 @@ Quality documentation requires continuous review and improvement. AI can automat
 
 **Automated Documentation Review Workflow:**
 
-```markdown
+`````markdown
 # .github/prompts/documentation-review.prompt.md
 
 # Documentation Quality Review
@@ -1893,7 +1893,7 @@ Provide:
 2. List of issues found with severity (High/Medium/Low)
 3. Specific improvement recommendations
 4. Estimated effort to address issues
-```
+`````
 
 **Real-World Documentation Generation Example:**
 
@@ -1901,7 +1901,7 @@ Provide:
 
 *AI Response*:
 
-```markdown
+`````markdown
 # Authentication Middleware Documentation
 
 ## Overview
@@ -5736,7 +5736,7 @@ If this works correctly, you've achieved your first intent-based development suc
 1. **Create Project-Specific Instructions** 
 Add to `.vscode/instructions.md`:
 
-```markdown
+```
 # AI Development Instructions
 
 ## Project Context
@@ -5784,7 +5784,7 @@ Create `.vscode/mcp.json`:
 3. **Create Reusable Prompt Templates** 
 Add to `.github/prompts/feature-template.prompt.md`:
 
-```markdown
+```text
 # Feature Development Template
 
 Generate a complete feature implementation including:
