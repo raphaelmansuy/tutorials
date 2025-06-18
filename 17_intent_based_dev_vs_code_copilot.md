@@ -39,11 +39,15 @@ graph TD
     F --> H[Project Delays]
     F --> I[Technical Debt]
     
-    style A fill:#ffcccb
-    style F fill:#ffcccb
-    style G fill:#ff9999
-    style H fill:#ff9999
-    style I fill:#ff9999
+    style A fill:#FFE4E1,stroke:#8B0000,stroke-width:3px,color:#2F4F4F
+    style B fill:#E6F3FF,stroke:#1E90FF,stroke-width:2px,color:#191970
+    style C fill:#E6F3FF,stroke:#1E90FF,stroke-width:2px,color:#191970
+    style D fill:#E6F3FF,stroke:#1E90FF,stroke-width:2px,color:#191970
+    style E fill:#E6F3FF,stroke:#1E90FF,stroke-width:2px,color:#191970
+    style F fill:#FFEBCD,stroke:#FF8C00,stroke-width:3px,color:#8B4513
+    style G fill:#FFB6C1,stroke:#DC143C,stroke-width:2px,color:#8B0000
+    style H fill:#FFB6C1,stroke:#DC143C,stroke-width:2px,color:#8B0000
+    style I fill:#FFB6C1,stroke:#DC143C,stroke-width:2px,color:#8B0000
 ```
 
 
