@@ -1,0 +1,31 @@
+{
+  // Diff algorithm settings to prevent timeout issues
+  "diffEditor.maxComputationTime": 0,
+  "diffEditor.ignoreTrimWhitespace": true,
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.wordWrap": "on",
+  
+  // Performance optimizations
+  "editor.largeFileOptimizations": true,
+  "editor.maxTokenizationLineLength": 20000,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  
+  // Git diff optimizations
+  "git.useEditorAsCommitInput": false,
+  "git.mergeEditor": false,
+  "scm.diffDecorations": "gutter",
+  
+  // File watcher optimizations
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.hg/store/**": true
+  },
+  
+  // Memory and performance settings
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "extensions.autoUpdate": false,
+  "telemetry.telemetryLevel": "off"
+}
