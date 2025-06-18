@@ -15,20 +15,32 @@ This guide provides a comprehensive walkthrough for setting up a free, SEO-optim
 Keep your existing tutorial files at the root level. Here's the recommended structure:
 
 ```mermaid
-architecture-beta
-    group repo(server)[Repository Root]
+flowchart TD
+    A[Repository Root] --> B[README.md]
+    A --> C[Tutorial Files]
+    C --> D[01_kubernetes_beginner.md]
+    C --> E[05_vertex_ai.md]
+    C --> F[17_intent_based_dev_vs_code_copilot.md]
     
-    service readme(doc)[README.md] in repo
-    service tutorials(docs)[Tutorial Files] in repo
-    service config(database)[_config.yml] in repo
-    service layouts(folder)[_layouts/] in repo
-    service assets(folder)[assets/] in repo
-    service index(doc)[index.md] in repo
-    service actions(folder)[.github/workflows/] in repo
+    A --> G[_config.yml]
+    A --> H[index.md]
+    A --> I[_layouts/]
+    I --> J[default.html]
+    I --> K[tutorial.html]
     
-    tutorials:R --> L:config
-    layouts:B --> T:assets
-    index:T --> B:readme
+    A --> L[assets/]
+    L --> M[css/]
+    M --> N[style.css]
+    L --> O[images/]
+    O --> P[social-preview.png]
+    
+    A --> Q[.github/workflows/]
+    Q --> R[jekyll.yml]
+    
+    style A fill:#e1f5fe
+    style C fill:#f3e5f5
+    style I fill:#e8f5e8
+    style L fill:#fff3e0
 ```
 
 **Key Files:**
