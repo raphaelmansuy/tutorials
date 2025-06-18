@@ -215,20 +215,24 @@ Enterprise-grade API management, security, and authentication solutions.
 |----------|-------|----------|----------|-------------|
 | [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md) | Intermediate | 5-7 hours | English | Complete guide to API management, security, and analytics with Google Cloud Apigee |
 | [📖 OAuth2: From Novice to Practitioner](./11_oauth2.md) | Intermediate | 4-6 hours | English | Master OAuth2 authentication and authorization with real-world examples and security best practices |
+| [📖 OpenID Connect: Complete Authentication Guide](./12_oidc_connect.md) | Intermediate to Advanced | 6-8 hours | English | Comprehensive OpenID Connect tutorial covering identity authentication, token management, and production implementation |
 
 **What you'll learn:**
 
 - **Apigee architecture** and API gateway fundamentals
 - **OAuth2 flows** and authentication patterns (Authorization Code, Client Credentials, PKCE)
+- **OpenID Connect (OIDC)** identity layer and authentication protocols
 - **API security** and authentication strategies
-- **Traffic management** and rate limiting
 - **Token lifecycle** management and security best practices
+- **ID tokens, access tokens**, and refresh token handling
+- **Traffic management** and rate limiting
 - **Analytics and monitoring** for API performance
 - **Developer portal** setup and management
 - **API monetization** and policy enforcement
 - **Integration patterns** with GCP services
 - **Production deployment** and scaling strategies
-- **Troubleshooting** OAuth2 and API issues
+- **OIDC debugging** and troubleshooting techniques
+- **Enterprise identity** integration patterns
 
 **Key Features:**
 
@@ -236,7 +240,8 @@ Enterprise-grade API management, security, and authentication solutions.
 - Security best practices and compliance
 - Performance optimization and analytics
 - Real-world integration scenarios
-- Hands-on OAuth2 implementation examples
+- Hands-on OAuth2 and OIDC implementation examples
+- Production-ready authentication solutions
 
 ---
 
@@ -281,13 +286,19 @@ Enterprise-grade API management, security, and authentication solutions.
 ### Path 7: API Management & Integration
 
 ```text
-1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. Apigee API Management → 5. Next.js Deployment
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management → 6. Next.js Deployment
 ```
 
 ### Path 8: Advanced AI & Data Platform
 
 ```text
-1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. OAuth2 & Apigee Integration
+1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. OAuth2 & OIDC → 6. Apigee Integration
+```
+
+### Path 9: Authentication & Security Mastery
+
+```text
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. OpenID Connect → 5. Apigee API Management
 ```
 
 ---
@@ -324,6 +335,7 @@ Enterprise-grade API management, security, and authentication solutions.
 | Tower.dev Platform | $0-15 USD | ⚠️ Platform usage and compute resources |
 | Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
 | OAuth2 Authentication | $0-5 USD | ✅ Most examples use free services |
+| OpenID Connect (OIDC) | $0-5 USD | ✅ Free identity providers available |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -377,6 +389,7 @@ Track your progress through the training:
 - [ ] 🏗️ **Data Platform Engineer** - Mastered Tower.dev for data engineering
 - [ ] 🌐 **API Management Expert** - Implemented enterprise API solutions with Apigee
 - [ ] 🔐 **OAuth2 Security Specialist** - Mastered authentication and authorization patterns
+- [ ] 🔑 **OpenID Connect Expert** - Implemented enterprise identity and authentication solutions
 
 ---
 
