@@ -1166,7 +1166,6 @@ You are implementing a new feature in our TypeScript microservices platform.
 ## Output Format
 Provide a summary of changes, test results, and any architectural implications.
 ``````
-``````
 
 **`.github/prompts/bug-fix.prompt.md`:**
 
