@@ -209,22 +209,26 @@ Modern data platform development and management solutions.
 
 ### 🌐 **API Management & Integration**
 
-Enterprise-grade API management and security solutions.
+Enterprise-grade API management, security, and authentication solutions.
 
 | Tutorial | Level | Duration | Language | Description |
 |----------|-------|----------|----------|-------------|
 | [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md) | Intermediate | 5-7 hours | English | Complete guide to API management, security, and analytics with Google Cloud Apigee |
+| [📖 OAuth2: From Novice to Practitioner](./11_oauth2.md) | Intermediate | 4-6 hours | English | Master OAuth2 authentication and authorization with real-world examples and security best practices |
 
 **What you'll learn:**
 
 - **Apigee architecture** and API gateway fundamentals
+- **OAuth2 flows** and authentication patterns (Authorization Code, Client Credentials, PKCE)
 - **API security** and authentication strategies
 - **Traffic management** and rate limiting
+- **Token lifecycle** management and security best practices
 - **Analytics and monitoring** for API performance
 - **Developer portal** setup and management
 - **API monetization** and policy enforcement
 - **Integration patterns** with GCP services
 - **Production deployment** and scaling strategies
+- **Troubleshooting** OAuth2 and API issues
 
 **Key Features:**
 
@@ -232,6 +236,7 @@ Enterprise-grade API management and security solutions.
 - Security best practices and compliance
 - Performance optimization and analytics
 - Real-world integration scenarios
+- Hands-on OAuth2 implementation examples
 
 ---
 
@@ -276,13 +281,13 @@ Enterprise-grade API management and security solutions.
 ### Path 7: API Management & Integration
 
 ```text
-1. Install Google Cloud CLI → 2. GCP Crash Course → 3. Apigee API Management → 4. Next.js Deployment
+1. Install Google Cloud CLI → 2. GCP Crash Course → 3. OAuth2 Authentication → 4. Apigee API Management → 5. Next.js Deployment
 ```
 
 ### Path 8: Advanced AI & Data Platform
 
 ```text
-1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. Apigee Integration
+1. Install Google Cloud CLI → 2. Tower.dev Platform → 3. Vertex AI → 4. AI Agent Development → 5. OAuth2 & Apigee Integration
 ```
 
 ---
@@ -318,6 +323,7 @@ Enterprise-grade API management and security solutions.
 | AI Agent Development | $10-30 USD | ⚠️ Gemini API calls and compute costs |
 | Tower.dev Platform | $0-15 USD | ⚠️ Platform usage and compute resources |
 | Apigee API Management | $0-10 USD | ✅ Evaluation tier available |
+| OAuth2 Authentication | $0-5 USD | ✅ Most examples use free services |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -370,6 +376,7 @@ Track your progress through the training:
 - [ ] 🧠 **AI Agent Developer** - Created intelligent AI agents with Google ADK and Gemini
 - [ ] 🏗️ **Data Platform Engineer** - Mastered Tower.dev for data engineering
 - [ ] 🌐 **API Management Expert** - Implemented enterprise API solutions with Apigee
+- [ ] 🔐 **OAuth2 Security Specialist** - Mastered authentication and authorization patterns
 
 ---
 
