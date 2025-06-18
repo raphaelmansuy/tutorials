@@ -273,6 +273,23 @@ Think of it as the difference between being a micromanager who specifies every d
 **Core Components of Intent-Based Development:**
 
 ```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#E8F4FD',
+    'primaryTextColor': '#1E3A8A',
+    'primaryBorderColor': '#3B82F6',
+    'secondaryColor': '#F0FDF4',
+    'secondaryTextColor': '#15803D',
+    'secondaryBorderColor': '#22C55E',
+    'tertiaryColor': '#FEF3FF',
+    'tertiaryTextColor': '#7C2D92',
+    'tertiaryBorderColor': '#A855F7',
+    'background': '#FFFFFF',
+    'lineColor': '#6B7280',
+    'textColor': '#111827'
+  }
+}}%%
 mindmap
   root((Intent-Based Development))
     Natural Language Interface
