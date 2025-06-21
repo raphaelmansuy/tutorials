@@ -398,6 +398,14 @@ Strategic migration guides and infrastructure transformation patterns.
 
 ---
 
+### 🏗️ Infrastructure as Code (IaC)
+
+| Tutorial                                                                 | Level                | Duration  | Language | Description                                                                                         |
+| ------------------------------------------------------------------------ | -------------------- | --------- | -------- | --------------------------------------------------------------------------------------------------- |
+| [📖 Terraform for the Impatient: From Novice to Practitioner](./18_terraform.md) | Beginner to Advanced | 4-8 hours | English  | Fast-track guide to mastering Terraform, Infrastructure as Code, and cloud automation best practices |
+
+---
+
 ## 🎯 Learning Paths
 
 ### Path 1: Cloud Beginner to Professional
