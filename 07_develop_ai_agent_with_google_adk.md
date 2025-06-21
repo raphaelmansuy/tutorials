@@ -1,6 +1,6 @@
 # Google Agent Development Kit (ADK) - A Comprehensive Guide to Building Intelligent AI Agents
 
-## Chapter 1: Introduction - Why ADK Matters in June 2025
+### Chapter 1: Introduction - Why ADK Matters in June 2025
 
 ### The Agent Revolution is Here (And You're About to Miss It)
 
@@ -85,9 +85,9 @@ By the end of this article, you'll understand how to transform chaotic AI implem
 
 The biggest mistake new ADK developers make is thinking bigger means better. Start small, prove value, then scale. The most successful agent implementations begin with solving one specific problem really well.
 
-# Chapter 2: The ADK Mindset - From Functions to Autonomous Teams
+## Chapter 2: The ADK Mindset - From Functions to Autonomous Teams
 
-## The Overwhelmed CTO's Awakening
+### The Overwhelmed CTO's Awakening
 
 Meet David Chen, CTO of a mid-sized fintech startup. Three months ago, his team was drowning. Their AI-powered customer service system was a nightmare of if-else statements wrapped around GPT API calls. Every new feature required weeks of debugging, and the system broke whenever edge cases appeared .
 
@@ -105,9 +105,9 @@ But agent thinking operates differently:
 - **Goal-oriented behavior** rather than step-by-step instructions
 - **Dynamic adaptation** to changing conditions and contexts
 
-## Why Agent Thinking Changes Everything
+### Why Agent Thinking Changes Everything
 
-### The Fundamental Shift: From Instructions to Intentions
+#### The Fundamental Shift: From Instructions to Intentions
 
 In traditional programming, you tell the computer exactly what to do:
 
@@ -135,7 +135,7 @@ customer_service_agent = Agent(
 
 The agent **perceives** the customer's intent, **reasons** about the best response, and **acts** autonomously to achieve the goal .
 
-### The Specialization Principle: Jazz Ensemble vs. Solo Piano
+#### The Specialization Principle: Jazz Ensemble vs. Solo Piano
 
 Think about why jazz ensembles create richer music than solo pianists. It's not just about having more instruments—it's about **specialized expertise working in harmony** .
 
@@ -169,9 +169,9 @@ In David's new system:
 - The **Billing Agent** specializes in payment and account problems
 - Each agent has its own tools and expertise, but they coordinate seamlessly
 
-## What Is an Agent? Beyond Functions and Objects
+### What Is an Agent? Beyond Functions and Objects
 
-### Core Agent Anatomy
+#### Core Agent Anatomy
 
 An agent in ADK isn't just a function with extra features—it's a **self-contained execution unit designed to act autonomously** . Every agent has:
 
@@ -188,7 +188,7 @@ weather_agent = Agent(
 )
 ```
 
-### The Autonomy Spectrum: From Puppets to Partners
+#### The Autonomy Spectrum: From Puppets to Partners
 
 Not all agents need the same level of independence. ADK supports different points on the **autonomy spectrum** :
 
@@ -213,7 +213,7 @@ Most business applications benefit from **proactive, collaborative agents** that
 **Services** provide capabilities: `PaymentService.process_payment()`
 **Agents** achieve goals: `"Help this customer resolve their billing issue"`
 
-## **Pause and Reflect** 🤔
+#### Pause and Reflect 🤔
 
 Before diving into hands-on examples, consider your current systems:
 
@@ -221,9 +221,9 @@ Before diving into hands-on examples, consider your current systems:
 2. **What tasks could benefit from specialized "expert" agents?**
 3. **How much autonomy would you be comfortable giving to an AI system?**
 
-## When Agent Thinking Transforms Business Logic
+### When Agent Thinking Transforms Business Logic
 
-### Real Example: From Chaos to Coordination
+#### Real Example: From Chaos to Coordination
 
 David's old customer service flow looked like this:
 
@@ -290,11 +290,11 @@ When a user requests "Write a blog post about renewable energy," the orchestrato
 3. **Coordinates** handoff from researcher to writer to editor
 4. **Ensures** quality standards are met throughout
 
-## Pro Tip 💡
+### Pro Tip 💡
 
 **Start with the outcome, not the process.** Instead of thinking "How do I code this workflow?" ask "What goal should this agent achieve?" Let the agent figure out the how—that's what makes it intelligent.
 
-## The Mental Model Shift: From Coding to Orchestrating
+### The Mental Model Shift: From Coding to Orchestrating
 
 Traditional developers write code that tells computers what to do. Agent developers **orchestrate teams** of intelligent entities that figure out how to achieve goals .
 
@@ -305,7 +305,7 @@ This shift requires thinking like a manager rather than a micromanager:
 - **Enable communication** between agents working on related tasks
 - **Monitor outcomes** rather than controlling every step
 
-## Common Misconceptions About Agent Development
+### Common Misconceptions About Agent Development
 
 **Misconception 1**: "Agents are just fancy functions"
 **Reality**: Agents have goals, context, and autonomy—they make decisions, not just process data .
@@ -329,9 +329,9 @@ The mindset shift from traditional programming to agent orchestration is profoun
 
 Would you like me to continue with Chapter 3: Quick Start Victory?
 
-# Chapter 3: Quick Start Victory - Your First Agent in 10 Minutes
+### Chapter 3: Quick Start Victory - Your First Agent in 10 Minutes
 
-## The Immediate Gratification Promise
+### The Immediate Gratification Promise
 
 Remember David from Chapter 2? His transformation didn't happen through months of theoretical study—it happened in the first 10 minutes when he saw an intelligent agent actually working. That moment of clarity is exactly what we're about to give you.
 
@@ -368,7 +368,7 @@ graph TD
     style H fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
 ```
 
-## Step 1: Environment Setup (2 Minutes)
+### Step 1: Environment Setup (2 Minutes)
 
 ### Prerequisites Check
 
@@ -421,7 +421,7 @@ pip show google-adk
 
 This should display the ADK version and dependencies, confirming successful installation.
 
-## Step 2: Project Structure Setup (2 Minutes)
+### Step 2: Project Structure Setup (2 Minutes)
 
 ### Create the Project Framework
 
@@ -453,7 +453,7 @@ Notice this isn't just a single Python file. ADK treats agents as **applications
 - **Environment management**: Keep secrets and configuration separate
 - **Package organization**: Enable imports and reusability
 
-## Step 3: Create Your First Agent (4 Minutes)
+### Step 3: Create Your First Agent (4 Minutes)
 
 ### The Complete Agent Code
 
@@ -569,7 +569,7 @@ root_agent = Agent(
 **3. Intelligence Through Instructions**
 The `instruction` parameter is where the magic happens. It transforms a raw LLM into a **specialized agent** with specific behavior patterns.
 
-## Step 4: Environment Configuration (1 Minute)
+### Step 4: Environment Configuration (1 Minute)
 
 ### Configure Model Access
 
@@ -603,7 +603,7 @@ from . import agent
 
 This enables ADK to discover and load your agent.
 
-## Step 5: Launch and Test (1 Minute)
+### Step 5: Launch and Test (1 Minute)
 
 ### Start the ADK Web Interface
 
@@ -645,7 +645,7 @@ User: I'm planning a trip to London. How's the weather there and what time is it
 Agent: In London, it's currently cloudy with a temperature of 15°C (59°F). The current time in London is 2025-06-21 08:29:45 GMT. Perfect for sightseeing if you don't mind the clouds!
 ```
 
-## The Magic Moment: Understanding What Just Happened
+### The Magic Moment: Understanding What Just Happened
 
 ### Agent Reasoning in Action
 
@@ -668,7 +668,7 @@ Traditional programming would require you to:
 
 **The agent handles all of this automatically through reasoning**. It understands intent, not just keywords.
 
-## **Interactive Challenge** 🎯
+### **Interactive Challenge** 🎯
 
 Before moving on, try these queries to test your agent's intelligence:
 
@@ -679,7 +679,7 @@ Before moving on, try these queries to test your agent's intelligence:
 
 Notice how the agent adapts its responses while maintaining consistency.
 
-## Alternative: Command Line Interface
+### Alternative: Command Line Interface
 
 If you prefer terminal interaction, use:
 
@@ -696,7 +696,7 @@ Agent > The weather in New York is sunny with a temperature of 25°C (77°F).
 You > quit
 ```
 
-## When to Use Single Agents: The Decision Framework
+### When to Use Single Agents: The Decision Framework
 
 Your weather agent demonstrates **single-agent patterns**—one specialized entity handling related tasks. This approach works best when:
 
@@ -773,9 +773,9 @@ Congratulations! You've just built and deployed your first intelligent agent. Mo
 
 The moment you saw your agent respond intelligently to natural language, you crossed the threshold from traditional programming into the agent paradigm. That feeling of "it just works" is exactly what makes ADK powerful—and we're just getting started.
 
-# Chapter 4: Agent Types Deep Dive - Understanding the Building Blocks
+## Chapter 4: Agent Types Deep Dive - Understanding the Building Blocks
 
-## The Agent Architecture Spectrum
+### The Agent Architecture Spectrum
 
 Think of building an agent system like assembling a professional orchestra. You wouldn't use only violinists to perform a symphony—you need specialized musicians for different instruments, a conductor to coordinate them, and sometimes even guest soloists with unique skills. Similarly, ADK provides different types of agents, each optimized for specific roles in your intelligent application.
 
@@ -835,7 +835,7 @@ flowchart TD
     class I output
 ```
 
-## LLM Agents: The Dynamic Reasoning Powerhouses
+### LLM Agents: The Dynamic Reasoning Powerhouses
 
 **LLM Agents are the thinking components** of your agent system—they leverage large language models to understand natural language, make context-aware decisions, and adapt their behavior based on the situation at hand.
 
@@ -869,7 +869,7 @@ customer_service_agent = LlmAgent(
 )
 ```
 
-### The LLM Agent Decision Process
+#### The LLM Agent Decision Process
 
 Understanding how LLM Agents make decisions helps you design more effective instructions and tool sets:
 
@@ -927,7 +927,7 @@ flowchart TD
     class L,M output
 ```
 
-### When to Use LLM Agents
+#### When to Use LLM Agents
 
 LLM Agents are your go-to choice for scenarios requiring **flexible, intelligent reasoning**:
 
@@ -976,11 +976,11 @@ financial_advisor = LlmAgent(
 )
 ```
 
-## Workflow Agents: The Orchestration Masters
+### Workflow Agents: The Orchestration Masters
 
 **Workflow Agents are the conductors** of your agent orchestra—they don't reason or make dynamic decisions, but they excel at coordinating other agents according to predefined patterns. Think of them as smart process managers that ensure work flows through your system efficiently and predictably.
 
-### The Three Orchestration Patterns
+#### The Three Orchestration Patterns
 
 ADK provides three fundamental workflow patterns, each optimized for different coordination needs:
 
@@ -1024,7 +1024,7 @@ flowchart TD
     class H,I,J example
 ```
 
-### Sequential Agents: Step-by-Step Excellence
+#### Sequential Agents: Step-by-Step Excellence
 
 **Sequential Agents execute sub-agents in order**, with each agent building on the output of the previous one. This pattern is perfect for **pipeline processes** where each step depends on the completion of prior steps.
 
@@ -1124,7 +1124,7 @@ sequenceDiagram
     SP-->>User: Publication-ready article
 ```
 
-### Parallel Agents: Simultaneous Execution Power
+#### Parallel Agents: Simultaneous Execution Power
 
 **Parallel Agents execute multiple sub-agents simultaneously**, making them ideal for tasks where **independent operations can run concurrently** to save time and improve efficiency.
 
@@ -1223,7 +1223,7 @@ flowchart TD
     class M result
 ```
 
-### Loop Agents: Iterative Process Control
+#### Loop Agents: Iterative Process Control
 
 **Loop Agents repeatedly execute sub-agents** until a specific condition is met or a maximum number of iterations is reached. This pattern is perfect for **quality control, optimization, and iterative improvement processes**.
 
@@ -1319,7 +1319,7 @@ flowchart TD
     class E,M exit
 ```
 
-### When to Use Each Workflow Pattern
+#### When to Use Each Workflow Pattern
 
 | Pattern | Best For | Characteristics | Example Use Cases |
 |---------|----------|----------------|-------------------|
@@ -1327,7 +1327,7 @@ flowchart TD
 | **Parallel** | Independent tasks, time optimization | Concurrent execution, result aggregation | Data gathering, multi-source analysis, batch processing |
 | **Loop** | Quality control, iterative improvement | Repeated execution, condition-based termination | Content refinement, error correction, optimization processes |
 
-## Custom Agents: The Specialized Virtuosos
+### Custom Agents: The Specialized Virtuosos
 
 **Custom Agents provide unlimited flexibility** by allowing you to implement completely custom orchestration logic. They're the virtuoso soloists of your agent orchestra—when standard patterns aren't enough, Custom Agents give you the power to create exactly what you need.
 
@@ -1528,7 +1528,7 @@ class IntelligentRoutingAgent(BaseAgent):
             metrics["avg_response_time"] = metrics["total_time"] / metrics["successful_requests"]
 ```
 
-### Advanced Custom Agent Patterns
+#### Advanced Custom Agent Patterns
 
 **Circuit Breaker Pattern**: Implement fault tolerance with automatic recovery:
 
@@ -1623,7 +1623,7 @@ stateDiagram-v2
     CircuitOpen --> ExecuteBackup: All Requests Use Backup
 ```
 
-### When to Build Custom Agents
+#### When to Build Custom Agents
 
 **✅ Build Custom Agents When:**
 - **Standard patterns are insufficient** for your specific requirements
@@ -1710,7 +1710,7 @@ flowchart TD
     class L,M,N combination
 ```
 
-## Pro Tips for Agent Architecture 💡
+### Pro Tips for Agent Architecture 💡
 
 **1. Start Simple, Scale Gradually**: Begin with single LLM Agents for new features, then introduce workflow orchestration as complexity grows.
 
@@ -1730,11 +1730,11 @@ Understanding these three agent types and their appropriate use cases is fundame
 
 
 
-## Built-in Tools Arsenal
+### Built-in Tools Arsenal
 
 Tools are the capabilities that agents can use to interact with the world and accomplish tasks. ADK provides a rich ecosystem of built-in tools that enable agents to perform a wide range of functions.
 
-### Core Built-in Tools
+#### Core Built-in Tools
 
 ADK includes several powerful built-in tools:
 
@@ -1744,7 +1744,7 @@ ADK includes several powerful built-in tools:
 - **Database connectors**: Interact with various database systems
 - **API clients**: Connect to external services and APIs
 
-### Implementing Custom Tools
+#### Implementing Custom Tools
 
 Custom tools in ADK are simply Python functions with type hints and docstrings:
 
@@ -1774,7 +1774,7 @@ Agents use tools through a reasoning process:
 4. **Tool Execution**: Calling the tool with parameters
 5. **Response Synthesis**: Incorporating tool results into a response
 
-## Third-party Integrations
+### Third-party Integrations
 
 ADK is designed to work with existing AI ecosystems, offering compatibility with popular frameworks and tools.
 
@@ -1811,7 +1811,7 @@ research_agent = LlmAgent(
 )
 ```
 
-### CrewAI Compatibility
+#### CrewAI Compatibility
 
 ADK can work alongside CrewAI for team-based agent orchestration:
 
@@ -1864,7 +1864,7 @@ result = content_crew.kickoff()
 # Implementation depends on specific integration needs
 ```
 
-### OpenAPI Specifications
+#### OpenAPI Specifications
 
 ADK supports OpenAPI specifications for integrating with RESTful services:
 
@@ -1873,11 +1873,11 @@ ADK supports OpenAPI specifications for integrating with RESTful services:
 3. **Create tool wrapper**: Wrap the client in a tool function
 4. **Add to agent**: Include the tool in your agent's tools list
 
-## Custom Tool Development
+### Custom Tool Development
 
 Creating custom tools allows you to extend agent capabilities with domain-specific functionality.
 
-### Best Practices for Tool Design
+#### Best Practices for Tool Design
 
 When developing custom tools, follow these best practices:
 
@@ -1887,7 +1887,7 @@ When developing custom tools, follow these best practices:
 - **Error handling**: Gracefully handle errors and provide informative messages
 - **Statelessness**: Design tools to be stateless when possible
 
-### Example: Content Creation Tool
+#### Example: Content Creation Tool
 
 Here's an example of a custom tool for content creation:
 
@@ -1926,7 +1926,7 @@ def generate_social_post(topic: str, platform: str, tone: str = "professional") 
     }
 ```
 
-## **Interactive Challenge** 🎯
+### **Interactive Challenge** 🎯
 
 Before moving on, try designing a custom tool for a specific business need:
 
@@ -1937,7 +1937,7 @@ Before moving on, try designing a custom tool for a specific business need:
 
 ---
 
-# Chapter 5: Tools and Capabilities – Extending Agent Power
+## Chapter 5: Tools and Capabilities – Extending Agent Power
 
 ## Introduction
 
@@ -2994,9 +2994,9 @@ With well-designed tools, your agents can access real-time data, perform complex
 **Next**: Chapter 6 will explore how to orchestrate multiple agents working together to solve complex, multi-step problems that require coordination and specialized expertise.
 
 
-# Chapter 6: Multi-Agent Orchestration - Building Intelligent Teams
+### Chapter 6: Multi-Agent Orchestration - Building Intelligent Teams
 
-## Why Multi-Agent Systems?
+### Why Multi-Agent Systems?
 
 As agentic applications grow in complexity, structuring them as a single, monolithic agent can become challenging to develop, maintain, and reason about. Multi-agent systems in ADK allow you to compose multiple, distinct `BaseAgent` instances to collaborate or coordinate in achieving larger goals.
 
@@ -3074,7 +3074,7 @@ customer_service = LlmAgent(
 
 This architecture allows each agent to focus on its area of expertise while providing a unified experience to the customer.
 
-## Coordination Patterns
+### Coordination Patterns
 
 ADK supports various coordination patterns for multi-agent systems, enabling different ways for agents to work together.
 
@@ -3207,7 +3207,7 @@ When designing multi-agent systems, start with a clear separation of concerns. E
 
 ---
 
-# Chapter 7: Business Applications - Real-World Use Cases
+## Chapter 7: Business Applications - Real-World Use Cases
 
 ## Customer Service Automation
 
@@ -3524,9 +3524,9 @@ Would you like me to continue with the next chapters on Evaluation and Testing, 
 
 ---
 
-# Chapter 8: Evaluation and Testing - Ensuring Agent Reliability
+### Chapter 8: Evaluation and Testing - Ensuring Agent Reliability
 
-## Why Evaluation Matters in Production
+### Why Evaluation Matters in Production
 
 Imagine deploying a customer service agent that gives incorrect information 30% of the time, or a content creation system that occasionally generates inappropriate content. In traditional software, bugs are frustrating but predictable. With AI agents, **unpredictable behavior can be catastrophic** .
 
@@ -3816,9 +3816,9 @@ class AgentUATFramework:
 
 ---
 
-# Chapter 9: Production Deployment - Scaling Agent Systems
+### Chapter 9: Production Deployment - Scaling Agent Systems
 
-## Deployment Architecture Overview
+### Deployment Architecture Overview
 
 Deploying ADK agents to production requires understanding the **three primary deployment patterns**, each optimized for different business requirements and operational constraints .
 
@@ -4163,7 +4163,7 @@ To ensure a smooth deployment process, follow this comprehensive checklist:
 
 ---
 
-# Chapter 10: Advanced Patterns - Mastering Complex Agent Architectures
+## Chapter 10: Advanced Patterns - Mastering Complex Agent Architectures
 
 ## State Management: The Memory Layer of Intelligence
 
@@ -4567,7 +4567,7 @@ The advanced patterns in this chapter transform simple agents into **sophisticat
 
 ---
 
-# Chapter 11: Troubleshooting Guide - Solving Common Agent Problems
+## Chapter 11: Troubleshooting Guide - Solving Common Agent Problems
 
 ## Common Pitfalls in Agent Development
 
@@ -4790,7 +4790,7 @@ These expert recommendations can save you hours of debugging time:
 
 By understanding these common pitfalls and applying effective troubleshooting techniques, you can build more reliable, performant agent systems with Google's Agent Development Kit. Remember that troubleshooting is an iterative process—start simple, isolate issues, and systematically address each challenge to create production-ready agent applications.
 
-# Chapter 12: The Future of ADK - Emerging Patterns and Roadmap
+## Chapter 12: The Future of ADK - Emerging Patterns and Roadmap
 
 ## The Evolution of Agent Ecosystems
 
