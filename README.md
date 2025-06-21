@@ -399,11 +399,22 @@ Strategic migration guides and infrastructure transformation patterns.
 
 ---
 
-### 🏗️ Infrastructure as Code (IaC)
+### 🔐 **Identity & Access Management (IAM)**
+
+Master Google Cloud IAM concepts, policies, and real-world access control scenarios.
 
 | Tutorial                                                                 | Level                | Duration  | Language | Description                                                                                         |
 | ------------------------------------------------------------------------ | -------------------- | --------- | -------- | --------------------------------------------------------------------------------------------------- |
-| [📖 Terraform for the Impatient: From Novice to Practitioner](./18_terraform.md) | Beginner to Advanced | 4-8 hours | English  | Fast-track guide to mastering Terraform, Infrastructure as Code, and cloud automation best practices |
+| [📖 Google Cloud IAM: From Novice to Practitioner](./20_google_iam.md)   | Beginner to Advanced | 2-4 hours | English  | Comprehensive guide to Google Cloud IAM: identities, roles, policies, mindmaps, and practical labs   |
+
+**What you'll learn:**
+
+- Google Cloud identity types (users, service accounts, groups, workload identities)
+- IAM roles, policies, and permissions
+- Policy evaluation and access decision flow
+- Hands-on mindmaps and sequence diagrams for IAM
+- Real-world access control scenarios and troubleshooting
+- Best practices for secure cloud access management
 
 ---
 
