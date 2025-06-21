@@ -775,232 +775,958 @@ The moment you saw your agent respond intelligently to natural language, you cro
 
 # Chapter 4: Agent Types Deep Dive - Understanding the Building Blocks
 
-## LLM Agents: The Dynamic Reasoning Layer
+## The Agent Architecture Spectrum
 
-LLM Agents represent the primary "thinking" components in ADK applications, leveraging large language models for dynamic reasoning, natural language understanding, and decision-making. Unlike deterministic agents that follow predefined execution paths, LLM Agents use language models to dynamically interpret instructions, make decisions, and interact with tools based on context and user input.
+Think of building an agent system like assembling a professional orchestra. You wouldn't use only violinists to perform a symphony—you need specialized musicians for different instruments, a conductor to coordinate them, and sometimes even guest soloists with unique skills. Similarly, ADK provides different types of agents, each optimized for specific roles in your intelligent application.
 
-### Core Capabilities of LLM Agents
+**ADK's three core agent types** form a comprehensive toolkit for building sophisticated agent systems:
 
-LLM Agents (`LlmAgent` class) function as the dynamic reasoning layer in the ADK architecture, with several key capabilities:
+- **LLM Agents**: The dynamic reasoning specialists
+- **Workflow Agents**: The orchestration conductors  
+- **Custom Agents**: The specialized virtuosos
 
-- **Natural language reasoning**: Understanding user intent from unstructured text
-- **Dynamic decision making**: Choosing appropriate actions based on context
-- **Tool selection and usage**: Determining which tools to use and how to use them
-- **Response generation**: Creating coherent, contextual responses
+Understanding when and how to use each type is crucial for building effective agent systems that solve real business problems.
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#ffeaa7"
+    tertiaryColor: "#55a3ff"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#ffeaa7"
+    tertiaryBkg: "#d1f2eb"
+---
+flowchart TD
+    A[Business Problem] --> B{What Type of Intelligence Needed?}
+    
+    B -->|Dynamic Reasoning<br/>Natural Language<br/>Adaptive Decisions| C[LLM Agent]
+    B -->|Structured Process<br/>Predictable Flow<br/>Coordination| D[Workflow Agent]
+    B -->|Unique Logic<br/>Custom Integration<br/>Specialized Control| E[Custom Agent]
+    
+    C --> F[Tools & Reasoning]
+    D --> G[Sub-Agent Orchestration]
+    E --> H[Custom Implementation]
+    
+    F --> I[Intelligent Responses]
+    G --> I
+    H --> I
+    
+    classDef problem fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef decision fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef llmAgent fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef workflowAgent fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef customAgent fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef capability fill:#f0f8ff,stroke:#3498db,stroke-width:2px,color:#2874a6
+    classDef output fill:#f1f8e9,stroke:#28a745,stroke-width:2px,color:#155724
+    
+    class A problem
+    class B decision
+    class C llmAgent
+    class D workflowAgent
+    class E customAgent
+    class F,G,H capability
+    class I output
+```
+
+## LLM Agents: The Dynamic Reasoning Powerhouses
+
+**LLM Agents are the thinking components** of your agent system—they leverage large language models to understand natural language, make context-aware decisions, and adapt their behavior based on the situation at hand.
+
+### Core Capabilities and Intelligence
+
+LLM Agents excel at tasks that require **human-like reasoning and adaptability**:
+
+- **Natural Language Understanding**: Interpreting user intent from conversational text
+- **Dynamic Decision Making**: Choosing appropriate actions based on context and goals
+- **Tool Selection and Usage**: Intelligently determining which tools to use and how
+- **Contextual Response Generation**: Creating coherent, relevant responses
+- **Adaptive Behavior**: Adjusting strategies based on feedback and results
 
 ```python
 from google.adk.agents import LlmAgent
 
-# Create a basic LLM Agent
+# Create a sophisticated customer service agent
 customer_service_agent = LlmAgent(
-    name="customer_service",
+    name="customer_service_specialist",
     model="gemini-2.0-flash",
-    description="Help customers with their banking needs",
-    instruction="You are a helpful banking assistant. Use the available tools to assist customers.",
-    tools=[check_balance_tool, transfer_funds_tool, locate_atm_tool]
+    description="Intelligent customer service representative specializing in banking",
+    instruction="""You are an expert customer service representative for a premium bank. 
+    Your role is to:
+    1. Understand customer needs through active listening
+    2. Use available tools to gather account information
+    3. Provide personalized, empathetic responses
+    4. Escalate complex issues appropriately
+    
+    Always maintain a professional, helpful tone and ensure customer satisfaction.""",
+    tools=[check_balance_tool, transfer_funds_tool, locate_atm_tool, create_support_ticket_tool]
 )
+```
+
+### The LLM Agent Decision Process
+
+Understanding how LLM Agents make decisions helps you design more effective instructions and tool sets:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A["User Input:<br/>I need help with my account"] --> B[Intent Analysis]
+    B --> C{What does the user need?}
+    
+    C -->|Account Information| D[Select: check_balance_tool]
+    C -->|Transaction Help| E[Select: transfer_funds_tool]
+    C -->|Location Services| F[Select: locate_atm_tool]
+    C -->|Complex Issue| G[Select: create_support_ticket_tool]
+    
+    D --> H[Execute Tool]
+    E --> H
+    F --> H
+    G --> H
+    
+    H --> I[Analyze Results]
+    I --> J{Need More Information?}
+    
+    J -->|Yes| K[Select Additional Tool]
+    J -->|No| L[Generate Response]
+    
+    K --> H
+    L --> M["Natural Language Response:<br/>Based on your account information..."]
+    
+    classDef input fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef analysis fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef decision fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef tool fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef execution fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef output fill:#f0f8ff,stroke:#3498db,stroke-width:2px,color:#2874a6
+    
+    class A input
+    class B,I analysis
+    class C,J decision
+    class D,E,F,G,K tool
+    class H execution
+    class L,M output
 ```
 
 ### When to Use LLM Agents
 
-LLM Agents are ideal for scenarios requiring:
+LLM Agents are your go-to choice for scenarios requiring **flexible, intelligent reasoning**:
 
-- **Open-ended tasks** with unclear structure or execution path
-- **Natural language user inputs** that need interpretation
-- **Complex workflows** requiring reasoning and adaptation
-- **Business scenarios** like customer service, content creation, or data analysis
+**✅ Ideal Use Cases:**
+- **Customer service interactions** with varied, unpredictable queries
+- **Content creation tasks** requiring creativity and adaptation
+- **Research and analysis** where context and nuance matter
+- **Personal assistants** that need to understand user preferences
+- **Educational tutoring** that adapts to learning styles
 
-### Business Example: Customer Service
+**❌ Consider Alternatives When:**
+- **Deterministic workflows** with fixed steps and outcomes
+- **High-volume, simple tasks** where consistency is more important than intelligence
+- **Real-time applications** where response predictability is crucial
+- **Regulated environments** requiring exact, auditable decision paths
 
-A customer service implementation using LLM Agents might look like this:
+### Advanced LLM Agent Patterns
+
+**Multi-Specialist Architecture**: Create teams of specialized LLM agents for complex domains:
 
 ```python
-# Define specialized customer service agents
-billing_agent = LlmAgent(
-    name="billing_specialist",
+# Financial services multi-specialist system
+investment_advisor = LlmAgent(
+    name="investment_advisor",
     model="gemini-2.0-flash",
-    description="Handle billing and payment inquiries",
-    tools=[payment_history_tool, refund_tool, invoice_tool],
-    instruction="You are a billing specialist. Help customers with payment issues."
+    description="Investment advice specialist with market analysis expertise",
+    tools=[market_data_tool, portfolio_analysis_tool, risk_assessment_tool],
+    instruction="You are a certified investment advisor. Provide data-driven investment recommendations based on client goals and risk tolerance."
 )
 
-technical_agent = LlmAgent(
-    name="technical_support",
+loan_specialist = LlmAgent(
+    name="loan_specialist", 
     model="gemini-2.0-flash",
-    description="Resolve technical issues and product problems",
-    tools=[troubleshooting_tool, system_status_tool, reset_tool],
-    instruction="You are a technical support specialist. Help customers resolve technical issues."
+    description="Mortgage and loan specialist with lending expertise",
+    tools=[credit_check_tool, loan_calculator_tool, approval_status_tool],
+    instruction="You are a lending specialist. Help customers understand loan options and guide them through the application process."
 )
 
-# Create a router agent that delegates to specialists
-router_agent = LlmAgent(
-    name="customer_service_router",
+# Coordinating agent that delegates to specialists
+financial_advisor = LlmAgent(
+    name="financial_advisor",
     model="gemini-2.0-flash",
-    description="Route customer inquiries to appropriate specialists",
-    sub_agents=[billing_agent, technical_agent],
-    instruction="You are a customer service router. Analyze the customer's query and delegate to the appropriate specialist agent."
+    description="Primary financial advisor coordinating specialized services",
+    sub_agents=[investment_advisor, loan_specialist],
+    instruction="You are a comprehensive financial advisor. Listen to client needs and coordinate with appropriate specialists to provide holistic financial guidance."
 )
 ```
 
-This multi-agent structure allows for specialized handling of different query types while maintaining a unified customer experience.
+## Workflow Agents: The Orchestration Masters
 
-## Workflow Agents: Orchestrating Execution Flow
+**Workflow Agents are the conductors** of your agent orchestra—they don't reason or make dynamic decisions, but they excel at coordinating other agents according to predefined patterns. Think of them as smart process managers that ensure work flows through your system efficiently and predictably.
 
-Workflow Agents are specialized components in ADK designed purely for orchestrating the execution flow of sub-agents. Unlike LLM Agents, Workflow Agents operate based on predefined logic, determining the execution sequence according to their type without consulting an LLM for orchestration.
+### The Three Orchestration Patterns
 
-### Types of Workflow Agents
+ADK provides three fundamental workflow patterns, each optimized for different coordination needs:
 
-ADK provides three core workflow agent types:
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A[Workflow Agent Types] --> B[Sequential Agent]
+    A --> C[Parallel Agent]
+    A --> D[Loop Agent]
+    
+    B --> E["Step 1 → Step 2 → Step 3<br/>Each step waits for previous"]
+    C --> F["Task A<br/>Task B<br/>Task C<br/>All execute simultaneously"]
+    D --> G["Repeat Process<br/>Until Condition Met<br/>Or Max Iterations Reached"]
+    
+    E --> H[Content Pipeline<br/>Research → Write → Edit]
+    F --> I[Data Gathering<br/>Weather + News + Traffic]
+    G --> J[Quality Control<br/>Check → Fix → Recheck]
+    
+    classDef main fill:#e8f4fd,stroke:#2980b9,stroke-width:3px,color:#1565c0
+    classDef agent fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef pattern fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef example fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    
+    class A main
+    class B,C,D agent
+    class E,F,G pattern
+    class H,I,J example
+```
 
-1. **Sequential Agents**: Execute sub-agents one after another, in sequence
-2. **Loop Agents**: Repeatedly execute sub-agents until a specific termination condition is met
-3. **Parallel Agents**: Execute multiple sub-agents simultaneously
+### Sequential Agents: Step-by-Step Excellence
+
+**Sequential Agents execute sub-agents in order**, with each agent building on the output of the previous one. This pattern is perfect for **pipeline processes** where each step depends on the completion of prior steps.
 
 ```python
 from google.adk.agents import SequentialAgent, LlmAgent
 
-# Create individual agents for each step
+# Create individual pipeline agents
 research_agent = LlmAgent(
-    name="research_agent",
+    name="research_specialist",
     model="gemini-2.0-flash",
-    tools=[search_tool, database_tool],
-    output_key="research_data"  # Saves output to state
+    tools=[search_tool, database_tool, fact_check_tool],
+    description="Comprehensive research specialist",
+    instruction="Conduct thorough research on the given topic. Gather facts, statistics, and authoritative sources.",
+    output_key="research_findings"  # Store results in session state
+)
+
+outline_agent = LlmAgent(
+    name="content_strategist",
+    model="gemini-2.0-flash",
+    description="Content structure and strategy specialist",
+    instruction="Create a detailed content outline based on the research_findings in session state. Structure for maximum impact and readability.",
+    output_key="content_outline"
 )
 
 writing_agent = LlmAgent(
-    name="writing_agent",
+    name="content_writer",
     model="gemini-2.0-flash",
-    instruction="Write content based on research_data from state."
+    tools=[style_guide_tool, template_tool],
+    description="Professional content writer",
+    instruction="Write engaging, high-quality content following the content_outline from session state. Maintain brand voice and style.",
+    output_key="draft_content"
 )
 
-# Create sequential workflow
-content_pipeline = SequentialAgent(
-    name="content_pipeline",
-    sub_agents=[research_agent, writing_agent],
-    description="Research and write content in sequence"
+editing_agent = LlmAgent(
+    name="content_editor",
+    model="gemini-2.0-flash",
+    tools=[grammar_tool, readability_tool, seo_tool],
+    description="Professional content editor and optimizer",
+    instruction="Edit and optimize the draft_content from session state. Ensure clarity, correctness, and SEO optimization."
+)
+
+# Create the sequential workflow
+content_creation_pipeline = SequentialAgent(
+    name="content_creation_pipeline",
+    sub_agents=[research_agent, outline_agent, writing_agent, editing_agent],
+    description="End-to-end content creation pipeline from research to publication-ready content"
 )
 ```
 
-### Why Use Workflow Agents?
-
-Workflow agents provide several key benefits:
-
-- **Predictability**: Guaranteed execution flow based on agent type and configuration
-- **Reliability**: Consistent task execution in the required order or pattern
-- **Structure**: Clear control structures for complex processes
-- **Composition**: Ability to combine structured process control with flexible LLM-powered execution
-
-### Enterprise Example: Document Processing
-
-Document processing workflows benefit significantly from the structured approach of Workflow Agents:
+**Sequential Agent Flow Visualization**:
 
 ```mermaid
-graph TD
-    A[Document Upload] --> B[Extraction Agent]
-    B --> C[Classification Agent]
-    C --> D1[Contract Analyzer]
-    C --> D2[Financial Analyzer]
-    C --> D3[Legal Compliance Checker]
-    D1 --> E[Summary Agent]
-    D2 --> E
-    D3 --> E
-    E --> F[Actionable Insights]
-
-    %% Pastel color palette with good contrast
-    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
-    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
-    style C fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#795548
-    style D1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#1b5e20
-    style D2 fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#4527a0
-    style D3 fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#e65100
-    style E fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
-    style F fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+sequenceDiagram
+    actor User
+    participant SP as Sequential Pipeline
+    participant R as Research Agent
+    participant O as Outline Agent  
+    participant W as Writing Agent
+    participant E as Editing Agent
+    participant State as Session State
+    
+    User->>SP: "Create article about renewable energy"
+    SP->>R: Execute research phase
+    R->>State: Store research_findings
+    R-->>SP: Research complete
+    
+    SP->>O: Execute outline phase
+    O->>State: Read research_findings
+    O->>State: Store content_outline
+    O-->>SP: Outline complete
+    
+    SP->>W: Execute writing phase
+    W->>State: Read content_outline
+    W->>State: Store draft_content
+    W-->>SP: Draft complete
+    
+    SP->>E: Execute editing phase
+    E->>State: Read draft_content
+    E->>State: Store final_content
+    E-->>SP: Editing complete
+    
+    SP-->>User: Publication-ready article
 ```
 
-This architecture allows for specialized handling of different document types while maintaining a consistent processing pipeline.
+### Parallel Agents: Simultaneous Execution Power
 
-## Custom Agents: Ultimate Flexibility
+**Parallel Agents execute multiple sub-agents simultaneously**, making them ideal for tasks where **independent operations can run concurrently** to save time and improve efficiency.
 
-Custom Agents provide a powerful extension mechanism in the ADK framework, allowing developers to implement arbitrary orchestration logic by directly inheriting from `BaseAgent`. Unlike the predefined patterns offered by LLM Agents and Workflow Agents, Custom Agents give complete control over execution flow, state management, and agent interactions.
+```python
+from google.adk.agents import ParallelAgent, LlmAgent
 
-### When to Use Custom Agents
+# Create independent information gathering agents
+weather_agent = LlmAgent(
+    name="weather_specialist",
+    model="gemini-2.0-flash",
+    tools=[weather_api_tool],
+    description="Weather information specialist",
+    instruction="Provide current weather conditions and forecasts.",
+    output_key="weather_data"
+)
 
-Custom Agents are designed for scenarios where predefined agent types don't provide enough flexibility:
+traffic_agent = LlmAgent(
+    name="traffic_specialist", 
+    model="gemini-2.0-flash",
+    tools=[traffic_api_tool, maps_tool],
+    description="Traffic and transportation specialist",
+    instruction="Analyze traffic conditions and suggest optimal routes.",
+    output_key="traffic_data"
+)
 
-- **Unique operational logic** not covered by standard patterns
-- **Specialized integrations** with external systems
-- **Custom control flows** beyond sequential, parallel, or loop patterns
-- **Performance-critical components** requiring optimized execution
+news_agent = LlmAgent(
+    name="news_specialist",
+    model="gemini-2.0-flash",
+    tools=[news_api_tool, trending_tool],
+    description="News and current events specialist", 
+    instruction="Gather relevant news and trending topics.",
+    output_key="news_data"
+)
 
-### Implementing Custom Agents
+# Create parallel execution workflow
+morning_briefing_system = ParallelAgent(
+    name="morning_briefing_system",
+    sub_agents=[weather_agent, traffic_agent, news_agent],
+    description="Comprehensive morning briefing system gathering multiple data sources simultaneously"
+)
+```
 
-Custom Agents inherit from `BaseAgent` and must implement the `_run_async_impl` method, which defines their behavior:
+**Parallel Agent Execution Flow**:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A[Morning Briefing Request] --> B[Parallel Agent Coordinator]
+    
+    B --> C[Weather Agent]
+    B --> D[Traffic Agent] 
+    B --> E[News Agent]
+    
+    C --> F[Weather API]
+    D --> G[Traffic API]
+    E --> H[News API]
+    
+    F --> I[Weather Data]
+    G --> J[Traffic Data]
+    H --> K[News Data]
+    
+    I --> L[Results Aggregator]
+    J --> L
+    K --> L
+    
+    L --> M[Comprehensive Morning Briefing]
+    
+    classDef request fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef coordinator fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef agent fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef api fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef data fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef aggregator fill:#f0f8ff,stroke:#3498db,stroke-width:2px,color:#2874a6
+    classDef result fill:#f1f8e9,stroke:#28a745,stroke-width:2px,color:#155724
+    
+    class A request
+    class B coordinator
+    class C,D,E agent
+    class F,G,H api
+    class I,J,K data
+    class L aggregator
+    class M result
+```
+
+### Loop Agents: Iterative Process Control
+
+**Loop Agents repeatedly execute sub-agents** until a specific condition is met or a maximum number of iterations is reached. This pattern is perfect for **quality control, optimization, and iterative improvement processes**.
+
+```python
+from google.adk.agents import LoopAgent, LlmAgent
+
+# Create quality control agents
+content_reviewer = LlmAgent(
+    name="content_quality_reviewer",
+    model="gemini-2.0-flash", 
+    tools=[quality_check_tool, compliance_tool],
+    description="Content quality and compliance reviewer",
+    instruction="""Review content for:
+    1. Accuracy and factual correctness
+    2. Brand compliance and voice consistency  
+    3. Grammar and readability
+    4. SEO optimization
+    
+    Return 'APPROVED' if content meets all standards, otherwise return 'NEEDS_REVISION' with specific feedback.""",
+    output_key="review_result"
+)
+
+content_improver = LlmAgent(
+    name="content_improvement_specialist",
+    model="gemini-2.0-flash",
+    tools=[rewrite_tool, enhancement_tool],
+    description="Content improvement and revision specialist",
+    instruction="Based on the review_result feedback, improve the content to address all identified issues. Focus on making specific, targeted improvements.",
+    output_key="improved_content"
+)
+
+# Create iterative quality control loop
+quality_control_loop = LoopAgent(
+    name="quality_control_system",
+    sub_agents=[content_reviewer, content_improver],
+    description="Iterative quality control system that refines content until it meets all standards",
+    max_iterations=5,  # Prevent infinite loops
+    termination_condition="review_result == 'APPROVED'"  # Stop when approved
+)
+```
+
+**Loop Agent Iterative Flow**:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A[Initial Content] --> B[Loop Agent Controller]
+    B --> C{Check Iteration Count<br/>& Max Iterations}
+    
+    C -->|Continue| D[Content Reviewer Agent]
+    C -->|Max Reached| E[Exit with Current Result]
+    
+    D --> F{Review Result?}
+    F -->|APPROVED| G[Success - Exit Loop]
+    F -->|NEEDS_REVISION| H[Content Improver Agent]
+    
+    H --> I[Improved Content]
+    I --> J[Update Session State]
+    J --> K[Increment Iteration Count]
+    K --> C
+    
+    G --> L[Final Approved Content]
+    E --> M[Max Iterations Reached<br/>Return Best Attempt]
+    
+    classDef input fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef controller fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef decision fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef agent fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef process fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef success fill:#f1f8e9,stroke:#28a745,stroke-width:2px,color:#155724
+    classDef exit fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    
+    class A input
+    class B controller
+    class C,F decision
+    class D,H agent
+    class I,J,K process
+    class G,L success
+    class E,M exit
+```
+
+### When to Use Each Workflow Pattern
+
+| Pattern | Best For | Characteristics | Example Use Cases |
+|---------|----------|----------------|-------------------|
+| **Sequential** | Pipeline processes, dependency chains | Ordered execution, state passing | Content creation, document processing, onboarding workflows |
+| **Parallel** | Independent tasks, time optimization | Concurrent execution, result aggregation | Data gathering, multi-source analysis, batch processing |
+| **Loop** | Quality control, iterative improvement | Repeated execution, condition-based termination | Content refinement, error correction, optimization processes |
+
+## Custom Agents: The Specialized Virtuosos
+
+**Custom Agents provide unlimited flexibility** by allowing you to implement completely custom orchestration logic. They're the virtuoso soloists of your agent orchestra—when standard patterns aren't enough, Custom Agents give you the power to create exactly what you need.
+
+### The Power of Custom Implementation
+
+Custom Agents inherit from `BaseAgent` and implement their own `_run_async_impl` method, giving you complete control over:
+
+- **Execution flow and decision logic**
+- **State management and persistence**
+- **Error handling and recovery**
+- **Integration with external systems**
+- **Performance optimization**
+
+**Custom Agent Architecture**:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A[Custom Agent Request] --> B[_run_async_impl Method]
+    B --> C[Custom Logic & Analysis]
+    
+    C --> D{Business Logic Decision}
+    D -->|Route A| E[Specialist Agent 1]
+    D -->|Route B| F[Specialist Agent 2]
+    D -->|Route C| G[External System Integration]
+    D -->|Fallback| H[Fallback Agent]
+    
+    E --> I[Performance Tracking]
+    F --> I
+    G --> J[Custom Error Handling]
+    H --> I
+    
+    I --> K[State Management]
+    J --> K
+    K --> L[Response Synthesis]
+    L --> M[Final Response]
+    
+    classDef request fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef custom fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef logic fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef decision fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef agent fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef external fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#e65100
+    classDef management fill:#f0f8ff,stroke:#3498db,stroke-width:2px,color:#2874a6
+    classDef output fill:#f1f8e9,stroke:#28a745,stroke-width:2px,color:#155724
+    
+    class A request
+    class B,C custom
+    class D decision
+    class E,F,H agent
+    class G external
+    class I,J,K management
+    class L,M output
+```
 
 ```python
 from google.adk.agents import BaseAgent
 import asyncio
+import logging
 
-class MyCustomAgent(BaseAgent):
-    def __init__(self, name, sub_agents=None, description=None):
-        super().__init__(
-            name=name,
-            sub_agents=sub_agents,
-            description=description
-        )
-
+class IntelligentRoutingAgent(BaseAgent):
+    """
+    Custom agent that intelligently routes requests based on 
+    real-time system conditions and historical performance data.
+    """
+    
+    def __init__(self, name, specialist_agents, fallback_agent):
+        super().__init__(name=name, description="Intelligent request routing system")
+        self.specialist_agents = specialist_agents
+        self.fallback_agent = fallback_agent
+        self.performance_metrics = {}
+        
     async def _run_async_impl(self, ctx):
-        # Access session state
-        previous_result = ctx.session.state.get("some_key")
-
-        # Custom logic
-        if some_condition:
-            # Run first sub-agent
-            async for event in self.sub_agents.run_async(ctx):
+        """Custom routing logic with performance tracking and fallback handling."""
+        
+        # Analyze request to determine optimal routing
+        request_analysis = await self._analyze_request(ctx)
+        
+        # Check system health and agent availability
+        available_agents = await self._check_agent_availability()
+        
+        # Select best agent based on analysis and performance history
+        selected_agent = self._select_optimal_agent(request_analysis, available_agents)
+        
+        try:
+            # Execute selected agent with performance monitoring
+            start_time = asyncio.get_event_loop().time()
+            
+            async for event in selected_agent.run_async(ctx):
                 yield event
-        else:
-            # Run second sub-agent
-            async for event in self.sub_agents.run_async(ctx):
+                
+            # Track successful execution
+            execution_time = asyncio.get_event_loop().time() - start_time
+            self._update_performance_metrics(selected_agent.name, execution_time, True)
+            
+        except Exception as e:
+            # Handle failures and implement fallback logic
+            logging.warning(f"Agent {selected_agent.name} failed: {e}")
+            self._update_performance_metrics(selected_agent.name, 0, False)
+            
+            # Execute fallback agent
+            async for event in self.fallback_agent.run_async(ctx):
                 yield event
-
-        # Store results in state
-        ctx.session.state["my_key"] = "some_value"
-
-        # Generate final response
-        yield self.create_final_response_event("Task completed successfully")
+                
+            yield self.create_final_response_event(
+                "Request completed using fallback system due to primary agent unavailability."
+            )
+    
+    async def _analyze_request(self, ctx):
+        """Analyze request complexity and determine requirements."""
+        user_message = ctx.messages[-1].content if ctx.messages else ""
+        
+        analysis = {
+            "complexity": len(user_message.split()),
+            "domain": self._classify_domain(user_message),
+            "urgency": self._assess_urgency(user_message),
+            "required_tools": self._identify_required_tools(user_message)
+        }
+        
+        return analysis
+    
+    async def _check_agent_availability(self):
+        """Check which agents are currently available and responsive."""
+        available = []
+        
+        for agent in self.specialist_agents:
+            try:
+                # Simple health check - could be expanded to more sophisticated monitoring
+                if self._is_agent_healthy(agent):
+                    available.append(agent)
+            except Exception:
+                continue
+                
+        return available
+    
+    def _select_optimal_agent(self, analysis, available_agents):
+        """Select the best agent based on analysis and performance history."""
+        
+        if not available_agents:
+            return self.fallback_agent
+            
+        # Score agents based on suitability and performance
+        agent_scores = {}
+        
+        for agent in available_agents:
+            score = 0
+            
+            # Domain matching
+            if analysis["domain"] in agent.description.lower():
+                score += 10
+                
+            # Performance history
+            if agent.name in self.performance_metrics:
+                metrics = self.performance_metrics[agent.name]
+                score += metrics["success_rate"] * 5
+                score -= metrics["avg_response_time"] * 0.1
+                
+            agent_scores[agent] = score
+            
+        # Return highest scoring agent
+        return max(agent_scores.items(), key=lambda x: x[1])[0]
+    
+    def _update_performance_metrics(self, agent_name, execution_time, success):
+        """Update performance tracking for agents."""
+        if agent_name not in self.performance_metrics:
+            self.performance_metrics[agent_name] = {
+                "total_requests": 0,
+                "successful_requests": 0,
+                "total_time": 0,
+                "success_rate": 0,
+                "avg_response_time": 0
+            }
+            
+        metrics = self.performance_metrics[agent_name]
+        metrics["total_requests"] += 1
+        
+        if success:
+            metrics["successful_requests"] += 1
+            metrics["total_time"] += execution_time
+            
+        metrics["success_rate"] = metrics["successful_requests"] / metrics["total_requests"]
+        
+        if metrics["successful_requests"] > 0:
+            metrics["avg_response_time"] = metrics["total_time"] / metrics["successful_requests"]
 ```
 
-### Capabilities of Custom Agents
+### Advanced Custom Agent Patterns
 
-Custom Agents provide control over several key aspects:
+**Circuit Breaker Pattern**: Implement fault tolerance with automatic recovery:
 
-| Capability         | Description                                | Code Pattern                                                                  |
-| :----------------- | :----------------------------------------- | :---------------------------------------------------------------------------- |
-| Calling Sub-Agents | Invoke other agents and yield their events | `async for event in self.sub_agent.run_async(ctx): yield event`               |
-| Reading State      | Access data from previous steps            | `previous_result = ctx.session.state.get("some_key")`                         |
-| Writing State      | Store results for later steps              | `ctx.session.state["my_key"] = value`                                         |
-| Conditional Logic  | Make decisions based on runtime conditions | `if condition: await agent1.run_async(ctx) else: await agent2.run_async(ctx)` |
-| Error Handling     | Manage failures and exceptions             | `try: ... except Exception: ...`                                              |
+```python
+class CircuitBreakerAgent(BaseAgent):
+    """Custom agent implementing circuit breaker pattern for fault tolerance."""
+    
+    def __init__(self, name, primary_agent, backup_agent, failure_threshold=5):
+        super().__init__(name=name)
+        self.primary_agent = primary_agent
+        self.backup_agent = backup_agent
+        self.failure_threshold = failure_threshold
+        self.failure_count = 0
+        self.circuit_open = False
+        self.last_failure_time = None
+        
+    async def _run_async_impl(self, ctx):
+        """Execute with circuit breaker logic."""
+        
+        # Check if circuit should be reset
+        if self.circuit_open and self._should_attempt_reset():
+            self.circuit_open = False
+            self.failure_count = 0
+            
+        # Route based on circuit state
+        if self.circuit_open:
+            # Circuit is open, use backup
+            async for event in self.backup_agent.run_async(ctx):
+                yield event
+        else:
+            # Circuit is closed, try primary
+            try:
+                async for event in self.primary_agent.run_async(ctx):
+                    yield event
+                    
+                # Success - reset failure count
+                self.failure_count = 0
+                
+            except Exception as e:
+                # Handle failure
+                self.failure_count += 1
+                self.last_failure_time = asyncio.get_event_loop().time()
+                
+                if self.failure_count >= self.failure_threshold:
+                    self.circuit_open = True
+                    
+                # Execute backup
+                async for event in self.backup_agent.run_async(ctx):
+                    yield event
+```
 
-## Choosing the Right Agent Type
+**Circuit Breaker Pattern Flow**:
 
-Selecting the appropriate agent type depends on your specific use case and requirements:
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50"
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+stateDiagram-v2
+    [*] --> CircuitClosed: Initial State
+    
+    CircuitClosed --> CheckPrimary: Request Received
+    CheckPrimary --> ExecutePrimary: Circuit Closed
+    ExecutePrimary --> Success: Primary Agent Succeeds
+    ExecutePrimary --> Failure: Primary Agent Fails
+    
+    Success --> ResetFailures: Reset Failure Count
+    ResetFailures --> CircuitClosed: Ready for Next Request
+    
+    Failure --> IncrementFailures: Increment Failure Count
+    IncrementFailures --> CheckThreshold: Evaluate Threshold
+    CheckThreshold --> CircuitClosed: Below Threshold
+    CheckThreshold --> CircuitOpen: Threshold Exceeded
+    
+    CircuitOpen --> ExecuteBackup: Use Backup Agent
+    ExecuteBackup --> BackupResponse: Backup Completes
+    BackupResponse --> CheckTimeout: Check Reset Timer
+    CheckTimeout --> CircuitClosed: Timer Expired
+    CheckTimeout --> CircuitOpen: Still in Timeout
+    
+    CircuitOpen --> ExecuteBackup: All Requests Use Backup
+```
 
-| Feature          | LLM Agent                         | Workflow Agent                              | Custom Agent                              |
-| :--------------- | :-------------------------------- | :------------------------------------------ | :---------------------------------------- |
-| Primary Function | Reasoning, Generation, Tool Use   | Controlling Agent Execution Flow            | Implementing Unique Logic/Integrations    |
-| Core Engine      | Large Language Model (LLM)        | Predefined Logic (Sequence, Parallel, Loop) | Custom Code                               |
-| Determinism      | Non-deterministic (Flexible)      | Deterministic (Predictable)                 | Can be either, based on implementation    |
-| Primary Use      | Language tasks, Dynamic decisions | Structured processes, Orchestration         | Tailored requirements, Specific workflows |
+### When to Build Custom Agents
 
-## **Pause and Reflect** 🤔
+**✅ Build Custom Agents When:**
+- **Standard patterns are insufficient** for your specific requirements
+- **Complex business logic** needs to be embedded in the orchestration
+- **External system integration** requires specialized handling
+- **Performance optimization** demands custom control flow
+- **Regulatory compliance** requires auditable decision processes
 
-Before diving into multi-agent orchestration, consider:
+**❌ Consider Standard Agents When:**
+- **Standard patterns meet your needs** (they cover 80% of use cases)
+- **Development speed** is more important than customization
+- **Team expertise** is limited with custom development
+- **Maintenance complexity** is a concern
 
-1. Which agent types would best suit your current business problems?
-2. How might you combine different agent types to create more powerful solutions?
-3. What specialized knowledge domains in your organization could benefit from dedicated agents?
+## **Interactive Challenge** 🎯
+
+Before moving to the next chapter, design your own multi-agent system:
+
+1. **Choose a business scenario** from your industry or interests
+2. **Identify the different types of intelligence** needed (reasoning, orchestration, custom logic)
+3. **Map each requirement** to the appropriate agent type
+4. **Design the coordination pattern** between agents
+5. **Consider the tools** each agent would need
+
+This exercise will help solidify your understanding of when and how to use each agent type effectively.
 
 ---
+
+## Choosing the Right Agent Architecture
+
+The decision of which agent types to use depends on your specific requirements, but here's a practical framework for making the choice:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#f8f9fa"
+    primaryTextColor: "#2c3e50" 
+    primaryBorderColor: "#6c5ce7"
+    lineColor: "#74b9ff"
+    secondaryColor: "#d1f2eb"
+    tertiaryColor: "#ffeaa7"
+    background: "#ffffff"
+    mainBkg: "#f8f9fa"
+    secondBkg: "#d1f2eb"
+    tertiaryBkg: "#ffeaa7"
+---
+flowchart TD
+    A[Business Requirement] --> B{Need Natural Language<br/>Understanding?}
+    
+    B -->|Yes| C{Complex Reasoning<br/>Required?}
+    B -->|No| D{Structured Process<br/>Flow Needed?}
+    
+    C -->|Yes| E[LLM Agent<br/>Primary Choice]
+    C -->|No| F[Simple LLM Agent<br/>or Workflow Agent]
+    
+    D -->|Yes| G{Execution Pattern?}
+    D -->|No| H[Custom Agent<br/>for Integration]
+    
+    G -->|Sequential| I[Sequential Agent]
+    G -->|Parallel| J[Parallel Agent]  
+    G -->|Iterative| K[Loop Agent]
+    
+    E --> L[Add Workflow Agents<br/>for Orchestration]
+    F --> L
+    I --> M[Add Custom Agents<br/>for Special Logic]
+    J --> M
+    K --> M
+    H --> N[Consider LLM Agents<br/>for Intelligence Layer]
+    
+    classDef start fill:#e8f4fd,stroke:#2980b9,stroke-width:2px,color:#1565c0
+    classDef decision fill:#fff3e0,stroke:#f39c12,stroke-width:2px,color:#e67e22
+    classDef llm fill:#e8f5e9,stroke:#27ae60,stroke-width:2px,color:#1e8449
+    classDef workflow fill:#fdf2e9,stroke:#e74c3c,stroke-width:2px,color:#c0392b
+    classDef custom fill:#f4e6ff,stroke:#9b59b6,stroke-width:2px,color:#7d3c98
+    classDef combination fill:#f0f8ff,stroke:#3498db,stroke-width:2px,color:#2874a6
+    
+    class A start
+    class B,C,D,G decision
+    class E,F llm
+    class I,J,K workflow
+    class H custom
+    class L,M,N combination
+```
+
+## Pro Tips for Agent Architecture 💡
+
+**1. Start Simple, Scale Gradually**: Begin with single LLM Agents for new features, then introduce workflow orchestration as complexity grows.
+
+**2. Specialize Agents by Domain**: Create focused agents with deep expertise rather than general-purpose agents that try to do everything.
+
+**3. Use Workflow Agents for Predictability**: When you need guaranteed execution patterns, workflow agents provide reliability that LLM agents cannot match.
+
+**4. Reserve Custom Agents for Unique Requirements**: Custom agents provide unlimited flexibility but require more development and maintenance effort.
+
+**5. Combine Agent Types Strategically**: The most powerful systems combine different agent types—LLM Agents for intelligence, Workflow Agents for orchestration, and Custom Agents for specialized logic.
+
+---
+
+Understanding these three agent types and their appropriate use cases is fundamental to building effective agent systems with ADK. Each type has distinct strengths and optimal scenarios, and the most sophisticated systems often combine multiple types to create comprehensive solutions.
+
+**Ready to extend your agents with powerful capabilities? Chapter 5 will dive deep into Tools and Capabilities, showing you how to give your agents the ability to interact with the world and perform real work.**
 
 # Chapter 5: Tools and Capabilities - Extending Agent Power
 
@@ -1738,62 +2464,6 @@ When implementing business applications with ADK, focus on creating clear bounda
 ---
 
 Would you like me to continue with the next chapters on Evaluation and Testing, Production Deployment, Advanced Patterns, and Troubleshooting?
-
-<div style="text-align: center">⁂</div>
-
-: https://deepwiki.com/google/adk-docs/3.1-llm-agents
-
-: https://google.github.io/adk-docs/
-
-: https://medium.com/@d3xvn/exploring-googles-agent-development-kit-adk-71a27a609920
-
-: https://www.aalpha.net/blog/google-agent-development-kit-adk-for-multi-agent-applications/
-
-: https://www.firecrawl.dev/blog/google-adk-multi-agent-tutorial
-
-: https://google.github.io/adk-docs/agents/workflow-agents/
-
-: https://google.github.io/adk-docs/agents/multi-agents/
-
-: https://saptak.in/writing/2025/05/10/google-adk-masterclass-part12
-
-: https://deepwiki.com/google/adk-docs/3.2-custom-agents\&rut=b7b1f1e5e9a68044bedc7e75559cda45a29ace3c6ac4c7c88534e0fea8a45516
-
-: https://google.github.io/adk-docs/agents/
-
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
-
-: https://github.com/pratik008/adk-tutorial
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart
-
-: https://dev.to/astrodevil/i-built-a-team-of-5-agents-using-google-adk-meta-llama-and-nemotron-ultra-253b-ec3
-
-: https://dev.to/rawheel/meet-googles-agent-development-kit-adk-build-real-ai-agents-not-just-chatbots-44g
-
-: https://arxiv.org/html/2505.02279v1
-
-: https://aodocs.com/products/document-management-system/
-
-: https://www.youtube.com/watch?v=zgrOwow_uTQ
-
-: https://deepwiki.com/google/adk-docs/6-deployment\&rut=caceaea83efb6073ccb3840d33e48dbec532a2e0e146c35f3806ebe60343b73d
-
-: https://google.github.io/adk-docs/evaluate/
-
-: https://www.siddharthbharath.com/the-complete-guide-to-googles-agent-development-kit-adk/
-
-: https://saptak.in/writing/2025/05/10/google-adk-masterclass-part5
-
-: https://daily.dev/blog/android-app-performance-optimization-guide-2024
-
-: https://github.com/google/adk-samples
-
-: https://www.youtube.com/watch?v=OlfjWonfcQ4
-
-: https://codelabs.developers.google.com/your-first-agent-with-adk
-
-: https://www.linkedin.com/pulse/master-multi-agents-from-scratch-googles-agent-development-jha-zq9rc
 
 ---
 
@@ -2837,64 +3507,6 @@ This pattern enables **enterprise-grade persistence** with full audit trails and
 The advanced patterns in this chapter transform simple agents into **sophisticated, production-ready systems** that can handle complex business requirements while maintaining performance and reliability . These techniques form the foundation for building agent applications that scale with your business needs.
 
 **Ready to tackle the inevitable challenges that arise in production? Chapter 11 will arm you with comprehensive troubleshooting techniques and debugging strategies that turn agent mysteries into solvable problems.**
-
-<div style="text-align: center">⁂</div>
-
-: https://www.siddharthbharath.com/the-complete-guide-to-googles-agent-development-kit-adk/
-
-: https://deepwiki.com/google/adk-docs/5-sessions-and-memory
-
-: https://saptak.in/writing/2025/05/10/google-adk-masterclass-part5
-
-: https://daily.dev/blog/android-app-performance-optimization-guide-2024
-
-: https://www.browserstack.com/guide/performance-bottleneck
-
-: https://google.github.io/adk-docs/agents/
-
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
-
-: https://google.github.io/adk-docs/tutorials/
-
-: https://cloud.google.com/blog/products/ai-machine-learning/build-kyc-agentic-workflows-with-googles-adk
-
-: https://github.com/pratik008/adk-tutorial
-
-: https://www.youtube.com/watch?v=J6BUAUy5KsQ
-
-: https://www.coursera.org/learn/troubleshooting-debugging-techniques
-
-: https://github.com/sambhipiyush/Troubleshooting-and-Debugging-Techniques-Google
-
-: https://www.scribd.com/document/613954139/Troubleshooting-and-Debugging-Techniques
-
-: https://dl.acm.org/doi/10.1145/544862.544966
-
-: https://blog.stackademic.com/effective-error-handling-in-android-strategies-and-best-practices-c9eb6fb4b864?gi=c31d73e2475d
-
-: https://www.youtube.com/watch?v=H-e6btGiNZo
-
-: https://www.linkedin.com/pulse/unlocking-future-agentic-architectures-googles-adk-john-willis-mpsee
-
-: https://www.datacamp.com/tutorial/agent-development-kit-adk
-
-: https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/
-
-: https://github.com/heiko-hotz/project-horizon
-
-: https://securitybrief.com.au/story/google-enhances-agent-toolkit-unveils-updates-for-secure-ai
-
-: https://arxiv.org/html/2505.02279v1
-
-: https://blogs.infoservices.com/google-cloud/smart-ai-agents-google-agent-development-kit/
-
-: https://lu.ma/h56uftvo
-
-: https://career.skills.google/paths/2472/course_templates/1342?locale=de
-
-: https://algodaily.com/lessons/troubleshooting-and-debugging-techniques-473ab2be
-
-: https://repost.aws/es/questions/QUdt8sGI63SnSAahvzJ0-PIQ/agent-2-agent-protocol-roadmap
 
 ---
 
