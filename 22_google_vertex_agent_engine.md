@@ -2344,65 +2344,61 @@ Your agent-powered future doesn't start tomorrow—it starts the moment you begi
 
 ---
 
-*Ready to lead the AI agent revolution? Join the Vertex AI Agent Engine community, follow Google Cloud's AI developments for the latest updates, and remember—the best way to master agent development is by building agents. Your 24-hour challenge and enterprise transformation await.*
-## Further Reading and Resources
+> **Ready to lead the AI agent revolution?**  
+> Join the Vertex AI Agent Engine community, follow Google Cloud's AI developments for the latest updates, and remember—the best way to master agent development is by building agents.  
+> **Your 24-hour challenge and enterprise transformation await.**
 
-Explore these curated resources to deepen your understanding of Vertex AI Agent Engine, agentic AI, and best practices for enterprise deployment:
+<div align="center">⁂</div>
 
-### Official Documentation & Tutorials
+### Further Reading & Resources
 
+- [Agentic AI Use Cases – Accelirate](https://www.accelirate.com/agentic-ai-use-cases/)
+- [Building and Deploying AI Agents with LangChain on Vertex AI (Google Cloud Community)](https://www.googlecloudcommunity.com/gc/Community-Blogs/Building-and-Deploying-AI-Agents-with-LangChain-on-Vertex-AI/ba-p/748929)
 - [Vertex AI Agent Engine Overview](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview)
-- [Agent Development Kit (ADK) Quickstart](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart)
+- [Vertex AI Agent Builder Overview](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview)
+- [Cost-Optimized AI Agents – Lyzr](https://www.lyzr.ai/glossaries/cost-optimized-ai-agents)
 - [Agent Engine Sessions Overview](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/sessions/overview)
-- [Agent Engine Monitoring & Management](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/monitoring)
-- [Agent Engine Deployment Guide](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/deploy)
-- [ADK Official Docs & Tutorials](https://google.github.io/adk-docs/get-started/)
-- [Multi-Agent Systems with ADK](https://google.github.io/adk-docs/agents/multi-agents/)
-- [ADK Deployment to Agent Engine](https://google.github.io/adk-docs/deploy/agent-engine/)
-- [Vertex AI Agent Engine Release Notes](https://cloud.google.com/vertex-ai/generative-ai/docs/release-notes)
-
-### Community Guides, Blogs & Case Studies
-
-- [Building and Deploying AI Agents with LangChain on Vertex AI](https://www.googlecloudcommunity.com/gc/Community-Blogs/Building-and-Deploying-AI-Agents-with-LangChain-on-Vertex-AI/ba-p/748929)
-- [Agentic AI Use Cases](https://www.accelirate.com/agentic-ai-use-cases/)
-- [Cost-Optimized AI Agents](https://www.lyzr.ai/glossaries/cost-optimized-ai-agents)
-- [Agent Architecture: Building LangChain Agents with Vertex AI](https://www.restack.io/p/agent-architecture-answer-building-langchain-agents-with-vertex-ai-cat-ai)
-- [Vertex AI Model Monitoring](https://www.restack.io/p/vertex-ai-model-monitoring-answer-cat-ai)
-- [AI Model Monitoring: Vertex AI](https://www.restack.io/p/ai-model-monitoring-answer-monitoring-ai-systems-vertex-ai-cat-ai)
-- [Real-World AI Agent Case Studies](https://www.creolestudios.com/real-world-ai-agent-case-studies/)
-- [Google Vertex AI Agent Builder Guide](https://www.softude.com/blog/google-vertex-ai-agent-builder-guide)
-- [Vertex AI Agent Builder Pricing in 2024](https://therightaiagents.com/vertex-ai-agent-builder-pricing-in-2024/)
-- [CloudChipr: Vertex AI Blog](https://cloudchipr.com/blog/vertex-ai)
-
-### Example Projects & Notebooks
-
+- [ADK Docs: Get Started](https://google.github.io/adk-docs/get-started/)
+- [ADK Docs: Multi-Agents](https://google.github.io/adk-docs/agents/multi-agents/)
+- [ADK Tutorials](https://google.github.io/adk-docs/tutorials/)
+- [Agent Development Kit Quickstart](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart)
+- [Agent Engine Overview (authuser=0000)](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview?authuser=0000)
+- [ADK Tutorial (GitHub)](https://github.com/pratik008/adk-tutorial)
+- [Agent Engine Monitoring](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/monitoring)
+- [Agent Architecture with LangChain & Vertex AI (Restack)](https://www.restack.io/p/agent-architecture-answer-building-langchain-agents-with-vertex-ai-cat-ai)
+- [Vertex AI Model Monitoring (Restack)](https://www.restack.io/p/vertex-ai-model-monitoring-answer-cat-ai)
+- [YouTube: Vertex AI Agent Engine Demos](https://www.youtube.com/watch?v=F5LQ3el36IM)
+- [ADK Runbooks: Multi-Agent Overview](https://dandye.github.io/adk_runbooks/multi_agent_overview.html)
 - [Agent Starter Pack (GitHub)](https://github.com/GoogleCloudPlatform/agent-starter-pack)
-- [ADK Tutorial Repository](https://github.com/pratik008/adk-tutorial)
-- [ADK Walkthrough](https://github.com/sokart/adk-walkthrough)
-- [Vertex AI Samples](https://cloud.google.com/vertex-ai/docs/samples)
-- [Llama 3 Agent Engine Notebook](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_agent_engine_llama3_1.ipynb)
-- [PyTorch Deployed Model Agent Engine Notebook](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_pytorch_deployed_model_agent_engine.ipynb)
-- [Tracing Agents in Agent Engine (Notebook)](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/agent-engine/tracing_agents_in_agent_engine.ipynb)
-- [LiveKit Agent Deployment Examples](https://github.com/livekit-examples/agent-deployment)
-
-### Videos & Codelabs
-
-- [Building AI Agents with Vertex AI (Codelab)](https://codelabs.developers.google.com/devsite/codelabs/building-ai-agents-vertexai)
-- [YouTube: Vertex AI Agent Engine Overview](https://www.youtube.com/watch?v=F5LQ3el36IM)
-- [YouTube: Vertex AI Agent Builder Demo](https://www.youtube.com/watch?v=8rlNdKywldQ)
-- [YouTube: Vertex AI Agent Engine Deep Dive](https://www.youtube.com/watch?v=P4VFL9nIaIA)
-- [YouTube: Vertex AI Agent Engine in Action](https://www.youtube.com/watch?v=Oip5yWUfI-U)
-
-### Additional References
-
-- [Vertex AI Agent Builder Product Page](https://cloud.google.com/products/agent-builder)
+- [AI Model Monitoring (Restack)](https://www.restack.io/p/ai-model-monitoring-answer-monitoring-ai-systems-vertex-ai-cat-ai)
+- [SolarWinds: Troubleshooting Your Agent Installation](https://documentation.solarwinds.com/en/success_center/orionplatform/content/core-troubleshooting-your-agent-installation-sw494.htm)
+- [Vertex AI Release Notes](https://cloud.google.com/vertex-ai/generative-ai/docs/release-notes)
+- [Google Cloud Community: API Exceptions in Agent Builder](https://www.googlecloudcommunity.com/gc/AI-ML/Create-API-Vertex-AI-Agent-Builder-google-api-core-exceptions/td-p/772926)
+- [ADK Docs: Deploy to Agent Engine](https://google.github.io/adk-docs/deploy/agent-engine/)
+- [YouTube: Vertex AI Agent Engine Walkthrough](https://www.youtube.com/watch?v=8rlNdKywldQ)
+- [Softude: Google Vertex AI Agent Builder Guide](https://www.softude.com/blog/google-vertex-ai-agent-builder-guide)
+- [YouTube: Vertex AI Agent Builder Overview](https://www.youtube.com/watch?v=P4VFL9nIaIA)
+- [ADK Walkthrough (GitHub)](https://github.com/sokart/adk-walkthrough)
+- [Vertex AI Agent Builder Pricing 2024](https://therightaiagents.com/vertex-ai-agent-builder-pricing-in-2024/)
 - [LangChain Integration with Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/develop/langchain)
 - [LangChain Google Vertex AI Integration Docs](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm/)
-- [Agent Engine API Discussions](https://www.googlecloudcommunity.com/gc/AI-ML/Create-API-Vertex-AI-Agent-Builder-google-api-core-exceptions/td-p/772926)
-- [Agent Engine Community Blogs](https://www.googlecloudcommunity.com/gc/Community-Blogs/Building-and-Deploying-AI-Agents-with-LangChain-on-Vertex-AI/bc-p/807357)
-- [Agent Engine Sessions Documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/sessions/overview)
-- [Agent Engine Monitoring Documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/monitoring)
+- [Agent Deployment Examples (GitHub)](https://github.com/livekit-examples/agent-deployment)
+- [Vertex AI Blog – Cloudchipr](https://cloudchipr.com/blog/vertex-ai)
+- [Google Cloud Community: Building and Deploying AI Agents (Discussion)](https://www.googlecloudcommunity.com/gc/Community-Blogs/Building-and-Deploying-AI-Agents-with-LangChain-on-Vertex-AI/bc-p/807357)
+- [Agent Engine Overview (authuser=4)](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview?authuser=4)
+- [LinkedIn: CanAI Agents for Enterprise Security](https://www.linkedin.com/posts/oluseyi-akindeinde-7525671b_canai-agents-protect-your-enterprise-over-activity-7305649073024360448-M01P)
+- [Vertex AI Samples](https://cloud.google.com/vertex-ai/docs/samples)
+- [Llama 3 Agent Engine Example (GitHub)](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_agent_engine_llama3_1.ipynb)
+- [PyTorch Deployed Model Agent Engine Example (GitHub)](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_pytorch_deployed_model_agent_engine.ipynb)
+- [LinkedIn: Agent Garden Gallery](https://www.linkedin.com/pulse/agent-garden-gallery-how-google-accelerating-agentic-ai-thamma-bgame)
+- [Codelab: Building AI Agents with Vertex AI](https://codelabs.developers.google.com/devsite/codelabs/building-ai-agents-vertexai)
+- [Tracing Agents in Agent Engine (GitHub)](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/agent-engine/tracing_agents_in_agent_engine.ipynb)
+- [Vertex AI Agent Builder Product Page](https://cloud.google.com/products/agent-builder)
+- [Deploying to Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/deploy)
+- [YouTube: Vertex AI Agent Engine Overview](https://www.youtube.com/watch?v=Oip5yWUfI-U)
+- [EAAI LIM Paper (Aston University)](https://publications.aston.ac.uk/id/eprint/38580/1/EAAI-_LIM_(Revised_v2).pdf)
+- [Real-World AI Agent Case Studies](https://www.creolestudios.com/real-world-ai-agent-case-studies/)
+- [DeployHQ: Network Agent Errors](https://www.deployhq.com/support/network-agent-errors/network-agent-is-not-connected)
 
 ---
 
-*Stay up to date with the latest advancements by following the [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview) and joining the Google Cloud AI community.*
