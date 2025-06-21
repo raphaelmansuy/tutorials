@@ -269,7 +269,7 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 
 ---
 
-###🤖 **Artificial Intelligence & Machine Learning**
+### 🤖 **Artificial Intelligence & Machine Learning**
 
 Advanced ML training with Google Cloud's Vertex AI platform and AI agent development.
 
