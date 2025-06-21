@@ -4,20 +4,23 @@ Welcome to your comprehensive collection of cloud computing and DevOps tutorials
 
 ## 📚 Purpose
 
-This project offers a curated list of **actionable training tutorials** designed to take you from beginner to advanced in cloud computing, specifically focusing on:
+This project offers a curated collection of **actionable training tutorials** to guide you from beginner to advanced in cloud computing. The focus areas include:
 
-- **Google Cloud Platform (GCP)** services and tools
-- **Kubernetes** container orchestr- [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
-- [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
-- [ ] 🔧 **CI/CD Automation Master** - Built automated Docker pipelines with GitLab CI/CD and AWS ECR
-- [ ] 🧠 **AI-Powered Developer** - Mastered Amazon Q for code generation and development acceleration
-- [ ] 🤖 **Intent-Based Development Master** - Transformed development workflow using VS Code Copilot Agent and natural language programming
-- [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutionsn
-- **Machine Learning** with Vertex AI
-- **Cloud storage** and data management
-- **DevOps** best practices
+- **Google Cloud Platform (GCP)**: Core services, tools, and hands-on labs
+- **Kubernetes**: Container orchestration and deployment fundamentals
+- **Machine Learning**: End-to-end workflows with Vertex AI
+- **Cloud Storage & Data Management**: Secure, scalable storage solutions
+- **DevOps**: Modern CI/CD automation and best practices
+- **AI-Powered Development**: Accelerate coding with Amazon Q and VS Code Copilot Agent
 
-Each tutorial is designed to be practical, with step-by-step instructions and real-world examples.
+Each tutorial features:
+
+- Step-by-step, practical instructions
+- Real-world examples and use cases
+- Clear prerequisites and cost estimates
+- Troubleshooting and best practice tips
+
+Start your journey with confidence—whether you’re new to the cloud or aiming for advanced, production-ready skills.
 
 ---
 
@@ -415,6 +418,25 @@ Master Google Cloud IAM concepts, policies, and real-world access control scenar
 - Hands-on mindmaps and sequence diagrams for IAM
 - Real-world access control scenarios and troubleshooting
 - Best practices for secure cloud access management
+
+---
+
+### ☁️ Application Hosting & Serverless
+
+Master serverless deployment and modern application hosting with Google Cloud Run.
+
+| Tutorial                                                                                      | Level                | Duration  | Language | Description                                                                                                 |
+| --------------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| [📖 Google Cloud Run for the Impatient: From Novice to Practitioner](./21_google_cloud_run.md) | Beginner to Advanced | 3-5 hours | English  | Fast-track guide to deploying, scaling, and managing containerized applications with Google Cloud Run        |
+
+**What you'll learn:**
+
+- Cloud Run fundamentals: services, jobs, and serverless architecture
+- Deploying stateless containers with zero infrastructure management
+- Building REST APIs, web apps, and background jobs
+- Autoscaling, concurrency, and performance tuning
+- Security, authentication, and cost optimization
+- Real-world deployment patterns and troubleshooting
 
 ---
 
