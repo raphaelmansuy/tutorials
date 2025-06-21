@@ -1728,7 +1728,7 @@ Understanding these three agent types and their appropriate use cases is fundame
 
 **Ready to extend your agents with powerful capabilities? Chapter 5 will dive deep into Tools and Capabilities, showing you how to give your agents the ability to interact with the world and perform real work.**
 
-# Chapter 5: Tools and Capabilities - Extending Agent Power
+
 
 ## Built-in Tools Arsenal
 
@@ -1936,6 +1936,1063 @@ Before moving on, try designing a custom tool for a specific business need:
 4. Consider how an agent would use this tool to solve real problems
 
 ---
+
+# Chapter 5: Tools and Capabilities – Extending Agent Power
+
+## Introduction
+
+Tools are the bridge between your agent's intelligence and the real world. They transform a language model from a conversational interface into an active problem-solver, capable of retrieving data, performing computations, and taking actions. In the Google Agent Development Kit (ADK), tools enable three primary use cases: **augmenting knowledge**, **extending capabilities**, and **taking real-world actions**.
+
+Think of tools as superpowers for your agent—each tool expands what your agent can do beyond generating text.
+
+## What Are Tools in ADK?
+
+A **tool** in ADK is any callable function that an agent can invoke to accomplish specific tasks. Tools are defined using function declarations that follow the OpenAPI schema format, making them compatible with Google's Gemini models and other AI systems.
+
+### The Three Pillars of Tool Usage
+
+Based on Google's official documentation, tools serve three fundamental purposes:
+
+1. **Augment Knowledge**: Access information from external sources like databases, APIs, and knowledge bases
+2. **Extend Capabilities**: Use external tools to perform computations beyond the model's limitations
+3. **Take Actions**: Interact with external systems using APIs to control devices, send emails, or update databases
+
+### Why Tools Are Essential
+
+- **Break through model limitations**: Access real-time data, perform complex calculations, and interact with systems
+- **Enable dynamic responses**: Provide up-to-date information instead of relying on training data
+- **Create actionable agents**: Move beyond conversation to actual problem-solving and task execution
+- **Ensure modularity**: Build reusable capabilities that work across different agents and applications
+
+## Tool Architecture and Function Calling in ADK
+
+Google's Gemini models power ADK's function calling capabilities, enabling sophisticated tool usage through a structured four-step process:
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#e8f5e9"
+    primaryTextColor: "#263238"
+    primaryBorderColor: "#4caf50"
+    lineColor: "#81c784"
+    secondaryColor: "#e3f2fd"
+    tertiaryColor: "#fff3e0"
+    background: "#ffffff"
+    mainBkg: "#e8f5e9"
+    secondBkg: "#e3f2fd"
+    tertiaryBkg: "#fff3e0"
+---
+flowchart TD
+    A[User Request] --> B[Agent + Function Declarations]
+    B --> C{Model Analysis}
+    C -->|Tool Needed| D[Function Call Proposal]
+    C -->|Direct Response| E[Natural Language Response]
+    D --> F[Execute Function]
+    F --> G[Function Result]
+    G --> H[Model Synthesis]
+    H --> I[Final Response]
+    E --> I
+
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#263238
+    classDef agent fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#263238
+    classDef logic fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#263238
+    classDef tool fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#263238
+    classDef result fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#263238
+    classDef response fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#263238
+
+    class A user
+    class B agent
+    class C logic
+    class D,F tool
+    class G result
+    class E,H,I response
+```
+
+### The Four-Step Function Calling Process
+
+1. **Function Declaration**: Define tools using OpenAPI-compatible schemas
+2. **Model Analysis**: The agent determines if a tool is needed based on user intent
+3. **Function Execution**: Your application executes the proposed function call
+4. **Response Integration**: The model incorporates function results into the final response
+
+---
+
+## Built-in Tools and Ecosystem
+
+ADK integrates with Google's extensive tool ecosystem and supports industry-standard frameworks:
+
+### Google Cloud Native Tools
+
+- **Google Search**: Real-time web search capabilities with structured results
+- **Code Execution**: Secure Python code execution environment
+- **Vertex AI APIs**: Access to Google's AI services for specialized tasks
+- **Cloud Functions**: Serverless function execution for scalable operations
+
+### Third-Party Ecosystem Integration
+
+ADK seamlessly integrates with popular frameworks and tools from the broader AI ecosystem. Based on LangChain's extensive tool library, you can access hundreds of pre-built integrations:
+
+#### Search and Data Retrieval
+
+- **Web Search**: Brave Search, DuckDuckGo, Google Serper, Tavily Search
+- **Academic**: ArXiv, PubMed, Semantic Scholar
+- **Financial**: Alpha Vantage, Yahoo Finance, FMP Data
+- **Social**: Reddit Search, YouTube, Twitter
+
+#### Productivity and Business
+
+- **Communication**: Gmail Toolkit, Slack Toolkit, Twilio
+- **Project Management**: Jira, ClickUp, Notion
+- **Development**: GitHub Toolkit, GitLab Toolkit
+- **CRM**: Salesforce, HubSpot integrations
+
+#### Databases and Analytics
+
+- **SQL Databases**: PostgreSQL, MySQL, SQLite
+- **NoSQL**: Cassandra, MongoDB
+- **Analytics**: BigQuery, Spark SQL, Tableau
+- **Cloud Storage**: Google Drive, AWS S3, Azure Blob
+
+---
+
+## Creating Custom Tools: The OpenAPI Standard
+
+ADK follows Google's function calling specification, which is based on the OpenAPI schema format. This ensures compatibility across the entire Google AI ecosystem.
+
+### Function Declaration Structure
+
+Every tool in ADK is defined using a function declaration with three key components:
+
+```python
+def get_weather(city: str, units: str = "celsius") -> dict:
+    """Get current weather information for a specified city.
+
+    This function retrieves real-time weather data including temperature,
+    humidity, and conditions for any city worldwide.
+
+    Args:
+        city (str): The city name and optionally state/country (e.g., "Boston, MA")
+        units (str): Temperature units - "celsius", "fahrenheit", or "kelvin"
+
+    Returns:
+        dict: Weather data with status, temperature, conditions, and humidity
+    """
+    # Simulated API call
+    return {
+        "status": "success",
+        "temperature": 22,
+        "units": units,
+        "conditions": "partly cloudy",
+        "humidity": 65,
+        "city": city
+    }
+```
+
+### OpenAPI Schema Components
+
+Based on Google's official specification, ADK supports a subset of the OpenAPI 3.0 schema format:
+
+- **`name`**: Unique function identifier (alphanumeric, underscores, camelCase - no spaces, periods, or dashes)
+- **`description`**: Clear, detailed explanation of function purpose and capabilities with examples
+- **`parameters`**: Input specification using JSON schema with these supported types:
+  - `type`: `"object"` (required for parameters root)
+  - `properties`: Individual parameter definitions
+  - `type` per property: `string`, `integer`, `boolean`, `array`, `object`
+  - `description`: Parameter purpose and format constraints
+  - `enum`: Fixed sets of allowed values for improved accuracy
+  - `required`: Array of mandatory parameter names
+
+### Best Practices from Google Documentation
+
+**Function Naming**: Use descriptive function names without spaces, periods, or dashes. Examples: `get_weather_forecast`, `send_email`, `calculate_distance`
+
+**Clear Descriptions**: Be extremely specific and provide context. Examples:
+
+- ❌ "Gets weather"
+- ✅ "Finds theaters based on location and optionally movie title which is currently playing in theaters"
+- ✅ "Book flight tickets after confirming users' specific requirements, such as time, departure, destination, party size and preferred airline"
+
+**Strong Typing**: Use specific types and enums instead of generic descriptions:
+
+- Use `enum` for limited sets: `"enum": ["daylight", "cool", "warm"]`
+- Provide format examples: "The city and state, e.g., 'San Francisco, CA' or a zip code e.g., '95616'"
+- Be specific about constraints: "Light level from 0 to 100. Zero is off and 100 is full brightness"
+
+**Tool Selection**: While the model can use many tools, providing too many can increase the risk of incorrect selection. For best results, aim for 10-20 tools maximum in the active set.
+
+## Advanced Function Calling Capabilities
+
+Google's Gemini models support sophisticated function calling patterns that enable complex workflows and robust applications.
+
+### Parallel Function Calling
+
+Parallel function calling allows the model to execute multiple independent functions simultaneously, dramatically improving efficiency for tasks that don't depend on each other.
+
+#### Use Cases for Parallel Execution
+
+- **Data Gathering**: Collect information from multiple sources simultaneously
+- **Multi-Service Queries**: Check status across different systems at once
+- **Batch Processing**: Perform multiple similar operations in parallel
+- **Multi-Modal Analysis**: Process different types of media simultaneously
+
+#### Implementation Example: Morning Briefing System
+
+```python
+from google.adk.agents import LlmAgent
+
+# Define independent data collection tools
+def get_weather(location: str) -> dict:
+    """Get current weather for a location.
+
+    Args:
+        location (str): City and state/country
+
+    Returns:
+        dict: Weather data including temperature and conditions
+    """
+    return {
+        "status": "success",
+        "location": location,
+        "temperature": 22,
+        "conditions": "partly cloudy"
+    }
+
+def get_traffic(origin: str, destination: str) -> dict:
+    """Get traffic information between two points.
+
+    Args:
+        origin (str): Starting location
+        destination (str): Destination location
+
+    Returns:
+        dict: Traffic data including duration and route info
+    """
+    return {
+        "status": "success",
+        "duration": "25 minutes",
+        "traffic_level": "light",
+        "recommended_route": "Highway 101"
+    }
+
+def get_calendar(date: str) -> dict:
+    """Get calendar events for a specific date.
+
+    Args:
+        date (str): Date in YYYY-MM-DD format
+
+    Returns:
+        dict: Calendar events and scheduling info
+    """
+    return {
+        "status": "success",
+        "events": [
+            {"time": "09:00", "title": "Team Meeting", "duration": "1 hour"},
+            {"time": "14:00", "title": "Client Call", "duration": "30 minutes"}
+        ]
+    }
+
+def get_news_headlines() -> dict:
+    """Get current news headlines.
+
+    Returns:
+        dict: Top news stories and headlines
+    """
+    return {
+        "status": "success",
+        "headlines": [
+            "Tech stocks rally after positive earnings",
+            "New climate initiative launched globally"
+        ]
+    }
+
+# Create agent with parallel function calling
+briefing_agent = LlmAgent(
+    name="morning_briefing_agent",
+    model="gemini-2.0-flash",
+    tools=[get_weather, get_traffic, get_calendar, get_news_headlines],
+    description="Comprehensive morning briefing assistant",
+    instruction="""You provide complete morning briefings by gathering information
+    from multiple sources simultaneously. When asked for a briefing, call all
+    relevant functions in parallel to provide weather, traffic, calendar, and news."""
+)
+```
+
+#### Parallel Execution Flow
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#e8f5e9"
+    primaryTextColor: "#263238"
+    primaryBorderColor: "#4caf50"
+    lineColor: "#81c784"
+    secondaryColor: "#e3f2fd"
+    tertiaryColor: "#fff8e1"
+    background: "#ffffff"
+    mainBkg: "#e8f5e9"
+    secondBkg: "#e3f2fd"
+    tertiaryBkg: "#fff8e1"
+---
+flowchart TD
+    A[Morning Briefing Request] --> B[Agent Analysis]
+    B --> C[Parallel Function Calls]
+
+    C --> D[Weather API]
+    C --> E[Traffic API]
+    C --> F[Calendar API]
+    C --> G[News API]
+
+    D --> H[Weather Data]
+    E --> I[Traffic Data]
+    F --> J[Calendar Data]
+    G --> K[News Data]
+
+    H --> L[Results Aggregation]
+    I --> L
+    J --> L
+    K --> L
+
+    L --> M[Comprehensive Briefing]
+
+    classDef request fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#263238
+    classDef agent fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#263238
+    classDef parallel fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#263238
+    classDef api fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#263238
+    classDef data fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#263238
+    classDef result fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#263238
+
+    class A request
+    class B agent
+    class C parallel
+    class D,E,F,G api
+    class H,I,J,K data
+    class L,M result
+```
+
+### Compositional Function Calling
+
+Compositional function calling enables chaining multiple function calls where the output of one function becomes the input for another, creating sophisticated workflows.
+
+#### Sequential Decision Making
+
+```python
+def get_user_location() -> dict:
+    """Get the user's current location.
+
+    Returns:
+        dict: Location data with coordinates and address
+    """
+    return {
+        "status": "success",
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "city": "San Francisco",
+        "state": "CA"
+    }
+
+def find_nearby_restaurants(location: str, cuisine: str = "any") -> dict:
+    """Find restaurants near a location.
+
+    Args:
+        location (str): City and state
+        cuisine (str): Type of cuisine preference
+
+    Returns:
+        dict: List of nearby restaurants with ratings
+    """
+    return {
+        "status": "success",
+        "restaurants": [
+            {"name": "Golden Gate Bistro", "rating": 4.5, "cuisine": "American"},
+            {"name": "Sakura Sushi", "rating": 4.7, "cuisine": "Japanese"},
+            {"name": "Luigi's Pizza", "rating": 4.2, "cuisine": "Italian"}
+        ]
+    }
+
+def check_restaurant_availability(restaurant_name: str, party_size: int, time: str) -> dict:
+    """Check if a restaurant has availability.
+
+    Args:
+        restaurant_name (str): Name of the restaurant
+        party_size (int): Number of people
+        time (str): Preferred time (e.g., "7:00 PM")
+
+    Returns:
+        dict: Availability status and reservation options
+    """
+    return {
+        "status": "success",
+        "available": True,
+        "available_times": ["6:30 PM", "7:00 PM", "7:30 PM"],
+        "estimated_wait": "15 minutes"
+    }
+
+def make_reservation(restaurant_name: str, party_size: int, time: str, contact: str) -> dict:
+    """Make a restaurant reservation.
+
+    Args:
+        restaurant_name (str): Restaurant name
+        party_size (int): Number of people
+        time (str): Reservation time
+        contact (str): Contact information
+
+    Returns:
+        dict: Reservation confirmation details
+    """
+    return {
+        "status": "success",
+        "confirmation_number": "RSV-12345",
+        "restaurant": restaurant_name,
+        "time": time,
+        "party_size": party_size
+    }
+
+# Compositional agent that chains these functions
+restaurant_agent = LlmAgent(
+    name="restaurant_booking_agent",
+    model="gemini-2.0-flash",
+    tools=[get_user_location, find_nearby_restaurants, check_restaurant_availability, make_reservation],
+    description="Complete restaurant discovery and booking assistant",
+    instruction="""Help users find and book restaurants by following this process:
+    1. First, get the user's location
+    2. Find restaurants near them based on preferences
+    3. Check availability at recommended restaurants
+    4. Make reservations when requested
+    Use the information from each step to inform the next."""
+)
+```
+
+#### Compositional Flow Visualization
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#fff3e0"
+    primaryTextColor: "#263238"
+    primaryBorderColor: "#ff9800"
+    lineColor: "#ffb74d"
+    secondaryColor: "#e8f5e9"
+    tertiaryColor: "#e3f2fd"
+    background: "#ffffff"
+    mainBkg: "#fff3e0"
+    secondBkg: "#e8f5e9"
+    tertiaryBkg: "#e3f2fd"
+---
+sequenceDiagram
+    participant User
+    participant Agent
+    participant Location as Location Service
+    participant Search as Restaurant Search
+    participant Availability as Availability Check
+    participant Booking as Reservation System
+
+    User->>Agent: "Book dinner for 4 people at 7 PM"
+    Agent->>Location: get_user_location()
+    Location-->>Agent: "San Francisco, CA"
+
+    Agent->>Search: find_nearby_restaurants("San Francisco, CA")
+    Search-->>Agent: List of restaurants
+
+    Agent->>Availability: check_restaurant_availability("Golden Gate Bistro", 4, "7:00 PM")
+    Availability-->>Agent: Available times
+
+    Agent->>User: "Golden Gate Bistro available at 7:00 PM. Shall I book it?"
+    User->>Agent: "Yes, please book it"
+
+    Agent->>Booking: make_reservation("Golden Gate Bistro", 4, "7:00 PM", contact)
+    Booking-->>Agent: Confirmation RSV-12345
+
+    Agent->>User: "Reserved! Confirmation: RSV-12345"
+```
+
+### Forced Function Calling
+
+Forced function calling constrains the model to always use specific tools, ensuring predictable behavior and tool usage in critical scenarios.
+
+#### Function Calling Modes
+
+ADK supports three function calling modes based on Google's official specification:
+
+- **AUTO** (Default): The model decides whether to generate a natural language response or suggest a function call based on the prompt and context. This is the most flexible mode and recommended for most scenarios.
+- **ANY**: The model is constrained to always predict a function call and guarantees function schema adherence. If `allowed_function_names` is not specified, the model can choose from any of the provided function declarations. If `allowed_function_names` is provided as a list, the model can only choose from functions in that list. Use this mode when you require a function call response to every prompt.
+- **NONE**: The model is prohibited from making function calls. This is equivalent to sending a request without any function declarations. Use this to temporarily disable function calling without removing your tool definitions.
+
+```python
+from google.adk.types import ToolConfig, FunctionCallingConfig
+
+# Configure function calling mode
+tool_config = ToolConfig(
+    function_calling_config=FunctionCallingConfig(
+        mode="ANY",  # Force function calling
+        allowed_function_names=["extract_customer_info"]  # Optional: restrict to specific functions
+    )
+)
+```
+
+#### Implementation Example: Structured Data Extraction
+
+```python
+from google.adk.agents import LlmAgent
+from google.adk.types import ToolConfig, FunctionCallingConfig
+
+def extract_customer_info(name: str, email: str, phone: str, company: str) -> dict:
+    """Extract and validate customer information.
+
+    Args:
+        name (str): Customer full name
+        email (str): Email address
+        phone (str): Phone number
+        company (str): Company name
+
+    Returns:
+        dict: Validated customer information
+    """
+    return {
+        "status": "success",
+        "customer_id": "CUST-001",
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "company": company,
+        "validation_status": "verified"
+    }
+
+def extract_order_details(product: str, quantity: int, price: float, delivery_date: str) -> dict:
+    """Extract order information from text.
+
+    Args:
+        product (str): Product name or description
+        quantity (int): Number of items ordered
+        price (float): Unit price
+        delivery_date (str): Requested delivery date
+
+    Returns:
+        dict: Structured order information
+    """
+    return {
+        "status": "success",
+        "order_id": "ORD-001",
+        "product": product,
+        "quantity": quantity,
+        "price": price,
+        "total": quantity * price,
+        "delivery_date": delivery_date
+    }
+
+# Forced function calling configuration
+extraction_agent = LlmAgent(
+    name="data_extraction_agent",
+    model="gemini-2.0-flash",
+    tools=[extract_customer_info, extract_order_details],
+    tool_config=ToolConfig(
+        function_calling_config=FunctionCallingConfig(
+            mode="ANY",  # Force function calling
+            allowed_function_names=["extract_customer_info", "extract_order_details"]
+        )
+    ),
+    description="Structured data extraction specialist",
+    instruction="""You must always use the appropriate extraction function to
+    structure the provided information. Analyze the input text and call the
+    appropriate function with the extracted data."""
+)
+```
+
+---
+
+## Tool Usage Patterns
+
+Agents use tools through a reasoning process:
+
+1. **Intent Recognition**: Understand what the user wants.
+2. **Tool Selection**: Choose the right tool.
+3. **Parameter Extraction**: Identify required inputs.
+4. **Tool Execution**: Call the tool.
+5. **Response Synthesis**: Incorporate results into the reply.
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#fffde7"
+    primaryTextColor: "#263238"
+    primaryBorderColor: "#fbc02d"
+    lineColor: "#ffd54f"
+    secondaryColor: "#e3f2fd"
+    tertiaryColor: "#fce4ec"
+    background: "#ffffff"
+    mainBkg: "#fffde7"
+    secondBkg: "#e3f2fd"
+    tertiaryBkg: "#fce4ec"
+---
+flowchart TD
+    A[User Query] --> B[Agent]
+    B --> C{Intent Analysis}
+    C -->|Tool Needed| D[Select Tool]
+    D --> E[Extract Parameters]
+    E --> F[Call Tool]
+    F --> G[Get Result]
+    G --> H[Compose Response]
+    H --> I[User]
+    C -->|No Tool| J[Direct Response]
+    J --> I
+
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#263238
+    classDef agent fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#263238
+    classDef logic fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#263238
+    classDef tool fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#263238
+    classDef result fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#263238
+
+    class A,I user
+    class B agent
+    class C logic
+    class D,E,F,G,H tool
+    class J result
+```
+
+---
+
+## Advanced Tool Integration Patterns
+
+### Model Context Protocol (MCP) Support
+
+ADK includes experimental built-in support for the Model Context Protocol (MCP), an open standard for connecting AI applications with external tools and data sources. This feature is available in the Python and JavaScript/TypeScript SDKs.
+
+#### MCP Capabilities and Limitations
+
+**Current Support**:
+
+- Tools (functions) are fully supported
+- Automatic tool calling with MCP servers
+- Direct integration with Gemini models
+
+**Limitations**:
+
+- Resources and prompts are not yet supported
+- Feature is experimental and may have breaking changes
+- Currently limited to Python and JavaScript/TypeScript SDKs
+
+#### Implementation Example
+
+```python
+import asyncio
+from datetime import datetime
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+from google import genai
+
+# Configure MCP server (example: weather service)
+server_params = StdioServerParameters(
+    command="npx",
+    args=["-y", "@philschmid/weather-mcp"],
+    env=None
+)
+
+async def use_mcp_weather():
+    # Initialize Gemini client
+    client = genai.Client(api_key="YOUR_API_KEY")
+
+    async with stdio_client(server_params) as (read, write):
+        async with ClientSession(read, write) as session:
+            # Initialize MCP session
+            await session.initialize()
+
+            # Use MCP session as a tool
+            response = await client.aio.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"What is the weather in London on {datetime.now().strftime('%Y-%m-%d')}?",
+                config=genai.types.GenerateContentConfig(
+                    temperature=0,
+                    tools=[session],  # MCP session provides tools automatically
+                    # Optional: disable automatic function calling
+                    # automatic_function_calling=genai.types.AutomaticFunctionCallingConfig(disable=True)
+                )
+            )
+
+            print(response.text)
+
+# Run the async function
+asyncio.run(use_mcp_weather())
+```
+
+**Manual MCP Integration**: If the built-in support doesn't meet your needs, you can always integrate MCP servers manually by implementing the protocol directly.
+
+### LangChain Tool Integration
+
+ADK can integrate with the extensive LangChain ecosystem by wrapping LangChain tools as ADK functions:
+
+```python
+from langchain.tools import DuckDuckGoSearchRun
+from google import genai
+
+# Wrap LangChain tool as ADK function
+search_tool = DuckDuckGoSearchRun()
+
+def search_web(query: str) -> str:
+    """Search the web for current information using DuckDuckGo.
+
+    Args:
+        query (str): Search terms to find relevant information on the web
+
+    Returns:
+        str: Search results with URLs, titles, and snippets from DuckDuckGo
+    """
+    return search_tool.run(query)
+
+# Use with Gemini models
+client = genai.Client(api_key="YOUR_API_KEY")
+config = genai.types.GenerateContentConfig(
+    tools=[search_web],
+    temperature=0
+)
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="What are the latest developments in quantum computing?",
+    config=config
+)
+```
+
+This pattern allows you to leverage hundreds of pre-built LangChain tools including database connectors, API integrations, and specialized utilities.
+
+### Automatic Function Calling (Python SDK Only)
+
+The Python SDK supports automatic function calling, which streamlines the development process by:
+
+1. **Automatic Schema Generation**: Converts Python functions with type hints and docstrings to function declarations
+2. **Automatic Execution**: Detects function call responses and executes the corresponding Python functions
+3. **Response Handling**: Sends function results back to the model automatically
+4. **Final Response**: Returns the model's synthesized text response
+
+```python
+from google import genai
+from google.genai import types
+
+def get_temperature(location: str) -> dict:
+    """Gets the current temperature for a given location.
+
+    Args:
+        location: The city and state, e.g. San Francisco, CA
+
+    Returns:
+        A dictionary containing the temperature and unit.
+    """
+    # Implementation would call weather API
+    return {"temperature": 25, "unit": "Celsius"}
+
+# Configure with automatic function calling
+client = genai.Client(api_key="YOUR_API_KEY")
+config = types.GenerateContentConfig(
+    tools=[get_temperature]  # Pass the function directly
+)
+
+# The SDK handles the complete flow automatically
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="What's the temperature in Boston?",
+    config=config
+)
+
+print(response.text)  # Gets the final synthesized response
+```
+
+#### Disabling Automatic Function Calling
+
+You can disable automatic execution while still using Python functions for schema generation:
+
+```python
+config = types.GenerateContentConfig(
+    tools=[get_temperature],
+    automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)
+)
+```
+
+#### Schema Generation Limitations
+
+Automatic schema extraction works with these Python types:
+
+```python
+AllowedType = (int | float | bool | str | list['AllowedType'] | dict[str, AllowedType])
+```
+
+For complex nested objects or when automatic extraction doesn't meet your needs, define schemas manually using the function declaration format.
+
+### Multi-Tool Use: Combining Native Tools with Function Calling
+
+ADK supports combining multiple tool types in a single request, including native Google tools and custom function declarations. This is currently available through the Live API:
+
+```python
+# Example combining Google Search, Code Execution, and custom functions
+tools = [
+    {'google_search': {}},
+    {'code_execution': {}},
+    {'function_declarations': [turn_on_lights_schema, get_weather_schema]}
+]
+
+prompt = """
+Please help me with three tasks:
+1. Turn on the lights in my office
+2. Calculate the fibonacci sequence for the first 10 numbers using code
+3. Search for the latest weather forecast for San Francisco
+"""
+
+# Execute with multiple tool types
+response = await client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt,
+    tools=tools
+)
+```
+
+### Native Google Tools
+
+ADK provides access to Google's built-in tools through the tools configuration:
+
+- **Google Search**: Real-time web search with grounding capabilities
+- **Code Execution**: Secure Python code execution environment for calculations and data processing
+- **URL Context**: Extract and process information from web pages
+- **File Processing**: Handle documents, images, and other media types
+
+### Advanced Integration Patterns
+
+**Sequential Tool Chaining**: The model can determine the order of tool execution based on dependencies:
+
+```mermaid
+graph LR
+    A[User Request] --> B[Code Analysis]
+    B --> C[Search for Libraries]
+    C --> D[Execute Code]
+    D --> E[Format Results]
+```
+
+**Conditional Tool Selection**: Tools are selected based on context and previous results, enabling dynamic workflows.
+
+---
+
+## Tool Design Patterns and Architecture
+
+### 1. **Single-Tool Agent**
+
+A focused agent with one specialized tool (e.g., weather, calculator).
+
+### 2. **Multi-Tool Agent**
+
+A generalist agent with several tools, choosing the right one per request.
+
+### 3. **Agent-as-Tool**
+
+Agents can use other agents as tools, enabling composition and reuse.
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#fff3e0"
+    primaryTextColor: "#263238"
+    primaryBorderColor: "#ff9800"
+    lineColor: "#ffb74d"
+    secondaryColor: "#e8f5e9"
+    tertiaryColor: "#e3f2fd"
+    background: "#ffffff"
+    mainBkg: "#fff3e0"
+    secondBkg: "#e8f5e9"
+    tertiaryBkg: "#e3f2fd"
+---
+flowchart TD
+    A[User: Complex Problem] --> B[General Assistant Agent]
+    B --> C{Problem Analysis}
+
+    C -->|Math Problem| D[Mathematics Agent]
+    C -->|Research Needed| E[Research Agent]
+    C -->|Code Issue| F[Development Agent]
+
+    D --> G[Calculator Tool]
+    D --> H[Statistics Tool]
+
+    E --> I[Web Search Tool]
+    E --> J[Academic DB Tool]
+
+    F --> K[Code Analysis Tool]
+    F --> L[Debug Tool]
+
+    G --> M[Integrated Solution]
+    H --> M
+    I --> M
+    J --> M
+    K --> M
+    L --> M
+
+    M --> N[Comprehensive Response]
+
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#263238
+    classDef general fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#263238
+    classDef analysis fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#263238
+    classDef specialist fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#263238
+    classDef tool fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#263238
+    classDef solution fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#263238
+    classDef response fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,color:#263238
+
+    class A user
+    class B general
+    class C analysis
+    class D,E,F specialist
+    class G,H,I,J,K,L tool
+    class M solution
+    class N response
+```
+
+This architecture demonstrates how agents can coordinate different specialized tools to solve complex, multi-faceted problems efficiently.
+
+---
+
+## Production-Ready Tool Development
+
+### Security and Validation
+
+When building tools for production, implement robust security measures:
+
+```python
+def secure_payment_tool(amount: float, recipient: str, currency: str = "USD") -> dict:
+    """Process a financial transaction with validation and security checks.
+
+    Args:
+        amount (float): Transaction amount (must be positive)
+        recipient (str): Verified recipient identifier
+        currency (str): ISO currency code
+
+    Returns:
+        dict: Transaction result with confirmation details
+    """
+    # Input validation
+    if amount <= 0:
+        return {"status": "error", "message": "Amount must be positive"}
+
+    if not validate_recipient(recipient):
+        return {"status": "error", "message": "Invalid recipient"}
+
+    # Security check - require confirmation for large amounts
+    if amount > 1000:
+        return {
+            "status": "confirmation_required",
+            "message": f"Please confirm transaction of {amount} {currency} to {recipient}",
+            "confirmation_token": generate_token()
+        }
+
+    # Process transaction with audit trail
+    result = process_secure_transaction(amount, recipient, currency)
+    log_transaction(result)
+
+    return result
+```
+
+### Error Handling Best Practices
+
+Implement comprehensive error handling based on Google's recommendations:
+
+- **Graceful Degradation**: Provide meaningful error messages that help the model understand what went wrong
+- **Retry Logic**: Handle temporary failures with appropriate retry mechanisms
+- **Fallback Options**: Offer alternative approaches when primary tools fail
+- **Audit Trails**: Log all tool executions for debugging and compliance
+
+### Supported Models and Capabilities
+
+Based on Google's official documentation, function calling support varies by model:
+
+| Model                 | Function Calling | Parallel Calls | Compositional Calls |
+| --------------------- | ---------------- | -------------- | ------------------- |
+| Gemini 2.5 Pro        | ✔️               | ✔️             | ✔️                  |
+| Gemini 2.5 Flash      | ✔️               | ✔️             | ✔️                  |
+| Gemini 2.5 Flash-Lite | ✔️               | ✔️             | ✔️                  |
+| Gemini 2.0 Flash      | ✔️               | ✔️             | ✔️                  |
+| Gemini 2.0 Flash-Lite | ❌               | ❌             | ❌                  |
+
+### Technical Limitations
+
+- **OpenAPI Support**: Only a [subset of the OpenAPI schema](https://ai.google.dev/api/caching#FunctionDeclaration) is supported
+- **Parameter Types**: In Python, supported parameter types are limited to basic types and their combinations
+- **Automatic Function Calling**: Currently available only in the Python SDK
+- **Token Limits**: Function descriptions and parameters count towards input token limits
+
+### Performance Recommendations
+
+- **Temperature**: Use a low temperature (e.g., 0) for more deterministic and reliable function calls
+- **Validation**: For functions with significant consequences (e.g., placing orders), validate the call with the user before executing
+- **Error Handling**: Implement robust error handling to return informative error messages that the model can use to generate helpful responses
+- **Security**: Use appropriate authentication and authorization mechanisms, avoid exposing sensitive data in function calls
+
+---
+
+## Example: Social Post Generator Tool
+
+```python
+def generate_social_post(topic: str, platform: str, tone: str = "professional") -> dict:
+    """Generate a social media post for a given topic and platform.
+    Args:
+        topic (str): The subject.
+        platform (str): e.g., Twitter, LinkedIn.
+        tone (str): e.g., professional, casual. Default: professional.
+    Returns:
+        dict: Generated post and metadata.
+    """
+    if platform.lower() == "twitter":
+        max_length = 280
+    elif platform.lower() == "linkedin":
+        max_length = 3000
+    else:
+        max_length = 1000
+    post = f"Sample {tone} post about {topic} for {platform}"
+    return {
+        "status": "success",
+        "post": post,
+        "character_count": len(post),
+        "platform": platform,
+        "hashtags": [f"#{topic.replace(' ', '')}", "#content"]
+    }
+```
+
+---
+
+## Tool Integration Checklist
+
+- [x] Clear docstring and type hints
+- [x] Consistent return format
+- [x] Error handling
+- [x] Stateless design
+- [x] Tested in isolation
+
+---
+
+## Summary
+
+Tools are the cornerstone of agent capability in ADK, transforming language models from conversational interfaces into powerful problem-solving systems. By leveraging Google's function calling specification (based on OpenAPI schema format), you can create robust, secure, and scalable tool ecosystems.
+
+**Key Takeaways:**
+
+- **Follow Google's Standards**: Use the OpenAPI subset schema format for maximum compatibility across the Google AI ecosystem
+- **Leverage Model Capabilities**: Different Gemini models support varying levels of function calling - choose the right model for your needs
+- **Implement Security Best Practices**: Include validation, confirmation flows, and audit trails for critical operations
+- **Optimize for Performance**: Use low temperature settings, limit active tool sets to 10-20 tools, and implement proper error handling
+- **Integrate Broadly**: Leverage existing ecosystems like LangChain and MCP for rapid development, while understanding their limitations
+- **Choose the Right Pattern**: Use parallel calling for independent operations, compositional calling for dependent workflows, and forced calling for structured data extraction
+
+**Technical Considerations:**
+
+- **Python SDK Advantages**: Automatic function calling, schema generation, and comprehensive MCP support
+- **Model Selection**: Ensure your chosen Gemini model supports the function calling features you need
+- **Schema Design**: Balance detail with token efficiency, use enums for constrained values, and provide clear examples
+- **Error Handling**: Design tools to fail gracefully and provide informative error messages
+
+With well-designed tools, your agents can access real-time data, perform complex calculations, integrate with enterprise systems, and take meaningful actions in the world. The combination of Google's robust function calling infrastructure and the rich ecosystem of available integrations provides a solid foundation for building production-ready AI applications.
+
+**Next**: Chapter 6 will explore how to orchestrate multiple agents working together to solve complex, multi-step problems that require coordination and specialized expertise.
+
 
 # Chapter 6: Multi-Agent Orchestration - Building Intelligent Teams
 
