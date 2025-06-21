@@ -241,6 +241,7 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 | ----------------------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | [📖 Amazon Q for the Impatient: From Novice to Practitioner](./16_amazon_q.md)                        | Beginner to Advanced | 4-6 hours | English  | Master AI-powered code generation, security scanning, and development acceleration with Amazon Q                                 |
 | [📖 Intent-Based Development Using VSCode Copilot AI Agent](./17_intent_based_dev_vs_code_copilot.md) | Beginner to Advanced | 6-8 hours | English  | Master the revolutionary approach to software development using natural language and AI collaboration with VS Code Copilot Agent |
+| [📖 Modern Python Development Toolkit 2025](./23-modern-python-dev-toolkit.md) | Intermediate to Advanced | 2-4 hours | English  | Unified, high-performance Python dev workflow with UV, Ruff, Pyright, Taskipy, and pre-commit. Modern best practices, automation, and CI/CD. |
 
 **What you'll learn:**
 
@@ -267,6 +268,17 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Advanced prompt engineering** for complex software architecture
 - **Context management** for large-scale project development
 - **Documentation automation** with living, synchronized project docs
+
+#### Modern Python Development Toolkit 2025
+
+- **Unified Python development workflow** with modern tools
+- **UVicorn** for high-performance ASGI server
+- **Ruff** for fast, flexible linting
+- **Pyright** for static type checking
+- **Taskipy** for task automation
+- **pre-commit** for managing and maintaining multi-language pre-commit hooks
+- **Best practices** for Python project structure, dependency management, and CI/CD integration
+- **Real-world examples** and hands-on exercises
 
 **Key Features:**
 
