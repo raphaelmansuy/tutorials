@@ -1518,14 +1518,23 @@ Content creation is another area where ADK's multi-agent architecture shines, en
 
 A complete content creation pipeline might look like this:
 
-```
-Content Brief →
-Research Agent →
-Outline Agent →
-Draft Agent →
-Editorial Agent →
-SEO Optimization Agent →
-Final Content
+```mermaid
+flowchart TD
+    A[Content Brief] --> B[Research Agent]
+    B --> C[Outline Agent]
+    C --> D[Draft Agent]
+    D --> E[Editorial Agent]
+    E --> F[SEO Optimization Agent]
+    F --> G[Final Content]
+
+    %% Pastel color palette with strong contrast
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
+    style C fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#795548
+    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    style E fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#4527a0
+    style F fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#e65100
+    style G fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
 ```
 
 This can be implemented in ADK as follows:
