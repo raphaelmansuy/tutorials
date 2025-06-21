@@ -33,7 +33,7 @@ graph TD
     C --> G[Database Tool]
     D --> H[Analytics Tool]
     E --> I[Content Tool]
-    
+
     style A fill:#e1f5fe,stroke:#01579b,color:#000
     style B fill:#f3e5f5,stroke:#4a148c,color:#000
     style C fill:#e8f5e8,stroke:#1b5e20,color:#000
@@ -41,17 +41,15 @@ graph TD
     style E fill:#fce4ec,stroke:#880e4f,color:#000
 ```
 
-
 ### The \$2.7 Billion Opportunity
 
 According to industry reports, the global AI agent market is exploding, projected to reach \$2.7 billion by 2028 . But here's the kicker: most businesses are still stuck in the "single AI call" mindset, missing out on the real value that comes from orchestrated agent systems.
 
 **Real companies are already winning with agents:**
 
-- Uber uses AI agents to summarize customer interactions and surface context for support representatives 
-- Toyota implemented an AI platform that reduced manual work by over 10,000 hours per year 
-- Renault Group uses enterprise-grade AI agents for code generation and development workflows 
-
+- Uber uses AI agents to summarize customer interactions and surface context for support representatives
+- Toyota implemented an AI platform that reduced manual work by over 10,000 hours per year
+- Renault Group uses enterprise-grade AI agents for code generation and development workflows
 
 ### Why Google Built ADK: Learning from Internal Success
 
@@ -59,11 +57,10 @@ Google didn't build ADK in a vacuum . It's the same framework powering agents wi
 
 **ADK's core philosophy:**
 
-- **Model-agnostic**: Works with Gemini, GPT, Claude, or any LLM 
-- **Deployment-agnostic**: Run locally, on Google Cloud, or anywhere 
-- **Framework-compatible**: Integrates with LangChain, CrewAI, and other tools 
-- **Production-ready**: Built for real business applications, not just demos 
-
+- **Model-agnostic**: Works with Gemini, GPT, Claude, or any LLM
+- **Deployment-agnostic**: Run locally, on Google Cloud, or anywhere
+- **Framework-compatible**: Integrates with LangChain, CrewAI, and other tools
+- **Production-ready**: Built for real business applications, not just demos
 
 ### **Pause and Reflect** 🤔
 
@@ -84,11 +81,9 @@ By the end of this article, you'll understand how to transform chaotic AI implem
 - **Production patterns** that actually work in business
 - **The confidence** to build sophisticated agent systems
 
-
 ### Pro Tip 💡
 
 The biggest mistake new ADK developers make is thinking bigger means better. Start small, prove value, then scale. The most successful agent implementations begin with solving one specific problem really well.
-
 
 # Chapter 2: The ADK Mindset - From Functions to Autonomous Teams
 
@@ -108,8 +103,7 @@ But agent thinking operates differently:
 
 - **Autonomous entities** that perceive, reason, and act independently
 - **Goal-oriented behavior** rather than step-by-step instructions
-- **Dynamic adaptation** to changing conditions and contexts 
-
+- **Dynamic adaptation** to changing conditions and contexts
 
 ## Why Agent Thinking Changes Everything
 
@@ -149,18 +143,18 @@ Think about why jazz ensembles create richer music than solo pianists. It's not 
 graph TD
     A[Customer Inquiry] --> B[Router Agent]
     B --> C[Technical Support Agent]
-    B --> D[Billing Agent] 
+    B --> D[Billing Agent]
     B --> E[General Inquiry Agent]
-    
+
     C --> F[Database Tool]
     C --> G[Ticket System Tool]
-    
+
     D --> H[Payment Tool]
     D --> I[Account Tool]
-    
+
     E --> J[Knowledge Base Tool]
     E --> K[FAQ Tool]
-    
+
     style A fill:#e1f5fe,stroke:#01579b,color:#000
     style B fill:#f3e5f5,stroke:#4a148c,color:#000
     style C fill:#e8f5e8,stroke:#1b5e20,color:#000
@@ -173,8 +167,7 @@ In David's new system:
 - The **Router Agent** acts like a conductor, directing inquiries to specialists
 - The **Technical Support Agent** has deep knowledge of system issues
 - The **Billing Agent** specializes in payment and account problems
-- Each agent has its own tools and expertise, but they coordinate seamlessly 
-
+- Each agent has its own tools and expertise, but they coordinate seamlessly
 
 ## What Is an Agent? Beyond Functions and Objects
 
@@ -185,7 +178,7 @@ An agent in ADK isn't just a function with extra features—it's a **self-contai
 **Identity**: A name and clear description of its purpose
 **Autonomy**: The ability to make decisions without explicit instructions
 **Tools**: Capabilities it can use to interact with the world
-**Context**: Understanding of its environment and goals 
+**Context**: Understanding of its environment and goals
 
 ```python
 weather_agent = Agent(
@@ -195,7 +188,6 @@ weather_agent = Agent(
 )
 ```
 
-
 ### The Autonomy Spectrum: From Puppets to Partners
 
 Not all agents need the same level of independence. ADK supports different points on the **autonomy spectrum** :
@@ -203,23 +195,23 @@ Not all agents need the same level of independence. ADK supports different point
 **Reactive Agents**: Respond to specific triggers (like traditional functions)
 **Proactive Agents**: Take initiative based on goals and context
 **Adaptive Agents**: Learn and evolve their behavior over time
-**Collaborative Agents**: Work with other agents to achieve complex goals 
+**Collaborative Agents**: Work with other agents to achieve complex goals
 
 Most business applications benefit from **proactive, collaborative agents** that can reason about problems and coordinate with teammates .
 
 ### Agent vs. Function vs. Service: The Hierarchy of Abstraction
 
-| Aspect | Function | Service | Agent |
-| :-- | :-- | :-- | :-- |
-| **Abstraction Level** | Low | Medium | High |
-| **Decision Making** | None | Limited | Autonomous |
-| **Context Awareness** | Stateless | Session-based | Persistent |
-| **Goal Orientation** | Task-focused | Feature-focused | Outcome-focused |
-| **Collaboration** | None | API calls | Rich interaction |
+| Aspect                | Function     | Service         | Agent            |
+| :-------------------- | :----------- | :-------------- | :--------------- |
+| **Abstraction Level** | Low          | Medium          | High             |
+| **Decision Making**   | None         | Limited         | Autonomous       |
+| **Context Awareness** | Stateless    | Session-based   | Persistent       |
+| **Goal Orientation**  | Task-focused | Feature-focused | Outcome-focused  |
+| **Collaboration**     | None         | API calls       | Rich interaction |
 
 **Functions** process data: `calculate_tax(income, deductions)`
 **Services** provide capabilities: `PaymentService.process_payment()`
-**Agents** achieve goals: `"Help this customer resolve their billing issue"` 
+**Agents** achieve goals: `"Help this customer resolve their billing issue"`
 
 ## **Pause and Reflect** 🤔
 
@@ -239,7 +231,7 @@ David's old customer service flow looked like this:
 # The old way - rigid and brittle
 def handle_customer_message(message, user_id):
     intent = classify_intent(message)  # Often wrong
-    
+
     if intent == "refund":
         if has_recent_purchase(user_id):
             if within_refund_window(user_id):
@@ -248,7 +240,7 @@ def handle_customer_message(message, user_id):
                 return "Refund window expired"
         else:
             return "No recent purchases found"
-    
+
     # ... 50+ more elif statements
 ```
 
@@ -276,7 +268,7 @@ ADK agents collaborate through multiple patterns :
 **Hierarchical Delegation**: A manager agent routes work to specialists
 **Peer Collaboration**: Agents work together as equals on complex tasks
 **Sequential Workflows**: Agents pass work down a pipeline
-**Dynamic Coordination**: Agents decide how to collaborate based on context 
+**Dynamic Coordination**: Agents decide how to collaborate based on context
 
 ```python
 # Hierarchical delegation in action
@@ -285,7 +277,7 @@ orchestrator = Agent(
     description="Create high-quality blog posts through research, writing, and editing",
     sub_agents=[
         Agent(name="researcher", tools=[search_tool, database_tool]),
-        Agent(name="writer", tools=[content_tool, template_tool]),  
+        Agent(name="writer", tools=[content_tool, template_tool]),
         Agent(name="editor", tools=[grammar_tool, style_tool])
     ]
 )
@@ -296,7 +288,7 @@ When a user requests "Write a blog post about renewable energy," the orchestrato
 1. **Analyzes** the request and breaks it into subtasks
 2. **Delegates** research to the researcher agent
 3. **Coordinates** handoff from researcher to writer to editor
-4. **Ensures** quality standards are met throughout 
+4. **Ensures** quality standards are met throughout
 
 ## Pro Tip 💡
 
@@ -311,8 +303,7 @@ This shift requires thinking like a manager rather than a micromanager:
 - **Define clear roles** and responsibilities for each agent
 - **Set boundaries** and constraints to ensure safe operation
 - **Enable communication** between agents working on related tasks
-- **Monitor outcomes** rather than controlling every step 
-
+- **Monitor outcomes** rather than controlling every step
 
 ## Common Misconceptions About Agent Development
 
@@ -338,7 +329,6 @@ The mindset shift from traditional programming to agent orchestration is profoun
 
 Would you like me to continue with Chapter 3: Quick Start Victory?
 
-
 # Chapter 3: Quick Start Victory - Your First Agent in 10 Minutes
 
 ## The Immediate Gratification Promise
@@ -355,6 +345,7 @@ Weather agents might seem simple, but they're actually perfect for understanding
 - **Tool usage**: Demonstrates how agents interact with external functions
 - **Error handling**: Shows how agents deal with missing or invalid data
 - **Natural language**: Proves agents can understand intent, not just keywords
+
 ```mermaid
 graph TD
     A["User: What's the weather in New York?"] --> B[Weather Agent]
@@ -388,7 +379,6 @@ Before we begin, ensure you have:
 - **Code editor** (VS Code, PyCharm, or any text editor)
 - **Internet connection** for package installation
 
-
 ### Create Your Virtual Environment
 
 **Why virtual environments matter:** They isolate your project dependencies, preventing conflicts with other Python projects on your system.
@@ -411,7 +401,7 @@ source .venv/bin/activate
 # Windows Command Prompt
 .venv\Scripts\activate.bat
 
-# Windows PowerShell  
+# Windows PowerShell
 .venv\Scripts\Activate.ps1
 ```
 
@@ -451,10 +441,9 @@ Your project structure should now look like this:
 ```
 weather_agent/
 ├── __init__.py
-├── agent.py  
+├── agent.py
 └── .env
 ```
-
 
 ### **Pause and Reflect** 🤔
 
@@ -463,7 +452,6 @@ Notice this isn't just a single Python file. ADK treats agents as **applications
 - **Modular development**: Separate concerns into different files
 - **Environment management**: Keep secrets and configuration separate
 - **Package organization**: Enable imports and reusability
-
 
 ## Step 3: Create Your First Agent (4 Minutes)
 
@@ -478,10 +466,10 @@ from google.adk.agents import Agent
 
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the weather report.
-    
+
     Returns:
         dict: status and result or error msg.
     """
@@ -492,7 +480,7 @@ def get_weather(city: str) -> dict:
             "report": "The weather in New York is sunny with a temperature of 25°C (77°F)."
         },
         "london": {
-            "status": "success", 
+            "status": "success",
             "report": "It's cloudy in London with a temperature of 15°C (59°F)."
         },
         "tokyo": {
@@ -500,7 +488,7 @@ def get_weather(city: str) -> dict:
             "report": "Tokyo is experiencing light rain and a temperature of 18°C (64°F)."
         }
     }
-    
+
     city_normalized = city.lower().strip()
     if city_normalized in weather_db:
         return weather_db[city_normalized]
@@ -512,20 +500,20 @@ def get_weather(city: str) -> dict:
 
 def get_current_time(city: str) -> dict:
     """Returns the current time in a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the current time.
-    
+
     Returns:
         dict: status and result or error msg.
     """
     # Simplified timezone mapping for demonstration
     timezone_map = {
         "new york": "America/New_York",
-        "london": "Europe/London", 
+        "london": "Europe/London",
         "tokyo": "Asia/Tokyo"
     }
-    
+
     city_normalized = city.lower().strip()
     if city_normalized in timezone_map:
         tz = ZoneInfo(timezone_map[city_normalized])
@@ -534,7 +522,7 @@ def get_current_time(city: str) -> dict:
         return {"status": "success", "report": report}
     else:
         return {
-            "status": "error", 
+            "status": "error",
             "error_message": f"Sorry, I don't have timezone information for {city}."
         }
 
@@ -550,7 +538,6 @@ root_agent = Agent(
     tools=[get_weather, get_current_time]
 )
 ```
-
 
 ### Understanding the Code Architecture
 
@@ -574,7 +561,7 @@ root_agent = Agent(
     name="weather_time_agent",           # Unique identifier
     model="gemini-2.0-flash",           # LLM to use for reasoning
     description="...",                   # What this agent does
-    instruction="...",                   # How it should behave  
+    instruction="...",                   # How it should behave
     tools=[get_weather, get_current_time] # Available capabilities
 )
 ```
@@ -598,7 +585,6 @@ GOOGLE_API_KEY=your_api_key_here
 # GOOGLE_CLOUD_PROJECT=your-project-id
 # GOOGLE_CLOUD_LOCATION=us-central1
 ```
-
 
 ### Getting Your Google API Key
 
@@ -634,7 +620,6 @@ Starting ADK Web UI...
 Server running at: http://localhost:8080
 ```
 
-
 ### Your First Conversation
 
 Open your browser to `http://localhost:8080` and try these queries:
@@ -648,7 +633,7 @@ Agent: The weather in New York is sunny with a temperature of 25°C (77°F).
 
 **Time inquiry:**
 
-```  
+```
 User: What time is it in Tokyo?
 Agent: The current time in Tokyo is 2025-06-21 16:29:45 JST
 ```
@@ -659,7 +644,6 @@ Agent: The current time in Tokyo is 2025-06-21 16:29:45 JST
 User: I'm planning a trip to London. How's the weather there and what time is it?
 Agent: In London, it's currently cloudy with a temperature of 15°C (59°F). The current time in London is 2025-06-21 08:29:45 GMT. Perfect for sightseeing if you don't mind the clouds!
 ```
-
 
 ## The Magic Moment: Understanding What Just Happened
 
@@ -712,7 +696,6 @@ Agent > The weather in New York is sunny with a temperature of 25°C (77°F).
 You > quit
 ```
 
-
 ## When to Use Single Agents: The Decision Framework
 
 Your weather agent demonstrates **single-agent patterns**—one specialized entity handling related tasks. This approach works best when:
@@ -724,14 +707,12 @@ Your weather agent demonstrates **single-agent patterns**—one specialized enti
 - **Clear boundaries**: The agent's responsibilities are well-defined
 - **Fast response needs**: No coordination overhead between multiple agents
 
-
 ### ❌ Consider Multi-Agent When:
 
 - **Complex workflows**: Tasks require different specialized knowledge
 - **Tool conflicts**: Different tasks need incompatible tool configurations
 - **Scale requirements**: Single agent becomes too complex to maintain
 - **Team simulation**: You want to model real-world team dynamics
-
 
 ## Common Pitfalls and Solutions
 
@@ -792,7 +773,6 @@ Congratulations! You've just built and deployed your first intelligent agent. Mo
 
 The moment you saw your agent respond intelligently to natural language, you crossed the threshold from traditional programming into the agent paradigm. That feeling of "it just works" is exactly what makes ADK powerful—and we're just getting started.
 
-
 # Chapter 4: Agent Types Deep Dive - Understanding the Building Blocks
 
 ## LLM Agents: The Dynamic Reasoning Layer
@@ -821,7 +801,6 @@ customer_service_agent = LlmAgent(
 )
 ```
 
-
 ### When to Use LLM Agents
 
 LLM Agents are ideal for scenarios requiring:
@@ -830,7 +809,6 @@ LLM Agents are ideal for scenarios requiring:
 - **Natural language user inputs** that need interpretation
 - **Complex workflows** requiring reasoning and adaptation
 - **Business scenarios** like customer service, content creation, or data analysis
-
 
 ### Business Example: Customer Service
 
@@ -877,6 +855,7 @@ ADK provides three core workflow agent types:
 1. **Sequential Agents**: Execute sub-agents one after another, in sequence
 2. **Loop Agents**: Repeatedly execute sub-agents until a specific termination condition is met
 3. **Parallel Agents**: Execute multiple sub-agents simultaneously
+
 ```python
 from google.adk.agents import SequentialAgent, LlmAgent
 
@@ -902,7 +881,6 @@ content_pipeline = SequentialAgent(
 )
 ```
 
-
 ### Why Use Workflow Agents?
 
 Workflow agents provide several key benefits:
@@ -911,7 +889,6 @@ Workflow agents provide several key benefits:
 - **Reliability**: Consistent task execution in the required order or pattern
 - **Structure**: Clear control structures for complex processes
 - **Composition**: Ability to combine structured process control with flexible LLM-powered execution
-
 
 ### Enterprise Example: Document Processing
 
@@ -955,7 +932,6 @@ Custom Agents are designed for scenarios where predefined agent types don't prov
 - **Custom control flows** beyond sequential, parallel, or loop patterns
 - **Performance-critical components** requiring optimized execution
 
-
 ### Implementing Custom Agents
 
 Custom Agents inherit from `BaseAgent` and must implement the `_run_async_impl` method, which defines their behavior:
@@ -971,11 +947,11 @@ class MyCustomAgent(BaseAgent):
             sub_agents=sub_agents,
             description=description
         )
-    
+
     async def _run_async_impl(self, ctx):
         # Access session state
         previous_result = ctx.session.state.get("some_key")
-        
+
         # Custom logic
         if some_condition:
             # Run first sub-agent
@@ -985,39 +961,36 @@ class MyCustomAgent(BaseAgent):
             # Run second sub-agent
             async for event in self.sub_agents.run_async(ctx):
                 yield event
-                
+
         # Store results in state
         ctx.session.state["my_key"] = "some_value"
-        
+
         # Generate final response
         yield self.create_final_response_event("Task completed successfully")
 ```
-
 
 ### Capabilities of Custom Agents
 
 Custom Agents provide control over several key aspects:
 
-
-| Capability | Description | Code Pattern |
-| :-- | :-- | :-- |
-| Calling Sub-Agents | Invoke other agents and yield their events | `async for event in self.sub_agent.run_async(ctx): yield event` |
-| Reading State | Access data from previous steps | `previous_result = ctx.session.state.get("some_key")` |
-| Writing State | Store results for later steps | `ctx.session.state["my_key"] = value` |
-| Conditional Logic | Make decisions based on runtime conditions | `if condition: await agent1.run_async(ctx) else: await agent2.run_async(ctx)` |
-| Error Handling | Manage failures and exceptions | `try: ... except Exception: ...` |
+| Capability         | Description                                | Code Pattern                                                                  |
+| :----------------- | :----------------------------------------- | :---------------------------------------------------------------------------- |
+| Calling Sub-Agents | Invoke other agents and yield their events | `async for event in self.sub_agent.run_async(ctx): yield event`               |
+| Reading State      | Access data from previous steps            | `previous_result = ctx.session.state.get("some_key")`                         |
+| Writing State      | Store results for later steps              | `ctx.session.state["my_key"] = value`                                         |
+| Conditional Logic  | Make decisions based on runtime conditions | `if condition: await agent1.run_async(ctx) else: await agent2.run_async(ctx)` |
+| Error Handling     | Manage failures and exceptions             | `try: ... except Exception: ...`                                              |
 
 ## Choosing the Right Agent Type
 
 Selecting the appropriate agent type depends on your specific use case and requirements:
 
-
-| Feature | LLM Agent | Workflow Agent | Custom Agent |
-| :-- | :-- | :-- | :-- |
-| Primary Function | Reasoning, Generation, Tool Use | Controlling Agent Execution Flow | Implementing Unique Logic/Integrations |
-| Core Engine | Large Language Model (LLM) | Predefined Logic (Sequence, Parallel, Loop) | Custom Code |
-| Determinism | Non-deterministic (Flexible) | Deterministic (Predictable) | Can be either, based on implementation |
-| Primary Use | Language tasks, Dynamic decisions | Structured processes, Orchestration | Tailored requirements, Specific workflows |
+| Feature          | LLM Agent                         | Workflow Agent                              | Custom Agent                              |
+| :--------------- | :-------------------------------- | :------------------------------------------ | :---------------------------------------- |
+| Primary Function | Reasoning, Generation, Tool Use   | Controlling Agent Execution Flow            | Implementing Unique Logic/Integrations    |
+| Core Engine      | Large Language Model (LLM)        | Predefined Logic (Sequence, Parallel, Loop) | Custom Code                               |
+| Determinism      | Non-deterministic (Flexible)      | Deterministic (Predictable)                 | Can be either, based on implementation    |
+| Primary Use      | Language tasks, Dynamic decisions | Structured processes, Orchestration         | Tailored requirements, Specific workflows |
 
 ## **Pause and Reflect** 🤔
 
@@ -1045,7 +1018,6 @@ ADK includes several powerful built-in tools:
 - **Database connectors**: Interact with various database systems
 - **API clients**: Connect to external services and APIs
 
-
 ### Implementing Custom Tools
 
 Custom tools in ADK are simply Python functions with type hints and docstrings:
@@ -1053,10 +1025,10 @@ Custom tools in ADK are simply Python functions with type hints and docstrings:
 ```python
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the weather report.
-    
+
     Returns:
         dict: status and result or error msg.
     """
@@ -1095,10 +1067,10 @@ search_tool = DuckDuckGoSearchRun()
 # Wrap LangChain tool for ADK
 def search_web(query: str) -> str:
     """Search the web for information.
-    
+
     Args:
         query (str): The search query.
-        
+
     Returns:
         str: Search results.
     """
@@ -1112,7 +1084,6 @@ research_agent = LlmAgent(
     description="Research information from the web"
 )
 ```
-
 
 ### CrewAI Compatibility
 
@@ -1167,7 +1138,6 @@ result = content_crew.kickoff()
 # Implementation depends on specific integration needs
 ```
 
-
 ### OpenAPI Specifications
 
 ADK supports OpenAPI specifications for integrating with RESTful services:
@@ -1191,7 +1161,6 @@ When developing custom tools, follow these best practices:
 - **Error handling**: Gracefully handle errors and provide informative messages
 - **Statelessness**: Design tools to be stateless when possible
 
-
 ### Example: Content Creation Tool
 
 Here's an example of a custom tool for content creation:
@@ -1199,29 +1168,29 @@ Here's an example of a custom tool for content creation:
 ```python
 def generate_social_post(topic: str, platform: str, tone: str = "professional") -> dict:
     """Generates a social media post based on the given parameters.
-    
+
     Args:
         topic (str): The main subject of the post.
         platform (str): The social media platform (e.g., Twitter, LinkedIn, Instagram).
         tone (str, optional): The tone of the post (e.g., professional, casual, humorous).
             Defaults to "professional".
-    
+
     Returns:
         dict: A dictionary containing the generated post and metadata.
     """
     # Implementation would generate content based on parameters
     # This is a simplified example
-    
+
     if platform.lower() == "twitter":
         max_length = 280
     elif platform.lower() == "linkedin":
         max_length = 3000
     else:
         max_length = 1000
-        
+
     # Generate content based on topic, platform, and tone
     # In a real implementation, this might use templates or another LLM
-    
+
     return {
         "status": "success",
         "post": f"Sample {tone} post about {topic} for {platform}",
@@ -1230,7 +1199,6 @@ def generate_social_post(topic: str, platform: str, tone: str = "professional") 
         "hashtags": [f"#{topic.replace(' ', '')}", "#content"]
     }
 ```
-
 
 ## **Interactive Challenge** 🎯
 
@@ -1281,7 +1249,6 @@ graph TD
     style H fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
     style I fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100
 ```
-
 
 ### Real Example: E-commerce Platform
 
@@ -1372,29 +1339,29 @@ config:
 flowchart TD
     A[User Request:<br/>Solve complex problem] --> B[General Assistant Agent]
     B --> C{Problem Type?}
-    
+
     C -->|Mathematical| D[Math Specialist Agent]
     C -->|Technical| E[Tech Specialist Agent]
     C -->|Research| F[Research Specialist Agent]
-    
+
     D --> G[Calculator Tool]
     D --> H[Equation Solver Tool]
-    
+
     E --> I[Debug Tool]
     E --> J[Code Analysis Tool]
-    
+
     F --> K[Search Tool]
     F --> L[Database Tool]
-    
+
     G --> M[Solution]
     H --> M
     I --> M
     J --> M
     K --> M
     L --> M
-    
+
     M --> N[Formatted Response]
-    
+
     %% Styling with professional pastel colors
     classDef userRequest fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#1565c0
     classDef generalAgent fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
@@ -1403,7 +1370,7 @@ flowchart TD
     classDef tool fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
     classDef solution fill:#f1f8e9,stroke:#689f38,stroke-width:2px,color:#33691e
     classDef response fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
-    
+
     class A userRequest
     class B generalAgent
     class C decision
@@ -1451,7 +1418,6 @@ ADK supports various communication protocols, including:
 - **Agent-to-Agent Protocol (A2A)**: For peer-to-peer task outsourcing
 - **Agent Network Protocol (ANP)**: For open-network agent discovery and collaboration
 
-
 ## Pro Tip 💡
 
 When designing multi-agent systems, start with a clear separation of concerns. Each agent should have a well-defined role and area of expertise. This makes the system easier to develop, test, and maintain as complexity grows.
@@ -1482,7 +1448,6 @@ This architecture provides several benefits:
 - **Deep knowledge** in specific domains
 - **Consistent response formatting**
 - **Seamless escalation** to human agents when needed
-
 
 ### Escalation Workflows
 
@@ -1522,10 +1487,10 @@ Integrating a knowledge base enhances agent capabilities:
 # Knowledge base tool
 def query_knowledge_base(query: str) -> dict:
     """Search the company knowledge base for information.
-    
+
     Args:
         query (str): The search query.
-        
+
     Returns:
         dict: Relevant knowledge base articles and information.
     """
@@ -1821,7 +1786,6 @@ Would you like me to continue with the next chapters on Evaluation and Testing, 
 
 : https://www.linkedin.com/pulse/master-multi-agents-from-scratch-googles-agent-development-jha-zq9rc
 
-
 ---
 
 # Chapter 8: Evaluation and Testing - Ensuring Agent Reliability
@@ -1888,20 +1852,18 @@ Test files represent **individual agent-model interactions** and are ideal for r
 }
 ```
 
-
 ### Integration Testing with Evalsets
 
 Evalsets support **multiple, potentially lengthy sessions** and are designed for **complex, multi-turn conversations**. These are ideal for integration testing and simulating real-world usage patterns .
 
 **Key differences between approaches:**
 
-
-| Aspect | Test Files | Evalsets |
-| :-- | :-- | :-- |
-| **Complexity** | Simple, single interactions | Complex, multi-turn conversations |
-| **Execution Speed** | Fast (unit testing) | Slower (integration testing) |
-| **Use Case** | Development iteration | Pre-production validation |
-| **Session Length** | Single session | Multiple lengthy sessions |
+| Aspect              | Test Files                  | Evalsets                          |
+| :------------------ | :-------------------------- | :-------------------------------- |
+| **Complexity**      | Simple, single interactions | Complex, multi-turn conversations |
+| **Execution Speed** | Fast (unit testing)         | Slower (integration testing)      |
+| **Use Case**        | Development iteration       | Pre-production validation         |
+| **Session Length**  | Single session              | Multiple lengthy sessions         |
 
 ## Evaluation Components Deep Dive
 
@@ -1918,7 +1880,7 @@ One of ADK's most powerful features is **validating the sequence of tool calls**
             "args": {"query": "refund policy electronics"}
         },
         {
-            "name": "check_purchase_date", 
+            "name": "check_purchase_date",
             "args": {"order_id": "12345"}
         },
         {
@@ -1939,23 +1901,22 @@ For multi-agent systems, ADK tracks **intermediate responses from sub-agents**, 
 graph TD
     A[User Query] --> B[Router Agent]
     B --> C[Research Agent]
-    C --> D[Analysis Agent] 
+    C --> D[Analysis Agent]
     D --> E[Response Agent]
-    
+
     F[Evaluation System] --> G[Tool Trajectory Check]
     F --> H[Intermediate Response Check]
     F --> I[Final Response Quality]
-    
+
     C --> G
     D --> H
     E --> I
-    
+
     style F fill:#e1f5fe,stroke:#01579b,color:#000
     style G fill:#e8f5e8,stroke:#1b5e20,color:#000
     style H fill:#fff3e0,stroke:#e65100,color:#000
     style I fill:#fce4ec,stroke:#880e4f,color:#000
 ```
-
 
 ## Testing Strategies for Production Readiness
 
@@ -1967,31 +1928,30 @@ Unlike traditional unit tests that verify deterministic functions, agent unit te
 # Agent unit testing pattern
 def test_refund_processing_agent():
     """Test that refund agent follows correct process."""
-    
+
     # Setup test case
     test_input = {
         "user_query": "I want to return my laptop",
         "order_id": "12345",
         "purchase_date": "2024-01-15"
     }
-    
+
     # Expected tool sequence
     expected_tools = [
         "check_return_policy",
-        "validate_return_window", 
+        "validate_return_window",
         "calculate_refund_amount",
         "initiate_return_process"
     ]
-    
+
     # Run evaluation
     result = evaluate_agent(refund_agent, test_input)
-    
+
     # Validate tool sequence
     assert result.tool_sequence == expected_tools
     assert "refund initiated" in result.final_response
     assert result.confidence_score > 0.8
 ```
-
 
 ### Integration Testing Patterns
 
@@ -2001,7 +1961,7 @@ Integration tests verify that **multiple agents work together correctly** and ha
 # Multi-agent integration test
 def test_customer_service_escalation_flow():
     """Test complete customer service workflow with escalation."""
-    
+
     test_scenarios = [
         {
             "name": "technical_issue_escalation",
@@ -2012,13 +1972,12 @@ def test_customer_service_escalation_flow():
             ]
         }
     ]
-    
+
     for scenario in test_scenarios:
         result = run_integration_test(customer_service_system, scenario)
         validate_agent_handoffs(result)
         validate_context_preservation(result)
 ```
-
 
 ### Performance Benchmarking
 
@@ -2031,22 +1990,22 @@ import psutil
 
 def benchmark_agent_performance(agent, test_cases, iterations=100):
     """Comprehensive agent performance benchmarking."""
-    
+
     metrics = {
         "response_times": [],
         "memory_usage": [],
         "cpu_usage": [],
         "success_rate": 0
     }
-    
+
     successful_runs = 0
-    
+
     for i in range(iterations):
         # Monitor resource usage
         process = psutil.Process()
         start_memory = process.memory_info().rss
         start_cpu = process.cpu_percent()
-        
+
         # Execute agent
         start_time = time.time()
         try:
@@ -2055,18 +2014,17 @@ def benchmark_agent_performance(agent, test_cases, iterations=100):
         except Exception as e:
             log_error(f"Agent execution failed: {e}")
             continue
-        
+
         end_time = time.time()
-        
+
         # Record metrics
         metrics["response_times"].append(end_time - start_time)
         metrics["memory_usage"].append(process.memory_info().rss - start_memory)
         metrics["cpu_usage"].append(process.cpu_percent() - start_cpu)
-    
+
     metrics["success_rate"] = successful_runs / iterations
     return metrics
 ```
-
 
 ## **Interactive Challenge** 🎯
 
@@ -2090,25 +2048,25 @@ class AgentUATFramework:
         self.user_personas = user_personas
         self.evaluation_criteria = {
             "helpfulness": 0.0,
-            "accuracy": 0.0, 
+            "accuracy": 0.0,
             "naturalness": 0.0,
             "safety": 0.0
         }
-    
+
     def conduct_uat_session(self, persona, scenarios):
         """Conduct structured UAT with specific user persona."""
-        
+
         results = []
         for scenario in scenarios:
             # Execute scenario
             response = self.agent.run(scenario["input"])
-            
+
             # Collect user feedback
             feedback = self.collect_user_feedback(persona, scenario, response)
-            
+
             # Score response
             scores = self.score_response(response, scenario["expected_outcome"])
-            
+
             results.append({
                 "scenario": scenario["name"],
                 "persona": persona["name"],
@@ -2116,10 +2074,9 @@ class AgentUATFramework:
                 "user_feedback": feedback,
                 "scores": scores
             })
-        
+
         return results
 ```
-
 
 ---
 
@@ -2131,11 +2088,11 @@ Deploying ADK agents to production requires understanding the **three primary de
 
 ### Deployment Options Comparison
 
-| Option | Management | Scalability | Control | Best For |
-| :-- | :-- | :-- | :-- | :-- |
-| **Vertex AI Agent Engine** | Fully Managed | Auto-scaling | Limited | Production workloads, rapid deployment |
-| **Cloud Run** | Managed Runtime | Manual scaling | Medium | Custom deployments, cost optimization |
-| **Custom Infrastructure** | Self-managed | Full control | Complete | Enterprise, specific requirements |
+| Option                     | Management      | Scalability    | Control  | Best For                               |
+| :------------------------- | :-------------- | :------------- | :------- | :------------------------------------- |
+| **Vertex AI Agent Engine** | Fully Managed   | Auto-scaling   | Limited  | Production workloads, rapid deployment |
+| **Cloud Run**              | Managed Runtime | Manual scaling | Medium   | Custom deployments, cost optimization  |
+| **Custom Infrastructure**  | Self-managed    | Full control   | Complete | Enterprise, specific requirements      |
 
 ## Vertex AI Agent Engine: The Managed Approach
 
@@ -2147,7 +2104,6 @@ Deploying ADK agents to production requires understanding the **three primary de
 - **Automatic Scaling**: Handles traffic spikes without manual intervention
 - **Integrated Session Management**: Built-in conversation state persistence
 - **Enterprise Security**: Google Cloud's security model with IAM integration
-
 
 ### Deployment Process
 
@@ -2189,7 +2145,6 @@ The deployment process involves several automated steps :
 - `roles/storage.admin`: For artifact staging
 - `roles/serviceusage.serviceUsageConsumer`: For service access
 
-
 ## Cloud Run: Containerized Flexibility
 
 Cloud Run provides a **middle ground between fully managed and self-hosted**, offering containerized deployment with automatic scaling while maintaining deployment flexibility .
@@ -2228,7 +2183,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 agent_server:app
 ```
 
-
 ### Deployment Commands
 
 ```bash
@@ -2245,7 +2199,6 @@ gcloud run deploy customer-service-agent \
     --max-instances 100 \
     --set-env-vars ENVIRONMENT=production
 ```
-
 
 ## Production Best Practices
 
@@ -2267,38 +2220,38 @@ class SecureAgentWrapper:
     def __init__(self, agent):
         self.agent = agent
         self.secret_client = secretmanager.SecretManagerServiceClient()
-        
+
     def sanitize_input(self, user_input):
         """Sanitize user input to prevent injection attacks."""
         # Remove potentially dangerous characters
         sanitized = re.sub(r'[<>"\';]', '', user_input)
-        
+
         # Limit input length
         if len(sanitized) > 2000:
             raise ValueError("Input too long")
-            
+
         return sanitized
-    
+
     def get_secret(self, secret_name):
         """Securely retrieve secrets from Secret Manager."""
         name = f"projects/{PROJECT_ID}/secrets/{secret_name}/versions/latest"
         response = self.secret_client.access_secret_version(request={"name": name})
         return response.payload.data.decode("UTF-8")
-    
+
     def run_secure(self, user_input, user_id):
         """Execute agent with security controls."""
         # Sanitize input
         clean_input = self.sanitize_input(user_input)
-        
+
         # Log request for audit
         self.log_request(user_id, clean_input)
-        
+
         # Execute agent
         response = self.agent.run(clean_input)
-        
+
         # Log response
         self.log_response(user_id, response)
-        
+
         return response
 ```
 
@@ -2328,18 +2281,18 @@ class ProductionMetrics:
         self.request_count = 0
         self.error_count = 0
         self.response_times = []
-        
+
     def track_request(self, start_time, success=True):
         self.request_count += 1
         if not success:
             self.error_count += 1
-        
+
         response_time = time.time() - start_time
         self.response_times.append(response_time)
-        
+
         # Log metrics
         logging.info(f"Request completed: success={success}, time={response_time:.2f}s")
-        
+
     def get_error_rate(self):
         if self.request_count == 0:
             return 0
@@ -2351,17 +2304,17 @@ class ProductionMetrics:
 **Performance Optimization Techniques** :
 
 1. **Response Time Optimization**
-    - **Parallel Processing**: Use workflow agents to execute independent tasks simultaneously
-    - **Caching**: Implement result caching for frequently accessed data
-    - **Model Selection**: Choose appropriate model sizes for different tasks
+   - **Parallel Processing**: Use workflow agents to execute independent tasks simultaneously
+   - **Caching**: Implement result caching for frequently accessed data
+   - **Model Selection**: Choose appropriate model sizes for different tasks
 2. **Cost Management**
-    - **Request Batching**: Group similar requests when possible
-    - **Model Routing**: Use smaller models for simple tasks, larger models for complex reasoning
-    - **Resource Scheduling**: Scale down during low-traffic periods
+   - **Request Batching**: Group similar requests when possible
+   - **Model Routing**: Use smaller models for simple tasks, larger models for complex reasoning
+   - **Resource Scheduling**: Scale down during low-traffic periods
 3. **Resource Allocation**
-    - **Memory Management**: Monitor and optimize agent memory usage
-    - **CPU Utilization**: Balance concurrent requests with available compute
-    - **Network Optimization**: Minimize external API calls through caching
+   - **Memory Management**: Monitor and optimize agent memory usage
+   - **CPU Utilization**: Balance concurrent requests with available compute
+   - **Network Optimization**: Minimize external API calls through caching
 
 ### Error Handling Patterns
 
@@ -2388,7 +2341,7 @@ def production_error_handler(func):
                 "traceback": traceback.format_exc()
             }
             logging.error(f"Production error: {error_details}")
-            
+
             # Determine error response strategy
             if isinstance(e, ValidationError):
                 return create_user_friendly_error("Invalid input provided")
@@ -2399,7 +2352,7 @@ def production_error_handler(func):
             else:
                 # Generic fallback
                 return create_fallback_response("Unable to process request")
-    
+
     return wrapper
 
 # Graceful degradation patterns
@@ -2407,19 +2360,19 @@ class FallbackAgent:
     def __init__(self, primary_agent, fallback_responses):
         self.primary_agent = primary_agent
         self.fallback_responses = fallback_responses
-    
+
     async def run_with_fallback(self, user_input):
         """Execute with fallback to predefined responses."""
         try:
             return await self.primary_agent.run(user_input)
         except Exception as e:
             logging.warning(f"Primary agent failed, using fallback: {e}")
-            
+
             # Simple keyword matching for fallback
             for keyword, response in self.fallback_responses.items():
                 if keyword.lower() in user_input.lower():
                     return response
-            
+
             return "I'm experiencing technical difficulties. Please try again later."
 ```
 
@@ -2428,39 +2381,45 @@ class FallbackAgent:
 To ensure a smooth deployment process, follow this comprehensive checklist:
 
 1. **Code Quality**
-    - [ ] Code reviewed and approved
-    - [ ] No critical or high-severity issues in code analysis
-    - [ ] Proper error handling and logging implemented
+
+   - [ ] Code reviewed and approved
+   - [ ] No critical or high-severity issues in code analysis
+   - [ ] Proper error handling and logging implemented
 
 2. **Testing**
-    - [ ] Unit tests cover all critical components
-    - [ ] Integration tests verify multi-agent interactions
-    - [ ] Performance tests meet acceptable thresholds
+
+   - [ ] Unit tests cover all critical components
+   - [ ] Integration tests verify multi-agent interactions
+   - [ ] Performance tests meet acceptable thresholds
 
 3. **Security**
-    - [ ] Sensitive data not hardcoded; use Secret Manager
-    - [ ] Proper IAM roles and permissions configured
-    - [ ] Input validation and sanitization in place
+
+   - [ ] Sensitive data not hardcoded; use Secret Manager
+   - [ ] Proper IAM roles and permissions configured
+   - [ ] Input validation and sanitization in place
 
 4. **Deployment**
-    - [ ] Environment variables and configuration files set
-    - [ ] Service account keys and API keys secured
-    - [ ] Deployment artifacts (e.g., Docker images) built and tested
+
+   - [ ] Environment variables and configuration files set
+   - [ ] Service account keys and API keys secured
+   - [ ] Deployment artifacts (e.g., Docker images) built and tested
 
 5. **Monitoring and Logging**
-    - [ ] Structured logging enabled
-    - [ ] Monitoring dashboards configured
-    - [ ] Alerting for error rates, latency, and resource usage
+
+   - [ ] Structured logging enabled
+   - [ ] Monitoring dashboards configured
+   - [ ] Alerting for error rates, latency, and resource usage
 
 6. **Scaling and Performance**
-    - [ ] Autoscaling policies defined (if applicable)
-    - [ ] Resource limits and requests configured
-    - [ ] Caching strategies implemented
+
+   - [ ] Autoscaling policies defined (if applicable)
+   - [ ] Resource limits and requests configured
+   - [ ] Caching strategies implemented
 
 7. **Documentation and Training**
-    - [ ] User documentation updated
-    - [ ] Technical documentation for maintenance and troubleshooting
-    - [ ] Training for support personnel on new agent features
+   - [ ] User documentation updated
+   - [ ] Technical documentation for maintenance and troubleshooting
+   - [ ] Training for support personnel on new agent features
 
 ## **Pro Tip** 💡
 
@@ -2491,15 +2450,15 @@ session.state = {
     # Session-specific (default scope)
     "current_step": 3,
     "last_query": "What's the weather?",
-    
+
     # User-specific (persists across sessions)
     "user:preferred_language": "English",
     "user:favorite_city": "San Francisco",
-    
+
     # Application-wide (shared across all users)
     "app:version": "2.1.0",
     "app:maintenance_mode": False,
-    
+
     # Temporary (not persisted)
     "temp:calculation_result": 42
 }
@@ -2511,9 +2470,9 @@ This **hierarchical approach** enables agents to maintain the right level of per
 
 ADK's session system consists of **three core components** that work together to provide comprehensive context management :
 
-**Sessions**: Stateful chat histories containing unique identifiers, persistent state dictionaries, event records, and metadata 
-**State**: Key-value stores within sessions that persist information across interactions 
-**Runners**: Orchestrators that connect agents with sessions, managing information flow and context passing 
+**Sessions**: Stateful chat histories containing unique identifiers, persistent state dictionaries, event records, and metadata
+**State**: Key-value stores within sessions that persist information across interactions
+**Runners**: Orchestrators that connect agents with sessions, managing information flow and context passing
 
 ```mermaid
 graph TD
@@ -2524,14 +2483,13 @@ graph TD
     E --> F[Tool Context]
     F --> D
     D --> G[State Persistence]
-    
+
     style A fill:#e1f5fe,stroke:#01579b,color:#000
     style B fill:#f3e5f5,stroke:#4a148c,color:#000
     style C fill:#e8f5e8,stroke:#1b5e20,color:#000
     style D fill:#fff3e0,stroke:#e65100,color:#000
     style E fill:#fce4ec,stroke:#880e4f,color:#000
 ```
-
 
 ### Implementing Context-Aware Agents
 
@@ -2543,22 +2501,22 @@ from google.adk.agents import LlmAgent
 
 def remember_user_preference(preference_type: str, value: str, tool_context: ToolContext) -> dict:
     """Stores user preferences across sessions.
-    
+
     Args:
         preference_type: Type of preference (e.g., 'communication_style', 'timezone')
         value: The preference value
         tool_context: Automatically provided by ADK
-    
+
     Returns:
         dict: Status of the operation
     """
     # Store at user scope for cross-session persistence
     key = f"user:{preference_type}"
     tool_context.state[key] = value
-    
+
     # Track when preference was set
     tool_context.state[f"{key}_updated"] = datetime.datetime.now().isoformat()
-    
+
     return {
         "status": "success",
         "message": f"I've remembered your {preference_type} preference: {value}"
@@ -2566,21 +2524,21 @@ def remember_user_preference(preference_type: str, value: str, tool_context: Too
 
 def get_user_context(tool_context: ToolContext) -> dict:
     """Retrieves user context for personalized responses.
-    
+
     Args:
         tool_context: Automatically provided by ADK
-    
+
     Returns:
         dict: User context information
     """
     context = {}
-    
+
     # Extract user preferences
     for key, value in tool_context.state.items():
         if key.startswith("user:") and not key.endswith("_updated"):
             pref_name = key.replace("user:", "")
             context[pref_name] = value
-    
+
     return {
         "status": "success",
         "context": context,
@@ -2630,7 +2588,7 @@ weather_agent = LlmAgent(
 )
 
 traffic_agent = LlmAgent(
-    name="traffic_specialist", 
+    name="traffic_specialist",
     model="gemini-2.0-flash",
     tools=[get_traffic_tool],
     description="Get traffic information quickly"
@@ -2638,7 +2596,7 @@ traffic_agent = LlmAgent(
 
 news_agent = LlmAgent(
     name="news_specialist",
-    model="gemini-2.0-flash", 
+    model="gemini-2.0-flash",
     tools=[get_news_tool],
     description="Get news information quickly"
 )
@@ -2666,29 +2624,29 @@ class CachedToolExecutor:
     def __init__(self, cache_ttl=300):  # 5 minute TTL
         self.cache = {}
         self.cache_ttl = cache_ttl
-    
+
     def cached_tool_call(self, tool_func, *args, **kwargs):
         """Execute tool with caching based on parameters."""
-        
+
         # Create cache key from function name and parameters
         cache_key = hashlib.md5(
             f"{tool_func.__name__}_{str(args)}_{str(sorted(kwargs.items()))}".encode()
         ).hexdigest()
-        
+
         current_time = time.time()
-        
+
         # Check cache
         if cache_key in self.cache:
             cached_result, timestamp = self.cache[cache_key]
             if current_time - timestamp < self.cache_ttl:
                 return cached_result
-        
+
         # Execute tool and cache result
         result = tool_func(*args, **kwargs)
         self.cache[cache_key] = (result, current_time)
-        
+
         return result
-    
+
     def clear_expired_cache(self):
         """Clean up expired cache entries."""
         current_time = time.time()
@@ -2707,7 +2665,6 @@ def get_stock_price_cached(symbol: str) -> dict:
     return cache_executor.cached_tool_call(get_stock_price_api, symbol)
 ```
 
-
 ### Resource Management
 
 **Efficient resource allocation** ensures agents scale effectively under load :
@@ -2723,38 +2680,37 @@ class ResourceOptimizedAgent:
         self.agent = agent
         self.semaphore = asyncio.Semaphore(max_concurrent_requests)
         self.thread_pool = ThreadPoolExecutor(max_workers=5)
-        
+
     async def execute_with_resource_management(self, request):
         """Execute agent request with resource controls."""
-        
+
         async with self.semaphore:  # Limit concurrent requests
             # Monitor resource usage
             memory_percent = psutil.virtual_memory().percent
             cpu_percent = psutil.cpu_percent(interval=1)
-            
+
             # Implement backpressure if resources are constrained
             if memory_percent > 85 or cpu_percent > 90:
                 await asyncio.sleep(0.5)  # Brief delay to reduce load
-            
+
             # Execute in thread pool for CPU-intensive operations
             if self.is_cpu_intensive_request(request):
                 loop = asyncio.get_event_loop()
                 result = await loop.run_in_executor(
-                    self.thread_pool, 
-                    self.agent.run, 
+                    self.thread_pool,
+                    self.agent.run,
                     request
                 )
             else:
                 result = await self.agent.run_async(request)
-            
+
             return result
-    
+
     def is_cpu_intensive_request(self, request):
         """Determine if request requires CPU-intensive processing."""
         cpu_intensive_keywords = ['analyze', 'calculate', 'process', 'generate']
         return any(keyword in request.lower() for keyword in cpu_intensive_keywords)
 ```
-
 
 ### Cost Management Strategies
 
@@ -2766,23 +2722,23 @@ class CostOptimizedRouter:
     def __init__(self):
         self.simple_model = "gemini-1.5-flash"  # Faster, cheaper
         self.complex_model = "gemini-2.0-flash" # More capable, expensive
-        
+
     def route_request(self, request: str) -> str:
         """Route requests to appropriate model based on complexity."""
-        
+
         complexity_indicators = {
             'simple': ['weather', 'time', 'basic', 'simple', 'quick'],
             'complex': ['analyze', 'research', 'create', 'write', 'solve', 'explain']
         }
-        
+
         request_lower = request.lower()
-        
+
         # Check for complexity indicators
-        simple_score = sum(1 for word in complexity_indicators['simple'] 
+        simple_score = sum(1 for word in complexity_indicators['simple']
                           if word in request_lower)
-        complex_score = sum(1 for word in complexity_indicators['complex'] 
+        complex_score = sum(1 for word in complexity_indicators['complex']
                            if word in request_lower)
-        
+
         # Route based on complexity
         if complex_score > simple_score or len(request) > 200:
             return self.complex_model
@@ -2794,9 +2750,9 @@ router = CostOptimizedRouter()
 
 def create_cost_optimized_agent(request: str):
     """Create agent with model selected based on request complexity."""
-    
+
     optimal_model = router.route_request(request)
-    
+
     return LlmAgent(
         name="cost_optimized_agent",
         model=optimal_model,
@@ -2819,12 +2775,12 @@ class ProductionSessionService(DatabaseSessionService):
     def __init__(self, db_path="agent_sessions.db"):
         self.db_path = db_path
         self.init_database()
-    
+
     def init_database(self):
         """Initialize database schema for session storage."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS sessions (
                 id TEXT PRIMARY KEY,
@@ -2835,7 +2791,7 @@ class ProductionSessionService(DatabaseSessionService):
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
-        
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS session_events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -2846,21 +2802,21 @@ class ProductionSessionService(DatabaseSessionService):
                 FOREIGN KEY (session_id) REFERENCES sessions (id)
             )
         ''')
-        
+
         conn.commit()
         conn.close()
-    
+
     def save_session_state(self, session_id: str, state: dict):
         """Persist session state to database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute('''
-            UPDATE sessions 
-            SET state = ?, updated_at = CURRENT_TIMESTAMP 
+            UPDATE sessions
+            SET state = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
         ''', (json.dumps(state), session_id))
-        
+
         conn.commit()
         conn.close()
 ```
@@ -2931,9 +2887,7 @@ The advanced patterns in this chapter transform simple agents into **sophisticat
 
 : https://repost.aws/es/questions/QUdt8sGI63SnSAahvzJ0-PIQ/agent-2-agent-protocol-roadmap
 
-
 ---
-
 
 # Chapter 11: Troubleshooting Guide - Solving Common Agent Problems
 
@@ -2965,17 +2919,16 @@ Tools extend agent capabilities, but integrating them can introduce several chal
 # Example of proper tool definition with clear docstring
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the weather report.
-    
+
     Returns:
         dict: status and result or error msg.
     """
     # Implementation here
     return {"status": "success", "report": f"The weather in {city} is sunny."}
 ```
-
 
 ## Performance Bottlenecks
 
@@ -3076,7 +3029,7 @@ def production_error_handler(func):
                 "traceback": traceback.format_exc()
             }
             logging.error(f"Production error: {error_details}")
-            
+
             # Determine error response strategy
             if isinstance(e, ValidationError):
                 return create_user_friendly_error("Invalid input provided")
@@ -3087,7 +3040,7 @@ def production_error_handler(func):
             else:
                 # Generic fallback
                 return create_fallback_response("Unable to process request")
-    
+
     return wrapper
 ```
 
@@ -3133,7 +3086,6 @@ gcloud auth application-default login
 python -m pip list | grep google-adk
 ```
 
-
 ### Iterative Testing
 
 Systematic testing helps identify and resolve issues early in the development process:
@@ -3159,51 +3111,6 @@ These expert recommendations can save you hours of debugging time:
 ---
 
 By understanding these common pitfalls and applying effective troubleshooting techniques, you can build more reliable, performant agent systems with Google's Agent Development Kit. Remember that troubleshooting is an iterative process—start simple, isolate issues, and systematically address each challenge to create production-ready agent applications.
-
-<div style="text-align: center">⁂</div>
-
-: https://www.googlecloudcommunity.com/gc/AI-ML/Adk-Agent-Deployment-Not-working/td-p/914536
-
-: https://www.siddharthbharath.com/the-complete-guide-to-googles-agent-development-kit-adk/
-
-: https://github.com/google/adk-python/issues/943
-
-: https://google.github.io/adk-docs/agents/multi-agents/
-
-: https://www.a2aprotocol.org/en/tutorials/agent-to-agent-communication-implementing-a2a-protocol-in-adk-projects
-
-: https://www.googlecloudcommunity.com/gc/AI-ML/How-to-Connect-ADK-agents-to-Vertex-AI-API-key-setup-issue/m-p/897384/highlight/true
-
-: https://stackoverflow.com/questions/79612542/google-adk-sequentialagent-sub-agents-not-waiting-for-user-input
-
-: https://www.linkedin.com/pulse/first-look-googles-agent-development-kit-adk-uxly-tbloc
-
-: https://developer.android.com/studio/debug
-
-: https://docs.appdynamics.com/appd/24.x/25.2/en/application-monitoring/install-app-server-agents/net-agent/net-agent-for-linux/net-agent-for-linux-troubleshooting
-
-: https://google.github.io/adk-docs/get-started/quickstart/
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart
-
-: https://stackoverflow.com/questions/79571580/i-am-trying-to-run-the-google-adk-but-it-shows-command-adk-not-found
-
-: https://github.com/google/adk-samples/issues
-
-: https://www.youtube.com/watch?v=_nzuy7HTffA
-
-: https://docs.tibco.com/pub/tea/2.3.0/doc/html/GUID-E813EDEB-820C-44EA-894D-3A2EBB5C7780.html
-
-: https://www.thewindowsclub.com/windows-adk-windows-10-knows-issues-workaround-fix
-
-: https://www.youtube.com/watch?v=GANi9eRxhHs
-
-: https://github.com/google/adk-python/issues/1406
-
-: https://google.github.io/adk-docs/agents/
-
-
----
 
 # Chapter 12: The Future of ADK - Emerging Patterns and Roadmap
 
@@ -3338,53 +3245,35 @@ The future of ADK is bright, with continuous improvements to the core framework,
 
 The journey from novice to practitioner is just the beginning—as you continue to explore and master ADK, you'll discover new patterns, techniques, and applications that push the boundaries of what's possible with agent-based AI systems. The revolution in AI development has begun, and ADK is at its forefront.
 
-<div style="text-align: center">⁂</div>
+---
 
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
+## Additional Resources and Community Links
 
-: https://www.linkedin.com/pulse/googles-agent-development-kit-adk-revolutionizing-multi-agent-ali-ywspf
+Explore more about Google's Agent Development Kit (ADK) and the broader agent ecosystem with these curated resources:
 
-: https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/
+- [Official Google ADK Blog: Easy to Build Multi-Agent Applications](https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/)
+- [LinkedIn: Google's Agent Development Kit (ADK) - Revolutionizing Multi-Agent Systems](https://www.linkedin.com/pulse/googles-agent-development-kit-adk-revolutionizing-multi-agent-ali-ywspf)
+- [Google Developers Blog: Agents, ADK Agent Engine, and A2A Enhancements at Google I/O](https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/)
+- [InfoQ: Google’s Agent Development Kit News](https://www.infoq.com/news/2025/04/agent-development-kit/)
+- [SD Times: AI Updates - Google’s New Tools for Building AI Agents](https://sdtimes.com/ai/april-11-2025-ai-updates-from-the-past-week-googles-new-tools-for-building-ai-agents-agent-mode-in-github-copilot-and-more/)
+- [Daily.dev: Building Multi-Agent Systems with Google’s A2A Protocol, ADK, and MCP](https://app.daily.dev/posts/building-multi-agent-with-google-s-a2a-agent2agent-protocol-agent-development-kit-adk-and-mcp--mf7bo8vt5)
+- [DataCamp: Agent Development Kit (ADK) Tutorial](https://www.datacamp.com/tutorial/agent-development-kit-adk)
+- [Google Cloud Blog: Using Google ADK and MCP with an External Server](https://cloud.google.com/blog/topics/developers-practitioners/use-google-adk-and-mcp-with-an-external-server)
+- [GitHub: Project Horizon (ADK Example)](https://github.com/heiko-hotz/project-horizon)
+- [GitHub: Awesome Google ADK (Curated List)](https://github.com/tsubasakong/awesome-google-adk)
+- [Official ADK Documentation: Community Page](https://google.github.io/adk-docs/community/)
+- [Google Cloud Skills Boost: ADK Labs and Courses](https://www.cloudskillsboost.google/course_templates/1340/labs/550650?locale=tr)
+- [Google Cloud Blog: Learning Resources at Google Cloud Next '25](https://cloud.google.com/blog/topics/training-certifications/learning-resources-at-google-cloud-next25)
+- [Google Codelabs: Instavibe ADK Multi-Agents Tutorial](https://codelabs.developers.google.com/instavibe-adk-multi-agents/instructions)
+- [Kubiya Blog: Agent Development Kit Insights](https://www.kubiya.ai/blog/agent-development-kit)
+- [DataFeedWatch: Google Ads Trends](https://www.datafeedwatch.com/blog/google-ads-trends)
+- [Google Cloud Blog: Building KYC Agentic Workflows with ADK](https://cloud.google.com/blog/products/ai-machine-learning/build-kyc-agentic-workflows-with-googles-adk)
+- [GitHub: Google Cross-Device SDK](https://github.com/google/cross-device-sdk)
+- [Infoservices Blog: Smart AI Agents with Google ADK](https://blogs.infoservices.com/google-cloud/smart-ai-agents-google-agent-development-kit/)
+- [Google Workspace Support: User Help](https://support.google.com/a/users/answer/11498760?hl=en-EN&rut=442f71bbd73dfb12a72a82e191b01eacd5a14d4d5e9c5d766f40acb0db9ff35b)
+- [Google Cloud Skills Boost: Learning Paths](https://www.cloudskillsboost.google/paths/1858?locale=en)
+- [YouTube: Google ADK Overview](https://www.youtube.com/watch?v=Ohp12YrVsJU)
+- [Search Engine Land: Google Outlines 2025 Ads API Roadmap](https://searchengineland.com/google-outlines-2025-ads-api-roadmap-448484)
+- [Official ADK Documentation](https://google.github.io/adk-docs/)
 
-: https://www.infoq.com/news/2025/04/agent-development-kit/
-
-: https://sdtimes.com/ai/april-11-2025-ai-updates-from-the-past-week-googles-new-tools-for-building-ai-agents-agent-mode-in-github-copilot-and-more/
-
-: https://app.daily.dev/posts/building-multi-agent-with-google-s-a2a-agent2agent-protocol-agent-development-kit-adk-and-mcp--mf7bo8vt5
-
-: https://www.datacamp.com/tutorial/agent-development-kit-adk
-
-: https://cloud.google.com/blog/topics/developers-practitioners/use-google-adk-and-mcp-with-an-external-server
-
-: https://github.com/heiko-hotz/project-horizon
-
-: https://github.com/tsubasakong/awesome-google-adk
-
-: https://google.github.io/adk-docs/community/
-
-: https://www.cloudskillsboost.google/course_templates/1340/labs/550650?locale=tr
-
-: https://cloud.google.com/blog/topics/training-certifications/learning-resources-at-google-cloud-next25
-
-: https://codelabs.developers.google.com/instavibe-adk-multi-agents/instructions
-
-: https://www.kubiya.ai/blog/agent-development-kit
-
-: https://www.datafeedwatch.com/blog/google-ads-trends
-
-: https://cloud.google.com/blog/products/ai-machine-learning/build-kyc-agentic-workflows-with-googles-adk
-
-: https://github.com/google/cross-device-sdk
-
-: https://blogs.infoservices.com/google-cloud/smart-ai-agents-google-agent-development-kit/
-
-: https://support.google.com/a/users/answer/11498760?hl=en-EN\&rut=442f71bbd73dfb12a72a82e191b01eacd5a14d4d5e9c5d766f40acb0db9ff35b
-
-: https://www.cloudskillsboost.google/paths/1858?locale=en
-
-: https://www.youtube.com/watch?v=Ohp12YrVsJU
-
-: https://searchengineland.com/google-outlines-2025-ads-api-roadmap-448484
-
-: https://google.github.io/adk-docs/
-
+---
