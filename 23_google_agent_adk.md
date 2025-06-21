@@ -89,84 +89,6 @@ By the end of this article, you'll understand how to transform chaotic AI implem
 
 The biggest mistake new ADK developers make is thinking bigger means better. Start small, prove value, then scale. The most successful agent implementations begin with solving one specific problem really well.
 
----
-
-*Ready to transform how you think about AI? Let's dive into the ADK mindset and start building agents that actually work in the real world.*
-
-**Continue to Chapter 2 to learn the fundamental shift in thinking that makes agents powerful, starting with a story about a CTO who discovered the secret to AI that actually scales.**
-
----
-
-Would you like me to continue with Chapter 2, or would you prefer any adjustments to Chapter 1?
-
-<div style="text-align: center">⁂</div>
-
-: https://google.github.io/adk-docs/
-
-: https://getstream.io/blog/exploring-google-adk/
-
-: https://google.github.io/adk-docs/agents/multi-agents/
-
-: https://deepwiki.com/google/adk-python/4-deployment
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart
-
-: https://google.github.io/adk-docs/agents/workflow-agents/
-
-: https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders
-
-: https://www.thewindowsclub.com/how-to-install-google-adk-to-build-multi-agents
-
-: https://dev.to/jnth/google-agent-development-kit-adk-introduction-3-building-a-multi-agent-project-management-1in3
-
-: https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/api-reference/introduction.htm
-
-: https://www.googlecloudcommunity.com/gc/Community-Blogs/A2A-MCP-and-ADK-Clarifying-Their-Roles-in-the-AI-Ecosystem/ba-p/911235
-
-: https://google.github.io/adk-docs/evaluate/
-
-: https://codelabs.developers.google.com/your-first-agent-with-adk
-
-: https://www.aalpha.net/blog/google-agent-development-kit-adk-for-multi-agent-applications/
-
-: https://dev.to/astrodevil/i-built-a-team-of-5-agents-using-google-adk-meta-llama-and-nemotron-ultra-253b-ec3
-
-: https://nms.kcl.ac.uk/michael.luck/resources/aamas06.pdf
-
-: https://www.linkedin.com/pulse/creating-multi-agent-ai-ecosystem-using-googles-adk-mcp-lambba-ezlzf
-
-: https://www.assistents.ai/blog/best-practices-in-ai-agent-development-and-implementation
-
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
-
-: https://pypi.org/project/google-adk/
-
-: https://www.youtube.com/watch?v=zgrOwow_uTQ
-
-: https://github.com/Kjdragan/google-adk-tutorial
-
-: https://www.classcentral.com/course/youtube-build-your-first-ai-agent-with-google-adk-in-minutes-444754
-
-: https://blog.gopenai.com/googles-agent-development-kit-adk-a-comprehensive-guide-to-building-intelligent-ai-agents-6ef8762e391e
-
-: https://github.com/theailifestyle/google-adk-demos
-
-: https://github.com/pratik008/adk-tutorial
-
-: https://google.github.io/adk-docs/agents/
-
-: https://www.datacamp.com/tutorial/agent-development-kit-adk
-
-: https://google.github.io/adk-docs/tools/third-party-tools/
-
-: https://www.youtube.com/watch?v=OlfjWonfcQ4
-
-: https://www.googlecloudcommunity.com/gc/Cloud-Product-Articles/Creating-Enterprise-Agents-with-ADK-with-a-few-lines-of-code/ta-p/898707
-
-: https://saptak.in/writing/2025/05/10/google-adk-masterclass-part12
-
-
----
 
 # Chapter 2: The ADK Mindset - From Functions to Autonomous Teams
 
@@ -416,50 +338,6 @@ The mindset shift from traditional programming to agent orchestration is profoun
 
 Would you like me to continue with Chapter 3: Quick Start Victory?
 
-<div style="text-align: center">⁂</div>
-
-: https://smythos.com/developers/ai-agent-development/agent-oriented-programming-vs-procedural-programming/
-
-: https://smythos.com/developers/agent-development/agent-oriented-programming-vs-object-oriented-programming/
-
-: https://en.wikipedia.org/wiki/Agent-oriented_programming
-
-: https://publish.obsidian.md/pkc/Hub/Tech/Agent-based+programming
-
-: https://google.github.io/adk-docs/
-
-: https://google.github.io/adk-docs/agents/
-
-: https://nn.cs.utexas.edu/downloads/papers/bryant-trustedautonomy18.pdf
-
-: https://milvus.io/ai-quick-reference/how-do-agents-collaborate-in-a-multiagent-system
-
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
-
-: https://www.linkedin.com/pulse/what-level-spectrum-do-you-want-your-ai-agent-pavithra-sivasubramani-pds9e
-
-: https://google.github.io/adk-docs/agents/workflow-agents/
-
-: https://www.thinkmind.org/download.php?articleid=future_computing_2011_2_30_30100
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart
-
-: https://www.siddharthbharath.com/the-complete-guide-to-googles-agent-development-kit-adk/
-
-: https://hypermode.com/blog/technical-guide-to-agent-orchestration
-
-: https://techcommunity.microsoft.com/blog/educatordeveloperblog/ai-agents-the-multi-agent-design-pattern---part-8/4402246
-
-: https://www.youtube.com/watch?v=VAR6mYhV56I
-
-: https://www.thinkmind.org/articles/soft_v5_n12_2012_4.pdf
-
-: https://hatchworks.com/blog/ai-agents/autonomous-agents/
-
-: https://codelabs.developers.google.com/your-first-agent-with-adk
-
-
----
 
 # Chapter 3: Quick Start Victory - Your First Agent in 10 Minutes
 
@@ -477,24 +355,27 @@ Weather agents might seem simple, but they're actually perfect for understanding
 - **Tool usage**: Demonstrates how agents interact with external functions
 - **Error handling**: Shows how agents deal with missing or invalid data
 - **Natural language**: Proves agents can understand intent, not just keywords
-
 ```mermaid
 graph TD
-    A[User: "What's the weather in New York?"] --> B[Weather Agent]
+    A["User: What's the weather in New York?"] --> B[Weather Agent]
     B --> C{Analyze Request}
-    C --> D[Extract Location: "New York"]
+    C --> D["Extract Location: New York"]
     C --> E[Determine Action: Get Weather]
     D --> F[Call get_weather tool]
     E --> F
     F --> G[Return Weather Data]
-    G --> H[Agent Response: "The weather in New York is sunny..."]
-    
-    style A fill:#e1f5fe,stroke:#01579b,color:#000
-    style B fill:#f3e5f5,stroke:#4a148c,color:#000
-    style F fill:#e8f5e8,stroke:#1b5e20,color:#000
-    style H fill:#fff3e0,stroke:#e65100,color:#000
-```
+    G --> H["Agent Response: The weather in New York is sunny..."]
 
+    %% Professional pastel color palette with good contrast
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
+    style C fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#795548
+    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    style E fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b
+    style F fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#4527a0
+    style G fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100
+    style H fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
+```
 
 ## Step 1: Environment Setup (2 Minutes)
 
@@ -911,66 +792,6 @@ Congratulations! You've just built and deployed your first intelligent agent. Mo
 
 The moment you saw your agent respond intelligently to natural language, you crossed the threshold from traditional programming into the agent paradigm. That feeling of "it just works" is exactly what makes ADK powerful—and we're just getting started.
 
-<div style="text-align: center">⁂</div>
-
-: https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/
-
-: https://google.github.io/adk-docs/get-started/installation/
-
-: https://google.github.io/adk-docs/get-started/quickstart/
-
-: https://google.github.io/adk-docs/tutorials/agent-team/
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart
-
-: https://www.thewindowsclub.com/how-to-install-google-adk-to-build-multi-agents
-
-: https://dev.to/jnth/google-agent-sdk-introduction-1-quickly-build-your-first-ai-agent-3kp5
-
-: https://google.github.io/adk-docs/agents/models/
-
-: https://www.youtube.com/watch?v=ust3hf6UiMo
-
-: https://www.youtube.com/watch?v=44C8u0CDtSo
-
-: https://blog.csdn.net/gitblog_00524/article/details/148439780
-
-: https://deepwiki.com/google/adk-web
-
-: https://github.com/sokart/adk-walkthrough
-
-: https://github.com/Neutrollized/adk-examples
-
-: https://google.github.io/adk-docs/get-started/
-
-: https://codelabs.developers.google.com/your-first-agent-with-adk
-
-: https://www.datacamp.com/tutorial/agent-development-kit-adk
-
-: https://github.com/google/adk-samples
-
-: https://github.com/google/adk-python
-
-: https://google.github.io/adk-docs/tutorials/
-
-: https://developer.android.com/tools/variables
-
-: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/develop/adk
-
-: https://docs.aws.amazon.com/sdkref/latest/guide/environment-variables.html
-
-: https://www.firecrawl.dev/blog/google-adk-multi-agent-tutorial
-
-: https://www.youtube.com/watch?v=EuKWEO4SQJg
-
-: https://colab.research.google.com/github/google/adk-docs/blob/main/examples/python/tutorial/agent_team/adk_tutorial.ipynb
-
-: https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/generative-ai-agents/adk/api-reference/examples/agent-function-tool.htm
-
-: https://dev.to/marianocodes/build-your-first-ai-agent-with-adk-agent-development-kit-by-google-409b
-
-
----
 
 # Chapter 4: Agent Types Deep Dive - Understanding the Building Blocks
 
@@ -1096,13 +917,27 @@ Workflow agents provide several key benefits:
 
 Document processing workflows benefit significantly from the structured approach of Workflow Agents:
 
-```
-Document Upload →
-Extraction Agent →
-Classification Agent →
-[Contract Analyzer, Financial Analyzer, Legal Compliance Checker] →
-Summary Agent →
-Actionable Insights
+```mermaid
+graph TD
+    A[Document Upload] --> B[Extraction Agent]
+    B --> C[Classification Agent]
+    C --> D1[Contract Analyzer]
+    C --> D2[Financial Analyzer]
+    C --> D3[Legal Compliance Checker]
+    D1 --> E[Summary Agent]
+    D2 --> E
+    D3 --> E
+    E --> F[Actionable Insights]
+
+    %% Pastel color palette with good contrast
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
+    style C fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#795548
+    style D1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    style D2 fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#4527a0
+    style D3 fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#e65100
+    style E fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
+    style F fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b
 ```
 
 This architecture allows for specialized handling of different document types while maintaining a consistent processing pipeline.
@@ -1434,6 +1269,17 @@ graph TD
     C --> G[Database Tool]
     D --> H[Analytics Tool]
     E --> I[Content Tool]
+
+    %% Professional pastel color palette with strong contrast
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
+    style C fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#795548
+    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    style E fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#4527a0
+    style F fill:#ffe0b2,stroke:#fb8c00,stroke-width:2px,color:#e65100
+    style G fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b
+    style H fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#4a148c
+    style I fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100
 ```
 
 
