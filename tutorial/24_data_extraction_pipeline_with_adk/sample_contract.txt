@@ -1,0 +1,49 @@
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into on January 15, 2024, between TechCorp Solutions, a Delaware corporation ("Company"), and DataMax Analytics LLC, a California limited liability company ("Contractor").
+
+PARTIES:
+- Company: TechCorp Solutions, 123 Innovation Drive, San Francisco, CA 94105
+- Contractor: DataMax Analytics LLC, 456 Tech Boulevard, Los Angeles, CA 90210
+
+SCOPE OF WORK:
+The Contractor agrees to provide data analytics and machine learning consulting services for the Company's customer segmentation project.
+
+FINANCIAL TERMS:
+- Total Contract Value: $75,000 USD
+- Payment Schedule: $25,000 due upon signing, $25,000 due on February 15, 2024, and $25,000 due upon project completion
+- Late Payment Penalty: 1.5% per month on overdue amounts
+- Currency: United States Dollars (USD)
+
+KEY DATES:
+- Effective Date: January 15, 2024
+- Project Start Date: January 22, 2024
+- Milestone Review: February 15, 2024
+- Project Completion Deadline: March 31, 2024
+- Contract Expiration: April 15, 2024
+
+OBLIGATIONS:
+Company Obligations:
+- Provide access to customer data and necessary systems
+- Assign a project manager for coordination
+- Make payments according to the agreed schedule
+- Provide feedback within 5 business days of deliverable submission
+
+Contractor Obligations:
+- Deliver data analytics models and documentation
+- Maintain confidentiality of all customer data
+- Provide weekly progress reports
+- Complete all work by the specified deadline
+- Ensure compliance with GDPR and CCPA regulations
+
+GOVERNING LAW:
+This Agreement shall be governed by and construed in accordance with the laws of the State of California. Any disputes arising under this Agreement shall be resolved through binding arbitration in San Francisco, California.
+
+TERMINATION:
+Either party may terminate this Agreement with 30 days written notice. In case of termination, the Contractor shall be paid for all work completed up to the termination date.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+TechCorp Solutions                    DataMax Analytics LLC
+By: John Smith, CEO                   By: Sarah Johnson, Managing Partner
+Date: January 15, 2024               Date: January 15, 2024
