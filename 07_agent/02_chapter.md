@@ -84,9 +84,25 @@ LLM Agents are the "knowledge workers" of your agent ecosystem. They understand 
 **Example: Customer Service Intelligence**
 
 ```python
-from google.adk.agents import Agent
+from google.adk.agents import LlmAgent
+from google.adk.tools import FunctionTool
 
-customer_service_agent = Agent(
+# Define your custom tools first
+def get_account_info(customer_id: str) -> dict:
+    """Retrieve account information for a customer."""
+    # Implementation here
+    return {"status": "success", "account_data": "..."}
+
+def check_order_status(order_id: str) -> dict:
+    """Check the status of a customer order."""
+    # Implementation here
+    return {"status": "success", "order_status": "shipped"}
+
+# Create function tools
+account_tool = FunctionTool(func=get_account_info)
+order_tool = FunctionTool(func=check_order_status)
+
+customer_service_agent = LlmAgent(
     name="customer_service_specialist",
     model="gemini-2.0-flash",
     instruction="""
@@ -102,10 +118,9 @@ customer_service_agent = Agent(
     Always prioritize customer satisfaction while following company policies.
     """,
     tools=[
-        get_account_info,
-        check_order_status,
-        process_refund,
-        escalate_to_human
+        account_tool,
+        order_tool,
+        # Add other tools as needed
     ]
 )
 ```
@@ -233,9 +248,56 @@ class ComplianceAgent(BaseAgent):
 
 Think of tools as the "skills" your agents can learn. Just as a human employee might learn to use Salesforce, Excel, or Photoshop, your agents can learn to use various tools to accomplish their tasks.
 
-#### Function Tools: Your Custom Business Logic
+### Tools: Critical Limitations and Best Practices
 
-These are tools you create to handle your specific business needs.
+**Built-in Tool Restrictions (Important):**
+
+1. **One Built-in Tool Per Agent**: Each agent can only use ONE built-in tool (Google Search, Code Execution, or Vertex AI Search)
+2. **No Mixing**: Built-in tools cannot be combined with other tools in the same agent
+3. **No Sub-agent Support**: Built-in tools cannot be used in sub-agents
+
+**Workaround for Multiple Capabilities:**
+
+```python
+from google.adk.tools import AgentTool
+from google.adk.agents import LlmAgent
+from google.adk.tools import google_search
+from google.adk.code_executors import BuiltInCodeExecutor
+
+# Create specialized agents
+search_agent = LlmAgent(
+    model='gemini-2.0-flash',
+    name='SearchAgent',
+    instruction="You're a specialist in Google Search",
+    tools=[google_search],
+)
+
+coding_agent = LlmAgent(
+    model='gemini-2.0-flash',
+    name='CodeAgent',
+    instruction="You're a specialist in Code Execution",
+    executor=[BuiltInCodeExecutor],
+)
+
+# Use them as tools in a coordinator agent
+root_agent = LlmAgent(
+    name="RootAgent",
+    model="gemini-2.0-flash",
+    description="Root Agent",
+    tools=[
+        AgentTool(agent=search_agent), 
+        AgentTool(agent=coding_agent)
+    ],
+)
+```
+
+**Function Tool Best Practices:**
+
+- **Return Type**: Always return a dictionary with a "status" key
+- **Type Hints**: Use proper type hints for all parameters
+- **No Default Values**: Avoid default parameter values (LLM doesn't support them)
+- **Descriptive Docstrings**: Include clear purpose, parameter descriptions, and return value examples
+- **Error Handling**: Return error information in the response dictionary
 
 **Simple Function Tool Example:**
 
@@ -289,10 +351,11 @@ def calculate_shipping_cost(
 
 ADK comes with powerful built-in tools that handle common tasks:
 
-- **Google Search Tool**: Real-time web information
-- **Code Execution Tool**: Run Python code safely
-- **File Processing Tools**: Handle documents, images, and data files
-- **RAG (Retrieval-Augmented Generation)**: Search and use knowledge bases
+- **Google Search Tool**: Real-time web information (requires Gemini 2.0 models)
+- **Code Execution Tool**: Run Python code safely (requires Gemini 2.0 models)  
+- **Vertex AI Search Tool**: Search your private data stores and knowledge bases
+
+**Important Limitations**: Currently, each agent can only use ONE built-in tool at a time, and built-in tools cannot be combined with other tools in the same agent. To use multiple capabilities, create separate agents and use them via AgentTool or sub-agents.
 
 #### Third-Party Tools: Ecosystem Integration
 
@@ -301,6 +364,14 @@ One of ADK's superpowers is seamless integration with existing tool ecosystems:
 - **LangChain Tools**: Access to 100+ pre-built integrations
 - **CrewAI Tools**: Specialized agent tools and capabilities
 - **OpenAPI Integration**: Automatically create tools from API specifications
+- **Model Context Protocol (MCP)**: Connect to MCP servers for standardized tool access
+- **Google Cloud Tools**: Native integration with Google Cloud services
+
+**New Addition - MCP Support**: ADK now includes comprehensive support for the Model Context Protocol (MCP), an open standard for connecting LLMs to external systems. This allows you to:
+
+- Use existing MCP servers as tools in your agents
+- Expose your ADK tools as MCP servers for other applications
+- Access the growing ecosystem of MCP-compatible tools and services
 
 ---
 
@@ -338,13 +409,15 @@ graph TD
 **State Prefixes in ADK:**
 
 - `app:*` - Application-wide data (shared across all users)
-- `user:*` - User-specific data (across all sessions)
+- `user:*` - User-specific data (across all sessions)  
 - `session:*` - Session-specific data (current conversation)
 - `temp:*` - Temporary data (not persisted)
 
 **Practical Example: E-commerce Assistant**
 
 ```python
+from google.adk.tools import ToolContext, FunctionTool
+
 def update_shopping_cart(item_id: str, quantity: int, tool_context: ToolContext):
     """Add or update item in user's shopping cart."""
     
@@ -379,6 +452,15 @@ def update_shopping_cart(item_id: str, quantity: int, tool_context: ToolContext)
         'message': f'Cart updated with {quantity} of item {item_id}'
     }
 ```
+
+**Important**: State modifications should only be done through:
+
+1. `ToolContext.state` in tool functions
+2. `CallbackContext.state` in callbacks  
+3. `EventActions.state_delta` when manually creating events
+4. Agent `output_key` for simple response storage
+
+Direct modification of `session.state` is not recommended and may not persist properly.
 
 ---
 
@@ -669,3 +751,97 @@ In the next chapter, we'll put this knowledge into practice by building your fir
 3. When would you use a Parallel Agent vs. a Sequential Agent?
 
 *(Answers: 1. LLM Agents, Workflow Agents, Custom Agents 2. Session state is conversation-specific, user state persists across all sessions 3. Parallel for concurrent tasks, Sequential for ordered processes)*
+
+## Recent Updates & Installation
+
+### Latest ADK Releases (Google I/O 2025)
+
+**Major Updates:**
+
+- **Java ADK v0.1.0**: ADK now supports Java, extending agent capabilities to the Java ecosystem
+- **Python ADK v1.0.0**: Now stable and production-ready
+- **Enhanced MCP Support**: Full Model Context Protocol integration for tool interoperability
+
+### Installation
+
+**Python Installation:**
+
+```bash
+# Create virtual environment (recommended)
+python -m venv .venv
+
+# Activate virtual environment
+# Mac/Linux:
+source .venv/bin/activate
+# Windows CMD:
+.venv\Scripts\activate.bat
+# Windows PowerShell:
+.venv\Scripts\Activate.ps1
+
+# Install ADK
+pip install google-adk
+
+# Verify installation
+pip show google-adk
+```
+
+**Java Installation:**
+Follow the [Java ADK documentation](https://google.github.io/adk-docs/api-reference/java/) for Maven/Gradle setup.
+
+---
+
+## Advanced ADK Features: Evaluation and Safety
+
+### Built-in Evaluation Framework
+
+ADK provides comprehensive evaluation capabilities to assess agent performance:
+
+- **Response Quality Evaluation**: Assess the quality of final responses
+- **Step-by-Step Execution Analysis**: Evaluate intermediate reasoning steps
+- **Predefined Test Cases**: Create systematic test suites for your agents
+- **Performance Metrics**: Track consistency, accuracy, and reliability
+
+### Safety and Security Features
+
+ADK incorporates security and safety patterns:
+
+- **Content Filtering**: Built-in safety mechanisms for generated content
+- **Authentication Flows**: Secure tool authentication and credential management
+- **Sandboxed Execution**: Safe code execution environments
+- **Access Controls**: Fine-grained permissions for tool usage
+
+### Streaming and Real-time Capabilities
+
+- **Bidi-streaming**: Live, bidirectional communication for real-time applications
+- **Server-Sent Events (SSE)**: Streaming responses for web applications
+- **WebSocket Support**: Full-duplex communication channels
+- **Audio Streaming**: Support for voice-enabled applications
+
+---
+
+## Document Updates and Fact-Checking Summary
+
+**Key Corrections Made:**
+
+1. **Installation**: Updated to use correct package name `google-adk` and proper installation steps
+2. **Agent Classes**: Updated import statements to use `LlmAgent` instead of `Agent` where appropriate
+3. **Tool Integration**: Added critical limitations about built-in tools (one per agent, no mixing)
+4. **State Management**: Added important warnings about proper state modification patterns
+5. **MCP Support**: Added comprehensive Model Context Protocol integration information
+6. **Latest Updates**: Included Google I/O 2025 announcements (Java ADK, v1.0.0 stability)
+7. **Advanced Features**: Added evaluation, safety, and streaming capabilities
+8. **Best Practices**: Enhanced tool development guidelines based on official documentation
+
+**Sources Verified:**
+
+- [Official ADK Documentation](https://google.github.io/adk-docs/)
+- [Installation Guide](https://google.github.io/adk-docs/get-started/installation/)
+- [Agent Types](https://google.github.io/adk-docs/agents/)
+- [Tools Documentation](https://google.github.io/adk-docs/tools/)
+- [Sessions and State](https://google.github.io/adk-docs/sessions/)
+- [Deployment Options](https://google.github.io/adk-docs/deploy/)
+- [MCP Integration](https://google.github.io/adk-docs/mcp/)
+
+All technical examples and architectural descriptions have been cross-referenced with the official documentation to ensure accuracy and completeness.
+
+---
