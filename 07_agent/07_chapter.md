@@ -6,9 +6,17 @@
 
 Picture this: Your company's AI system isn't just one smart agent - it's an entire organization of specialized agents working together. The Sales Intelligence Agent identifies promising leads, the Market Research Agent analyzes competitive positioning, the Proposal Agent crafts winning presentations, the Risk Assessment Agent evaluates deal terms, and the Contract Agent handles negotiations. All working simultaneously, sharing insights, and coordinating their efforts like a perfectly synchronized team.
 
-This isn't science fiction - it's **Multi-Agent Systems (MAS)**, and it's revolutionizing how enterprises tackle complex challenges that require diverse expertise, parallel processing, and collaborative intelligence.
+This isn't science fiction - it's **Multi-Agent Systems (MAS)** powered by Google's Agent Development Kit (ADK), and it's revolutionizing how enterprises tackle complex challenges that require diverse expertise, parallel processing, and collaborative intelligence.
 
 **Why should you master multi-agent systems?** Because the problems worth solving in business are rarely simple enough for a single agent. Market analysis, supply chain optimization, customer experience management, financial risk assessment - these require teams of specialized intelligences working in concert.
+
+**What You'll Learn in This Chapter:**
+
+- How to design and implement multi-agent architectures using Google ADK
+- Proven patterns: Hierarchical teams, democratic coordination, and swarm intelligence  
+- Real-world implementation strategies with actual ADK code examples
+- Communication and coordination mechanisms that scale
+- Production-ready patterns from enterprise deployments
 
 ---
 
@@ -73,40 +81,26 @@ graph TD
 
 ---
 
-## Multi-Agent Architecture Patterns
+## Multi-Agent Architecture Patterns with Google ADK
 
-### 1. Hierarchical Teams: Command and Control
+Google's Agent Development Kit (ADK) provides three foundational patterns for building multi-agent systems, each designed for specific use cases and coordination requirements.
 
-**Best for:** Clear authority structures and well-defined processes
+### 1. Hierarchical Coordination Pattern
+
+**Best for:** Clear authority structures, well-defined processes, and centralized decision-making
+
+**ADK Implementation:** Using parent-child agent relationships with `sub_agents`
 
 **Real-World Example:** Investment Portfolio Management
 
 ```python
-from google.adk.multi_agent import HierarchicalSystem, AgentRole
+from google.adk.agents import Agent
 
-# The Master Coordinator
-portfolio_manager = Agent(
-    name="portfolio_manager",
-    model="gemini-2.0-flash",
-    instruction="""
-    You are a senior portfolio manager coordinating investment decisions.
-    
-    Responsibilities:
-    - Set overall investment strategy and risk tolerance
-    - Coordinate specialist agents for different asset classes
-    - Make final investment decisions based on team recommendations
-    - Monitor portfolio performance and rebalance as needed
-    
-    You have authority over: equity_analyst, bond_analyst, risk_manager, 
-    compliance_officer
-    """,
-    tools=[set_investment_strategy, approve_trades, rebalance_portfolio]
-)
-
-# Specialist Agents
+# Specialist agents with clearly defined roles
 equity_analyst = Agent(
     name="equity_analyst",
     model="gemini-2.0-flash",
+    description="Analyzes stocks for financial performance, growth potential, and valuation.",
     instruction="""
     You are an equity research specialist focused on stock analysis.
     
@@ -116,7 +110,7 @@ equity_analyst = Agent(
     - Valuation metrics and price targets
     - Industry trends and competitive dynamics
     
-    Report findings to portfolio_manager with buy/sell/hold recommendations.
+    Provide clear buy/sell/hold recommendations with supporting analysis.
     """,
     tools=[analyze_financial_statements, calculate_valuations, 
            research_industry_trends, generate_stock_reports]
@@ -125,6 +119,7 @@ equity_analyst = Agent(
 bond_analyst = Agent(
     name="bond_analyst", 
     model="gemini-2.0-flash",
+    description="Analyzes fixed income securities and credit markets.",
     instruction="""
     You are a fixed income specialist analyzing bonds and credit markets.
     
@@ -134,7 +129,7 @@ bond_analyst = Agent(
     - Yield curve positioning and sector allocation
     - Corporate bond vs. treasury spread analysis
     
-    Provide bond recommendations to portfolio_manager.
+    Provide bond recommendations with risk-adjusted returns.
     """,
     tools=[analyze_credit_risk, calculate_duration, assess_yield_curves,
            evaluate_bond_sectors]
@@ -142,7 +137,8 @@ bond_analyst = Agent(
 
 risk_manager = Agent(
     name="risk_manager",
-    model="gemini-2.0-flash", 
+    model="gemini-2.0-flash",
+    description="Monitors portfolio risk and compliance requirements.",
     instruction="""
     You are a risk management specialist monitoring portfolio risk.
     
@@ -152,447 +148,551 @@ risk_manager = Agent(
     - Correlation analysis and stress testing
     - Regulatory capital requirements
     
-    Alert portfolio_manager to risk limit breaches.
+    Alert immediately to any risk limit breaches.
     """,
     tools=[calculate_var, stress_test_portfolio, monitor_correlations,
            check_risk_limits]
 )
 
-# Create the hierarchical system
-investment_team = HierarchicalSystem(
-    name="investment_management_team",
-    leader=portfolio_manager,
-    specialists=[equity_analyst, bond_analyst, risk_manager],
-    communication_protocol="leader_driven",
-    decision_authority="leader_final_approval"
+# Coordinator agent with hierarchical authority
+portfolio_manager = Agent(
+    name="portfolio_manager",
+    model="gemini-2.0-flash",
+    description="Senior portfolio manager coordinating investment decisions.",
+    instruction="""
+    You are a senior portfolio manager coordinating investment decisions.
+    
+    Responsibilities:
+    - Set overall investment strategy and risk tolerance
+    - Coordinate specialist agents for different asset classes
+    - Make final investment decisions based on team recommendations
+    - Monitor portfolio performance and rebalance as needed
+    
+    Use your sub-agents for specialized analysis, then make final decisions.
+    """,
+    sub_agents=[equity_analyst, bond_analyst, risk_manager],  # ADK hierarchical structure
+    tools=[set_investment_strategy, approve_trades, rebalance_portfolio]
 )
 ```
 
-**The Magic:** Each specialist provides expert analysis in their domain, but the portfolio manager maintains strategic oversight and final decision authority.
+**Key ADK Features:**
 
-### 2. Democratic Teams: Collaborative Decision Making
+- **Agent Hierarchy:** Using `sub_agents` parameter establishes parent-child relationships
+- **Automatic Delegation:** ADK's `transfer_to_agent()` function enables dynamic routing
+- **State Sharing:** All agents access the same session state for coordination
 
-**Best for:** Creative problem-solving and innovation
+### 2. Collaborative Workflow Pattern
+
+**Best for:** Creative problem-solving, iterative processes, and democratic decision-making
+
+**ADK Implementation:** Using `SequentialAgent` and `ParallelAgent` for structured workflows
 
 **Real-World Example:** Product Development Team
 
 ```python
-from google.adk.multi_agent import DemocraticSystem, ConsensusMethod
+from google.adk.agents import Agent, SequentialAgent, ParallelAgent
 
-# Collaborative Product Development Agents
+# Phase 1: Parallel market and technical research
 market_researcher = Agent(
     name="market_researcher",
     model="gemini-2.0-flash",
+    description="Analyzes market opportunities and customer needs.",
     instruction="""
-    You are a market research specialist analyzing customer needs and market opportunities.
-    
-    Research focus:
+    Research and analyze:
     - Customer pain points and unmet needs
     - Market size and growth potential
     - Competitive landscape analysis
     - Pricing sensitivity and willingness to pay
     
-    Collaborate with product_designer and technical_architect to shape product requirements.
+    Save findings to session state for the team to use.
     """,
-    tools=[conduct_market_analysis, survey_customers, analyze_competitors,
-           assess_market_opportunity]
-)
-
-product_designer = Agent(
-    name="product_designer",
-    model="gemini-2.0-flash",
-    instruction="""
-    You are a product design specialist focused on user experience and product features.
-    
-    Design considerations:
-    - User interface and experience design
-    - Feature prioritization and user stories
-    - Usability testing and feedback integration
-    - Design system consistency and accessibility
-    
-    Work with market_researcher and technical_architect to create optimal product designs.
-    """,
-    tools=[create_wireframes, design_user_flows, conduct_usability_tests,
-           prioritize_features]
+    tools=[conduct_market_analysis, survey_customers, analyze_competitors],
+    output_key="market_research"  # Automatically saves results to session state
 )
 
 technical_architect = Agent(
     name="technical_architect",
     model="gemini-2.0-flash",
+    description="Evaluates technical feasibility and implementation approach.",
     instruction="""
-    You are a technical architecture specialist evaluating implementation feasibility.
-    
-    Technical focus:
+    Assess technical considerations:
     - System architecture and scalability requirements
     - Technology stack recommendations
     - Development timeline and resource estimates
     - Security and compliance considerations
     
-    Collaborate with market_researcher and product_designer to ensure technical viability.
+    Save technical assessment to session state.
     """,
     tools=[design_system_architecture, estimate_development_effort,
-           assess_technical_risks, recommend_tech_stack]
+           assess_technical_risks, recommend_tech_stack],
+    output_key="technical_assessment"
 )
 
-# Democratic decision-making system
-product_team = DemocraticSystem(
-    name="product_development_team",
-    agents=[market_researcher, product_designer, technical_architect],
-    consensus_method=ConsensusMethod.WEIGHTED_VOTING,
-    voting_weights={
-        "market_researcher": 0.4,  # Market needs are critical
-        "product_designer": 0.35,  # User experience is key
-        "technical_architect": 0.25  # Technical feasibility matters
-    },
-    minimum_consensus_threshold=0.75
+# Parallel research phase
+research_phase = ParallelAgent(
+    name="research_phase",
+    sub_agents=[market_researcher, technical_architect]
+)
+
+# Phase 2: Product design using research results
+product_designer = Agent(
+    name="product_designer",
+    model="gemini-2.0-flash",
+    description="Creates user-centered product designs.",
+    instruction="""
+    Using the market research and technical assessment from session state:
+    - Design user interface and experience flows
+    - Prioritize features based on market needs and technical constraints
+    - Create wireframes and user stories
+    - Ensure accessibility and usability standards
+    
+    Balance market demands with technical feasibility.
+    """,
+    tools=[create_wireframes, design_user_flows, prioritize_features],
+    output_key="product_design"
+)
+
+# Sequential workflow: Research → Design
+product_development_workflow = SequentialAgent(
+    name="product_development_workflow",
+    sub_agents=[research_phase, product_designer]
 )
 ```
 
-**Business Impact:** TechStart used this approach to reduce product development cycle time by 60% while increasing market fit scores by 35%.
+**Key ADK Features:**
 
-### 3. Swarm Intelligence: Emergent Coordination
+- **Sequential Coordination:** `SequentialAgent` runs sub-agents in order
+- **Parallel Execution:** `ParallelAgent` runs multiple agents simultaneously  
+- **State Management:** `output_key` automatically saves agent results to shared state
+- **Context Sharing:** Agents read previous results from session state
 
-**Best for:** Complex optimization problems and adaptive responses
+### 3. Dynamic Orchestration Pattern
 
-**Real-World Example:** Supply Chain Optimization
+**Best for:** Adaptive workflows, complex decision trees, and intelligent routing
+
+**ADK Implementation:** Using LLM-driven delegation with `transfer_to_agent()`
+
+**Real-World Example:** Customer Service System
 
 ```python
-from google.adk.multi_agent import SwarmSystem, EmergentBehavior
+from google.adk.agents import Agent
 
-# Create a swarm of specialized supply chain agents
-def create_supply_chain_swarm():
-    # Demand forecasting agents (one per region/product)
-    demand_agents = []
-    for region in ["north_america", "europe", "asia_pacific"]:
-        for product_line in ["premium", "standard", "budget"]:
-            agent = Agent(
-                name=f"demand_forecaster_{region}_{product_line}",
-                model="gemini-2.0-flash",
-                instruction=f"""
-                You are a demand forecasting specialist for {product_line} products in {region}.
-                
-                Analyze and predict:
-                - Historical sales patterns and seasonality
-                - Economic indicators and market conditions
-                - Competitive actions and pricing dynamics
-                - Promotional impact and inventory levels
-                
-                Share insights with other agents and adapt forecasts based on global patterns.
-                """,
-                tools=[analyze_sales_history, monitor_economic_indicators,
-                       track_competitor_actions, calculate_demand_forecast]
-            )
-            demand_agents.append(agent)
+# Specialized service agents
+billing_specialist = Agent(
+    name="billing_specialist",
+    model="gemini-2.0-flash",
+    description="Handles billing inquiries, payment issues, and account management.",
+    instruction="""
+    You are a billing specialist. Handle:
+    - Payment processing issues
+    - Billing discrepancies
+    - Account balance inquiries
+    - Subscription changes
     
-    # Supplier coordination agents (one per supplier)
-    supplier_agents = []
-    for supplier in ["supplier_a", "supplier_b", "supplier_c"]:
-        agent = Agent(
-            name=f"supplier_coordinator_{supplier}",
-            model="gemini-2.0-flash",
-            instruction=f"""
-            You are a supplier relationship manager for {supplier}.
-            
-            Coordinate:
-            - Production capacity and lead times
-            - Quality metrics and performance tracking
-            - Cost negotiations and contract terms
-            - Risk assessment and backup planning
-            
-            Work with demand forecasters and logistics agents to optimize supply.
-            """,
-            tools=[check_supplier_capacity, negotiate_terms, assess_supplier_risk,
-                   coordinate_production_schedules]
-        )
-        supplier_agents.append(agent)
+    Resolve billing issues efficiently and escalate complex cases.
+    """,
+    tools=[process_payments, check_account_balance, update_billing_info],
+    # This agent doesn't transfer - it's a terminal specialist
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True
+)
+
+technical_support = Agent(
+    name="technical_support",
+    model="gemini-2.0-flash",
+    description="Provides technical assistance and troubleshooting.",
+    instruction="""
+    You are a technical support specialist. Handle:
+    - Software installation and configuration
+    - Troubleshooting technical issues
+    - API integration support
+    - Performance optimization
     
-    # Logistics optimization agents (one per distribution center)
-    logistics_agents = []
-    for dc in ["dc_east", "dc_central", "dc_west"]:
-        agent = Agent(
-            name=f"logistics_optimizer_{dc}",
-            model="gemini-2.0-flash",
-            instruction=f"""
-            You are a logistics optimization specialist for {dc}.
-            
-            Optimize:
-            - Inventory levels and safety stock
-            - Transportation routes and carrier selection
-            - Warehouse operations and fulfillment speed
-            - Cost minimization and service level targets
-            
-            Coordinate with demand agents and supplier agents for optimal flow.
-            """,
-            tools=[optimize_inventory_levels, plan_transportation_routes,
-                   schedule_warehouse_operations, track_service_metrics]
-        )
-        logistics_agents.append(agent)
+    Provide step-by-step technical solutions.
+    """,
+    tools=[diagnose_technical_issues, provide_troubleshooting_steps, 
+           check_system_status, generate_api_examples],
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True
+)
+
+sales_consultant = Agent(
+    name="sales_consultant", 
+    model="gemini-2.0-flash",
+    description="Assists with product information, demos, and sales inquiries.",
+    instruction="""
+    You are a sales consultant. Handle:
+    - Product feature explanations
+    - Pricing and plan comparisons
+    - Demo scheduling
+    - Upgrade recommendations
     
-    # Create the swarm system
-    all_agents = demand_agents + supplier_agents + logistics_agents
+    Focus on understanding customer needs and matching solutions.
+    """,
+    tools=[explain_features, compare_pricing_plans, schedule_demos,
+           recommend_upgrades],
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True
+)
+
+# Intelligent coordinator with dynamic routing
+customer_service_coordinator = Agent(
+    name="customer_service_coordinator",
+    model="gemini-2.0-flash",
+    description="Routes customer inquiries to appropriate specialists.",
+    instruction="""
+    You are a customer service coordinator. Analyze incoming requests and route them:
     
-    supply_chain_swarm = SwarmSystem(
-        name="supply_chain_optimization_swarm",
-        agents=all_agents,
-        communication_method="broadcast_and_local",
-        coordination_mechanism="emergent_optimization",
-        global_objective="minimize_total_cost_while_meeting_service_levels",
-        local_objectives={
-            "demand_agents": "maximize_forecast_accuracy",
-            "supplier_agents": "optimize_supplier_performance", 
-            "logistics_agents": "minimize_logistics_costs"
-        },
-        adaptation_rules=[
-            "share_forecast_updates_immediately",
-            "propagate_capacity_changes_to_relevant_agents",
-            "coordinate_on_conflicting_objectives",
-            "learn_from_collective_performance"
-        ]
-    )
+    - Route billing questions (payments, charges, accounts) to billing_specialist
+    - Route technical issues (bugs, integrations, performance) to technical_support  
+    - Route sales inquiries (features, pricing, demos) to sales_consultant
     
-    return supply_chain_swarm
+    If unsure, ask clarifying questions before routing.
+    The model will automatically use transfer_to_agent() for routing.
+    """,
+    sub_agents=[billing_specialist, technical_support, sales_consultant],
+    tools=[log_customer_interaction, escalate_to_human]
+)
 ```
 
-**The Result:** GlobalManufacturing reduced supply chain costs by 18% while improving on-time delivery from 87% to 96% using swarm-based optimization.
+**Key ADK Features:**
+
+- **LLM-Driven Routing:** The coordinator's LLM automatically calls `transfer_to_agent()`
+- **Transfer Control:** `disallow_transfer_*` parameters control delegation scope
+- **Intelligent Decision Making:** The LLM analyzes context to route appropriately
+- **Fallback Mechanisms:** Human escalation tools for complex cases
 
 ---
 
-## Agent Communication Protocols
+## ADK Communication and Coordination Mechanisms
 
-### Message Passing: Structured Information Exchange
+Google ADK provides three core primitives for agent communication and coordination:
 
-```python
-from google.adk.communication import MessageBus, MessageType
+### 1. Shared Session State (`session.state`)
 
-# Set up a message bus for agent communication
-message_bus = MessageBus(
-    name="enterprise_message_bus",
-    protocols=["request_response", "publish_subscribe", "broadcast"],
-    message_persistence=True,
-    encryption_enabled=True
-)
-
-# Define message types for different communication patterns
-class AgentMessages:
-    # Request-Response Pattern
-    DATA_REQUEST = MessageType(
-        name="data_request",
-        schema={
-            "requested_data": str,
-            "parameters": dict,
-            "priority": str,
-            "deadline": datetime
-        },
-        response_required=True,
-        timeout_seconds=30
-    )
-    
-    # Publish-Subscribe Pattern  
-    MARKET_UPDATE = MessageType(
-        name="market_update",
-        schema={
-            "market": str,
-            "indicator": str,
-            "value": float,
-            "timestamp": datetime,
-            "confidence": float
-        },
-        response_required=False,
-        broadcast=True
-    )
-    
-    # Coordination Pattern
-    TASK_COORDINATION = MessageType(
-        name="task_coordination",
-        schema={
-            "task_id": str,
-            "assigned_to": list,
-            "dependencies": list,
-            "deadline": datetime,
-            "status": str
-        },
-        response_required=True,
-        coordination_required=True
-    )
-
-# Agents can now communicate efficiently
-@market_analyst.on_message(AgentMessages.DATA_REQUEST)
-def handle_data_request(message):
-    if message.requested_data == "market_analysis":
-        analysis = perform_market_analysis(message.parameters)
-        return message.reply(analysis)
-
-@financial_agent.subscribe(AgentMessages.MARKET_UPDATE)
-def handle_market_update(message):
-    if message.market == "stock_market":
-        update_portfolio_models(message.indicator, message.value)
-```
-
-### Knowledge Sharing: Collective Intelligence
+The primary way for agents to share information within the same session:
 
 ```python
-from google.adk.knowledge import SharedKnowledgeBase, KnowledgeGraph
+from google.adk.agents import LlmAgent
+from google.adk.tools.tool_context import ToolContext
 
-# Create a shared knowledge base for agent collaboration
-shared_kb = SharedKnowledgeBase(
-    name="enterprise_intelligence",
-    storage_backend="vector_database",
-    knowledge_types=[
-        "market_insights",
-        "customer_profiles", 
-        "competitor_intelligence",
-        "historical_patterns",
-        "domain_expertise"
-    ],
-    access_control="role_based"
+# Agent that writes to shared state
+market_analyst = LlmAgent(
+    name="market_analyst",
+    model="gemini-2.0-flash",
+    description="Analyzes market data and saves insights to session state.",
+    instruction="""
+    Analyze market data and save key insights for other agents to use.
+    Use tools to save findings to session state.
+    """,
+    tools=[analyze_market_data],
+    output_key="market_analysis"  # Automatically saves final response to state
 )
 
-# Knowledge graph for understanding relationships
-knowledge_graph = KnowledgeGraph(
-    name="business_context_graph",
-    entities=["customers", "products", "markets", "competitors", "trends"],
-    relationships=[
-        "customer_prefers_product",
-        "product_competes_in_market",
-        "market_influenced_by_trend",
-        "competitor_operates_in_market"
-    ],
-    reasoning_enabled=True
+def analyze_market_data(symbol: str, tool_context: ToolContext) -> dict:
+    """Analyze market data and save insights to shared state."""
+    
+    # Perform analysis
+    analysis = {
+        "symbol": symbol,
+        "trend": "bullish",
+        "confidence": 0.85,
+        "key_indicators": ["volume_spike", "momentum_increase"]
+    }
+    
+    # Write to shared session state
+    tool_context.state["market_insights"] = analysis
+    tool_context.state["last_analysis_time"] = datetime.now().isoformat()
+    
+    return analysis
+
+# Agent that reads from shared state
+portfolio_manager = LlmAgent(
+    name="portfolio_manager",
+    model="gemini-2.0-flash",
+    description="Makes investment decisions based on market analysis.",
+    instruction="""
+    Make investment decisions using market insights from session state.
+    Check state for 'market_insights' and 'last_analysis_time'.
+    """,
+    tools=[make_investment_decision]
 )
 
-# Agents contribute and consume shared knowledge
-class KnowledgeAgent(Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.knowledge_base = shared_kb
-        self.knowledge_graph = knowledge_graph
+def make_investment_decision(action: str, tool_context: ToolContext) -> dict:
+    """Make investment decisions using shared state insights."""
     
-    def learn_from_experience(self, experience):
-        """Store new insights for other agents to use"""
-        insight = self.extract_insight(experience)
-        self.knowledge_base.store_insight(
-            insight=insight,
-            source=self.name,
-            confidence=self.calculate_confidence(insight),
-            tags=self.extract_tags(insight)
-        )
-        
-        # Update the knowledge graph
-        entities = self.extract_entities(insight)
-        relationships = self.extract_relationships(insight)
-        self.knowledge_graph.update(entities, relationships)
+    # Read from shared session state
+    market_insights = tool_context.state.get("market_insights", {})
+    last_analysis = tool_context.state.get("last_analysis_time")
     
-    def leverage_collective_knowledge(self, query):
-        """Access insights from other agents"""
-        relevant_insights = self.knowledge_base.search(
-            query=query,
-            min_confidence=0.7,
-            exclude_sources=[self.name]  # Don't use own insights
-        )
-        
-        # Use knowledge graph for contextual understanding
-        context = self.knowledge_graph.get_context(query)
-        
-        return self.synthesize_knowledge(relevant_insights, context)
-```
-
----
-
-## Coordination Strategies
-
-### Task Allocation: The Right Agent for the Right Job
-
-```python
-from google.adk.coordination import TaskAllocator, AgentCapabilities
-
-# Define agent capabilities
-agent_capabilities = {
-    "financial_analyst": AgentCapabilities(
-        skills=["financial_modeling", "risk_assessment", "valuation"],
-        capacity={"max_concurrent_tasks": 5, "processing_speed": "high"},
-        specialization_score={"finance": 0.95, "marketing": 0.3, "operations": 0.4}
-    ),
-    "market_researcher": AgentCapabilities(
-        skills=["market_analysis", "customer_research", "competitive_intelligence"],
-        capacity={"max_concurrent_tasks": 3, "processing_speed": "medium"},
-        specialization_score={"finance": 0.4, "marketing": 0.95, "operations": 0.6}
-    ),
-    "operations_optimizer": AgentCapabilities(
-        skills=["process_optimization", "supply_chain", "logistics"],
-        capacity={"max_concurrent_tasks": 4, "processing_speed": "high"},
-        specialization_score={"finance": 0.3, "marketing": 0.5, "operations": 0.95}
-    )
-}
-
-# Smart task allocation system
-task_allocator = TaskAllocator(
-    agents=agent_capabilities,
-    allocation_strategy="optimal_matching",
-    load_balancing=True,
-    priority_handling=True
-)
-
-# Allocate tasks intelligently
-def allocate_business_analysis_project():
-    tasks = [
-        {"id": "financial_projection", "type": "finance", "priority": "high", "deadline": "2024-01-15"},
-        {"id": "market_sizing", "type": "marketing", "priority": "medium", "deadline": "2024-01-20"},
-        {"id": "process_mapping", "type": "operations", "priority": "low", "deadline": "2024-01-25"}
-    ]
-    
-    allocation = task_allocator.allocate_tasks(tasks)
-    
-    # Result: Each task goes to the most capable and available agent
-    return allocation
-```
-
-### Conflict Resolution: When Agents Disagree
-
-```python
-from google.adk.conflict import ConflictResolver, ResolutionStrategy
-
-# Conflict resolution system
-conflict_resolver = ConflictResolver(
-    strategies=[
-        ResolutionStrategy.EXPERT_OPINION,  # Defer to most qualified agent
-        ResolutionStrategy.MAJORITY_VOTE,   # Democratic decision
-        ResolutionStrategy.WEIGHTED_CONSENSUS, # Consider agent reliability
-        ResolutionStrategy.ESCALATION,      # Human intervention
-        ResolutionStrategy.EVIDENCE_BASED   # Best supporting data wins
-    ]
-)
-
-# Example: Investment recommendation conflict
-@conflict_resolver.handle_conflict
-def resolve_investment_disagreement(conflicting_recommendations):
-    """
-    Handle conflicts between investment agents with different recommendations
-    """
-    
-    # Analyze the nature of the conflict
-    conflict_type = analyze_conflict_type(conflicting_recommendations)
-    
-    if conflict_type == "data_interpretation":
-        # Use evidence-based resolution
-        return conflict_resolver.resolve_by_evidence(
-            recommendations=conflicting_recommendations,
-            evidence_weights={"historical_data": 0.4, "market_indicators": 0.6}
-        )
-    
-    elif conflict_type == "risk_tolerance":
-        # Escalate to human decision maker
-        return conflict_resolver.escalate_to_human(
-            context="Risk tolerance disagreement",
-            recommendations=conflicting_recommendations,
-            urgency="medium"
-        )
-    
+    if market_insights and market_insights.get("confidence", 0) > 0.8:
+        decision = f"Execute {action} based on {market_insights['trend']} trend"
     else:
-        # Use weighted consensus based on agent track records
-        return conflict_resolver.weighted_consensus(
-            recommendations=conflicting_recommendations,
-            weights=get_agent_reliability_scores()
-        )
+        decision = f"Hold position - insufficient confidence in analysis"
+    
+    return {"decision": decision, "based_on": market_insights}
+```
+
+### 2. LLM-Driven Transfer (`transfer_to_agent`)
+
+ADK's AutoFlow automatically enables intelligent delegation between agents:
+
+```python
+from google.adk.agents import LlmAgent
+
+# Specialist agents
+research_analyst = LlmAgent(
+    name="research_analyst",
+    model="gemini-2.0-flash",
+    description="Conducts detailed financial research and fundamental analysis.",
+    instruction="Perform in-depth financial research. Use available tools to gather data.",
+    tools=[research_financials, analyze_fundamentals],
+    disallow_transfer_to_parent=True,  # Prevents transferring back
+    disallow_transfer_to_peers=True    # Prevents peer transfers
+)
+
+technical_analyst = LlmAgent(
+    name="technical_analyst", 
+    model="gemini-2.0-flash",
+    description="Performs technical analysis and chart pattern recognition.",
+    instruction="Analyze price charts and technical indicators.",
+    tools=[analyze_charts, identify_patterns],
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True
+)
+
+# Coordinator with LLM-driven delegation
+investment_coordinator = LlmAgent(
+    name="investment_coordinator",
+    model="gemini-2.0-flash",
+    description="Coordinates investment analysis by routing to specialist agents.",
+    instruction="""
+    You coordinate investment analysis. Route requests to specialists:
+    
+    - For fundamental analysis, research, or company data: use research_analyst
+    - For technical analysis, charts, or price patterns: use technical_analyst
+    
+    The LLM will automatically call transfer_to_agent() when appropriate.
+    """,
+    sub_agents=[research_analyst, technical_analyst],
+    tools=[summarize_analysis]
+)
+
+# Usage: The LLM automatically generates transfer_to_agent() calls
+# User: "What's the technical outlook for AAPL?"
+# LLM generates: transfer_to_agent(agent_name="technical_analyst")
+```
+
+### 3. Explicit Invocation (`AgentTool`)
+
+Use agents as tools for controlled, synchronous invocation:
+
+```python
+from google.adk.agents import LlmAgent
+from google.adk.tools import agent_tool
+
+# Specialist agent for risk assessment
+risk_assessor = LlmAgent(
+    name="risk_assessor",
+    model="gemini-2.0-flash",
+    description="Assesses investment risk and calculates risk metrics.",
+    instruction="Calculate comprehensive risk metrics for investments.",
+    tools=[calculate_var, assess_volatility, analyze_correlations]
+)
+
+# Wrap agent as a tool
+risk_tool = agent_tool.AgentTool(agent=risk_assessor)
+
+# Parent agent that uses other agents as tools
+portfolio_optimizer = LlmAgent(
+    name="portfolio_optimizer",
+    model="gemini-2.0-flash",
+    description="Optimizes portfolio allocation using risk assessment.",
+    instruction="""
+    Optimize portfolio allocation. Use the risk_assessor tool to evaluate
+    risk before making allocation decisions.
+    """,
+    tools=[risk_tool, optimize_allocation, rebalance_portfolio]
+)
+
+# The LLM will call the risk_assessor agent like any other tool:
+# Function call: risk_assessor(investment_data="...", analysis_type="comprehensive")
+```
+
+---
+
+## Advanced Multi-Agent Coordination Patterns
+
+### Workflow-Based Coordination
+
+ADK provides specialized workflow agents for structured coordination:
+
+```python
+from google.adk.agents import SequentialAgent, ParallelAgent, LoopAgent
+
+# Sequential processing pipeline
+data_processing_pipeline = SequentialAgent(
+    name="data_processing_pipeline",
+    sub_agents=[
+        data_validator,    # Validates input data
+        data_transformer,  # Transforms data format
+        data_analyzer,     # Analyzes processed data
+        report_generator   # Generates final report
+    ]
+)
+
+# Parallel analysis for multiple perspectives
+multi_perspective_analysis = ParallelAgent(
+    name="multi_perspective_analysis", 
+    sub_agents=[
+        technical_analyst,    # Technical analysis
+        fundamental_analyst,  # Fundamental analysis
+        sentiment_analyst     # Market sentiment analysis
+    ]
+)
+
+# Iterative refinement with session state termination condition
+from google.adk.tools.tool_context import ToolContext
+
+def check_quality_threshold(tool_context: ToolContext) -> dict:
+    """Check if quality threshold is met for loop termination."""
+    quality_score = tool_context.state.get("quality_score", 0)
+    meets_threshold = quality_score >= 0.9
+    
+    # Update state to signal loop completion
+    if meets_threshold:
+        tool_context.state["quality_check_complete"] = True
+    
+    return {
+        "quality_score": quality_score,
+        "meets_threshold": meets_threshold,
+        "should_continue": not meets_threshold
+    }
+
+quality_checker = Agent(
+    name="quality_checker",
+    model="gemini-2.0-flash",
+    description="Checks if quality threshold is met.",
+    instruction="""
+    Check the quality_score from session state.
+    If quality_score >= 0.9, mark quality_check_complete as True.
+    """,
+    tools=[check_quality_threshold]
+)
+
+iterative_improvement = LoopAgent(
+    name="iterative_improvement",
+    max_iterations=5,
+    sub_agents=[
+        content_generator,  # Generates content
+        quality_evaluator,  # Evaluates quality and sets state
+        quality_checker     # Checks termination condition
+    ]
+)
+```
+
+### State-Based Coordination
+
+Use session state to coordinate complex workflows:
+
+```python
+from google.adk.tools.tool_context import ToolContext
+
+def coordinate_investment_analysis(symbol: str, tool_context: ToolContext) -> dict:
+    """Coordinates multi-step investment analysis using session state."""
+    
+    # Set up coordination state
+    analysis_state = {
+        "symbol": symbol,
+        "steps_completed": [],
+        "current_step": "technical_analysis",
+        "results": {}
+    }
+    tool_context.state["investment_analysis"] = analysis_state
+    
+    return {"status": "analysis_initiated", "symbol": symbol}
+
+def technical_analysis_step(tool_context: ToolContext) -> dict:
+    """Performs technical analysis step."""
+    analysis_state = tool_context.state.get("investment_analysis", {})
+    
+    # Perform technical analysis
+    technical_results = {
+        "trend": "bullish",
+        "support_level": 150.00,
+        "resistance_level": 180.00
+    }
+    
+    # Update coordination state
+    analysis_state["results"]["technical"] = technical_results
+    analysis_state["steps_completed"].append("technical_analysis")
+    analysis_state["current_step"] = "fundamental_analysis"
+    tool_context.state["investment_analysis"] = analysis_state
+    
+    return technical_results
+
+def check_analysis_completion(tool_context: ToolContext) -> dict:
+    """Checks if all analysis steps are complete."""
+    analysis_state = tool_context.state.get("investment_analysis", {})
+    completed_steps = analysis_state.get("steps_completed", [])
+    
+    required_steps = ["technical_analysis", "fundamental_analysis", "risk_assessment"]
+    is_complete = all(step in completed_steps for step in required_steps)
+    
+    if is_complete:
+        # Generate final recommendation
+        results = analysis_state.get("results", {})
+        recommendation = synthesize_recommendation(results)
+        tool_context.state["final_recommendation"] = recommendation
+        
+    return {
+        "complete": is_complete,
+        "remaining_steps": [s for s in required_steps if s not in completed_steps]
+    }
+```
+
+### Human-in-the-Loop Coordination
+
+Integrate human oversight into agent workflows:
+
+```python
+from google.adk.tools import FunctionTool
+
+def request_human_approval(decision: str, context: dict, tool_context: ToolContext) -> dict:
+    """Requests human approval for critical decisions."""
+    
+    approval_request = {
+        "decision": decision,
+        "context": context,
+        "timestamp": datetime.now().isoformat(),
+        "status": "pending"
+    }
+    
+    # Save request to state for external system to process
+    tool_context.state["approval_request"] = approval_request
+    
+    # In a real implementation, this would integrate with an external approval system
+    # For demo purposes, we'll simulate approval logic
+    if context.get("risk_level") == "low":
+        approval_request["status"] = "auto_approved"
+        approval_request["approved_by"] = "system"
+    else:
+        approval_request["status"] = "requires_human_review"
+    
+    tool_context.state["approval_request"] = approval_request
+    return approval_request
+
+# Agent that requires human approval for high-risk decisions
+risk_sensitive_agent = LlmAgent(
+    name="risk_sensitive_agent",
+    model="gemini-2.0-flash",
+    description="Makes decisions requiring human oversight for high-risk scenarios.",
+    instruction="""
+    Analyze the risk level of decisions. For high-risk decisions, use the 
+    request_human_approval tool before proceeding.
+    """,
+    tools=[request_human_approval, execute_decision]
+)
 ```
 
 ---
@@ -795,220 +895,400 @@ fraud_swarm = SwarmSystem(
 
 ## Advanced Multi-Agent Patterns
 
-### The Consensus Builder Pattern
+### Consensus and Agreement Patterns
 
-When multiple agents need to reach agreement on complex decisions:
+Build systems where multiple agents must reach agreement:
 
 ```python
-from google.adk.consensus import ConsensusBuilder, VotingMechanism
+from google.adk.agents import LlmAgent, ParallelAgent, SequentialAgent
+from google.adk.tools.tool_context import ToolContext
 
-class InvestmentCommitteeConsensus:
-    def __init__(self):
-        self.consensus_builder = ConsensusBuilder(
-            voting_mechanism=VotingMechanism.BORDA_COUNT,
-            minimum_participation=0.8,
-            consensus_threshold=0.75,
-            iterations_limit=5
-        )
+def collect_agent_opinions(topic: str, tool_context: ToolContext) -> dict:
+    """Collect opinions from multiple agents on a topic."""
+    opinions = tool_context.state.get("agent_opinions", [])
+    agent_name = tool_context.agent_name
     
-    def reach_investment_decision(self, investment_proposal):
-        # Initial positions from each agent
-        positions = {
-            "equity_analyst": self.equity_analyst.evaluate(investment_proposal),
-            "bond_analyst": self.bond_analyst.evaluate(investment_proposal), 
-            "risk_manager": self.risk_manager.evaluate(investment_proposal),
-            "market_strategist": self.market_strategist.evaluate(investment_proposal)
-        }
-        
-        # Iterative consensus building
-        consensus = self.consensus_builder.build_consensus(
-            initial_positions=positions,
-            discussion_rounds=3,
-            information_sharing=True,
-            position_updates_allowed=True
-        )
-        
-        return consensus
+    # Each agent adds their opinion
+    opinion = {
+        "agent": agent_name,
+        "topic": topic,
+        "stance": "analyze and provide stance",
+        "confidence": 0.8,
+        "reasoning": "provide reasoning"
+    }
+    
+    opinions.append(opinion)
+    tool_context.state["agent_opinions"] = opinions
+    
+    return opinion
+
+def evaluate_consensus(threshold: float, tool_context: ToolContext) -> dict:
+    """Evaluate if agents have reached consensus."""
+    opinions = tool_context.state.get("agent_opinions", [])
+    
+    if len(opinions) < 2:
+        return {"consensus": False, "reason": "insufficient_opinions"}
+    
+    # Simple consensus check (in practice, would be more sophisticated)
+    agreement_score = calculate_agreement_score(opinions)
+    
+    return {
+        "consensus": agreement_score >= threshold,
+        "agreement_score": agreement_score,
+        "opinions_count": len(opinions)
+    }
+
+# Multi-agent consensus system
+consensus_agents = ParallelAgent(
+    name="consensus_gathering",
+    sub_agents=[
+        LlmAgent(name="expert_1", model="gemini-2.0-flash", tools=[collect_agent_opinions]),
+        LlmAgent(name="expert_2", model="gemini-2.0-flash", tools=[collect_agent_opinions]),
+        LlmAgent(name="expert_3", model="gemini-2.0-flash", tools=[collect_agent_opinions])
+    ]
+)
+
+consensus_evaluator = LlmAgent(
+    name="consensus_evaluator",
+    model="gemini-2.0-flash",
+    description="Evaluates consensus among expert opinions.",
+    tools=[evaluate_consensus]
+)
+
+full_consensus_system = SequentialAgent(
+    name="expert_consensus_system",
+    sub_agents=[consensus_agents, consensus_evaluator]
+)
 ```
 
-### The Expert Network Pattern  
+### Learning and Adaptation Patterns
 
-For accessing specialized knowledge on-demand:
+Agents that improve through collective experience:
 
 ```python
-from google.adk.networks import ExpertNetwork, ExpertiseRouter
+from google.adk.tools.tool_context import ToolContext
+import json
+from datetime import datetime
 
-# Create a network of domain experts
-expert_network = ExpertNetwork(
-    name="business_expert_network",
-    experts={
-        "tax_optimization": [tax_specialist_1, tax_specialist_2],
-        "regulatory_compliance": [compliance_expert_1, compliance_expert_2],
-        "market_analysis": [market_expert_1, market_expert_2, market_expert_3],
-        "technology_assessment": [tech_expert_1, tech_expert_2],
-        "financial_modeling": [finance_expert_1, finance_expert_2]
-    },
-    routing_strategy="best_available_expert",
-    load_balancing=True
-)
-
-# Route questions to the right experts
-expertise_router = ExpertiseRouter(
-    expert_network=expert_network,
-    question_classifier=ai_question_classifier,
-    fallback_strategy="multi_expert_consensus"
-)
-
-# Usage in a general business agent
-@business_consultant.when_needs_expertise
-def consult_experts(self, question, domain):
-    expert_response = expertise_router.route_question(
-        question=question,
-        required_expertise=domain,
-        urgency="normal",
-        consensus_required=True if question.complexity == "high" else False
-    )
+def record_decision_outcome(decision: str, outcome: str, success: bool, tool_context: ToolContext) -> dict:
+    """Record decision outcomes for learning."""
     
-    return expert_response
+    learning_data = tool_context.state.get("learning_history", [])
+    
+    record = {
+        "timestamp": datetime.now().isoformat(),
+        "agent": tool_context.agent_name,
+        "decision": decision,
+        "outcome": outcome,
+        "success": success,
+        "context": tool_context.state.get("current_context", {})
+    }
+    
+    learning_data.append(record)
+    tool_context.state["learning_history"] = learning_data
+    
+    return {"recorded": True, "total_records": len(learning_data)}
+
+def learn_from_history(decision_type: str, tool_context: ToolContext) -> dict:
+    """Learn from previous decisions to improve future ones."""
+    
+    learning_data = tool_context.state.get("learning_history", [])
+    
+    # Filter relevant past decisions
+    relevant_decisions = [
+        record for record in learning_data 
+        if decision_type in record["decision"].lower()
+    ]
+    
+    if not relevant_decisions:
+        return {"patterns": "no_historical_data", "recommendation": "proceed_with_caution"}
+    
+    # Analyze success patterns
+    total_decisions = len(relevant_decisions)
+    successful_decisions = [r for r in relevant_decisions if r["success"]]
+    success_rate = len(successful_decisions) / total_decisions
+    
+    # Extract successful patterns
+    patterns = analyze_successful_patterns(successful_decisions)
+    
+    return {
+        "success_rate": success_rate,
+        "total_decisions": total_decisions,
+        "patterns": patterns,
+        "recommendation": generate_recommendation(patterns, success_rate)
+    }
+
+def analyze_successful_patterns(successful_decisions):
+    """Analyze patterns in successful decisions."""
+    # In practice, this would use more sophisticated analysis
+    common_contexts = {}
+    for decision in successful_decisions:
+        context = decision.get("context", {})
+        for key, value in context.items():
+            if key not in common_contexts:
+                common_contexts[key] = {}
+            if value not in common_contexts[key]:
+                common_contexts[key][value] = 0
+            common_contexts[key][value] += 1
+    
+    return common_contexts
+
+def generate_recommendation(patterns, success_rate):
+    """Generate recommendations based on learned patterns."""
+    if success_rate > 0.8:
+        return "high_confidence_proceed"
+    elif success_rate > 0.6:
+        return "moderate_confidence_proceed_with_monitoring"
+    else:
+        return "low_confidence_require_additional_validation"
+
+# Learning-enabled agent
+adaptive_agent = LlmAgent(
+    name="adaptive_investment_agent",
+    model="gemini-2.0-flash",
+    description="Investment agent that learns from past decisions.",
+    instruction="""
+    Make investment decisions while learning from past outcomes.
+    Always use learn_from_history before making similar decisions.
+    Record outcomes using record_decision_outcome after decisions are executed.
+    """,
+    tools=[learn_from_history, record_decision_outcome, make_investment_decision]
+)
 ```
 
-### The Learning Organization Pattern
+### Expert Network Patterns
 
-Agents that improve collectively over time:
+Dynamic expert consultation based on context:
 
 ```python
-from google.adk.learning import CollectiveLearning, ExperienceSharing
+from google.adk.tools.tool_context import ToolContext
 
-# Collective learning system
-collective_learning = CollectiveLearning(
-    learning_methods=["experience_sharing", "pattern_recognition", 
-                     "performance_feedback", "model_updating"],
-    knowledge_integration="continuous",
-    performance_tracking=True
+def route_to_expert(question: str, domain: str, tool_context: ToolContext) -> dict:
+    """Route questions to appropriate domain experts."""
+    
+    # Map domains to expert agents
+    expert_routing = {
+        "technology": "tech_expert_agent",
+        "finance": "finance_expert_agent", 
+        "marketing": "marketing_expert_agent",
+        "operations": "operations_expert_agent",
+        "legal": "legal_expert_agent"
+    }
+    
+    expert_agent = expert_routing.get(domain.lower())
+    
+    if not expert_agent:
+        return {"error": f"No expert available for domain: {domain}"}
+    
+    # Store routing information for the coordinator
+    tool_context.state["expert_consultation"] = {
+        "question": question,
+        "domain": domain,
+        "routed_to": expert_agent,
+        "status": "pending"
+    }
+    
+    return {
+        "routed_to": expert_agent,
+        "domain": domain,
+        "status": "consultation_initiated"
+    }
+
+def classify_question_domain(question: str, tool_context: ToolContext) -> dict:
+    """Classify questions into appropriate domains."""
+    
+    # Keywords for domain classification
+    domain_keywords = {
+        "technology": ["software", "hardware", "system", "architecture", "development"],
+        "finance": ["budget", "cost", "revenue", "profit", "investment", "financial"],
+        "marketing": ["customer", "market", "brand", "promotion", "advertising"],
+        "operations": ["process", "workflow", "efficiency", "production", "supply"],
+        "legal": ["contract", "compliance", "regulation", "policy", "legal"]
+    }
+    
+    question_lower = question.lower()
+    domain_scores = {}
+    
+    for domain, keywords in domain_keywords.items():
+        score = sum(1 for keyword in keywords if keyword in question_lower)
+        if score > 0:
+            domain_scores[domain] = score
+    
+    if not domain_scores:
+        return {"domain": "general", "confidence": 0.5}
+    
+    best_domain = max(domain_scores, key=domain_scores.get)
+    confidence = domain_scores[best_domain] / len(domain_keywords[best_domain])
+    
+    return {"domain": best_domain, "confidence": confidence}
+
+# Expert coordinator agent
+expert_coordinator = LlmAgent(
+    name="expert_coordinator",
+    model="gemini-2.0-flash", 
+    description="Routes questions to appropriate domain experts.",
+    instruction="""
+    You coordinate expert consultations. For each question:
+    1. Use classify_question_domain to determine the domain
+    2. Use route_to_expert to route to the appropriate specialist
+    3. Provide clear guidance on the routing decision
+    """,
+    tools=[classify_question_domain, route_to_expert]
 )
-
-class LearningAgent(Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.collective_learning = collective_learning
-        self.experience_buffer = []
-    
-    def learn_from_outcome(self, task, outcome, feedback):
-        """Learn from task outcomes and share with other agents"""
-        experience = {
-            "task_type": task.type,
-            "context": task.context,
-            "action_taken": task.action,
-            "outcome": outcome,
-            "feedback": feedback,
-            "success_metrics": self.calculate_success_metrics(outcome)
-        }
-        
-        # Store experience locally
-        self.experience_buffer.append(experience)
-        
-        # Share with collective learning system
-        self.collective_learning.integrate_experience(
-            source_agent=self.name,
-            experience=experience,
-            generalizability_score=self.assess_generalizability(experience)
-        )
-    
-    def leverage_collective_wisdom(self, new_task):
-        """Use collective learning to improve performance on new tasks"""
-        similar_experiences = self.collective_learning.find_similar_experiences(
-            task_context=new_task.context,
-            task_type=new_task.type,
-            minimum_similarity=0.7
-        )
-        
-        # Adapt approach based on collective wisdom
-        recommended_approach = self.collective_learning.recommend_approach(
-            new_task=new_task,
-            similar_experiences=similar_experiences,
-            success_weight=0.8  # Prioritize successful past approaches
-        )
-        
-        return recommended_approach
 ```
 
 ---
 
 ## Best Practices for Multi-Agent Systems
 
-### 1. Design for Clear Responsibilities
+### 1. Design for Clear Agent Responsibilities
 
-Each agent should have a well-defined role and clear boundaries:
+Each agent should have a well-defined role with specific, non-overlapping responsibilities:
 
 ```python
+from google.adk.agents import Agent
+
 # ✅ Good: Clear, focused responsibilities
 customer_service_agent = Agent(
     name="customer_service_specialist",
-    primary_responsibility="Handle customer inquiries and complaints",
-    secondary_responsibilities=[
-        "Escalate complex issues to specialists",
-        "Update customer records",
-        "Track satisfaction metrics"
-    ],
-    not_responsible_for=[
-        "Technical troubleshooting",
-        "Billing disputes", 
-        "Product development feedback"
-    ]
+    model="gemini-2.0-flash",
+    description="Handles customer inquiries, complaints, and basic account questions.",
+    instruction="""
+    You are a customer service specialist responsible for:
+    
+    PRIMARY RESPONSIBILITIES:
+    - Handle customer inquiries and complaints
+    - Provide account information and basic troubleshooting
+    - Escalate complex technical or billing issues to specialists
+    - Update customer interaction records
+    
+    ESCALATION RULES:
+    - Transfer technical issues to technical_support agent
+    - Transfer billing disputes to billing_specialist agent  
+    - Transfer product feedback to product_team agent
+    
+    Always be helpful and professional. When in doubt, escalate rather than guess.
+    """,
+    tools=[update_customer_records, check_account_status, escalate_to_specialist]
 )
 
 # ❌ Bad: Vague, overlapping responsibilities  
 general_agent = Agent(
-    name="does_everything",
-    primary_responsibility="Handle all customer-related tasks and some other stuff"
+    name="general_helper",
+    description="Helps with various tasks",
+    instruction="Handle customer requests and other business tasks as needed"
 )
 ```
 
-### 2. Plan for Communication Overhead
+### 2. Use ADK's Built-in Coordination Mechanisms
 
-More agents means more communication - design efficient protocols:
+Leverage ADK's proven patterns rather than building custom communication protocols:
 
 ```python
-# Efficient communication patterns
-communication_design = {
-    "broadcast_sparingly": "Only for critical updates affecting all agents",
-    "direct_messaging": "For specific agent-to-agent coordination",
-    "publish_subscribe": "For data updates and event notifications",
-    "request_response": "For specific information requests",
-    "batch_communication": "Group related messages to reduce overhead"
-}
+from google.adk.agents import SequentialAgent, ParallelAgent
+
+# ✅ Good: Use ADK workflow agents for coordination
+research_and_analysis = SequentialAgent(
+    name="market_research_pipeline",
+    sub_agents=[
+        # Parallel research phase
+        ParallelAgent(
+            name="research_phase",
+            sub_agents=[market_researcher, competitor_analyst, customer_surveyor]
+        ),
+        # Sequential analysis phase  
+        data_synthesizer,
+        recommendation_generator
+    ]
+)
+
+# ❌ Bad: Custom message passing that reinvents ADK patterns
+# Don't build custom coordination when ADK provides proven solutions
 ```
 
-### 3. Implement Graceful Degradation
+### 3. Implement Proper Error Handling and Fallbacks
 
-System should continue working even if some agents fail:
+Use ADK's transfer controls and session state for resilient systems:
 
 ```python
-from google.adk.resilience import GracefulDegradation
+# Resilient agent design with fallback strategies
+primary_agent = Agent(
+    name="primary_processor",
+    model="gemini-2.0-flash",
+    description="Primary task processor with fallback handling.",
+    instruction="""
+    Process the task using your tools. If you encounter limitations:
+    1. Check session state for previous attempts
+    2. Use transfer_to_agent to route to specialist if needed
+    3. Set appropriate status in session state for monitoring
+    """,
+    tools=[process_task, check_processing_status],
+    # Control transfer behavior for reliability
+    disallow_transfer_to_parent=False,  # Allow escalation
+    disallow_transfer_to_peers=True    # Prevent infinite loops
+)
 
-resilient_system = GracefulDegradation(
-    critical_agents=["system_coordinator", "safety_monitor"],
-    fallback_strategies={
-        "agent_failure": "redistribute_tasks_to_available_agents",
-        "communication_failure": "use_alternative_communication_channels",
-        "performance_degradation": "reduce_complexity_and_continue"
-    },
-    minimum_service_level="basic_functionality_maintained"
+fallback_agent = Agent(
+    name="fallback_processor", 
+    model="gemini-2.0-flash",
+    description="Simplified processor for when primary agent fails.",
+    instruction="""
+    You handle tasks when the primary processor cannot complete them.
+    Use simplified approaches and clearly mark any limitations.
+    """,
+    tools=[simplified_process_task, log_fallback_usage]
 )
 ```
 
-### 4. Monitor System-Level Metrics
+### 4. Monitor Multi-Agent Performance
 
-Track collective performance, not just individual agent metrics:
+Track system-level metrics using session state and proper logging:
 
 ```python
-system_metrics = {
-    "coordination_efficiency": "time_to_coordinate / total_task_time",
-    "knowledge_sharing_effectiveness": "shared_insights_used / total_insights_generated",
-    "conflict_resolution_time": "avg_time_to_resolve_agent_conflicts",
-    "collective_accuracy": "system_accuracy_vs_individual_agent_accuracy",
-    "scalability_factor": "performance_change_per_additional_agent"
-}
+from google.adk.tools.tool_context import ToolContext
+from datetime import datetime
+
+def track_system_performance(task_id: str, agent_name: str, 
+                           action: str, tool_context: ToolContext) -> dict:
+    """Track multi-agent system performance metrics."""
+    
+    # Initialize or update performance tracking
+    perf_data = tool_context.state.get("system_performance", {
+        "task_start_time": datetime.now().isoformat(),
+        "agent_interactions": [],
+        "coordination_events": [],
+        "transfer_count": 0
+    })
+    
+    # Record agent interaction
+    interaction = {
+        "timestamp": datetime.now().isoformat(),
+        "agent": agent_name,
+        "action": action,
+        "task_id": task_id
+    }
+    
+    perf_data["agent_interactions"].append(interaction)
+    
+    # Track transfers for coordination efficiency
+    if action == "transfer":
+        perf_data["transfer_count"] += 1
+    
+    tool_context.state["system_performance"] = perf_data
+    
+    return {
+        "recorded": True,
+        "total_interactions": len(perf_data["agent_interactions"]),
+        "transfer_count": perf_data["transfer_count"]
+    }
+
+# Add performance tracking to your agents
+performance_aware_agent = Agent(
+    name="monitored_agent",
+    model="gemini-2.0-flash",
+    instruction="Complete tasks while tracking performance metrics.",
+    tools=[track_system_performance, your_business_tools]
+)
 ```
 
 ---
@@ -1025,49 +1305,122 @@ system_metrics = {
 2. **Technical Architect:** Evaluate development feasibility and resources
 3. **Financial Analyst:** Calculate costs, revenue projections, and ROI
 4. **Risk Manager:** Identify and assess potential risks
-5. **Coordinator:** Synthesize inputs and make final recommendation
+5. **Decision Coordinator:** Synthesize inputs and make final recommendation
 
 **Implementation Steps:**
 
 ```python
-# Your multi-agent system template
-from google.adk.multi_agent import DemocraticSystem
+# Your multi-agent system using actual ADK patterns
+from google.adk.agents import Agent, ParallelAgent, SequentialAgent
+from google.adk.tools.tool_context import ToolContext
 
-# 1. Define your specialist agents
+# 1. Define your specialist agents with session state coordination
+def analyze_market_opportunity(feature_description: str, target_market: str, tool_context: ToolContext) -> dict:
+    """Analyze market opportunity for the product feature."""
+    # Your market analysis logic here
+    analysis = {
+        "market_size": "estimate_market_size",
+        "demand_level": "assess_demand",
+        "competitive_landscape": "analyze_competition",
+        "timing_assessment": "evaluate_launch_timing"
+    }
+    
+    # Save analysis to shared session state
+    tool_context.state["market_analysis"] = analysis
+    return analysis
+
 market_analyst = Agent(
     name="market_analyst",
     model="gemini-2.0-flash",
-    instruction="Analyze market opportunity for the product launch...",
-    tools=[your_market_analysis_tools]
+    description="Analyzes market opportunities and competitive positioning.",
+    instruction="Analyze market opportunity, demand, and timing for product launches.",
+    tools=[analyze_market_opportunity]
 )
 
-# 2. Set up communication protocols
-message_bus = MessageBus(...)
-
-# 3. Create the multi-agent system
-product_launch_team = DemocraticSystem(
-    name="product_launch_decision_team",
-    agents=[market_analyst, technical_architect, financial_analyst, risk_manager],
-    coordinator=launch_coordinator,
-    decision_mechanism="weighted_consensus"
+technical_architect = Agent(
+    name="technical_architect", 
+    model="gemini-2.0-flash",
+    description="Evaluates technical feasibility and development requirements.",
+    instruction="Assess technical complexity, resource requirements, and implementation timeline.",
+    tools=[assess_technical_feasibility, estimate_development_effort]
 )
 
-# 4. Test with a real scenario
-decision = product_launch_team.make_decision({
-    "product_feature": "AI-powered analytics dashboard",
-    "target_market": "small_to_medium_businesses",
-    "timeline": "Q2_2024",
-    "budget_constraint": 500000
-})
+financial_analyst = Agent(
+    name="financial_analyst",
+    model="gemini-2.0-flash", 
+    description="Calculates costs, revenue projections, and ROI.",
+    instruction="Analyze financial implications, costs, and revenue potential.",
+    tools=[calculate_development_costs, project_revenue, calculate_roi]
+)
+
+risk_manager = Agent(
+    name="risk_manager",
+    model="gemini-2.0-flash",
+    description="Identifies and assesses potential risks and mitigation strategies.",
+    instruction="Identify technical, market, and business risks with mitigation plans.",
+    tools=[identify_risks, assess_risk_impact, recommend_mitigations]
+)
+
+# 2. Parallel analysis phase - all specialists work simultaneously
+analysis_team = ParallelAgent(
+    name="analysis_team",
+    sub_agents=[market_analyst, technical_architect, financial_analyst, risk_manager]
+)
+
+# 3. Decision synthesis agent that reviews all analyses
+def synthesize_decision(tool_context: ToolContext) -> dict:
+    """Synthesize all analyses into a final recommendation."""
+    
+    # Retrieve all analyses from session state
+    market_analysis = tool_context.state.get("market_analysis", {})
+    technical_analysis = tool_context.state.get("technical_analysis", {})
+    financial_analysis = tool_context.state.get("financial_analysis", {})
+    risk_analysis = tool_context.state.get("risk_analysis", {})
+    
+    # Your decision synthesis logic here
+    recommendation = "GO" if all_analyses_positive(
+        market_analysis, technical_analysis, financial_analysis, risk_analysis
+    ) else "NO_GO"
+    
+    return {
+        "recommendation": recommendation,
+        "confidence": "calculate_confidence_score",
+        "rationale": "provide_detailed_reasoning",
+        "key_factors": "list_decisive_factors"
+    }
+
+decision_coordinator = Agent(
+    name="decision_coordinator",
+    model="gemini-2.0-flash",
+    description="Synthesizes specialist analyses into final launch decision.",
+    instruction="""
+    Review all specialist analyses from session state and make a final recommendation.
+    Consider market opportunity, technical feasibility, financial viability, and risks.
+    Provide clear rationale for your decision.
+    """,
+    tools=[synthesize_decision]
+)
+
+# 4. Complete decision pipeline
+product_launch_decision_system = SequentialAgent(
+    name="product_launch_decision_system",
+    sub_agents=[analysis_team, decision_coordinator]
+)
+
+# 5. Test with a real scenario
+# decision = await product_launch_decision_system.run(
+#     "Evaluate launch of AI-powered analytics dashboard for SMB market"
+# )
 ```
 
 **Success Criteria:**
 
-- Each agent provides specialized analysis
-- Agents can communicate and share insights
-- System reaches a coherent decision with clear rationale
-- System handles at least one conflict/disagreement scenario
-- Decision quality is better than any single agent could provide
+- Each agent provides specialized analysis using session state
+- All agents work in parallel during analysis phase  
+- Decision coordinator synthesizes inputs into coherent recommendation
+- System handles conflicting recommendations appropriately
+- Final decision includes clear rationale and confidence assessment
+- Decision quality demonstrably better than single-agent analysis
 
 ---
 
