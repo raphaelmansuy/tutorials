@@ -36,56 +36,131 @@ Agents with persistent memory can:
 **Provide Continuity:** Pick up conversations and projects where they left off
 **Personalize Interactions:** Adapt communication style and focus areas to individual users
 
+#### Stateless vs Memory-Enabled Agent Comparison
+
 ```mermaid
-graph TB
-    subgraph "Stateless Agent"
-        A1[User Request] --> B1[Process Request]
-        B1 --> C1[Generate Response]
-        C1 --> D1[Forget Everything]
-        D1 --> A1
+flowchart LR
+    subgraph "🔄 Stateless Agent Cycle"
+        direction TB
+        A1["`👤 **User Request**`"] 
+        B1["`⚙️ **Process Request**
+        No context available`"]
+        C1["`💬 **Generate Response**
+        Generic output`"]
+        D1["`🗑️ **Forget Everything**
+        Reset state`"]
+        
+        A1 --> B1 --> C1 --> D1
+        D1 -.-> A1
     end
     
-    subgraph "Memory-Enabled Agent"
-        A2[User Request] --> B2[Retrieve Context]
-        B2 --> C2[Process with History]
-        C2 --> D2[Generate Contextual Response]
-        D2 --> E2[Update Memory]
-        E2 --> F2[Learn from Interaction]
-        F2 --> A2
+    subgraph "🧠 Memory-Enabled Agent Cycle"
+        direction TB
+        A2["`👤 **User Request**`"]
+        B2["`📚 **Retrieve Context**
+        Access memory & history`"]
+        C2["`🎯 **Process with History**
+        Contextual understanding`"]
+        D2["`💡 **Generate Smart Response**
+        Personalized output`"]
+        E2["`💾 **Update Memory**
+        Store new insights`"]
         
-        subgraph "Memory Systems"
-            G2[Short-term Memory]
-            H2[Long-term Memory]
-            I2[Episodic Memory]
-            J2[Semantic Memory]
-            K2[Procedural Memory]
+        A2 --> B2 --> C2 --> D2 --> E2
+        E2 -.-> A2
+    end
+    
+    style A1 fill:#fce4ec,stroke:#d81b60,stroke-width:2px,color:#2d2d2d
+    style B1 fill:#ffebee,stroke:#d81b60,stroke-width:2px,color:#2d2d2d
+    style C1 fill:#fce4ec,stroke:#d81b60,stroke-width:2px,color:#2d2d2d
+    style D1 fill:#ffcdd2,stroke:#d81b60,stroke-width:2px,color:#2d2d2d
+    
+    style A2 fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#2d2d2d
+    style B2 fill:#f1f8e9,stroke:#4caf50,stroke-width:2px,color:#2d2d2d
+    style C2 fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#2d2d2d
+    style D2 fill:#c8e6c9,stroke:#4caf50,stroke-width:2px,color:#2d2d2d
+    style E2 fill:#a5d6a7,stroke:#4caf50,stroke-width:2px,color:#2d2d2d
+```
+
+#### ADK Memory Architecture Components
+
+```mermaid
+flowchart TD
+    subgraph "💾 Google ADK Memory System"
+        direction TB
+        
+        subgraph "🏃‍♂️ Short-Term Memory"
+            SS["`📝 **Session State**
+            Current conversation
+            Temporary context`"]
         end
         
-        B2 --> G2
-        B2 --> H2
-        E2 --> G2
-        E2 --> H2
-        F2 --> I2
-        F2 --> J2
-        F2 --> K2
+        subgraph "🧠 Long-Term Memory"
+            MS["`🗄️ **Memory Service**
+            Cross-session storage
+            Persistent knowledge`"]
+            
+            subgraph "Production Options"
+                IM["`💻 **InMemoryMemoryService**
+                Development & testing`"]
+                VM["`☁️ **VertexAiRagMemoryService**
+                Production & scale`"]
+            end
+        end
+        
+        subgraph "🔍 Memory Access"
+            MT["`🛠️ **load_memory_tool**
+            Search & retrieve
+            Knowledge integration`"]
+        end
+        
+        SS <--> MS
+        MS --> IM
+        MS --> VM
+        MS <--> MT
     end
     
-    style A1 fill:#ffcdd2
-    style B1 fill:#ffcdd2
-    style C1 fill:#ffcdd2
-    style D1 fill:#ffcdd2
+    style SS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#2d2d2d
+    style MS fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#2d2d2d
+    style IM fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#2d2d2d
+    style VM fill:#e0f2f1,stroke:#388e3c,stroke-width:2px,color:#2d2d2d
+    style MT fill:#fff8e1,stroke:#fbc02d,stroke-width:2px,color:#2d2d2d
+```
+
+#### Memory Types in Business Context
+
+```mermaid
+mindmap
+  root)🧠 Agent Memory Types(
+    🏃‍♂️ Working Memory
+      📝 Session State
+      💬 Current Conversation
+      🎯 Active Context
+      ⏱️ Temporary Storage
     
-    style A2 fill:#e8f5e8
-    style B2 fill:#e1f5fe
-    style C2 fill:#fff3e0
-    style D2 fill:#f3e5f5
-    style E2 fill:#e0f2f1
-    style F2 fill:#fff8e1
-    style G2 fill:#e3f2fd
-    style H2 fill:#f1f8e9
-    style I2 fill:#fce4ec
-    style J2 fill:#f3e5f5
-    style K2 fill:#e8f5e8
+    📚 Episodic Memory
+      🗓️ Past Interactions
+      📋 Event Sequences
+      🔄 Learning Patterns
+      📊 Outcome Tracking
+    
+    🗃️ Semantic Memory
+      📖 Domain Knowledge
+      🏢 Business Rules
+      📋 Procedures
+      🎓 Expertise
+    
+    👤 Autobiographical
+      🎨 User Preferences
+      📱 Communication Style
+      🔒 Personal History
+      🤝 Relationship Building
+    
+    ⚙️ Procedural Memory
+      🛠️ Learned Skills
+      📈 Best Practices
+      🔧 Tool Usage
+      🎯 Process Optimization
 ```
 
 ---
