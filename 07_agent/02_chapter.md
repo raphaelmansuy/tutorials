@@ -19,47 +19,45 @@ ADK is your new kitchen for building intelligent software. This chapter gives yo
 Think of ADK like a modern city with three distinct districts, each serving a specific purpose but all connected by a sophisticated transportation system:
 
 ```mermaid
-mindmap
-  root((ADK Architecture))
-    Agents
-      LLM Agents
-        Reasoning
-        Language Understanding
-        Dynamic Decision Making
-      Workflow Agents
-        Sequential Processing
-        Parallel Execution
-        Loop Orchestration
-      Custom Agents
-        Specialized Logic
-        External Integrations
-        Unique Behaviors
-    Tools
-      Function Tools
-        Custom Business Logic
-        API Integrations
-        Data Processing
-      Built-in Tools
-        Google Search
-        Code Execution
-        File Processing
-      Third-party Tools
-        LangChain Integration
-        CrewAI Tools
-        OpenAPI Specs
-    Runtime
-      Sessions
-        State Management
-        User Context
-        Conversation History
-      Memory
-        Long-term Storage
-        Retrieval Systems
-        Personalization
-      Deployment
-        Vertex AI Engine
-        Cloud Run
-        Local Development
+flowchart TD
+    subgraph agents["🤖 AGENTS"]
+        direction TB
+        A1["LLM Agents<br/>• Reasoning<br/>• Language Understanding<br/>• Dynamic Decision Making"]
+        A2["Workflow Agents<br/>• Sequential Processing<br/>• Parallel Execution<br/>• Loop Orchestration"]
+        A3["Custom Agents<br/>• Specialized Logic<br/>• External Integrations<br/>• Unique Behaviors"]
+    end
+    
+    subgraph tools["🔧 TOOLS"]
+        direction TB
+        T1["Function Tools<br/>• Custom Business Logic<br/>• API Integrations<br/>• Data Processing"]
+        T2["Built-in Tools<br/>• Google Search<br/>• Code Execution<br/>• File Processing"]
+        T3["Third-party Tools<br/>• LangChain Integration<br/>• CrewAI Tools<br/>• OpenAPI Specs"]
+    end
+    
+    subgraph runtime["☁️ RUNTIME"]
+        direction TB
+        R1["Sessions<br/>• State Management<br/>• User Context<br/>• Conversation History"]
+        R2["Memory<br/>• Long-term Storage<br/>• Retrieval Systems<br/>• Personalization"]
+        R3["Deployment<br/>• Vertex AI Engine<br/>• Cloud Run<br/>• Local Development"]
+    end
+    
+    agents -.-> tools
+    tools -.-> runtime
+    agents -.-> runtime
+    
+    classDef agentStyle fill:#e8f4fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef toolStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef runtimeStyle fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef subgraphAgent fill:#f0f8ff,stroke:#1976d2,stroke-width:3px,color:#0d47a1
+    classDef subgraphTool fill:#faf5ff,stroke:#7b1fa2,stroke-width:3px,color:#4a148c
+    classDef subgraphRuntime fill:#f8fff8,stroke:#388e3c,stroke-width:3px,color:#1b5e20
+    
+    class A1,A2,A3 agentStyle
+    class T1,T2,T3 toolStyle
+    class R1,R2,R3 runtimeStyle
+    class agents subgraphAgent
+    class tools subgraphTool
+    class runtime subgraphRuntime
 ```
 
 **Pause and Reflect:** *Before diving deeper, think about a complex business process in your organization. Can you identify parts that require reasoning (LLM Agents), parts that follow predictable steps (Workflow Agents), and parts that need specialized logic (Custom Agents)?*
