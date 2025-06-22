@@ -1,10 +1,16 @@
 # Generative AI Latest MCP 2025-06-18 Documentation for the Impatient: From Novice to Practitioner in Record Time
 
+> **Disclaimer**: This document provides technical guidance and implementation patterns for the Model Context Protocol (MCP) 2025-06-18 specification. Performance benefits and metrics mentioned are based on analysis of MCP's capabilities and may vary significantly based on implementation details, existing infrastructure, and organizational factors. 
+
 ## Why Your AI Integration Dreams Are Finally Within Reach
 
-Picture this: Maya, a technical lead at a healthcare startup, spent three months building custom connectors between her AI-powered patient management system and various data sources. Each integration required its own authentication system, error handling, and maintenance overhead. What should have been a straightforward AI implementation became a nightmare of fragmented APIs and security vulnerabilities.
+**Picture this**: Maya, a technical lead at a healthcare startup, spent three months building custom connectors between her AI-powered patient management system and various data sources. Each integration required its own authentication system, error handling, and maintenance overhead. What should have been a straightforward AI implementation became a nightmare of fragmented APIs and security vulnerabilities.
 
 Now imagine if there was a single protocol that could connect any AI model to any data source with enterprise-grade security built in. Welcome to the Model Context Protocol (MCP) 2025-06-18 specification—the breakthrough that transforms AI integration from months of custom development to days of standardized implementation.
+
+![Illustration of AI Integration Challenges](./images/mcp_illustration.jpeg)
+
+
 
 **Why does this matter right now?** The AI integration landscape has reached a critical inflection point. Companies are spending millions on custom integrations that break with every vendor API update. The June 18, 2025 MCP specification isn't just another protocol revision—it's the standardization moment that eliminates the N×M integration problem and creates a truly connected AI ecosystem.
 
@@ -21,65 +27,65 @@ The Model Context Protocol 2025-06-18 specification introduces five transformati
 ```mermaid
 flowchart TD
     A[AI Integration Challenge] --> B{MCP 2025-06-18<br/>Five Game-Changing Features}
-    
+
     B --> C[1 Structured Tool Output]
     B --> D[2 Interactive Elicitation]
     B --> E[3 OAuth 2.1 Security]
     B --> F[4 Resource Linking]
     B --> G[5 Protocol Version Headers]
-    
+
     C --> C1[Schema-Validated Responses]
     C1 --> C2[Type-Safe Integration]
-    C2 --> C3[70% Less Debugging Time]
-    
+    C2 --> C3[Reduced Debugging Time]
+
     D --> D1[Dynamic Conversations]
     D1 --> D2[Context-Aware Workflows]
-    D2 --> D3[45% Better User Experience]
-    
+    D2 --> D3[Improved User Experience]
+
     E --> E1[Resource Indicators RFC 8707]
     E1 --> E2[Token Binding & Scoping]
     E2 --> E3[Enterprise-Grade Security]
-    
+
     F --> F1[Connected Information]
     F1 --> F2[Contextual Navigation]
-    F2 --> F3[2.5 Hours Daily Saved]
-    
+    F2 --> F3[Enhanced Productivity]
+
     G --> G1[Version Negotiation]
     G1 --> G2[Compatibility Validation]
-    G2 --> G3[40% Fewer Integration Failures]
-    
+    G2 --> G3[Fewer Integration Failures]
+
     C3 --> H[Transformed AI Ecosystem]
     D3 --> H
     E3 --> H
     F3 --> H
     G3 --> H
-    
+
     H --> I[Predictable Responses]
     H --> J[Interactive Intelligence]
     H --> K[Enterprise Security]
     H --> L[Connected Workflows]
     H --> M[Reliable Integration]
-    
+
     style A fill:#ffebee,stroke:#d32f2f,stroke-width:2px
     style B fill:#e8f4fd,stroke:#1976d2,stroke-width:3px
     style H fill:#e8f5e8,stroke:#388e3c,stroke-width:3px
-    
+
     classDef featureBox fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     class C,D,E,F,G featureBox
-    
+
     classDef benefitBox fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
     class C1,C2,D1,D2,E1,E2,F1,F2,G1,G2 benefitBox
-    
+
     classDef impactBox fill:#e0f2f1,stroke:#00695c,stroke-width:2px
     class C3,D3,E3,F3,G3 impactBox
-    
+
     classDef outcomeBox fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
     class I,J,K,L,M outcomeBox
 ```
 
 **1. Structured Tool Output: Predictable AI Responses**
 
-**Why this matters:** AI integration failures cost enterprises an average of $2.1 million annually, with 67% of these failures stemming from unpredictable response formats. When an AI tool returns "Customer sentiment: mostly positive with some concerns" instead of a structured score, downstream systems break, reports fail, and business logic crashes.
+**Why this matters:** Unpredictable response formats are a major source of AI integration challenges. When an AI tool returns "Customer sentiment: mostly positive with some concerns" instead of a structured score, downstream systems break, reports fail, and business logic crashes. Enterprise teams report spending significant time debugging response parsing issues.
 
 **What it delivers:** The specification now mandates structured, schema-validated outputs from all tools. Every response follows a predefined format with type-safe data structures, confidence scores, and standardized metadata fields.
 
@@ -104,7 +110,7 @@ flowchart TD
 }
 ```
 
-This structured approach reduces debugging time by up to 70% because developers know exactly what format to expect.
+This structured approach can significantly reduce debugging time because developers know exactly what format to expect.
 
 **2. Elicitation: Interactive AI That Asks Smart Questions**
 
@@ -116,7 +122,7 @@ This structured approach reduces debugging time by up to 70% because developers 
 
 **3. OAuth Resource Server Classification with Enhanced Security**
 
-**Why this matters:** Enterprise AI deployments face a security paradox: they need access to sensitive data to provide value, but current authentication methods create massive security vulnerabilities. Token theft, privilege escalation, and unauthorized access cost organizations an average of $4.45 million per breach.
+**Why this matters:** Enterprise AI deployments face a security paradox: they need access to sensitive data to provide value, but current authentication methods create security vulnerabilities. According to IBM's 2024 Cost of Data Breach Report, the global average cost of a data breach is $4.88 million, with unauthorized access being a significant contributor to breach incidents.
 
 **What it delivers:** MCP servers are now classified as OAuth Resource Servers with protected resource metadata. This enables seamless integration with enterprise identity providers while maintaining security best practices and preventing the most common attack vectors.
 
@@ -124,7 +130,7 @@ This structured approach reduces debugging time by up to 70% because developers 
 
 **4. Resource Linking: Connected Information Ecosystems**
 
-**Why this matters:** Information silos destroy productivity and decision-making quality. When an AI analysis tool provides insights without connecting users to source documents, verification processes, or related resources, teams waste hours hunting for context. Research shows that knowledge workers spend 2.5 hours daily searching for information.
+**Why this matters:** Information silos destroy productivity and decision-making quality. When an AI analysis tool provides insights without connecting users to source documents, verification processes, or related resources, teams waste hours hunting for context. Studies consistently show that knowledge workers spend substantial time daily searching for information and context.
 
 **What it delivers:** Tools can now return not just data, but contextual links to related resources, creating interconnected information ecosystems that enhance user workflows and enable deeper investigation.
 
@@ -132,7 +138,7 @@ This structured approach reduces debugging time by up to 70% because developers 
 
 **5. Protocol Version Headers and Enhanced Validation**
 
-**Why this matters:** Version mismatches are the hidden cause of 40% of integration failures in distributed systems. When different components assume different protocol versions, subtle bugs emerge that are extremely difficult to diagnose. Features fail silently, data gets corrupted, and teams spend weeks debugging phantom issues.
+**Why this matters:** Version mismatches are a significant cause of integration failures in distributed systems. When different components assume different protocol versions, subtle bugs emerge that are extremely difficult to diagnose. Features fail silently, data gets corrupted, and teams spend considerable time debugging phantom issues.
 
 **What it delivers:** The specification now requires negotiated protocol versions to be specified via MCP-Protocol-Version headers in HTTP requests. This ensures compatibility and enables better error handling across different implementations.
 
@@ -142,8 +148,8 @@ This structured approach reduces debugging time by up to 70% because developers 
 
 The 2025-06-18 revision includes several important schema improvements:
 
-- **Enhanced _meta field usage** across additional interface types for better metadata handling
-- **Context field in CompletionRequest** enabling completion requests to include previously-resolved variables 
+- **Enhanced \_meta field usage** across additional interface types for better metadata handling
+- **Context field in CompletionRequest** enabling completion requests to include previously-resolved variables
 - **Title field for human-friendly display names** allowing programmatic identifiers to remain stable while improving user experience
 
 **Quick Assessment:** Which of these features would solve your biggest current AI integration challenge? Take a moment to identify the pain point that costs your team the most time or resources.
@@ -158,11 +164,11 @@ graph TD
     B --> C[MCP Server 1Database Connector]
     B --> D[MCP Server 2API Gateway]
     B --> E[MCP Server 3File System Access]
-    
+
     C --> F[PostgreSQL Database]
     D --> G[External APIs]
     E --> H[Local File System]
-    
+
     style A fill:#e8f4fd
     style B fill:#f3e8ff
     style C fill:#e8f5e8
@@ -194,8 +200,9 @@ Prompts are reusable templates that guide AI behavior for specific workflows. Th
 Sampling allows servers to request AI completions during execution. This powerful feature enables servers to leverage AI capabilities for complex analysis or decision-making within their operations.
 
 **Interactive Challenge:** If you're building a customer support AI, which pillar would you use to:
+
 - Access customer purchase history? (Answer: Resources)
-- Create support tickets? (Answer: Tools)  
+- Create support tickets? (Answer: Tools)
 - Generate response templates? (Answer: Prompts)
 - Analyze sentiment of customer messages? (Answer: Sampling)
 
@@ -219,24 +226,24 @@ flowchart TD
     H --> I[Type-Safe Results]
     I --> B
     B --> A
-    
+
     subgraph "Structured Output"
         J[Customer Data]
         K[Analysis Results]
         L[Confidence Scores]
         M[Audit Trail]
     end
-    
+
     F --> J
     F --> K
     F --> L
     F --> M
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style C fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     style G fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style I fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
+
     classDef structuredBox fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
     class J,K,L,M structuredBox
 ```
@@ -249,65 +256,77 @@ import { z } from "zod";
 
 const server = new McpServer({
   name: "customer-analytics-server",
-  version: "1.0.0"
+  version: "1.0.0",
 });
 
 // Define structured output schema
 const CustomerInsightSchema = z.object({
   customerId: z.string(),
   insights: z.object({
-    purchaseFrequency: z.enum(['high', 'medium', 'low']),
+    purchaseFrequency: z.enum(["high", "medium", "low"]),
     averageOrderValue: z.number(),
     riskScore: z.number().min(0).max(1),
-    preferredCategories: z.array(z.string())
+    preferredCategories: z.array(z.string()),
   }),
-  recommendations: z.array(z.object({
-    action: z.string(),
-    priority: z.enum(['urgent', 'high', 'medium', 'low']),
-    expectedImpact: z.string()
-  })),
+  recommendations: z.array(
+    z.object({
+      action: z.string(),
+      priority: z.enum(["urgent", "high", "medium", "low"]),
+      expectedImpact: z.string(),
+    })
+  ),
   metadata: z.object({
     analysisDate: z.string(),
     dataPoints: z.number(),
-    confidenceLevel: z.number()
-  })
+    confidenceLevel: z.number(),
+  }),
 });
 
 server.registerTool(
   "analyze_customer_behavior",
   {
     title: "Customer Behavior Analysis",
-    description: "Analyze customer behavior patterns and generate actionable insights",
+    description:
+      "Analyze customer behavior patterns and generate actionable insights",
     inputSchema: {
       customerId: z.string().describe("Unique customer identifier"),
-      analysisType: z.enum(['comprehensive', 'purchase_pattern', 'risk_assessment'])
+      analysisType: z.enum([
+        "comprehensive",
+        "purchase_pattern",
+        "risk_assessment",
+      ]),
     },
-    outputSchema: CustomerInsightSchema
+    outputSchema: CustomerInsightSchema,
   },
   async ({ customerId, analysisType }) => {
     // Simulate analysis processing
-    const analysisResult = await performCustomerAnalysis(customerId, analysisType);
-    
+    const analysisResult = await performCustomerAnalysis(
+      customerId,
+      analysisType
+    );
+
     return {
-      content: [{
-        type: "text",
-        text: `Customer analysis completed for ${customerId}`
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Customer analysis completed for ${customerId}`,
+        },
+      ],
       structuredContent: {
         customerId,
         insights: {
           purchaseFrequency: analysisResult.frequency,
           averageOrderValue: analysisResult.avgValue,
           riskScore: analysisResult.risk,
-          preferredCategories: analysisResult.categories
+          preferredCategories: analysisResult.categories,
         },
         recommendations: analysisResult.recommendations,
         metadata: {
           analysisDate: new Date().toISOString(),
           dataPoints: analysisResult.dataPointCount,
-          confidenceLevel: analysisResult.confidence
-        }
-      }
+          confidenceLevel: analysisResult.confidence,
+        },
+      },
     };
   }
 );
@@ -355,10 +374,10 @@ def analyze_customer_behavior(
     analysis_type: Literal['comprehensive', 'purchase_pattern', 'risk_assessment']
 ) -> CustomerAnalysisResult:
     """Analyze customer behavior patterns and generate actionable insights"""
-    
+
     # Simulate analysis processing
     analysis_result = perform_customer_analysis(customer_id, analysis_type)
-    
+
     return CustomerAnalysisResult(
         customer_id=customer_id,
         insights=CustomerInsights(
@@ -395,41 +414,41 @@ Interactive elicitation transforms static AI tools into dynamic conversations. T
 flowchart TD
     A[User Request: Generate Report] --> B[MCP Server Processing]
     B --> C{Requires Sensitive Data?}
-    
+
     C -->|No| D[Generate Standard Report]
     C -->|Yes| E[Trigger Elicitation]
-    
+
     E --> F[Present Consent Dialog]
     F --> G{User Response}
-    
+
     G -->|Deny| H[Return Access Denied]
     G -->|Approve| I[Validate Justification]
-    
+
     I --> J[Log Access Request]
     J --> K[Generate Sensitive Report]
     K --> L[Include Audit Trail]
-    
+
     D --> M[Return Results]
     H --> M
     L --> M
-    
+
     subgraph "Elicitation Dialog"
         N[Confirm Access Permission]
         O[Business Justification]
         P[Data Retention Period]
         Q[Additional Context]
     end
-    
+
     F --> N
     F --> O
     F --> P
     F --> Q
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style G fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     style J fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    
+
     classDef elicitationBox fill:#fce4ec,stroke:#c2185b,stroke-width:2px
     class N,O,P,Q elicitationBox
 ```
@@ -441,16 +460,19 @@ server.registerTool(
   "generate_customer_report",
   {
     title: "Customer Report Generator",
-    description: "Generate comprehensive customer reports with privacy controls",
+    description:
+      "Generate comprehensive customer reports with privacy controls",
     inputSchema: {
       customerId: z.string(),
-      reportType: z.enum(['summary', 'detailed', 'compliance'])
-    }
+      reportType: z.enum(["summary", "detailed", "compliance"]),
+    },
   },
   async ({ customerId, reportType }, context) => {
     // Check if sensitive data access is required
-    const requiresSensitiveData = await checkSensitiveDataRequirement(reportType);
-    
+    const requiresSensitiveData = await checkSensitiveDataRequirement(
+      reportType
+    );
+
     if (requiresSensitiveData) {
       // Use elicitation to get user consent
       const consentResult = await context.elicit({
@@ -458,50 +480,59 @@ server.registerTool(
         requestedSchema: {
           type: "object",
           properties: {
-            confirmAccess: { 
+            confirmAccess: {
               type: "boolean",
-              description: "Confirm access to sensitive customer data"
+              description: "Confirm access to sensitive customer data",
             },
             accessReason: {
-              type: "string", 
-              description: "Business justification for data access"
+              type: "string",
+              description: "Business justification for data access",
             },
             dataRetentionPeriod: {
               type: "string",
               enum: ["24_hours", "7_days", "30_days"],
-              description: "How long will this data be retained?"
-            }
+              description: "How long will this data be retained?",
+            },
           },
-          required: ["confirmAccess", "accessReason"]
-        }
+          required: ["confirmAccess", "accessReason"],
+        },
       });
-      
-      if (consentResult.action !== "accept" || !consentResult.content.confirmAccess) {
+
+      if (
+        consentResult.action !== "accept" ||
+        !consentResult.content.confirmAccess
+      ) {
         return {
-          content: [{
-            type: "text",
-            text: "Report generation cancelled - sensitive data access denied"
-          }]
+          content: [
+            {
+              type: "text",
+              text: "Report generation cancelled - sensitive data access denied",
+            },
+          ],
         };
       }
-      
+
       // Log access for compliance
       await logDataAccess(customerId, consentResult.content.accessReason);
     }
-    
+
     const reportData = await generateReport(customerId, reportType);
-    
+
     return {
-      content: [{
-        type: "text",
-        text: `Customer report generated successfully`
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Customer report generated successfully`,
+        },
+      ],
       structuredContent: reportData,
-      resourceLinks: [{
-        type: "compliance_audit",
-        uri: `mcp://audit/customer-access/${customerId}`,
-        title: "Access Audit Trail"
-      }]
+      resourceLinks: [
+        {
+          type: "compliance_audit",
+          uri: `mcp://audit/customer-access/${customerId}`,
+          title: "Access Audit Trail",
+        },
+      ],
     };
   }
 );
@@ -525,7 +556,7 @@ class ConsentRequest(BaseModel):
     confirm_access: bool = Field(description="Confirm access to sensitive customer data")
     access_reason: str = Field(description="Business justification for data access")
     data_retention_period: Literal["24_hours", "7_days", "30_days"] = Field(
-        default="24_hours", 
+        default="24_hours",
         description="How long will this data be retained?"
     )
 
@@ -536,17 +567,17 @@ async def generate_customer_report(
     ctx: Context
 ) -> dict:
     """Generate comprehensive customer reports with privacy controls"""
-    
+
     # Check if sensitive data access is required
     requires_sensitive_data = await check_sensitive_data_requirement(report_type)
-    
+
     if requires_sensitive_data:
         # Use elicitation to get user consent
         consent_result = await ctx.elicit(
             message="This report includes sensitive customer data. Please confirm access permissions.",
             schema=ConsentRequest
         )
-        
+
         match consent_result:
             case AcceptedElicitation(data=data):
                 if not data.confirm_access:
@@ -558,7 +589,7 @@ async def generate_customer_report(
                     }
                 # Log access for compliance
                 await log_data_access(customer_id, data.access_reason)
-                
+
             case DeclinedElicitation() | CancelledElicitation():
                 return {
                     "content": [{
@@ -566,9 +597,9 @@ async def generate_customer_report(
                         "text": "Report generation cancelled - sensitive data access denied"
                     }]
                 }
-    
+
     report_data = await generate_report(customer_id, report_type)
-    
+
     return {
         "content": [{
             "type": "text",
@@ -614,26 +645,26 @@ sequenceDiagram
     participant MCPClient as MCP Client
     participant MCPServer as MCP Server
     participant Resource as Protected Resource
-    
+
     Note over Client,MCPServer: OAuth 2.1 Authorization Flow with Resource Indicators
-    
+
     Client->>AuthServer: Authorization Request<br/>+ resource parameter<br/>(mcp://analytics-server)
-    
+
     rect rgb(255, 248, 220)
     Note over AuthServer: Validate client credentials<br/>& resource parameter
     AuthServer-->>Client: Authorization Code
     end
-    
+
     Client->>AuthServer: Token Request<br/>+ authorization code<br/>+ resource indicator
-    
+
     rect rgb(240, 248, 255)
     Note over AuthServer: Issue token bound to<br/>specific MCP server resource
     AuthServer-->>Client: Access Token + Metadata<br/>audience: mcp-analytics-server<br/>resource: mcp://analytics-server
     end
-    
+
     Client->>MCPClient: Initialize MCP Connection<br/>+ Bearer Token
     MCPClient->>MCPServer: MCP Request<br/>Authorization: Bearer {token}<br/>MCP-Protocol-Version: 2025-06-18
-    
+
     rect rgb(248, 255, 248)
     Note over MCPServer: Multi-layer Security Validation
     MCPServer->>MCPServer: 1. Validate JWT Signature
@@ -641,27 +672,27 @@ sequenceDiagram
     MCPServer->>MCPServer: 3. Check Resource Indicator
     MCPServer->>MCPServer: 4. Validate Required Scopes
     end
-    
+
     alt Token Validation Success
         MCPServer->>Resource: Access Protected Data
         Resource-->>MCPServer: Return Data
-        
+
         rect rgb(255, 240, 245)
         Note over MCPServer: Audit & Compliance Logging
         MCPServer->>MCPServer: Log Access Event<br/>User: {sub}<br/>Resource: {resource}<br/>Timestamp: {now}
         end
-        
+
         MCPServer-->>MCPClient: Structured Response<br/>+ Audit Trail Reference
         MCPClient-->>Client: Success Response
-        
+
     else Invalid Token/Insufficient Permissions
         MCPServer-->>MCPClient: HTTP 401/403 Error<br/>+ Error Details
         MCPClient-->>Client: Authentication/Authorization Error
-        
+
     else Sensitive Operation Detected
         MCPServer->>Client: Elicitation Request<br/>Additional Approval Required
         Client-->>MCPServer: Manager Approval + Justification
-        
+
         opt Approval Granted
             MCPServer->>Resource: Execute Sensitive Operation
             Resource-->>MCPServer: Return Sensitive Data
@@ -682,30 +713,30 @@ flowchart TD
     C --> D[MCP Client]
     D --> E[Bearer Token Validation]
     E --> F{Valid Token?}
-    
+
     F -->|No| G[Return 401 Unauthorized]
     F -->|Yes| H[Extract Claims & Scopes]
-    
+
     H --> I{Resource Indicator Valid?}
     I -->|No| J[Return 403 Forbidden]
     I -->|Yes| K{Required Scopes Present?}
-    
+
     K -->|No| L[Return 403 Insufficient Scope]
     K -->|Yes| M[Process Request]
-    
+
     M --> N{Sensitive Operation?}
     N -->|Yes| O[Additional Approval Required]
     N -->|No| P[Execute Tool]
-    
+
     O --> Q[Manager Consent Flow]
     Q --> R{Approved?}
     R -->|No| S[Access Denied]
     R -->|Yes| T[Execute with Audit Trail]
-    
+
     P --> U[Return Results]
     S --> U
     T --> U
-    
+
     subgraph "Security Layers"
         V[JWT Signature Validation]
         W[Audience Verification]
@@ -713,18 +744,18 @@ flowchart TD
         Y[Scope Authorization]
         Z[Audit Logging]
     end
-    
+
     E --> V
     E --> W
     I --> X
     K --> Y
     T --> Z
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style E fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     style M fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
+
     classDef securityBox fill:#ffebee,stroke:#d32f2f,stroke-width:2px
     class V,W,X,Y,Z securityBox
 ```
@@ -744,9 +775,9 @@ const server = new McpServer({
       issuer: "https://auth.company.com",
       audience: "mcp-analytics-server",
       algorithms: ["RS256"],
-      resourceIndicatorRequired: true  // New 2025-06-18 requirement
-    }
-  }
+      resourceIndicatorRequired: true, // New 2025-06-18 requirement
+    },
+  },
 });
 
 // OAuth 2.1 middleware with Resource Indicators support
@@ -755,32 +786,33 @@ server.addMiddleware("security", async (request, next) => {
   if (!authHeader?.startsWith("Bearer ")) {
     throw new Error("Missing or invalid authorization header");
   }
-  
+
   const token = authHeader.substring(7);
-  
+
   try {
     const decoded = jwt.verify(token, getPublicKey(), {
       algorithms: ["RS256"],
       audience: "mcp-analytics-server",
-      issuer: "https://auth.company.com"
+      issuer: "https://auth.company.com",
     });
-    
+
     // Verify Resource Indicators (RFC 8707) - New requirement
     if (!decoded.resource || decoded.resource !== request.serverUri) {
-      throw new Error("Invalid resource indicator - token not intended for this server");
+      throw new Error(
+        "Invalid resource indicator - token not intended for this server"
+      );
     }
-    
+
     // Verify required scopes
     const requiredScopes = getRequiredScopes(request.method);
     const tokenScopes = decoded.scope?.split(" ") || [];
-    
-    if (!requiredScopes.every(scope => tokenScopes.includes(scope))) {
+
+    if (!requiredScopes.every((scope) => tokenScopes.includes(scope))) {
       throw new Error("Insufficient permissions");
     }
-    
+
     request.user = decoded;
     return await next();
-    
   } catch (error) {
     throw new Error(`Authentication failed: ${error.message}`);
   }
@@ -793,61 +825,72 @@ server.registerTool(
     description: "Access sensitive customer analytics with full audit trail",
     inputSchema: {
       query: z.string(),
-      timeRange: z.enum(['1d', '7d', '30d', '90d'])
+      timeRange: z.enum(["1d", "7d", "30d", "90d"]),
     },
     requiresAuth: true,
-    requiredScopes: ['analytics:read', 'customer:sensitive']
+    requiredScopes: ["analytics:read", "customer:sensitive"],
   },
   async ({ query, timeRange }, context) => {
     const userRole = context.request.user.role;
-    
+
     // Additional verification for highly sensitive operations
-    if (query.includes('pii') || query.includes('financial')) {
+    if (query.includes("pii") || query.includes("financial")) {
       const approvalResult = await context.elicit({
-        message: "This query accesses highly sensitive data. Additional approval required.",
+        message:
+          "This query accesses highly sensitive data. Additional approval required.",
         requestedSchema: {
           type: "object",
           properties: {
             managerApproval: { type: "boolean" },
             approvalCode: { type: "string" },
-            businessJustification: { type: "string" }
+            businessJustification: { type: "string" },
           },
-          required: ["managerApproval", "businessJustification"]
-        }
+          required: ["managerApproval", "businessJustification"],
+        },
       });
-      
+
       if (!approvalResult.content.managerApproval) {
         return {
-          content: [{
-            type: "text", 
-            text: "Access denied - manager approval required"
-          }],
-          isError: true
+          content: [
+            {
+              type: "text",
+              text: "Access denied - manager approval required",
+            },
+          ],
+          isError: true,
         };
       }
     }
-    
-    const results = await executeSecureQuery(query, timeRange, context.request.user);
-    
+
+    const results = await executeSecureQuery(
+      query,
+      timeRange,
+      context.request.user
+    );
+
     return {
-      content: [{
-        type: "text",
-        text: "Sensitive analytics query completed"
-      }],
+      content: [
+        {
+          type: "text",
+          text: "Sensitive analytics query completed",
+        },
+      ],
       structuredContent: {
         results: results.data,
         metadata: {
           executedBy: context.request.user.sub,
           executedAt: new Date().toISOString(),
           query: query,
-          auditId: results.auditId
-        }
+          auditId: results.auditId,
+        },
       },
-      resourceLinks: [{
-        type: "audit_trail",
-        uri: `mcp://security/audit/${results.auditId}`,
-        title: "Query Audit Trail"
-      }]
+      resourceLinks: [
+        {
+          type: "audit_trail",
+          uri: `mcp://security/audit/${results.auditId}`,
+          title: "Query Audit Trail",
+        },
+      ],
     };
   }
 );
@@ -898,32 +941,32 @@ auth_settings = AuthSettings(
 
 class CustomOAuthProvider(OAuthAuthorizationServerProvider):
     """Custom OAuth provider implementing resource indicators"""
-    
+
     async def validate_token(self, token: str, server_uri: str) -> dict:
         """Validate token with Resource Indicators support"""
         try:
             # Decode and verify JWT token
             decoded = jwt.decode(
-                token, 
-                get_public_key(), 
+                token,
+                get_public_key(),
                 algorithms=["RS256"],
                 audience="mcp-analytics-server",
                 issuer="https://auth.company.com"
             )
-            
+
             # Verify Resource Indicators (RFC 8707) - New requirement
             if not decoded.get('resource') or decoded['resource'] != server_uri:
                 raise ValueError("Invalid resource indicator - token not intended for this server")
-            
+
             # Verify required scopes
             required_scopes = ["analytics:read", "customer:sensitive"]
             token_scopes = decoded.get('scope', '').split(' ')
-            
+
             if not all(scope in token_scopes for scope in required_scopes):
                 raise ValueError("Insufficient permissions")
-            
+
             return decoded
-            
+
         except Exception as error:
             raise ValueError(f"Authentication failed: {error}")
 
@@ -937,34 +980,34 @@ async def access_sensitive_analytics(
     ctx: Context
 ) -> dict:
     """Access sensitive analytics with enhanced security"""
-    
+
     # Get authenticated user from context
     access_token = ctx.request.state.access_token if hasattr(ctx.request, 'state') else None
     if not access_token:
         raise ValueError("Authentication required")
-    
+
     user_info = access_token.user_info
     user_role = user_info.get('role')
-    
+
     # Additional verification for highly sensitive operations
     if 'pii' in query.lower() or 'financial' in query.lower():
         approval_result = await ctx.elicit(
             message="This query accesses highly sensitive data. Additional approval required.",
             schema=ManagerApprovalRequest
         )
-        
+
         if not approval_result.data.manager_approval:
             return {
                 "content": [{
-                    "type": "text", 
+                    "type": "text",
                     "text": "Access denied - manager approval required"
                 }],
                 "is_error": True
             }
-    
+
     # Execute secure query
     results = await execute_secure_query(query, time_range, user_info)
-    
+
     return {
         "content": [{
             "type": "text",
@@ -998,7 +1041,7 @@ async def execute_secure_query(query: str, time_range: str, user_info: dict):
         def __init__(self):
             self.data = {"sample": "data"}
             self.audit_id = "audit_123"
-    
+
     return QueryResult()
 ```
 
@@ -1019,54 +1062,54 @@ sequenceDiagram
     participant MCPClient as MCP Client
     participant MCPServer as MCP Server
     participant BusinessLogic as Business Logic
-    
+
     Note over User,BusinessLogic: Interactive Elicitation Flow - Customer Onboarding Example
-    
+
     User->>MCPClient: Start Customer Onboarding
     MCPClient->>MCPServer: Tool Request: onboard_new_customer()
-    
+
     rect rgb(255, 248, 220)
     Note over MCPServer: Initial Data Collection
     MCPServer->>BusinessLogic: Process Initial Request
     BusinessLogic-->>MCPServer: Requires Basic Information
     MCPServer->>MCPClient: Elicitation Request<br/>Schema: BasicInfoRequest<br/>(company_name, industry, employee_count)
     end
-    
+
     MCPClient->>User: Present Form: Company Details
     User-->>MCPClient: Input: "TechCorp", "healthcare", "201-1000"
     MCPClient->>MCPServer: Elicitation Response (Accepted)
-    
+
     rect rgb(240, 248, 255)
     Note over MCPServer: Industry-Specific Adaptation
     MCPServer->>BusinessLogic: Analyze Industry: "healthcare"
     BusinessLogic-->>MCPServer: Healthcare-Specific Questions Required
     MCPServer->>MCPClient: Elicitation Request<br/>Schema: HealthcareQuestions<br/>(HIPAA compliance, patient data handling)
     end
-    
+
     MCPClient->>User: Present Healthcare-Specific Form
     User-->>MCPClient: Input: compliance_requirements=["HIPAA", "SOC2"]<br/>patient_data_handling=true
     MCPClient->>MCPServer: Elicitation Response (Accepted)
-    
+
     rect rgb(248, 255, 248)
     Note over MCPServer: Size-Based Configuration
     MCPServer->>BusinessLogic: Analyze Size: "201-1000" employees
     BusinessLogic-->>MCPServer: Enterprise Features Available
     MCPServer->>MCPClient: Elicitation Request<br/>Schema: EnterpriseConfigRequest<br/>(SSO requirements, compliance certifications)
     end
-    
+
     MCPClient->>User: Present Enterprise Configuration Options
     User-->>MCPClient: Input: sso_required=true<br/>compliance_level="high"
     MCPClient->>MCPServer: Elicitation Response (Accepted)
-    
+
     rect rgb(255, 240, 245)
     Note over MCPServer: Final Processing & Results
     MCPServer->>BusinessLogic: Generate Customized Plan<br/>Industry: Healthcare<br/>Size: Enterprise<br/>Compliance: High
     BusinessLogic-->>MCPServer: Onboarding Plan Created
     end
-    
+
     MCPServer-->>MCPClient: Final Response<br/>+ Structured Onboarding Plan<br/>+ Resource Links<br/>+ Timeline
     MCPClient-->>User: Display Customized Onboarding Plan
-    
+
     alt User Cancels at Any Step
         User-->>MCPClient: Cancel/Decline Elicitation
         MCPClient->>MCPServer: Elicitation Response (Declined)
@@ -1083,52 +1126,52 @@ The following flowchart shows how the elicitation system adapts based on user re
 flowchart TD
     A[Start Onboarding] --> B[Basic Information Request]
     B --> C{User Response}
-    
+
     C -->|Cancel| D[End Process]
     C -->|Complete| E[Analyze Industry Type]
-    
+
     E --> F{Industry = Healthcare?}
     F -->|Yes| G[HIPAA Compliance Dialog]
     F -->|No| H{Industry = Finance?}
-    
+
     H -->|Yes| I[SOX Compliance Dialog]
     H -->|No| J[Standard Integration Dialog]
-    
+
     G --> K[Compliance Requirements Collected]
     I --> K
     J --> K
-    
+
     K --> L[Risk Assessment Based on Size]
     L --> M{Company Size > 200?}
-    
+
     M -->|Yes| N[Enterprise Setup Dialog]
     M -->|No| O[SMB Setup Dialog]
-    
+
     N --> P[Advanced Configuration Options]
     O --> Q[Simplified Configuration]
-    
+
     P --> R[Generate Complete Profile]
     Q --> R
     R --> S[Setup Confirmation]
     S --> T[Return Onboarding Results]
-    
+
     subgraph "Adaptive Flows"
         U[Healthcare Specific]
         V[Financial Specific]
         W[Enterprise Features]
         X[SMB Optimizations]
     end
-    
+
     G --> U
     I --> V
     N --> W
     O --> X
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style L fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     style R fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
+
     classDef adaptiveBox fill:#e0f2f1,stroke:#00695c,stroke-width:2px
     class U,V,W,X adaptiveBox
 ```
@@ -1140,7 +1183,8 @@ server.registerTool(
   "onboard_new_customer",
   {
     title: "Customer Onboarding Wizard",
-    description: "Interactive customer onboarding with progressive data collection"
+    description:
+      "Interactive customer onboarding with progressive data collection",
   },
   async (initialData, context) => {
     // Start with basic information
@@ -1150,46 +1194,53 @@ server.registerTool(
         type: "object",
         properties: {
           companyName: { type: "string" },
-          industry: { 
+          industry: {
             type: "string",
-            enum: ["technology", "healthcare", "finance", "retail", "manufacturing", "other"]
+            enum: [
+              "technology",
+              "healthcare",
+              "finance",
+              "retail",
+              "manufacturing",
+              "other",
+            ],
           },
-          employeeCount: { 
+          employeeCount: {
             type: "string",
-            enum: ["1-10", "11-50", "51-200", "201-1000", "1000+"]
-          }
+            enum: ["1-10", "11-50", "51-200", "201-1000", "1000+"],
+          },
         },
-        required: ["companyName", "industry"]
-      }
+        required: ["companyName", "industry"],
+      },
     });
-    
+
     if (basicInfo.action !== "accept") {
       return { content: [{ type: "text", text: "Onboarding cancelled" }] };
     }
-    
+
     // Customize follow-up questions based on industry
     let additionalQuestions = {};
     if (basicInfo.content.industry === "healthcare") {
       additionalQuestions = {
         complianceRequirements: {
           type: "array",
-          items: { enum: ["HIPAA", "GDPR", "SOC2", "ISO27001"] }
+          items: { enum: ["HIPAA", "GDPR", "SOC2", "ISO27001"] },
         },
-        patientDataHandling: { type: "boolean" }
+        patientDataHandling: { type: "boolean" },
       };
     } else if (basicInfo.content.industry === "finance") {
       additionalQuestions = {
         regulatoryFramework: {
-          type: "array", 
-          items: { enum: ["PCI-DSS", "SOX", "GDPR", "PSD2"] }
+          type: "array",
+          items: { enum: ["PCI-DSS", "SOX", "GDPR", "PSD2"] },
         },
-        transactionVolume: { 
+        transactionVolume: {
           type: "string",
-          enum: ["low", "medium", "high", "enterprise"]
-        }
+          enum: ["low", "medium", "high", "enterprise"],
+        },
       };
     }
-    
+
     const detailedInfo = await context.elicit({
       message: `Great! Let's customize your setup for the ${basicInfo.content.industry} industry.`,
       requestedSchema: {
@@ -1198,29 +1249,33 @@ server.registerTool(
           ...additionalQuestions,
           preferredContactMethod: {
             type: "string",
-            enum: ["email", "slack", "teams", "phone"]
-          }
-        }
-      }
+            enum: ["email", "slack", "teams", "phone"],
+          },
+        },
+      },
     });
-    
+
     // Generate customized onboarding plan
     const onboardingPlan = await createOnboardingPlan({
       ...basicInfo.content,
-      ...detailedInfo.content
+      ...detailedInfo.content,
     });
-    
+
     return {
-      content: [{
-        type: "text",
-        text: `Welcome ${basicInfo.content.companyName}! Your customized onboarding plan is ready.`
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Welcome ${basicInfo.content.companyName}! Your customized onboarding plan is ready.`,
+        },
+      ],
       structuredContent: onboardingPlan,
-      resourceLinks: [{
-        type: "onboarding_checklist",
-        uri: `mcp://onboarding/checklist/${onboardingPlan.id}`,
-        title: "Your Onboarding Checklist"
-      }]
+      resourceLinks: [
+        {
+          type: "onboarding_checklist",
+          uri: `mcp://onboarding/checklist/${onboardingPlan.id}`,
+          title: "Your Onboarding Checklist",
+        },
+      ],
     };
   }
 );
@@ -1259,18 +1314,18 @@ class GeneralQuestions(BaseModel):
 @mcp.tool()
 async def onboard_new_customer(ctx: Context) -> dict:
     """Interactive customer onboarding with progressive data collection"""
-    
+
     # Start with basic information
     basic_info_result = await ctx.elicit(
         message="Let's start your customer onboarding process",
         schema=BasicInfoRequest
     )
-    
+
     if not isinstance(basic_info_result, AcceptedElicitation):
         return {"content": [{"type": "text", "text": "Onboarding cancelled"}]}
-    
+
     basic_info = basic_info_result.data
-    
+
     # Customize follow-up questions based on industry
     if basic_info.industry == "healthcare":
         detailed_info_result = await ctx.elicit(
@@ -1287,18 +1342,18 @@ async def onboard_new_customer(ctx: Context) -> dict:
             message=f"Great! Let's customize your setup for the {basic_info.industry} industry.",
             schema=GeneralQuestions
         )
-    
+
     if not isinstance(detailed_info_result, AcceptedElicitation):
         return {"content": [{"type": "text", "text": "Onboarding cancelled"}]}
-    
+
     detailed_info = detailed_info_result.data
-    
+
     # Generate customized onboarding plan
     onboarding_plan = await create_onboarding_plan({
         **basic_info.dict(),
         **detailed_info.dict()
     })
-    
+
     return {
         "content": [{
             "type": "text",
@@ -1334,20 +1389,20 @@ flowchart TD
     B --> C[Start Timer]
     C --> D[Log Request Start]
     D --> E[Execute Tool Function]
-    
+
     E --> F{Success?}
     F -->|Yes| G[Log Success Metrics]
     F -->|No| H[Log Error Details]
-    
+
     G --> I[Calculate Duration]
     H --> I
     I --> J[Add Custom Metrics]
     J --> K[Structured Logging Output]
-    
+
     K --> L[Log Aggregation System]
     L --> M[Monitoring Dashboard]
     L --> N[Alert System]
-    
+
     subgraph "Monitoring Data"
         O[Request ID & Timing]
         P[User Context]
@@ -1355,33 +1410,33 @@ flowchart TD
         R[Performance Metrics]
         S[Security Events]
     end
-    
+
     D --> O
     G --> P
     H --> Q
     I --> R
     E --> S
-    
+
     subgraph "Outputs"
         T[JSON Logs]
         U[File Logs]
         V[Console Output]
         W[External Systems]
     end
-    
+
     K --> T
     K --> U
     K --> V
     L --> W
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style M fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     style N fill:#ffebee,stroke:#d32f2f,stroke-width:2px
-    
+
     classDef dataBox fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     class O,P,Q,R,S dataBox
-    
+
     classDef outputBox fill:#e0f2f1,stroke:#00695c,stroke-width:2px
     class T,U,V,W outputBox
 ```
@@ -1404,11 +1459,11 @@ def generate_request_id() -> str:
 
 class MonitoringMiddleware:
     """Middleware for comprehensive request monitoring"""
-    
+
     async def __call__(self, request: Any, call_next):
         start_time = time.time()
         request_id = generate_request_id()
-        
+
         # Log request start
         logger.info("MCP request started", extra={
             "request_id": request_id,
@@ -1416,10 +1471,10 @@ class MonitoringMiddleware:
             "user": getattr(request, 'user', {}).get('sub') if hasattr(request, 'user') else None,
             "server_version": mcp.version
         })
-        
+
         try {
             response = await call_next(request)
-            
+
             # Log successful completion
             duration = time.time() - start_time
             logger.info("MCP request completed", extra={
@@ -1427,9 +1482,9 @@ class MonitoringMiddleware:
                 "duration_ms": round(duration * 1000, 2),
                 "success": True
             })
-            
+
             return response
-            
+
         } catch (error) {
             # Log errors with context
             duration = time.time() - start_time
@@ -1439,23 +1494,23 @@ class MonitoringMiddleware:
                 "error": str(error),
                 "error_type": type(error).__name__
             }, exc_info=True)
-            
+
             raise error
 
 # Apply monitoring to all tools
 @mcp.tool()
 async def monitored_tool_example(data: str, ctx: Context) -> dict:
     """Example tool with built-in monitoring"""
-    
+
     # Add custom metrics
     logger.info("Processing data", extra={
         "data_length": len(data),
         "tool_name": "monitored_tool_example"
     })
-    
+
     # Simulate processing
     await asyncio.sleep(0.1)
-    
+
     return {
         "content": [{
             "type": "text",
@@ -1504,19 +1559,21 @@ LOGGING_CONFIG = {
 logging.config.dictConfig(LOGGING_CONFIG)
 ```
 
-## Real-World Success Stories: MCP in Production
+## Real-World Implementation Patterns: MCP in Practice
 
-### Healthcare: 45% Improvement in Patient Care Coordination
+_Note: The following examples represent typical implementation patterns and potential benefits based on MCP's capabilities. Actual performance improvements will vary based on specific implementations, existing infrastructure, and organizational factors._
 
-A major hospital network implemented MCP to connect their electronic health records, appointment systems, and patient communication platforms. The results exceeded expectations:
+### Healthcare: Improved Patient Care Coordination
 
-- **45% reduction in care coordination errors** through standardized data access
-- **60% faster response times** for patient inquiries via automated triage
+Healthcare organizations implementing MCP to connect electronic health records, appointment systems, and patient communication platforms report several benefits:
+
+- **Reduced care coordination errors** through standardized data access
+- **Faster response times** for patient inquiries via automated triage
 - **Seamless integration** between EHR systems, lab results, and physician notifications
 
-The key was using MCP's elicitation feature for progressive symptom assessment and resource linking to connect patients with relevant educational materials and specialists.
+The key success factors include using MCP's elicitation feature for progressive symptom assessment and resource linking to connect patients with relevant educational materials and specialists.
 
-### Financial Services: Real-Time Risk Assessment
+### Financial Services: Enhanced Risk Assessment
 
 A multinational bank leveraged MCP to create a unified risk assessment platform that saved millions in potential losses:
 
@@ -1585,25 +1642,25 @@ flowchart TD
     A[Phase 1: Environment Setup] --> B[Choose Integration Target]
     B --> C[Set Up Development Environment]
     C --> D[Configure Security Foundation]
-    
+
     D --> E[Phase 2: Core Implementation]
     E --> F[Build First Tool]
     F --> G[Add Resource Access]
     G --> H[Implement Elicitation]
     H --> I[Test Thoroughly]
-    
+
     I --> J[Phase 3: Production Readiness]
     J --> K[Security Audit]
     K --> L[Add Monitoring]
     L --> M[Create Documentation]
     M --> N[Deploy to Staging]
-    
+
     N --> O[Phase 4: Integration & Optimization]
     O --> P[Client Integration]
     P --> Q[User Testing]
     Q --> R[Performance Optimization]
     R --> S[Plan Expansion]
-    
+
     subgraph "Success Metrics"
         T[Protocol Compliance ✅]
         U[OAuth 2.1 Working ✅]
@@ -1611,18 +1668,18 @@ flowchart TD
         W[Schema Validation ✅]
         X[Team Adoption ✅]
     end
-    
+
     S --> T
     S --> U
     S --> V
     S --> W
     S --> X
-    
+
     style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     style J fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     style O fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
+
     classDef metricBox fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
     class T,U,V,W,X metricBox
 ```
@@ -1659,7 +1716,7 @@ flowchart TD
 ### Success Metrics
 
 - ✅ Server responds correctly to all MCP protocol messages
-- ✅ OAuth 2.1 authentication works with Resource Indicators
+- ✅ OAuth 2.1 authentication works with Resource Indicators (if implemented)
 - ✅ Elicitation provides smooth, intuitive user interactions
 - ✅ Structured outputs are schema-compliant and validated
 - ✅ At least three colleagues can successfully use the integration
@@ -1667,43 +1724,68 @@ flowchart TD
 ### Bonus Achievements
 
 - 🏆 Integrate with existing team tools used daily
-- 🏆 Implement resource linking between related data sources  
+- 🏆 Implement resource linking between related data sources
 - 🏆 Add sampling for AI-powered analysis during execution
 - 🏆 Contribute your implementation to the open-source community
 
 ## The Future Starts Now: Your MCP Journey
 
-The Model Context Protocol 2025-06-18 specification represents more than a technical upgrade—it's the foundation for the next generation of AI-powered applications. With structured tool outputs, interactive elicitation, enterprise-grade security, and connected resource ecosystems, MCP eliminates the barriers that have limited AI integration for years.
+The Model Context Protocol 2025-06-18 specification represents a significant advancement in AI integration standards. With structured tool outputs, interactive elicitation, enhanced security options, and connected resource ecosystems, MCP addresses many of the barriers that have complicated AI integration.
 
-Companies implementing MCP today are building tomorrow's competitive advantages. Block reduced mechanical tasks by 40%. Healthcare systems improved care coordination by 45%. Manufacturing plants cut downtime by 35%. The pattern is clear: MCP implementations deliver measurable business value quickly.
+Organizations implementing MCP report improved development velocity and more reliable integrations. The standardized approach can reduce the complexity of connecting AI systems to existing data sources and tools.
 
 **But knowledge without action is just expensive entertainment.**
 
-The MCP ecosystem is experiencing explosive growth. Microsoft has committed to integration support. Google DeepMind is implementing MCP in upcoming models. Over 1,000 open-source connectors emerged in months. The companies implementing MCP now are building the integrations that will define their industries.
+The MCP ecosystem is experiencing rapid growth. Major technology companies are exploring integration support. A growing number of open-source connectors are emerging. Organizations implementing MCP now are building the integrations that may define competitive advantages in their industries.
 
-Maya, the healthcare developer we met at the beginning, completed her MCP implementation last month. Her patient management system now connects seamlessly to all data sources with enterprise security. Her team ships features 60% faster, patient outcomes improved measurably, and Maya was promoted to Lead AI Architect.
+Maya, the healthcare developer we met at the beginning, completed her MCP implementation last month. Her patient management system now connects seamlessly to data sources with proper security controls. Her team reports faster development cycles, and the system provides better patient outcomes.
 
 **Your turn.**
 
-The 24-hour challenge isn't just an exercise—it's your entry point to the future of AI integration. The specification is proven, the tools are mature, and the community is ready to help.
+The implementation challenge isn't just an exercise—it's your entry point to the future of AI integration. The specification is proven, the tools are mature, and the community is ready to help.
 
 **What will you build?**
 
-In 24 hours, you could be the person your organization turns to when they need to connect AI to the real world. The question isn't whether MCP will transform AI application development—it already has. The question is: **Will you be leading that transformation, or watching from the sidelines?**
+In 24 hours, you could be the person your organization turns to when they need to connect AI to the real world. The question isn't whether MCP will improve AI application development—early adopters are already seeing benefits. The question is: **Will you be leading that transformation, or watching from the sidelines?**
 
 **Your countdown begins now.**
 
-Start today. Your journey from AI integration chaos to standardized success starts with a single MCP server. The future of connected AI is here—and it's waiting for you to build it.
+Start today. Your journey from AI integration complexity to standardized success starts with a single MCP server. The future of connected AI is here—and it's waiting for you to build it.
 
-## References
+---
 
-- [Anthropic MCP Announcement](https://www.anthropic.com/news/model-context-protocol)
-- [MCP Specification Repository](https://github.com/modelcontextprotocol/modelcontextprotocol)
+_This document was last updated on June 22, 2025, and reflects the MCP 2025-06-18 specification. Technical implementation details are based on official MCP documentation and should be verified against the latest specification for production use._
+
+## References and Further Reading
+
+### Official MCP Documentation
+
+- [MCP Specification 2025-06-18](https://spec.modelcontextprotocol.io/specification/2025-06-18)
 - [MCP 2025-06-18 Changelog](https://modelcontextprotocol.io/specification/2025-06-18/changelog)
 - [MCP Introduction Guide](https://modelcontextprotocol.io/introduction)
-- [MCP Client Elicitation](https://modelcontextprotocol.io/specification/2025-06-18/client/elicitation)
+- [MCP GitHub Organization](https://github.com/modelcontextprotocol)
+- [MCP Client Elicitation Specification](https://modelcontextprotocol.io/specification/2025-06-18/client/elicitation)
 - [MCP Tools Documentation](https://modelcontextprotocol.io/docs/concepts/tools)
+
+### Security Standards and Specifications
+
+- [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html)
+- [OAuth 2.1 Draft Specification](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-13)
+- [OAuth 2.0 Security Best Current Practice](https://oauth.net/2/oauth-best-practice/)
+
+### Implementation Resources
+
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
 - [MCP Examples](https://modelcontextprotocol.io/examples)
 - [MCP Client Quickstart](https://modelcontextprotocol.io/quickstart/client)
+
+### Security Research
+
+- [IBM Cost of Data Breach Report 2024](https://www.ibm.com/reports/data-breach) - Source for breach cost statistics
+- [Anthropic MCP Security Considerations](https://modelcontextprotocol.io/specification/2025-06-18#security-and-trust--safety)
+
+### Community and Support
+
+- [MCP Community Discussions](https://github.com/orgs/modelcontextprotocol/discussions)
+- [MCP Specification Discussions](https://github.com/modelcontextprotocol/specification/discussions)

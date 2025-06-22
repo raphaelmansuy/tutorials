@@ -242,6 +242,7 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 | [📖 Amazon Q for the Impatient: From Novice to Practitioner](./16_amazon_q.md)                        | Beginner to Advanced | 4-6 hours | English  | Master AI-powered code generation, security scanning, and development acceleration with Amazon Q                                 |
 | [📖 Intent-Based Development Using VSCode Copilot AI Agent](./17_intent_based_dev_vs_code_copilot.md) | Beginner to Advanced | 6-8 hours | English  | Master the revolutionary approach to software development using natural language and AI collaboration with VS Code Copilot Agent |
 | [📖 Modern Python Development Toolkit 2025](./23-modern-python-dev-toolkit.md) | Intermediate to Advanced | 2-4 hours | English  | Unified, high-performance Python dev workflow with UV, Ruff, Pyright, Taskipy, and pre-commit. Modern best practices, automation, and CI/CD. |
+| [📖 MCP 2025-06-18 Documentation: From Novice to Practitioner](./24-mcp.md) | Beginner to Advanced | 8-12 hours | English | Master the Model Context Protocol (MCP) 2025-06-18 specification for seamless AI integration with structured outputs, interactive elicitation, OAuth 2.1 security, and enterprise-grade development |
 
 **What you'll learn:**
 
@@ -280,6 +281,21 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Best practices** for Python project structure, dependency management, and CI/CD integration
 - **Real-world examples** and hands-on exercises
 
+#### Model Context Protocol (MCP) 2025-06-18
+
+- **MCP 2025-06-18 specification** mastery and core architectural concepts
+- **Structured tool outputs** for predictable, schema-validated AI responses
+- **Interactive elicitation** for dynamic user conversations and data collection
+- **OAuth 2.1 with Resource Indicators (RFC 8707)** for enterprise-grade security
+- **Resource linking** for connected information ecosystems
+- **Protocol version negotiation** and compatibility validation
+- **Enterprise MCP server development** with TypeScript and Python
+- **Production-ready authentication** and authorization patterns
+- **Real-world implementation patterns** including customer analytics and compliance
+- **Monitoring and observability** for production MCP deployments
+- **Progressive data collection workflows** with adaptive user interactions
+- **Multi-layer security validation** and audit trail management
+
 **Key Features:**
 
 - From simple code completion to complete application generation
@@ -292,6 +308,9 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Revolutionary workflow transformation** from implementation-focused to intention-focused development
 - **Natural language as code** interface for software creation
 - **Autonomous AI agent collaboration** for complex development tasks
+- **Standardized AI integration** with MCP protocol for seamless data source connections
+- **Enterprise-grade security** with OAuth 2.1 and Resource Indicators implementation
+- **Production-ready MCP servers** with comprehensive monitoring and observability
 
 ---
 
