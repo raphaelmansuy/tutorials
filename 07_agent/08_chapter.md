@@ -127,41 +127,139 @@ flowchart TD
     style MT fill:#fff8e1,stroke:#fbc02d,stroke-width:2px,color:#2d2d2d
 ```
 
-#### Memory Types in Business Context
+### Understanding ADK's Context Foundation
+
+Before diving into memory types, it's crucial to understand how ADK's **context system** provides the foundation for all memory and state operations. Think of context as the "nervous system" that connects your agents, tools, and memory services.
 
 ```mermaid
-mindmap
-  root)🧠 Agent Memory Types(
-    🏃‍♂️ Working Memory
-      📝 Session State
-      💬 Current Conversation
-      🎯 Active Context
-      ⏱️ Temporary Storage
+flowchart TD
+    subgraph "🔄 ADK Context Flow"
+        UC["`👤 **User Request**
+        Initial message & identity`"]
+        
+        IC["`🎯 **InvocationContext**
+        Complete request lifecycle
+        Access to all services`"]
+        
+        subgraph "Context Types"
+            TC["`🛠️ **ToolContext**
+            Memory search & state access
+            Authentication handling`"]
+            
+            CC["`📋 **CallbackContext**
+            State modification
+            Artifact management`"]
+            
+            RC["`👁️ **ReadonlyContext**
+            Safe read-only access
+            Basic information`"]
+        end
+        
+        MS["`💾 **Memory Services**
+        Cross-session storage
+        Knowledge retrieval`"]
+        
+        SS["`📝 **Session State**
+        Current conversation
+        Data persistence`"]
+    end
     
-    📚 Episodic Memory
-      🗓️ Past Interactions
-      📋 Event Sequences
-      🔄 Learning Patterns
-      📊 Outcome Tracking
+    UC --> IC
+    IC --> TC
+    IC --> CC
+    IC --> RC
     
-    🗃️ Semantic Memory
-      📖 Domain Knowledge
-      🏢 Business Rules
-      📋 Procedures
-      🎓 Expertise
+    TC --> MS
+    TC --> SS
+    CC --> SS
     
-    👤 Autobiographical
-      🎨 User Preferences
-      📱 Communication Style
-      🔒 Personal History
-      🤝 Relationship Building
-    
-    ⚙️ Procedural Memory
-      🛠️ Learned Skills
-      📈 Best Practices
-      🔧 Tool Usage
-      🎯 Process Optimization
+    style UC fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style IC fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000
+    style TC fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000
+    style CC fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000
+    style RC fill:#fff8e1,stroke:#ffc107,stroke-width:2px,color:#000
+    style MS fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#000
+    style SS fill:#ffebee,stroke:#f44336,stroke-width:2px,color:#000
 ```
+
+#### Context: The Memory Access Layer
+
+**Why Context Matters for Memory:**
+
+1. **Secure Access**: Context objects ensure memory operations are properly scoped to the right user and session
+2. **State Management**: All state modifications flow through context objects for proper tracking
+3. **Service Integration**: Context provides the bridge between your tools and ADK's memory services
+4. **Authentication**: Memory operations requiring credentials are handled through context
+
+**Key Context Objects for Memory:**
+
+- **`ToolContext`**: Used in tool functions, provides `search_memory()` and `state` access
+- **`CallbackContext`**: Used in callbacks, allows state modification and artifact management  
+- **`InvocationContext`**: Used in agent core logic, provides complete access to services
+- **`ReadonlyContext`**: Used where only read access is needed
+
+#### Context in Action: Memory-Enabled Tool
+
+```python
+from google.adk.tools import ToolContext
+
+def analyze_customer_history(
+    customer_query: str,
+    tool_context: ToolContext
+) -> dict:
+    """Analyze customer history using ADK's context system."""
+    
+    # 1. Access current session state through context
+    current_session_data = {
+        "search_intent": tool_context.state.get("search_intent"),
+        "budget_limit": tool_context.state.get("budget_limit"),
+        "customer_activity": tool_context.state.get("customer_activity")
+    }
+    
+    # 2. Access user-scoped state for personalization
+    user_preferences = {
+        "communication_style": tool_context.state.get("user:communication_style", "professional"),
+        "preferred_categories": tool_context.state.get("user:preferred_categories", []),
+        "past_satisfaction": tool_context.state.get("user:satisfaction_score", 0.5)
+    }
+    
+    # 3. Search memory through context
+    try:
+        memory_results = tool_context.search_memory(
+            f"customer analysis {customer_query} preferences {user_preferences['communication_style']}"
+        )
+        
+        # 4. Update state through context (automatically tracked)
+        tool_context.state["temp:last_analysis"] = f"analyzed_{customer_query}"
+        tool_context.state["user:last_query_type"] = extract_query_type(customer_query)
+        
+        return {
+            "analysis": f"Found {len(memory_results.results)} relevant memories",
+            "session_context": current_session_data,
+            "personalization": user_preferences,
+            "recommendations": generate_recommendations(memory_results, user_preferences)
+        }
+        
+    except ValueError as e:
+        return {"error": f"Memory service error: {e}"}
+
+def extract_query_type(query: str) -> str:
+    # Placeholder for query analysis logic
+    return "product_inquiry"
+
+def generate_recommendations(memory_results, preferences) -> list:
+    # Placeholder for recommendation logic
+    return ["personalized recommendations based on memory and preferences"]
+```
+
+**Context Benefits:**
+
+- **Automatic State Tracking**: Changes to `tool_context.state` are automatically persisted
+- **Secure Memory Access**: `tool_context.search_memory()` respects user and session boundaries
+- **Service Integration**: Context provides access to configured memory and session services
+- **Error Handling**: Context methods provide consistent error handling for service unavailability
+
+This context foundation enables the sophisticated memory patterns we'll explore next.
 
 ---
 
@@ -534,7 +632,40 @@ from google.adk.tools import load_memory_tool
 
 # Use the official memory tool instead of custom implementation
 # Use the official memory tool instead of custom implementation
-from google.adk.tools import load_memory_tool
+from google.adk.tools import load_memory_tool, ToolContext
+
+# Custom tool demonstrating context integration
+def manage_user_preferences(
+    preference_type: str,
+    preference_value: str,
+    tool_context: ToolContext
+) -> dict:
+    """Manage user preferences using ADK context system."""
+    
+    # Use context to access and modify user-scoped state
+    user_state_key = f"user:{preference_type}"
+    
+    # Read current preferences through context
+    current_prefs = tool_context.state.get(user_state_key, {})
+    
+    # Update preferences through context (automatically tracked)
+    tool_context.state[user_state_key] = preference_value
+    tool_context.state["temp:preference_updated"] = preference_type
+    
+    # Search memory for related user patterns
+    try:
+        memory_results = tool_context.search_memory(
+            f"user preferences {preference_type} patterns"
+        )
+        
+        return {
+            "status": "updated",
+            "preference": f"{preference_type} = {preference_value}",
+            "previous_value": current_prefs,
+            "related_patterns": len(memory_results.results) if memory_results else 0
+        }
+    except ValueError as e:
+        return {"status": "updated", "memory_error": str(e)}
 
 # Executive assistant with user-specific memory
 executive_assistant = LlmAgent(
@@ -550,10 +681,11 @@ executive_assistant = LlmAgent(
     - Their professional relationships and meeting dynamics
     
     Use load_memory_tool to access past interactions and provide highly personalized support.
+    Use manage_user_preferences to update user preferences based on interactions.
     """,
     # Note: In a real implementation, these tools would be defined as functions
     # Example: manage_calendar, draft_communications, prioritize_tasks, coordinate_meetings
-    tools=[load_memory_tool]
+    tools=[load_memory_tool, manage_user_preferences]
 )
 
 # Set up services
@@ -567,7 +699,7 @@ runner = Runner(
     memory_service=memory_service
 )
 
-# Building user profiles using ADK state scoping
+# Building user profiles using ADK state scoping and context
 async def update_user_profile(user_id, interaction_data):
     # Create or get existing session for this user with initial state
     session = await session_service.create_session(
@@ -749,6 +881,307 @@ async def business_consultation_lifecycle():
 
 ---
 
+## Context-Based State Management Patterns
+
+Understanding how to effectively use ADK's context system for state management is crucial for building robust memory-enabled agents. Here are the key patterns:
+
+### State Scoping Through Context
+
+ADK's context system supports different state scopes using prefixes:
+
+```python
+from google.adk.tools import ToolContext
+from google.adk.agents.callback_context import CallbackContext
+
+def demonstrate_state_scoping(tool_context: ToolContext):
+    """Demonstrate different state scoping patterns."""
+    
+    # Session-scoped state (default)
+    tool_context.state["current_task"] = "analyzing_document"
+    tool_context.state["session_start_time"] = "2024-01-15T10:00:00Z"
+    
+    # User-scoped state (persists across sessions for this user)
+    tool_context.state["user:preferred_language"] = "english"
+    tool_context.state["user:communication_style"] = "formal"
+    tool_context.state["user:expertise_level"] = "advanced"
+    
+    # App-scoped state (shared across all users of this app)
+    tool_context.state["app:version"] = "1.2.0"
+    tool_context.state["app:feature_flags"] = {"new_ui": True}
+    
+    # Temporary state (for current invocation only)
+    tool_context.state["temp:processing_status"] = "in_progress"
+    tool_context.state["temp:debug_info"] = {"step": 1, "timestamp": "now"}
+```
+
+### Context-Driven Memory Integration
+
+```mermaid
+flowchart TD
+    subgraph "🔄 Context-Memory Integration Flow"
+        T["`🛠️ **Tool Execution**
+        User request + context`"]
+        
+        SC["`📊 **State Check**
+        Read current state
+        via tool_context.state`"]
+        
+        MS["`🔍 **Memory Search**
+        Query via tool_context
+        .search_memory()`"]
+        
+        P["`⚙️ **Process**
+        Combine state + memory
+        Generate response`"]
+        
+        SU["`💾 **State Update**
+        Modify tool_context.state
+        Auto-tracked changes`"]
+        
+        MA["`📝 **Memory Addition**
+        Store session in memory
+        For future reference`"]
+    end
+    
+    T --> SC
+    SC --> MS
+    MS --> P
+    P --> SU
+    SU --> MA
+    
+    style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000
+    style SC fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000
+    style MS fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#000
+    style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000
+    style SU fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#000
+    style MA fill:#fff8e1,stroke:#ffc107,stroke-width:2px,color:#000
+```
+
+### Advanced Context Patterns
+
+#### Pattern 1: Smart State Management
+
+```python
+from google.adk.tools import ToolContext
+
+def smart_recommendation_tool(
+    user_query: str,
+    tool_context: ToolContext
+) -> dict:
+    """Demonstrate smart state management with context."""
+    
+    # 1. Read user profile from state
+    user_profile = {
+        "expertise": tool_context.state.get("user:expertise_level", "beginner"),
+        "interests": tool_context.state.get("user:preferred_categories", []),
+        "communication": tool_context.state.get("user:communication_style", "casual")
+    }
+    
+    # 2. Track interaction patterns
+    interaction_count = tool_context.state.get("user:interaction_count", 0)
+    tool_context.state["user:interaction_count"] = interaction_count + 1
+    tool_context.state["temp:current_query_type"] = classify_query(user_query)
+    
+    # 3. Search memory with context-aware query
+    memory_query = f"""
+    {user_query} 
+    expertise:{user_profile['expertise']} 
+    style:{user_profile['communication']}
+    """
+    
+    try:
+        memory_results = tool_context.search_memory(memory_query)
+        
+        # 4. Update state based on search results
+        if memory_results and len(memory_results.results) > 0:
+            tool_context.state["temp:found_relevant_memory"] = True
+            tool_context.state["user:successful_queries"] = tool_context.state.get("user:successful_queries", 0) + 1
+        
+        # 5. Adapt response based on context
+        response_style = "detailed" if user_profile["expertise"] == "advanced" else "simplified"
+        
+        return {
+            "recommendations": generate_recommendations(memory_results, user_profile),
+            "response_style": response_style,
+            "context_used": {
+                "user_profile": user_profile,
+                "interaction_count": interaction_count + 1,
+                "memory_found": len(memory_results.results) if memory_results else 0
+            }
+        }
+        
+    except ValueError as e:
+        # Handle memory service unavailable
+        tool_context.state["temp:memory_error"] = str(e)
+        return {"error": "Memory service unavailable", "fallback": True}
+
+def classify_query(query: str) -> str:
+    # Placeholder for query classification logic
+    return "information_request"
+
+def generate_recommendations(memory_results, user_profile) -> list:
+    # Placeholder for recommendation generation
+    return ["contextual recommendations based on memory and profile"]
+```
+
+#### Pattern 2: Context-Based Authentication
+
+```python
+from google.adk.tools import ToolContext
+from google.adk.auth import AuthConfig
+
+def secure_api_tool(
+    api_request: str,
+    tool_context: ToolContext
+) -> dict:
+    """Demonstrate context-based authentication pattern."""
+    
+    # 1. Check for existing credentials in state
+    api_key = tool_context.state.get("user:api_credentials")
+    
+    if not api_key:
+        # 2. Request authentication through context
+        auth_config = AuthConfig(
+            # Configure your auth requirements
+            # This is placeholder - use actual AuthConfig
+        )
+        
+        try:
+            tool_context.request_credential(auth_config)
+            return {"status": "authentication_required"}
+        except ValueError as e:
+            return {"error": f"Authentication error: {e}"}
+    
+    # 3. Use credentials with memory context
+    try:
+        # Search memory for similar API requests
+        memory_results = tool_context.search_memory(f"api request {api_request}")
+        
+        # Track API usage in state
+        api_calls = tool_context.state.get("user:api_calls", 0)
+        tool_context.state["user:api_calls"] = api_calls + 1
+        tool_context.state["temp:last_api_request"] = api_request
+        
+        # Make API call (placeholder)
+        api_result = f"API result for {api_request}"
+        
+        return {
+            "result": api_result,
+            "context": {
+                "api_calls_made": api_calls + 1,
+                "similar_requests": len(memory_results.results) if memory_results else 0
+            }
+        }
+        
+    except Exception as e:
+        tool_context.state["temp:api_error"] = str(e)
+        return {"error": f"API call failed: {e}"}
+```
+
+#### Pattern 3: Context-Aware Memory Storage
+
+```python
+from google.adk.agents.callback_context import CallbackContext
+
+def store_conversation_insights(
+    callback_context: CallbackContext,
+    conversation_data: dict
+) -> None:
+    """Store conversation insights using context for proper scoping."""
+    
+    # 1. Extract key insights from conversation
+    insights = {
+        "user_satisfaction": analyze_satisfaction(conversation_data),
+        "topics_covered": extract_topics(conversation_data),
+        "resolution_achieved": conversation_data.get("resolved", False),
+        "communication_effectiveness": rate_communication(conversation_data)
+    }
+    
+    # 2. Update user profile in state
+    callback_context.state["user:last_interaction_quality"] = insights["user_satisfaction"]
+    callback_context.state["user:topics_of_interest"] = insights["topics_covered"]
+    
+    # 3. Store session-level insights
+    callback_context.state["session:resolution_status"] = insights["resolution_achieved"]
+    callback_context.state["session:conversation_insights"] = insights
+    
+    # 4. Mark session for memory storage
+    callback_context.state["temp:ready_for_memory"] = True
+
+def analyze_satisfaction(data: dict) -> float:
+    # Placeholder for satisfaction analysis
+    return 0.8
+
+def extract_topics(data: dict) -> list:
+    # Placeholder for topic extraction
+    return ["product_inquiry", "technical_support"]
+
+def rate_communication(data: dict) -> float:
+    # Placeholder for communication rating
+    return 0.9
+```
+
+### Context Best Practices
+
+#### 1. Use Appropriate Context Types
+
+- `ToolContext` for tool functions requiring memory/auth access
+- `CallbackContext` for lifecycle callbacks needing state modification
+- `ReadonlyContext` for read-only scenarios like instruction providers
+
+#### 2. Implement Proper State Scoping
+
+- `user:` prefix for cross-session user data
+- `app:` prefix for application-wide settings
+- `temp:` prefix for temporary invocation data
+- No prefix for session-scoped data
+
+#### 3. Handle Context Errors Gracefully
+
+```python
+def robust_memory_tool(tool_context: ToolContext) -> dict:
+    try:
+        results = tool_context.search_memory("query")
+        return {"success": True, "results": results}
+    except ValueError as e:
+        # Memory service not configured
+        return {"success": False, "fallback": "no_memory_available"}
+    except Exception as e:
+        # Unexpected error
+        return {"success": False, "error": str(e)}
+```
+
+#### 4. Leverage Context for Service Integration
+
+```python
+def multi_service_tool(tool_context: ToolContext) -> dict:
+    # Memory search
+    memory_data = None
+    try:
+        memory_data = tool_context.search_memory("relevant info")
+    except ValueError:
+        pass  # Memory service not available
+    
+    # Artifact access  
+    artifacts = []
+    try:
+        artifacts = tool_context.list_artifacts()
+    except ValueError:
+        pass  # Artifact service not available
+    
+    # State management (always available)
+    tool_context.state["temp:services_used"] = {
+        "memory": memory_data is not None,
+        "artifacts": len(artifacts) > 0
+    }
+    
+    return {"memory_available": memory_data is not None, "artifacts_count": len(artifacts)}
+```
+
+This context foundation ensures your memory-enabled agents are robust, secure, and properly integrated with ADK's service ecosystem.
+
+---
+
 ## Production Deployment: Vertex AI Agent Engine
 
 ### Deploying Memory-Enabled Agents to Production
@@ -810,6 +1243,8 @@ for event in remote_app.query(
 - Memory services are automatically configured in production
 - Session management is handled by Vertex AI Agent Engine
 - Monitoring and logging are built-in features
+
+---
 
 ## Real-World Case Study: E-Commerce Personalization Engine
 
@@ -928,6 +1363,62 @@ sequenceDiagram
 from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
+from google.adk.tools import ToolContext
+
+# Define shopping tools with context integration
+def search_products(query: str, tool_context: ToolContext) -> dict:
+    """Search products and save context to session state."""
+    # Extract search parameters
+    category = extract_category(query)
+    budget = extract_budget(query)
+    
+    # Save search context to session state
+    tool_context.state["search_intent"] = category
+    tool_context.state["budget_limit"] = budget
+    tool_context.state["customer_activity"] = "browsing"
+    
+    # Perform product search (placeholder)
+    products = f"Found products for {category} under ${budget}"
+    
+    return {"products": products, "context_saved": True}
+
+def add_to_cart(item: str, tool_context: ToolContext) -> dict:
+    """Add item to cart with context awareness."""
+    # Read previous search context
+    search_intent = tool_context.state.get("search_intent", "unknown")
+    budget_limit = tool_context.state.get("budget_limit", 0)
+    
+    # Update cart state
+    cart_items = tool_context.state.get("cart_items", [])
+    cart_items.append(item)
+    tool_context.state["cart_items"] = cart_items
+    tool_context.state["customer_activity"] = "cart_building"
+    
+    # Calculate remaining budget
+    item_price = get_item_price(item)  # Placeholder function
+    remaining_budget = budget_limit - item_price
+    
+    return {
+        "status": "added",
+        "item": item,
+        "context": {
+            "original_search": search_intent,
+            "remaining_budget": remaining_budget,
+            "cart_size": len(cart_items)
+        }
+    }
+
+def extract_category(query: str) -> str:
+    # Placeholder for category extraction
+    return "running_shoes"
+
+def extract_budget(query: str) -> int:
+    # Placeholder for budget extraction
+    return 150
+
+def get_item_price(item: str) -> int:
+    # Placeholder for price lookup
+    return 70
 
 # Product search agent that saves context to session state
 product_search_agent = LlmAgent(
@@ -944,47 +1435,12 @@ product_search_agent = LlmAgent(
     
     Use this context to provide personalized recommendations.
     """,
-    tools=[search_products, filter_by_price, get_product_details, save_customer_preferences]
-)
-
-# Checkout agent that reads context from session state
-checkout_agent = LlmAgent(
-    name="checkout_optimizer",
-    model="gemini-2.0-flash",
-    instruction="""
-    You help customers complete their purchases and suggest complementary items.
-    
-    Always check session state for:
-    - Customer's original search intent and budget
-    - Items already in cart and remaining budget
-    - Previous browsing patterns and preferences
-    - Customer's decision-making stage
-    
-    Use this context to make relevant suggestions and remove friction.
-    """,
-    tools=[add_to_cart, calculate_total, suggest_accessories, apply_discounts]
-)
-
-# Coordinator agent managing the shopping experience
-shopping_coordinator = LlmAgent(
-    name="shopping_assistant",
-    model="gemini-2.0-flash",
-    instruction="""
-    You coordinate the customer's shopping experience across different agents.
-    
-    Route requests based on customer intent:
-    - Product searches and browsing: use product_search_specialist
-    - Cart management and checkout: use checkout_optimizer
-    
-    Maintain session state continuity across all interactions.
-    """,
-    sub_agents=[product_search_agent, checkout_agent],
-    tools=[analyze_customer_intent, update_shopping_session]
+    tools=[search_products, add_to_cart]
 )
 
 session_service = InMemorySessionService()
 runner = Runner(
-    agent=shopping_coordinator,
+    agent=product_search_agent,
     app_name="shopmart_personalization",
     session_service=session_service
 )
@@ -994,73 +1450,54 @@ runner = Runner(
 
 **Pattern**: Store and analyze customer behavior across multiple sessions to improve recommendations
 
-#### Customer Intelligence Architecture
-
-```mermaid
-flowchart TD
-    subgraph "🧠 Purchase Intelligence System"
-        PI["`📊 **Purchase Intelligence Agent**
-        Analyzes buying patterns
-        Predicts future needs`"]
-        
-        RA["`🎯 **Recommendation Agent**
-        Generates personalized suggestions
-        Learns from customer feedback`"]
-    end
-    
-    subgraph "💾 Memory Storage"
-        PH["`📈 **Purchase History**
-        Past orders & returns
-        Category preferences`"]
-        
-        BP["`🔄 **Behavior Patterns**
-        Browsing sessions
-        Seasonal trends`"]
-        
-        FB["`⭐ **Feedback Loop**
-        Clicks, purchases, returns
-        Review ratings`"]
-    end
-    
-    PI --> PH
-    PI --> BP
-    PI --> FB
-    
-    RA --> PH
-    RA --> BP
-    RA --> FB
-    
-    PH --> RA
-    BP --> RA
-    FB --> RA
-    
-    style PI fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000
-    style RA fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000
-    
-    style PH fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#000
-    style BP fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000
-    style FB fill:#fff8e1,stroke:#ffc107,stroke-width:2px,color:#000
-```
-
-**ADK Implementation:**
-
 ```python
 from google.adk.agents import LlmAgent
-from google.adk.memory import InMemoryMemoryService, VertexAiRagMemoryService
+from google.adk.memory import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory_tool
+from google.adk.tools import load_memory_tool, ToolContext
 
 # Memory service for storing customer intelligence
-memory_service = InMemoryMemoryService()  # or VertexAiRagMemoryService for production
+memory_service = InMemoryMemoryService()
 
-# Create memory search tool for customer insights
-customer_intelligence_tool = load_memory_tool(
-    name="search_customer_intelligence",
-    description="Search customer purchase history and behavior patterns for personalization"
-)
+def analyze_purchase_patterns(
+    customer_id: str,
+    tool_context: ToolContext
+) -> dict:
+    """Analyze customer purchase patterns using memory."""
+    
+    try:
+        # Search memory for customer's purchase history
+        memory_results = tool_context.search_memory(
+            f"customer {customer_id} purchases preferences behavior"
+        )
+        
+        # Extract patterns from memory results
+        patterns = extract_patterns_from_memory(memory_results)
+        
+        # Update customer profile in state
+        tool_context.state[f"user:purchase_patterns"] = patterns
+        tool_context.state["temp:analysis_completed"] = True
+        
+        return {
+            "customer_id": customer_id,
+            "patterns_found": len(patterns),
+            "memory_entries": len(memory_results.results) if memory_results else 0,
+            "patterns": patterns
+        }
+        
+    except ValueError as e:
+        return {"error": f"Memory service error: {e}"}
 
-# Purchase intelligence agent that learns customer patterns
+def extract_patterns_from_memory(memory_results) -> dict:
+    # Placeholder for pattern extraction logic
+    return {
+        "favorite_categories": ["electronics", "clothing"],
+        "price_sensitivity": "medium",
+        "seasonal_trends": ["back_to_school", "holiday_shopping"]
+    }
+
+# Purchase intelligence agent
 purchase_intelligence_agent = LlmAgent(
     name="purchase_intelligence_analyst",
     model="gemini-2.0-flash",
@@ -1073,301 +1510,22 @@ purchase_intelligence_agent = LlmAgent(
     - Price sensitivity and brand loyalty
     - Return patterns and satisfaction indicators
     
-    Use search_customer_intelligence to find relevant past behavior and build comprehensive customer profiles.
+    Use memory search to find relevant past behavior and build comprehensive customer profiles.
     """,
-    tools=[analyze_purchase_history, identify_patterns, calculate_lifetime_value, customer_intelligence_tool]
+    tools=[load_memory_tool, analyze_purchase_patterns]
 )
 
-# Recommendation agent that uses intelligence for personalization
-recommendation_agent = LlmAgent(
-    name="personalization_engine",
-    model="gemini-2.0-flash",
-    instruction="""
-    You generate personalized product recommendations based on customer intelligence.
-    
-    Always use search_customer_intelligence to:
-    - Find similar customers with comparable preferences
-    - Identify successful past recommendations
-    - Understand customer's buying journey stage
-    - Predict optimal timing for suggestions
-    
-    Tailor recommendations to individual customer context and preferences.
-    """,
-    tools=[generate_recommendations, predict_interests, suggest_timing, customer_intelligence_tool]
-)
-
-# Set up the system
-session_service = InMemorySessionService()
 runner = Runner(
-    agent=recommendation_agent,
+    agent=purchase_intelligence_agent,
     app_name="shopmart_intelligence",
-    session_service=session_service,
+    session_service=InMemorySessionService(),
     memory_service=memory_service
 )
-
-# Learning from customer interactions
-async def learn_from_customer_session(customer_id, session_data):
-    """Store customer session in memory for future intelligence"""
-    
-    # Create analysis session
-    analysis_session = await session_service.create_session(
-        app_name="shopmart_intelligence",
-        user_id=customer_id,
-        session_id=f"analysis_{session_data.session_id}",
-        state={
-            "customer_id": customer_id,
-            "session_type": session_data.session_type,
-            "purchase_made": session_data.purchase_made,
-            "categories_viewed": session_data.categories_viewed,
-            "time_spent": session_data.time_spent
-        }
-    )
-    
-    # Run intelligence analysis
-    from google.genai.types import Content, Part
-    analysis_request = Content(
-        parts=[Part(text=f"""
-        Analyze this customer session for intelligence insights:
-        
-        Customer ID: {customer_id}
-        Session Type: {session_data.session_type}
-        Categories Viewed: {session_data.categories_viewed}
-        Time Spent: {session_data.time_spent} minutes
-        Purchase Made: {session_data.purchase_made}
-        Items Purchased: {session_data.items_purchased if session_data.purchase_made else 'None'}
-        
-        Extract key insights about customer preferences, behavior patterns, and future prediction factors.
-        """)],
-        role="user"
-    )
-    
-    intelligence_insights = []
-    async for event in runner.run_async(
-        user_id=customer_id,
-        session_id=f"analysis_{session_data.session_id}",
-        new_message=analysis_request
-    ):
-        if event.is_final_response():
-            intelligence_insights.append(event.content.parts[0].text)
-    
-    # Store the intelligence session in memory
-    completed_session = await session_service.get_session(
-        app_name="shopmart_intelligence",
-        user_id=customer_id,
-        session_id=f"analysis_{session_data.session_id}"
-    )
-    
-    await memory_service.add_session_to_memory(completed_session)
-    
-    return {
-        "insights_generated": intelligence_insights,
-        "session_stored": True,
-        "customer_profile_updated": True
-    }
-```
-
-### Implementation Pattern 3: User-Specific Memory for Personalized Service
-
-**Pattern**: Build individual customer profiles with preferences and communication style
-
-#### Customer Profile Evolution
-
-```mermaid
-flowchart LR
-    subgraph "👤 Customer Profile Building"
-        FV["`🆕 **First Visit**
-        Basic preferences
-        Initial interactions`"]
-        
-        RV["`🔄 **Return Visits**
-        Refined preferences
-        Behavior patterns`"]
-        
-        LC["`👑 **Loyal Customer**
-        Deep personalization
-        Predictive service`"]
-    end
-    
-    subgraph "📊 Profile Data"
-        CP["`🎯 **Communication Prefs**
-        Email vs SMS
-        Formal vs casual tone`"]
-        
-        PP["`🛍️ **Purchase Patterns**
-        Favorite brands
-        Budget ranges`"]
-        
-        SP["`⭐ **Service History**
-        Past issues resolved
-        Satisfaction levels`"]
-    end
-    
-    FV --> RV --> LC
-    
-    FV --> CP
-    RV --> PP
-    LC --> SP
-    
-    CP --> RV
-    PP --> LC
-    SP --> LC
-    
-    style FV fill:#fff8e1,stroke:#ffc107,stroke-width:2px,color:#000
-    style RV fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#000
-    style LC fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000
-    
-    style CP fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000
-    style PP fill:#e0f2f1,stroke:#009688,stroke-width:2px,color:#000
-    style SP fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000
-```
-
-**ADK Implementation:**
-
-```python
-from google.adk.agents import LlmAgent
-from google.adk.sessions import InMemorySessionService
-from google.adk.memory import InMemoryMemoryService
-from google.adk.runners import Runner
-from google.adk.tools import load_memory_tool
-
-# Create customer service memory tool
-customer_service_memory_tool = load_memory_tool(
-    name="search_customer_service_memory",
-    description="Search customer service history and personal preferences for personalized support"
-)
-
-# Customer service agent with personalized memory
-customer_service_agent = LlmAgent(
-    name="personal_shopping_assistant",
-    model="gemini-2.0-flash",
-    instruction="""
-    You are a personal shopping assistant who builds deep relationships with customers.
-    
-    Use session state and memory to track each customer's:
-    - Communication style preferences (use customer: prefix in state)
-    - Shopping habits and favorite categories
-    - Budget ranges and price sensitivity
-    - Previous service interactions and resolutions
-    - Special occasions and gift-giving patterns
-    
-    Use search_customer_service_memory to provide highly personalized service that feels like talking to a friend who knows you well.
-    """,
-    tools=[check_order_status, process_returns, recommend_products, schedule_delivery, customer_service_memory_tool]
-)
-
-# Set up services
-session_service = InMemorySessionService()
-memory_service = InMemoryMemoryService()
-
-runner = Runner(
-    agent=customer_service_agent,
-    app_name="shopmart_customer_service",
-    session_service=session_service,
-    memory_service=memory_service
-)
-
-# Building customer profiles with ADK state scoping
-async def update_customer_profile(customer_id, interaction_data):
-    """Update customer profile based on new interaction data"""
-    
-    # Create session for profile update
-    session = await session_service.create_session(
-        app_name="shopmart_customer_service",
-        user_id=customer_id,
-        session_id=f"profile_update_{interaction_data.timestamp}",
-        state={
-            # Customer-specific preferences using customer: prefix
-            "customer:communication_style": interaction_data.communication_style,
-            "customer:preferred_contact_time": interaction_data.preferred_contact_time,
-            "customer:shopping_frequency": interaction_data.shopping_frequency,
-            "customer:average_order_value": interaction_data.average_order_value,
-            "customer:favorite_categories": interaction_data.favorite_categories,
-            "customer:last_interaction": interaction_data.timestamp,
-            # Temporary session data
-            "temp:current_mood": interaction_data.customer_mood,
-            "temp:current_need": interaction_data.immediate_need
-        }
-    )
-    
-    # Add the profile session to memory for future reference
-    await memory_service.add_session_to_memory(session)
-    
-    return session.state
-
-# Predictive customer service
-async def provide_proactive_service(customer_id, context):
-    """Predict customer needs and provide proactive service"""
-    
-    # Search memory for customer patterns
-    search_query = f"customer preferences {context.season} {context.occasion}"
-    
-    service_history = await memory_service.search_memory(
-        app_name="shopmart_customer_service",
-        user_id=customer_id,
-        query=search_query
-    )
-    
-    # Create session for proactive service
-    session = await session_service.create_session(
-        app_name="shopmart_customer_service",
-        user_id=customer_id,
-        session_id=f"proactive_service_{context.timestamp}"
-    )
-    
-    # Get customer profile from session state
-    user_state = session.state
-    customer_prefs = {
-        key: value for key, value in user_state.items() 
-        if key.startswith("customer:")
-    }
-    
-    # Generate proactive service recommendations
-    from google.genai.types import Content, Part
-    service_request = Content(
-        parts=[Part(text=f"""
-        Provide proactive service for this customer based on their profile and history:
-        
-        Customer ID: {customer_id}
-        Current Context: {context.occasion} shopping, {context.season} season
-        
-        Customer Preferences: {customer_prefs}
-        Past Service History: {service_history.memories[:3] if service_history else 'No history'}
-        
-        Suggest personalized recommendations, remind about relevant deals, or offer assistance based on their patterns.
-        """)],
-        role="user"
-    )
-    
-    proactive_suggestions = []
-    async for event in runner.run_async(
-        user_id=customer_id,
-        session_id=f"proactive_service_{context.timestamp}",
-        new_message=service_request
-    ):
-        if event.is_final_response():
-            proactive_suggestions.append(event.content.parts[0].text)
-    
-    # Store the proactive service session
-    completed_session = await session_service.get_session(
-        app_name="shopmart_customer_service",
-        user_id=customer_id,
-        session_id=f"proactive_service_{context.timestamp}"
-    )
-    
-    await memory_service.add_session_to_memory(completed_session)
-    
-    return {
-        "proactive_suggestions": proactive_suggestions,
-        "customer_profile": customer_prefs,
-        "service_history_used": len(service_history.memories) > 0 if service_history else False
-    }
 ```
 
 ### The Results: Transformation Through Memory
 
 > **Note:** The following metrics are fictional examples created for educational purposes to illustrate potential improvements with memory-enabled agents.
-
-ShopSmart's implementation of ADK memory systems delivered measurable business impact:
 
 #### Performance Improvements (Fictional Example)
 
@@ -1379,26 +1537,26 @@ flowchart LR
         (Fictional +129% increase)`"]
         
         AOV["`💰 **Average Order Value**
-        Example: $67 → $94
-        (Fictional +40% increase)`"]
+        Example: $47 → $69
+        (Fictional +47% increase)`"]
         
         CS["`⭐ **Customer Satisfaction**
-        Example: 3.2/5 → 4.7/5
-        (Fictional +47% increase)`"]
+        Example: 3.2 → 4.6/5
+        (Fictional +44% increase)`"]
     end
     
     subgraph "🔄 Memory-Driven Features (Example)"
         PR["`🎯 **Smart Recommendations**
-        Example: 78% relevance score
-        Fictional 3x higher click-through`"]
+        Context-aware suggestions
+        Seamless experiences`"]
         
         PA["`🤖 **Proactive Assistance**
-        Example: 45% cart abandonment reduction
-        Fictional timely intervention`"]
+        Anticipate customer needs
+        Reduce friction`"]
         
-        PC["`👤 **Personal Context**
-        Remember preferences
-        Seamless experiences`"]
+        PC["`💬 **Personalized Communication**
+        Individual preferences
+        Adaptive responses`"]
     end
     
     CR --> PR
@@ -1424,61 +1582,6 @@ flowchart LR
 
 **4. Personalized Communication**: Each interaction felt tailored to the individual customer's style and preferences
 
-### Actionable Implementation Roadmap
-
-#### Phase 1: Foundation (Weeks 1-2)
-
-- [ ] Set up ADK session services for context continuity
-- [ ] Implement basic session state management for shopping cart and preferences
-- [ ] Create customer service agent with session memory
-
-#### Phase 2: Intelligence (Weeks 3-4)
-
-- [ ] Add long-term memory service for purchase history
-- [ ] Implement recommendation agent with memory search capabilities
-- [ ] Build customer behavior analysis and pattern recognition
-
-#### Phase 3: Personalization (Weeks 5-6)
-
-- [ ] Implement user-specific state scoping for individual profiles
-- [ ] Add proactive service capabilities based on memory patterns
-- [ ] Create cross-session customer journey tracking
-
-#### Phase 4: Optimization (Weeks 7-8)
-
-- [ ] Deploy to production with VertexAI RAG for scalable memory
-- [ ] Implement feedback loops for continuous learning
-- [ ] Add performance monitoring and memory optimization
-
-### Key Technical Patterns
-
-**Session State Pattern**: Use for immediate context within shopping sessions
-
-```python
-state["current_search"] = "running shoes"
-state["budget_limit"] = 150
-state["customer_activity"] = "browsing"
-```
-
-**Memory Search Pattern**: Use for historical insights and personalization
-
-```python
-search_results = await memory_service.search_memory(
-    query="customer preferences athletic wear spring",
-    user_id=customer_id
-)
-```
-
-**State Scoping Pattern**: Use for persistent customer profiles
-
-```python
-state["customer:communication_style"] = "casual"
-state["customer:favorite_brands"] = ["Nike", "Adidas"]
-state["temp:current_session"] = "gift_shopping"
-```
-
-This e-commerce case study demonstrates how ADK memory systems can transform generic interactions into personalized, intelligent experiences that drive real business value.
-
 ---
 
 ## Memory Best Practices
@@ -1491,240 +1594,267 @@ This e-commerce case study demonstrates how ADK memory systems can transform gen
 # Customer Support: Focus on working and autobiographical memory
 customer_support_memory = {
     "working": {"retention": "session", "capacity": "high"},
-    "autobiographical": {"retention": "permanent", "privacy": "strict"},
-    "episodic": {"retention": "6_months", "learning_focus": "resolution_patterns"}
+    "episodic": {"retention": "6_months", "learning_focus": "resolution_patterns"},
+    "autobiographical": {"retention": "permanent", "scope": "user_specific"}
 }
 
 # Research Assistant: Emphasize semantic and episodic memory
 research_memory = {
     "semantic": {"retention": "permanent", "update_frequency": "continuous"},
-    "episodic": {"retention": "permanent", "pattern_extraction": "enabled"},
+    "episodic": {"retention": "1_year", "learning_focus": "research_patterns"},
     "working": {"retention": "project_duration", "capacity": "very_high"}
 }
 
-# Project Manager: Balance all memory types
-project_management_memory = {
-    "working": {"retention": "project_duration"},
-    "episodic": {"retention": "permanent", "success_tracking": "enabled"},
-    "procedural": {"retention": "permanent", "pattern_learning": "enabled"},
-    "autobiographical": {"retention": "permanent", "team_focused": True}
+# Sales Agent: Balance all memory types
+sales_memory = {
+    "working": {"retention": "session", "capacity": "medium"},
+    "episodic": {"retention": "2_years", "learning_focus": "sales_outcomes"},
+    "semantic": {"retention": "permanent", "domain": "product_knowledge"},
+    "autobiographical": {"retention": "permanent", "scope": "customer_relationships"},
+    "procedural": {"retention": "permanent", "focus": "sales_techniques"}
 }
 ```
 
-### Privacy and Performance Best Practices
-
-When implementing memory systems, consider these architectural patterns based on ADK's documented capabilities:
-
----
-
-## Your 24-Hour Challenge: Build a Memory-Enabled Business Agent
-
-**The Challenge:** Create an agent using Google ADK with persistent memory that gets smarter over time.
-
-**Scenario:** Business advisor agent that helps with strategic decisions
-
-**Required Components:**
-
-1. **Session State:** Track current analysis session
-2. **Long-term Memory:** Remember past advice and outcomes using MemoryService
-3. **User State:** Build user relationship and preferences using state scoping
-
-**Implementation Steps:**
+### 2. Implement Proper Memory Hygiene
 
 ```python
-# Step 1: Set up your ADK environment
-# pip install google-adk
+from google.adk.tools import ToolContext
+from google.adk.agents.callback_context import CallbackContext
 
-from google.adk.agents import LlmAgent
-from google.adk.sessions import InMemorySessionService
-from google.adk.memory import InMemoryMemoryService
-from google.adk.runners import Runner
-from google.adk.tools import load_memory_tool
-
-# Use the official memory tool (no custom parameters needed)
-from google.adk.tools import load_memory_tool
-
-# Step 2: Create your memory-enabled agent
-business_advisor = LlmAgent(
-    name="strategic_business_advisor",
-    model="gemini-2.0-flash",
-    instruction="""
-    You are a strategic business advisor with persistent memory.
+def memory_cleanup_tool(tool_context: ToolContext) -> dict:
+    """Implement memory hygiene practices."""
     
-    Use your capabilities to:
-    - Track ongoing strategic discussions using session state
-    - Learn from past advice and outcomes using load_memory_tool
-    - Apply business frameworks and knowledge from memory
-    - Personalize advice based on user state (use user: prefix)
+    # 1. Clean temporary state
+    temp_keys = [key for key in tool_context.state.keys() if key.startswith("temp:")]
+    for key in temp_keys:
+        if should_cleanup_temp_key(key, tool_context.state[key]):
+            del tool_context.state[key]
     
-    Always reference relevant past interactions and learnings when available.
-    """,
-    # Note: In a real implementation, these tools would be defined as functions
-    # Example: analyze_market_data, create_strategic_plan, assess_risks
-    tools=[load_memory_tool]
-)
+    # 2. Archive old session data
+    session_data = tool_context.state.get("session_metadata", {})
+    if is_session_old(session_data):
+        archive_session_data(session_data)
+    
+    # 3. Update user profile consolidation
+    user_interactions = tool_context.state.get("user:interaction_count", 0)
+    if user_interactions % 10 == 0:  # Every 10 interactions
+        consolidate_user_profile(tool_context)
+    
+    return {"cleanup_completed": True, "temp_keys_removed": len(temp_keys)}
 
-# Step 3: Set up services
-session_service = InMemorySessionService()
-memory_service = InMemoryMemoryService()
+def should_cleanup_temp_key(key: str, value: any) -> bool:
+    # Implement logic to determine if temporary data should be cleaned
+    return True  # Placeholder
 
-runner = Runner(
-    agent=business_advisor,
-    app_name="business_advisor",
-    session_service=session_service,
-    memory_service=memory_service
-)
+def is_session_old(session_data: dict) -> bool:
+    # Implement logic to check if session data is old
+    return False  # Placeholder
 
-# Step 4: Test memory persistence with error handling
-async def test_memory_persistence():
-    import asyncio
-    from google.genai.types import Content, Part
+def archive_session_data(session_data: dict) -> None:
+    # Implement session data archiving
+    pass
+
+def consolidate_user_profile(tool_context: ToolContext) -> None:
+    # Implement user profile consolidation logic
+    pass
+```
+
+### 3. Handle Memory Errors Gracefully
+
+```python
+from google.adk.tools import ToolContext
+
+def robust_memory_search(
+    query: str,
+    tool_context: ToolContext,
+    fallback_strategy: str = "local_state"
+) -> dict:
+    """Robust memory search with fallback strategies."""
     
     try:
-        # Session 1: Initial analysis
-        session1 = await session_service.create_session(
-            app_name="business_advisor",
-            user_id="client_001",
-            session_id="european_expansion",
-            state={"user:industry": "tech", "user:risk_tolerance": "moderate"}
-        )
+        # Primary: Search memory service
+        memory_results = tool_context.search_memory(query)
+        return {
+            "source": "memory_service",
+            "results": memory_results.results if memory_results else [],
+            "success": True
+        }
         
-        query1 = Content(
-            parts=[Part(text="Help me analyze entering the European market for my SaaS company")],
-            role="user"
-        )
-        
-        response1 = None
-        async for event in runner.run_async(
-            user_id="client_001",
-            session_id="european_expansion",
-            new_message=query1
-        ):
-            if event.is_final_response():
-                response1 = event.content.parts[0].text
-                print(f"Session 1 Response: {response1}")
-        
-        # Store session in memory
-        completed_session = await session_service.get_session(
-            app_name="business_advisor",
-            user_id="client_001",
-            session_id="european_expansion"
-        )
-        await memory_service.add_session_to_memory(completed_session)
-        print("✓ Session stored in memory")
-        
-        # Session 2: Follow-up (agent should remember previous discussion)
-        session2 = await session_service.create_session(
-            app_name="business_advisor",
-            user_id="client_001",
-            session_id="followup_european"
-        )
-        
-        query2 = Content(
-            parts=[Part(text="What did we decide about the European expansion timeline?")],
-            role="user"
-        )
-        
-        response2 = None
-        async for event in runner.run_async(
-            user_id="client_001",
-            session_id="followup_european",
-            new_message=query2
-        ):
-            if event.is_final_response():
-                response2 = event.content.parts[0].text
-                print(f"Session 2 Response: {response2}")
-        
-        # Verify memory persistence
-        if response2 and "european" in response2.lower():
-            print("✓ Memory persistence successful - agent referenced previous conversation")
+    except ValueError as e:
+        # Memory service not configured - use fallback
+        if fallback_strategy == "local_state":
+            return search_local_state(query, tool_context)
+        elif fallback_strategy == "cached_data":
+            return search_cached_data(query, tool_context)
         else:
-            print("⚠ Memory persistence test inconclusive - check agent implementation")
+            return {"source": "none", "results": [], "success": False, "error": str(e)}
             
-        return "Memory persistence test completed successfully"
-        
     except Exception as e:
-        print(f"❌ Error during memory test: {e}")
-        print("💡 Tip: Make sure ADK is properly installed and configured")
-        return f"Memory persistence test failed: {e}"
+        # Unexpected error - log and return empty results
+        tool_context.state["temp:memory_error"] = str(e)
+        return {"source": "error", "results": [], "success": False, "error": str(e)}
 
-# Run the test
-# asyncio.run(test_memory_persistence())
+def search_local_state(query: str, tool_context: ToolContext) -> dict:
+    """Fallback to searching session state."""
+    relevant_keys = [
+        key for key in tool_context.state.keys() 
+        if any(term in str(tool_context.state[key]).lower() for term in query.lower().split())
+    ]
+    
+    return {
+        "source": "local_state",
+        "results": [{"key": key, "value": tool_context.state[key]} for key in relevant_keys],
+        "success": True
+    }
+
+def search_cached_data(query: str, tool_context: ToolContext) -> dict:
+    """Fallback to cached data in state."""
+    cached_data = tool_context.state.get("cache:search_results", {})
+    
+    return {
+        "source": "cached_data",
+        "results": cached_data.get(query, []),
+        "success": True
+    }
 ```
 
-**Success Criteria:**
-
-- Agent remembers previous conversations across sessions ✓
-- Agent learns from interaction outcomes and improves advice ✓
-- Agent personalizes responses based on user interaction history ✓
-- Agent can explain recommendations based on past learnings ✓
-- Memory system handles privacy and performance requirements ✓
-
-**Production Upgrade Path:**
-
-For production deployment, upgrade to Vertex AI services:
+### 4. Monitor Memory Performance
 
 ```python
-# Production configuration
-from google.adk.sessions import VertexAiSessionService
-from google.adk.memory import VertexAiRagMemoryService
+from google.adk.agents.callback_context import CallbackContext
 
-# Requires Google Cloud setup
-session_service = VertexAiSessionService(
-    project="your-project-id",
-    location="us-central1"
-)
+def memory_performance_callback(
+    callback_context: CallbackContext,
+    **kwargs
+) -> None:
+    """Monitor memory system performance."""
+    
+    # Track memory usage metrics
+    memory_metrics = {
+        "search_count": callback_context.state.get("metrics:memory_searches", 0) + 1,
+        "state_size": len(callback_context.state),
+        "user_state_keys": len([k for k in callback_context.state.keys() if k.startswith("user:")]),
+        "temp_state_keys": len([k for k in callback_context.state.keys() if k.startswith("temp:")])
+    }
+    
+    # Update metrics in state
+    for key, value in memory_metrics.items():
+        callback_context.state[f"metrics:{key}"] = value
+    
+    # Check for potential issues
+    if memory_metrics["state_size"] > 100:
+        callback_context.state["temp:large_state_warning"] = True
+    
+    if memory_metrics["temp_state_keys"] > 20:
+        callback_context.state["temp:cleanup_needed"] = True
+```
 
-memory_service = VertexAiRagMemoryService(
-    rag_corpus="projects/your-project/locations/us-central1/ragCorpora/business-knowledge"
-)
+### 5. Security and Privacy Considerations
 
-# Deploy to Agent Engine
-from vertexai import agent_engines
+```python
+from google.adk.tools import ToolContext
 
-production_agent = agent_engines.create(
-    agent_engine=business_advisor,
-    requirements=["google-cloud-aiplatform[adk,agent_engines]"]
-)
+def secure_memory_access(
+    query: str,
+    user_id: str,
+    tool_context: ToolContext
+) -> dict:
+    """Implement secure memory access patterns."""
+    
+    # 1. Validate user permissions
+    if not validate_user_permissions(user_id, query):
+        return {"error": "Insufficient permissions", "results": []}
+    
+    # 2. Sanitize query to prevent injection
+    sanitized_query = sanitize_memory_query(query)
+    
+    # 3. Add user scoping to query
+    scoped_query = f"user:{user_id} {sanitized_query}"
+    
+    try:
+        # 4. Search with user-scoped query
+        memory_results = tool_context.search_memory(scoped_query)
+        
+        # 5. Filter results based on user permissions
+        filtered_results = filter_results_by_permissions(memory_results, user_id)
+        
+        # 6. Log access for audit
+        log_memory_access(user_id, sanitized_query, len(filtered_results))
+        
+        return {
+            "results": filtered_results,
+            "query_used": scoped_query,
+            "access_logged": True
+        }
+        
+    except Exception as e:
+        log_memory_error(user_id, sanitized_query, str(e))
+        return {"error": str(e), "results": []}
+
+def validate_user_permissions(user_id: str, query: str) -> bool:
+    # Implement user permission validation
+    return True  # Placeholder
+
+def sanitize_memory_query(query: str) -> str:
+    # Implement query sanitization
+    return query.strip()  # Placeholder
+
+def filter_results_by_permissions(memory_results, user_id: str) -> list:
+    # Implement result filtering based on permissions
+    return memory_results.results if memory_results else []
+
+def log_memory_access(user_id: str, query: str, result_count: int) -> None:
+    # Implement audit logging
+    pass
+
+def log_memory_error(user_id: str, query: str, error: str) -> None:
+    # Implement error logging
+    pass
 ```
 
 ---
 
-## Chapter Wrap-Up: From Tools to Trusted AI Partners
+## Next Steps: Building Your Memory-Enabled Agent
 
-Memory transforms agents from reactive tools into proactive partners. With Google ADK's session state and memory services, you can build agents that understand context, learn from experience, and provide increasingly valuable insights over time.
+### Implementation Roadmap
 
-**Key Takeaways:**
+#### Phase 1: Foundation (Week 1)
 
-- **Session State** provides short-term memory within conversations using ADK's built-in state management
-- **MemoryService** enables long-term knowledge storage across sessions accessible via `load_memory_tool()`
-- **State Scoping** (user:, app:, temp:) allows for different memory persistence levels
-- **Production Deployment** via Vertex AI Agent Engine scales memory-enabled agents reliably
-- **Vertex AI RAG** integration provides enterprise-grade semantic search capabilities
+- [ ] Set up basic ADK project with session services
+- [ ] Implement simple session state management
+- [ ] Create your first memory-enabled tool using `ToolContext`
 
-The most successful AI implementations aren't those with the most powerful models - they're those with thoughtful memory architectures that remember what matters, learn from experience, and build trust through consistent, contextual interactions.
+#### Phase 2: Memory Integration (Week 2)
 
-**Real-World Impact:**
+- [ ] Add `InMemoryMemoryService` for development
+- [ ] Implement the `load_memory_tool` in your agent
+- [ ] Create patterns for storing and retrieving conversation history
 
-> **Note:** The following organizational impact metrics are illustrative examples for educational purposes. Actual results will vary significantly based on implementation quality, use case complexity, and organizational context.
+#### Phase 3: Advanced Patterns (Week 3)
 
-Organizations using ADK's memory capabilities report potential benefits including:
+- [ ] Implement user-specific state scoping with prefixes
+- [ ] Add context-aware memory search patterns
+- [ ] Create memory cleanup and hygiene processes
 
-- Significant reduction in repeated questions and requests (varies by implementation)
-- Faster onboarding for new team members working with AI agents
-- Improved user satisfaction due to personalized, context-aware interactions
-- Potential reduction in knowledge silos and institutional memory loss
+#### Phase 4: Production Ready (Week 4)
 
-In our next chapter, we'll explore how to deploy these intelligent, memory-enabled agents into production environments where they can handle real business workloads at scale.
+- [ ] Migrate to `VertexAiRagMemoryService` for production
+- [ ] Implement security and privacy controls
+- [ ] Add monitoring and performance tracking
+- [ ] Deploy to Vertex AI Agent Engine
 
----
+### Key Takeaways
 
-*Next Chapter Preview: "Production Deployment: Scaling Agent Intelligence" - Where we'll learn advanced deployment patterns, monitoring strategies, and enterprise-scale architecture for business-critical agent applications.*
+**1. Context is Foundation**: ADK's context system enables all memory operations through `ToolContext`, `CallbackContext`, and other context objects.
 
-**Quick Reflection:**
+**2. Start Simple**: Begin with session state and `InMemoryMemoryService`, then progress to production services.
 
-- What business processes would benefit most from AI that remembers and learns over time?
-- How could persistent memory change the way your team collaborates with AI tools?
-- What are your specific privacy and security requirements for memory systems?
+**3. Design for Scale**: Use proper state scoping, implement memory hygiene, and plan for production deployment.
 
-**Pro Tip:** Start with ADK's `InMemorySessionService` and `InMemoryMemoryService` for development, then migrate to `VertexAiSessionService` and `VertexAiRagMemoryService` for production. This provides a clear upgrade path without changing your agent logic.
+**4. Security First**: Always implement proper user scoping, permissions, and audit logging for memory operations.
+
+**5. Monitor Performance**: Track memory usage, search patterns, and system performance to optimize over time.
+
+Memory-enabled agents represent the future of AI assistance - agents that learn, remember, and get better over time. By mastering ADK's memory and context systems, you're building the foundation for truly intelligent, persistent AI partners that can understand context, build relationships, and provide increasingly valuable assistance.
+
+The journey from stateless tools to stateful partners begins with understanding that memory isn't just about storage - it's about building intelligence that persists, learns, and evolves. With ADK's robust memory architecture and context system, you have everything needed to create agents that truly understand and remember.
