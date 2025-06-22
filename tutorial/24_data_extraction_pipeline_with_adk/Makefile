@@ -1,4 +1,4 @@
-.PHONY: help venv install test lint format clean run_basic_example run_legal_example cli_contacts cli_legal
+.PHONY: help venv install test lint format clean run_basic_example run_legal_example run_multi_agent_example test_multi_agent demo_multi_agent cli_contacts cli_legal
 
 help:
 	@echo "ADK Data Extraction Tutorial Makefile"
@@ -11,6 +11,9 @@ help:
 	@echo "  clean     - Remove .venv and __pycache__"
 	@echo "  run_basic_example - Run basic_contact_extraction.py example"
 	@echo "  run_legal_example - Run legal_document_analysis.py example"
+	@echo "  run_multi_agent_example - Run multi_agent_pipeline.py example"
+	@echo "  test_multi_agent - Run multi-agent pipeline test suite"
+	@echo "  demo_multi_agent - Run simple multi-agent demo"
 	@echo "  cli_contacts      - Run contact extraction via CLI"
 	@echo "  cli_legal         - Run legal analysis via CLI"
 
@@ -38,6 +41,15 @@ run_basic_example: install
 
 run_legal_example: install
 	. .venv/bin/activate && python -m adk_data_extraction.examples.legal_document_analysis
+
+run_multi_agent_example: install
+	. .venv/bin/activate && python -m adk_data_extraction.examples.multi_agent_pipeline
+
+test_multi_agent: install
+	. .venv/bin/activate && python test_multi_agent_pipeline.py
+
+demo_multi_agent: install
+	. .venv/bin/activate && python demo_multi_agent.py
 
 cli_contacts: install
 	. .venv/bin/activate && adk-extract-contacts

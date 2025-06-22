@@ -9,6 +9,7 @@ This package contains hands-on examples and production patterns for structured d
 
 - **Basic Contact Extraction**: Extract structured contact information from unstructured text
 - **Legal Document Analysis**: Advanced document processing with financial term extraction
+- **Multi-Agent Pipeline**: Sophisticated document classification, specialized extraction, and quality validation
 - **Production-Ready**: Full test coverage, linting, and CI/CD configuration
 - **CLI Tools**: Ready-to-use command-line interfaces for common tasks
 
@@ -64,10 +65,56 @@ adk-analyze-legal
 ```python
 import asyncio
 from adk_data_extraction.examples.basic_contact_extraction import extract_contacts
+from adk_data_extraction.examples.multi_agent_pipeline import MultiAgentExtractionPipeline
 
 # Extract contacts from text
 result = asyncio.run(extract_contacts("Your text here..."))
 print(result)
+
+# Use multi-agent pipeline for sophisticated document processing
+pipeline = MultiAgentExtractionPipeline()
+result = asyncio.run(pipeline.process_document("Your document here..."))
+print(f"Document Type: {result.classification.document_type}")
+print(f"Confidence: {result.validation.confidence_score}")
+```
+
+## Examples
+
+### 1. Basic Contact Extraction
+Extract contact information from emails, business cards, or any text:
+
+```python
+from adk_data_extraction.examples.basic_contact_extraction import extract_contacts
+result = asyncio.run(extract_contacts("Hi, I'm John at john@acme.com"))
+```
+
+### 2. Legal Document Analysis
+Analyze contracts, agreements, and legal documents:
+
+```python
+from adk_data_extraction.examples.legal_document_analysis import analyze_legal_document
+result = asyncio.run(analyze_legal_document("path/to/contract.txt"))
+```
+
+### 3. Multi-Agent Pipeline
+Sophisticated document processing with classification, specialized extraction, and validation:
+
+```python
+from adk_data_extraction.examples.multi_agent_pipeline import (
+    MultiAgentExtractionPipeline,
+    run_contract_example,
+    run_invoice_example,
+    run_general_document_example
+)
+
+# Complete pipeline demonstration
+asyncio.run(run_contract_example())
+asyncio.run(run_invoice_example())
+asyncio.run(run_general_document_example())
+
+# Or use the pipeline directly
+pipeline = MultiAgentExtractionPipeline()
+result = asyncio.run(pipeline.process_document("Your document content"))
 ```
 
 ## Project Structure
@@ -76,7 +123,9 @@ print(result)
   - `examples/` — Example implementations
     - `basic_contact_extraction.py` — Contact extraction with Pydantic models
     - `legal_document_analysis.py` — Advanced document analysis
+    - `multi_agent_pipeline.py` — Multi-agent document processing pipeline
 - `tests/` — Unit and integration tests
+- `test_multi_agent_pipeline.py` — Test suite for multi-agent examples
 - `pyproject.toml` — Project configuration and dependencies
 - `sample_contract.txt` — Sample data for testing
 - `Makefile` — Development automation

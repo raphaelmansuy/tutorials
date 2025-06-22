@@ -194,13 +194,15 @@ The framework's context management system ensures that extraction agents maintai
 Let's start with the foundation—extracting contact information from business emails. This example demonstrates the core concepts that you'll use in every ADK extraction project .
 
 ```python
+import asyncio
+from google.adk import Runner
 from google.adk.agents import LlmAgent
-from google.adk.runtime import Runner
 from google.adk.sessions import InMemorySessionService
-from pydantic import BaseModel, Field
 from google.genai import types
+from pydantic import BaseModel, Field
 
 class ContactInfo(BaseModel):
+    """Schema for extracted contact information."""
     name: str = Field(description="Full name of the contact")
     email: str = Field(description="Email address")
     company: str = Field(description="Company name")
@@ -212,52 +214,56 @@ contact_extractor = LlmAgent(
     name="contact_extractor",
     description="Extracts contact information from text",
     instruction="""Extract contact information from the provided text.
-    Focus on accuracy and completeness. If information is unclear or missing,
-    leave those fields empty rather than guessing.""",
+Focus on accuracy and completeness. If information is unclear or missing,
+leave those fields empty rather than guessing.""",
     output_schema=ContactInfo,
-    output_key="extracted_contacts"
+    output_key="extracted_contacts",
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
 )
 
-# Set up the extraction pipeline
 session_service = InMemorySessionService()
 runner = Runner(
     agent=contact_extractor,
     app_name="contact_extraction_app",
-    session_service=session_service
+    session_service=session_service,
 )
 
-# Example usage
 async def extract_contacts(text_content):
-    user_content = types.Content(role='user', parts=[types.Part(text=text_content)])
+    """
+    Extract contact information from the given text content using the contact_extractor agent.
+    Creates a session, sends the text to the agent, and returns the extracted contact info as a string.
+    """
+    # Create a session first
+    _session = await session_service.create_session(
+        app_name="contact_extraction_app", user_id="user_001", session_id="session_001"
+    )
 
+    user_content = types.Content(
+        role="user",
+        parts=[types.Part.from_text(text=text_content)]
+    )
     async for event in runner.run_async(
         user_id="user_001",
-        new_message=user_content
+        session_id="session_001",
+        new_message=user_content,
     ):
         if event.is_final_response() and event.content and event.content.parts:
             if event.content.parts[0].text:
                 return event.content.parts[0].text
-    return None  # No valid response found
+    return None
 
-# Improved error handling and logging
-async def extract_contacts(text_content):
-    try:
-        user_content = types.Content(role='user', parts=[types.Part(text=text_content)])
-        async for event in runner.run_async(
-            user_id="user_001",
-            session_id="session_001",
-            new_message=user_content
-        ):
-            if event.is_final_response():
-                if hasattr(event, 'content') and event.content:
-                    if hasattr(event.content, 'parts') and event.content.parts:
-                        for part in event.content.parts:
-                            if hasattr(part, 'text') and part.text:
-                                return part.text
-        raise ExtractionError("No valid response received from ADK agent")
-    except Exception as e:
-        logger.error(f"Contact extraction failed: {e}")
-        raise ExtractionError(f"Failed to extract contacts: {str(e)}")
+# Example usage
+def main():
+    SAMPLE_EMAIL = """Hi,
+My name is Jane Doe, I work at Acme Corp. You can reach me at jane.doe@acme.com or 555-1234.
+Best,
+Jane"""
+    result = asyncio.run(extract_contacts(SAMPLE_EMAIL))
+    print(result)
+
+if __name__ == "__main__":
+    main()
 ```
 
 This basic extractor demonstrates several key ADK principles :
@@ -266,6 +272,14 @@ This basic extractor demonstrates several key ADK principles :
 2. **Clear Instructions**: The agent knows exactly what to extract and how to handle uncertainty
 3. **Output Key**: Results are stored for potential use by other agents
 4. **Event-Driven Processing**: The extraction happens asynchronously with proper event handling
+5. **Session Management**: Proper session creation and management for reliable processing
+6. **Transfer Control**: `disallow_transfer_to_parent` and `disallow_transfer_to_peers` prevent unwanted agent transfers
+
+**Key Changes from Basic Implementation**:
+
+- **Session Creation**: Must explicitly create a session before processing
+- **Part Creation**: Use `types.Part.from_text()` for proper text part creation
+- **Transfer Control**: Added flags to prevent agent transfers in single-agent scenarios
 
 **Pro Tip**: Using Pydantic models ensures type safety and automatic validation—no more malformed JSON responses! The Field descriptions guide the AI in understanding exactly what data to extract .
 
@@ -354,111 +368,169 @@ This intermediate example introduces field validation, error handling, and retry
 Now let's tackle something more complex—extracting multiple data types from legal documents. This example shows how ADK handles sophisticated extraction scenarios with nested data structures.
 
 ```python
-from typing import List, Dict, Optional
+import asyncio
 from enum import Enum
-from datetime import datetime
-from google.adk.tools import FunctionTool
-import hashlib
-import logging
-
-logger = logging.getLogger(__name__)
+from google.adk import Runner
+from google.adk.agents import LlmAgent
+from google.adk.sessions import InMemorySessionService
+from google.genai import types
+from pydantic import BaseModel, Field
 
 class DocumentType(str, Enum):
+    """Enum representing different types of legal documents."""
     CONTRACT = "contract"
-    INVOICE = "invoice" 
+    INVOICE = "invoice"
     AGREEMENT = "agreement"
     PROPOSAL = "proposal"
     LEGAL_BRIEF = "legal_brief"
     UNKNOWN = "unknown"
 
 class FinancialTerm(BaseModel):
+    """Represents financial terms and amounts in a legal document."""
     amount: float = Field(description="Monetary amount")
     currency: str = Field(description="Currency code (USD, EUR, etc.)", default="USD")
     description: str = Field(description="Description of what this amount represents")
-    due_date: Optional[str] = Field(description="When payment is due", default=None)
+    due_date: str | None = Field(description="When payment is due", default=None)
 
 class LegalExtraction(BaseModel):
+    """Schema for extracted legal document information."""
     document_type: DocumentType
-    parties: List[str] = Field(description="All parties involved in the document")
-    key_dates: List[str] = Field(description="Important dates mentioned (contracts, deadlines, etc.)")
-    financial_terms: List[FinancialTerm] = Field(description="All monetary amounts and terms")
-    obligations: List[str] = Field(description="Key obligations and responsibilities listed")
+    parties: list[str] = Field(description="All parties involved in the document")
+    key_dates: list[str] = Field(
+        description="Important dates mentioned (contracts, deadlines, etc.)"
+    )
+    financial_terms: list[FinancialTerm] = Field(
+        description="All monetary amounts and terms"
+    )
+    obligations: list[str] = Field(
+        description="Key obligations and responsibilities listed"
+    )
     governing_law: str = Field(description="Jurisdiction or governing law", default="")
-    effective_date: Optional[str] = Field(description="When the document becomes effective")
-    expiration_date: Optional[str] = Field(description="When the document expires")
-
-# Create document reader tool using ADK's FunctionTool
-async def read_document_content(file_path: str, tool_context) -> Dict:
-    """Reads document content from various file formats"""
-    try:
-        # Basic file reading - in production, you'd integrate with
-        # document processing libraries like PyMuPDF for PDFs
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        return {"status": "success", "content": content}
-    except Exception as e:
-        return {"status": "error", "message": f"Failed to read document: {str(e)}"}
-
-document_reader_tool = FunctionTool(
-    name="document_reader",
-    description="Read document content from file path",
-    func=read_document_content
-)
+    effective_date: str | None = Field(
+        description="When the document becomes effective"
+    )
+    expiration_date: str | None = Field(description="When the document expires")
 
 legal_agent = LlmAgent(
     model="gemini-2.0-flash",
     name="legal_analyzer",
     description="Specialized agent for analyzing legal documents",
     instruction="""You are an expert legal document analyzer. Extract structured information
-    from legal documents with extreme precision. Pay special attention to:
-
-    1. All parties mentioned (individuals, companies, entities)
-    2. Financial terms including amounts, payment schedules, and penalties
-    3. Critical dates including effective dates, deadlines, and renewal terms
-    4. Legal obligations and responsibilities for each party
-    5. Governing law and jurisdiction clauses
-
-    If information is unclear or ambiguous, mark it as 'unclear' rather than guessing.
-    For dates, use ISO format (YYYY-MM-DD) when possible.
-    For amounts, include currency and context.""",
+from legal documents with extreme precision. Pay special attention to:
+1. All parties mentioned (individuals, companies, entities)
+2. Financial terms including amounts, payment schedules, and penalties
+3. Critical dates including effective dates, deadlines, and renewal terms
+4. Legal obligations and responsibilities for each party
+5. Governing law and jurisdiction clauses
+If information is unclear or ambiguous, mark it as 'unclear' rather than guessing.
+For dates, use ISO format (YYYY-MM-DD) when possible.
+For amounts, include currency and context.""",
     output_schema=LegalExtraction,
-    tools=[document_reader_tool]
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
 )
 
-# Example usage with proper event handling
 async def analyze_legal_document(document_path: str):
+    """
+    Analyze a legal document at the given path using the legal_agent.
+    Creates a session, reads the document content, sends it to the agent,
+    and returns the extracted legal info as a string.
+    """
+    # Read the document content first
+    try:
+        with open(document_path, encoding="utf-8") as file:
+            document_content = file.read()
+    except FileNotFoundError:
+        return f"Error: Document not found at {document_path}"
+    except PermissionError:
+        return f"Error: Permission denied to read {document_path}"
+    except UnicodeDecodeError:
+        return f"Error: Cannot decode document at {document_path}"
+
     session_service = InMemorySessionService()
+    _session = await session_service.create_session(
+        app_name="legal_analysis_app", user_id="legal_user", session_id="legal_session"
+    )
     runner = Runner(
         agent=legal_agent,
         app_name="legal_analysis_app",
-        session_service=session_service
+        session_service=session_service,
     )
 
+    # Send the document content directly to the agent
     user_content = types.Content(
-        role='user',
-        parts=[types.Part(text=f"Please analyze the legal document at: {document_path}")]
+        role="user",
+        parts=[
+            types.Part.from_text(
+                text=f"Please analyze this legal document:\n\n{document_content}"
+            )
+        ],
     )
-
     async for event in runner.run_async(
-        user_id="legal_user",
-        session_id="legal_session",
-        new_message=user_content
+        user_id="legal_user", session_id="legal_session", new_message=user_content
     ):
-        if hasattr(event, 'content') and event.content:
-            if hasattr(event.content, 'parts') and event.content.parts:
+        if hasattr(event, "content") and event.content:
+            if hasattr(event.content, "parts") and event.content.parts:
                 for part in event.content.parts:
-                    if hasattr(part, 'text'):
+                    if hasattr(part, "text") and part.text:
                         return part.text
-
     return "No analysis result available"
+
+# Example usage with sample contract
+def main():
+    # Using the sample contract from the tutorial directory
+    sample_contract_content = """
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into on January 15, 2024, between TechCorp Solutions, a Delaware corporation ("Company"), and DataMax Analytics LLC, a California limited liability company ("Contractor").
+
+PARTIES:
+- Company: TechCorp Solutions, 123 Innovation Drive, San Francisco, CA 94105
+- Contractor: DataMax Analytics LLC, 456 Tech Boulevard, Los Angeles, CA 90210
+
+FINANCIAL TERMS:
+- Total Contract Value: $75,000 USD
+- Payment Schedule: $25,000 due upon signing, $25,000 due on February 15, 2024, and $25,000 due upon project completion
+- Late Payment Penalty: 1.5% per month on overdue amounts
+
+GOVERNING LAW:
+This Agreement shall be governed by and construed in accordance with the laws of the State of California.
+"""
+    
+    # Create a temporary file and analyze it
+    import tempfile
+    import os
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as temp_file:
+        temp_file.write(sample_contract_content)
+        temp_path = temp_file.name
+    
+    try:
+        result = asyncio.run(analyze_legal_document(temp_path))
+        print("Analysis Result:")
+        print(result)
+    finally:
+        os.unlink(temp_path)  # Clean up temporary file
+
+if __name__ == "__main__":
+    main()
 ```
 
 This advanced example introduces several sophisticated concepts :
 
 - **Nested Data Structures**: Financial terms are complex objects with multiple fields
 - **Enums for Consistency**: Document types are limited to predefined values
-- **Tool Integration**: The agent can read various document formats
+- **Direct Document Reading**: The agent reads document content directly without tools
 - **Domain-Specific Instructions**: The prompt is tailored for legal document nuances
+- **Comprehensive Error Handling**: Proper file reading with multiple exception types
+- **Session Management**: Explicit session creation for reliable processing
+
+**Key Improvements in Working Implementation**:
+
+- **Modern Python Types**: Uses `str | None` instead of `Optional[str]` for Python 3.10+ compatibility
+- **Comprehensive Document Reading**: Built-in file reading with proper error handling
+- **Simplified Architecture**: Removes tool complexity for more direct processing
+- **Better Event Handling**: More robust event processing with proper attribute checking
 
 ### Legal Document Processing Architecture
 
@@ -504,8 +576,10 @@ This advanced example introduces several sophisticated concepts :
 
 - **Nested Data Structures**: Financial terms are complex objects with multiple fields
 - **Enums for Consistency**: Document types are limited to predefined values
-- **Tool Integration**: The agent can read various document formats
+- **Direct Document Reading**: The agent reads document content directly without tools
 - **Domain-Specific Instructions**: The prompt is tailored for legal document nuances
+- **Comprehensive Error Handling**: Proper file reading with multiple exception types
+- **Session Management**: Explicit session creation for reliable processing
 
 ### Example 3: Multi-Agent Extraction Pipeline (Advanced Level)
 
