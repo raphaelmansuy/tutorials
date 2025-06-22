@@ -608,7 +608,7 @@ flowchart TD
 #### The Approval Chain Pattern
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["📄 Request Submitted"] --> B["🔍 Initial Validator<br/>Basic checks & formatting"]
     
     B --> C{{"💰 Amount Check<br/>< $1000?"}}
