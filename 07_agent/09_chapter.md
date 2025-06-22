@@ -116,372 +116,714 @@ graph TB
 
 ## How to Build Enterprise-Scale Deployment
 
-### Step 1: Containerize Your Agent for Cloud Run
+> **⚠️ Important:** Google ADK provides three deployment options, with **Vertex AI Agent Engine** being the recommended approach for production deployments due to its fully managed nature, built-in scaling capabilities, and enterprise security features.
 
-First, let's create a production-ready container for your ADK agent:
+### Official ADK Deployment Options
 
-```dockerfile
-# Dockerfile for production ADK agent
-FROM python:3.11-slim
+Based on the official Google ADK documentation, here are the three deployment paths:
 
-# Set production environment
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-ENV GOOGLE_CLOUD_PROJECT=${PROJECT_ID}
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash agent
-WORKDIR /app
-
-# Copy requirements first for better caching
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
-COPY --chown=agent:agent . .
-
-# Switch to non-root user
-USER agent
-
-# Health check endpoint
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
-
-# Start the application
-CMD ["python", "main.py"]
+```mermaid
+graph TB
+    subgraph "🎯 Recommended: Vertex AI Agent Engine"
+        AE1[Fully Managed Runtime] --> AE2[Auto-scaling & Load Balancing]
+        AE2 --> AE3[Built-in Session Management]
+        AE3 --> AE4[Integrated Observability]
+        AE4 --> AE5[VPC-SC Security Support]
+        AE5 --> AE6[Production SLAs]
+    end
+    
+    subgraph "⚙️ Flexible: Cloud Run"
+        CR1[Container-based Deployment] --> CR2[ADK CLI Support]
+        CR2 --> CR3[Manual Scaling Configuration]
+        CR3 --> CR4[Custom Infrastructure Control]
+        CR4 --> CR5[UI & API Endpoints]
+    end
+    
+    subgraph "🔧 Advanced: Google Kubernetes Engine"
+        GKE1[Full Infrastructure Control] --> GKE2[Complex Multi-Agent Systems]
+        GKE2 --> GKE3[Custom Resource Management]
+        GKE3 --> GKE4[Open Source Model Support]
+        GKE4 --> GKE5[Advanced Networking]
+    end
+    
+    style AE1 fill:#e8f5e8
+    style AE2 fill:#e8f5e8
+    style AE3 fill:#e8f5e8
+    style AE4 fill:#e8f5e8
+    style AE5 fill:#e8f5e8
+    style AE6 fill:#e8f5e8
+    style CR1 fill:#fff3e0
+    style CR2 fill:#fff3e0
+    style CR3 fill:#fff3e0
+    style CR4 fill:#fff3e0
+    style CR5 fill:#fff3e0
+    style GKE1 fill:#fce4ec
+    style GKE2 fill:#fce4ec
+    style GKE3 fill:#fce4ec
+    style GKE4 fill:#fce4ec
+    style GKE5 fill:#fce4ec
 ```
 
-### Step 2: Production-Ready Application Code
+### Real-World Production Considerations
 
-Here's how to structure your production agent:
+**Agent Engine vs Cloud Run vs GKE Decision Matrix:**
+
+| Factor | Agent Engine | Cloud Run | GKE |
+|--------|--------------|-----------|-----|
+| **Setup Complexity** | Minimal (2-3 commands) | Low (ADK CLI) | High (Full K8s) |
+| **Production Readiness** | Built-in | Manual setup | Extensive setup |
+| **Scaling** | Automatic | Configurable | Full control |
+| **Monitoring** | Cloud Trace/Logging integrated | Manual setup | Custom implementation |
+| **Security** | VPC-SC compliant | Custom IAM | Full security control |
+| **Cost** | Usage-based compute | Pay-per-request | Infrastructure costs |
+| **Best For** | Most production workloads | Cost-sensitive applications | Complex multi-agent systems |
+
+### Step 1: Set Up Your ADK Agent Project Structure
+
+Before deployment, ensure your agent follows the official ADK project structure:
+
+```bash
+my_agent_project/
+├── agent.py                 # Main agent file with root_agent variable
+├── __init__.py              # Contains: from . import agent
+├── requirements.txt         # ADK dependencies
+├── .env                     # Environment variables
+└── tests/
+    └── test_agent.py        # Agent tests
+```
+
+**Key Requirements (Official ADK Standards):**
+
+- Agent code must be in `agent.py`
+- Your agent variable must be named `root_agent`
+- `__init__.py` must contain `from . import agent`
+- Python version: >=3.9 and <=3.12 (Agent Engine requirement)
+- Required package: `google-cloud-aiplatform[adk,agent_engines]`
+
+### Step 2: Vertex AI Agent Engine Deployment (Recommended)
+
+The official Google recommendation for production ADK agents is Vertex AI Agent Engine. Here's the complete setup:
 
 ```python
-# main.py - Production ADK agent
+# Production ADK Agent for Vertex AI Agent Engine
+import datetime
+from zoneinfo import ZoneInfo
+from google.adk.agents import Agent
+import vertexai
+from vertexai.preview import reasoning_engines
+from vertexai import agent_engines
+
+# Step 1: Initialize Vertex AI (supports 13 global regions)
+PROJECT_ID = "your-project-id"
+LOCATION = "us-central1"  # Choose from supported regions
+STAGING_BUCKET = "gs://your-production-bucket"
+
+vertexai.init(
+    project=PROJECT_ID,
+    location=LOCATION,
+    staging_bucket=STAGING_BUCKET,
+)
+
+# Step 2: Create your production agent
+def get_weather(city: str) -> dict:
+    """Retrieves the current weather report for a specified city.
+    
+    Args:
+        city (str): The name of the city for which to retrieve the weather report.
+    
+    Returns:
+        dict: status and result or error msg.
+    """
+    # Production implementation with real API integration
+    try:
+        # Your actual weather API integration here
+        if city.lower() == "new york":
+            return {
+                "status": "success",
+                "report": "The weather in New York is sunny with a temperature of 25°C (77°F)."
+            }
+        else:
+            return {
+                "status": "error",
+                "error_message": f"Weather information for '{city}' is not available."
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error_message": f"Service temporarily unavailable: {str(e)}"
+        }
+
+def get_current_time(city: str) -> dict:
+    """Returns the current time in a specified city."""
+    try:
+        timezone_map = {
+            "new york": "America/New_York",
+            "london": "Europe/London",
+            "tokyo": "Asia/Tokyo",
+            "sydney": "Australia/Sydney"
+        }
+        
+        tz_identifier = timezone_map.get(city.lower())
+        if not tz_identifier:
+            return {
+                "status": "error",
+                "error_message": f"Timezone information for '{city}' is not available."
+            }
+        
+        tz = ZoneInfo(tz_identifier)
+        now = datetime.datetime.now(tz)
+        report = f'The current time in {city} is {now.strftime("%Y-%m-%d %H:%M:%S %Z%z")}'
+        
+        return {"status": "success", "report": report}
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "error_message": f"Time service error: {str(e)}"
+        }
+
+# Step 3: Create production-ready agent with proper configuration
+root_agent = Agent(
+    name="production_weather_agent",
+    model="gemini-2.0-flash",  # Latest production model
+    description="Enterprise weather and time agent with global coverage",
+    instruction=(
+        "You are a reliable enterprise agent providing weather and time information. "
+        "Always provide accurate information and handle errors gracefully. "
+        "If a service is unavailable, apologize and suggest alternatives."
+    ),
+    tools=[get_weather, get_current_time],
+)
+
+# Step 4: Prepare for Agent Engine deployment
+app = reasoning_engines.AdkApp(
+    agent=root_agent,
+    enable_tracing=True,  # Essential for production monitoring
+)
+
+# Step 5: Test locally before deployment
+def test_agent_locally():
+    """Test agent functionality before deploying to production"""
+    print("Testing agent locally...")
+    
+    # Create test session
+    session = app.create_session(user_id="test_user")
+    print(f"✅ Session created: {session.id}")
+    
+    # Test queries
+    test_queries = [
+        "What's the weather in New York?",
+        "What time is it in London?",
+        "Tell me about the weather in an unknown city"
+    ]
+    
+    for query in test_queries:
+        print(f"\n🔍 Testing: {query}")
+        try:
+            for event in app.stream_query(
+                user_id="test_user",
+                session_id=session.id,
+                message=query
+            ):
+                if 'parts' in event and len(event['parts']) > 0:
+                    if 'text' in event['parts'][0]:
+                        print(f"✅ Response: {event['parts'][0]['text']}")
+        except Exception as e:
+            print(f"❌ Error: {e}")
+
+# Step 6: Deploy to Agent Engine
+def deploy_to_production():
+    """Deploy agent to Vertex AI Agent Engine"""
+    print("Deploying to Vertex AI Agent Engine...")
+    
+    try:
+        # Deploy with production requirements
+        remote_app = agent_engines.create(
+            agent_engine=root_agent,
+            requirements=[
+                "google-cloud-aiplatform[adk,agent_engines]>=1.73.0",
+                "python-dateutil>=2.8.2",
+                "requests>=2.31.0"  # For API integrations
+            ]
+        )
+        
+        print(f"✅ Agent deployed successfully!")
+        print(f"🔗 Resource name: {remote_app.resource_name}")
+        
+        return remote_app
+        
+    except Exception as e:
+        print(f"❌ Deployment failed: {e}")
+        raise
+
+# Step 7: Production testing
+def test_production_deployment(remote_app):
+    """Test the deployed agent in production"""
+    print("\n🚀 Testing production deployment...")
+    
+    # Create production session
+    session = remote_app.create_session(user_id="prod_user_001")
+    session_id = session["id"]
+    
+    # Test production query
+    for event in remote_app.stream_query(
+        user_id="prod_user_001",
+        session_id=session_id,
+        message="What's the current weather and time in New York?"
+    ):
+        if 'parts' in event and len(event['parts']) > 0:
+            if 'text' in event['parts'][0]:
+                print(f"✅ Production response: {event['parts'][0]['text']}")
+
+if __name__ == "__main__":
+    # Production deployment workflow
+    test_agent_locally()
+    remote_app = deploy_to_production()
+    test_production_deployment(remote_app)
+```
+
+**Key Agent Engine Production Features:**
+
+- **Automatic Scaling:** Handles 0 to thousands of concurrent users
+- **Built-in Monitoring:** Cloud Trace, Cloud Logging, and Cloud Monitoring integration
+- **Session Management:** Persistent conversation context
+- **VPC-SC Support:** Enterprise security compliance
+- **Global Availability:** 13 regions with production SLAs
+- **Cost Optimization:** Pay only for compute time used ($0.0994/vCPU-Hr, $0.0105/GiB-Hr)
+
+### Step 3: Cloud Run Deployment (Alternative)
+
+For more control over infrastructure or cost-sensitive deployments, use Cloud Run with the ADK CLI:
+
+```bash
+# Set up environment variables
+export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+export GOOGLE_CLOUD_LOCATION="us-central1"
+export AGENT_PATH="./your_agent_directory"
+export SERVICE_NAME="production-agent-service"
+
+# Deploy with ADK CLI (Recommended)
+adk deploy cloud_run \
+  --project=$GOOGLE_CLOUD_PROJECT \
+  --region=$GOOGLE_CLOUD_LOCATION \
+  --service_name=$SERVICE_NAME \
+  --with_ui \
+  $AGENT_PATH
+```
+
+**Cloud Run Production Configuration:**
+
+```python
+# agent.py - Cloud Run optimized agent
+from google.adk.agents import Agent
+import os
+
+def setup_production_agent():
+    """Configure agent for Cloud Run deployment"""
+    
+    # Environment-based configuration
+    model_name = os.getenv('MODEL_NAME', 'gemini-2.0-flash')
+    enable_debug = os.getenv('ENVIRONMENT', 'production') == 'development'
+    
+    root_agent = Agent(
+        name="cloud_run_agent",
+        model=model_name,
+        description="Production agent optimized for Cloud Run",
+        instruction=(
+            "You are a production AI agent running on Cloud Run. "
+            "Provide helpful and accurate responses while maintaining "
+            "enterprise-level reliability and security."
+        ),
+        tools=[],  # Add your production tools here
+    )
+    
+    return root_agent
+
+# This variable name is required by ADK
+root_agent = setup_production_agent()
+```
+
+**requirements.txt for Cloud Run:**
+
+```txt
+google-adk>=0.1.0
+google-cloud-aiplatform>=1.73.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+```
+
+**Cloud Run vs Agent Engine Trade-offs:**
+
+| Aspect | Cloud Run | Agent Engine |
+|--------|-----------|--------------|
+| **Setup** | ADK CLI + configuration | 3 Python commands |
+| **Scaling** | Manual configuration | Automatic |
+| **Monitoring** | Custom setup required | Built-in observability |
+| **Session Management** | Manual implementation | Managed service |
+| **Cost** | $0.000024/vCPU-second | $0.0994/vCPU-hour |
+| **UI** | Optional with `--with_ui` | Not included |
+
+### Step 4: Production Monitoring & Observability
+
+**Agent Engine Built-in Monitoring:**
+
+```python
+# Monitoring is automatic with Agent Engine
+# Access via Google Cloud Console:
+# - Cloud Trace for request tracing
+# - Cloud Logging for application logs  
+# - Cloud Monitoring for metrics and alerts
+
+# Example: Custom metrics in your agent tools
+import time
+from google.cloud import monitoring_v3
+
+def monitored_weather_function(city: str) -> dict:
+    """Weather function with monitoring"""
+    start_time = time.time()
+    
+    try:
+        # Your weather logic here
+        result = {"status": "success", "data": "weather_data"}
+        
+        # Record success metric
+        record_metric("weather_requests", 1, {"status": "success", "city": city})
+        
+        return result
+    except Exception as e:
+        # Record error metric
+        record_metric("weather_requests", 1, {"status": "error", "city": city})
+        raise
+    finally:
+        # Record latency
+        latency = time.time() - start_time
+        record_metric("weather_latency", latency, {"city": city})
+
+def record_metric(metric_name: str, value: float, labels: dict):
+    """Send custom metrics to Cloud Monitoring"""
+    # Implementation for Cloud Monitoring
+    pass
+```
+
+**Production SLO Monitoring:**
+
+```python
+# production_monitoring.py
+from dataclasses import dataclass
+from typing import Dict, List
+import time
+
+@dataclass
+class SLOTarget:
+    name: str
+    threshold: float
+    description: str
+
+class ProductionSLOMonitor:
+    def __init__(self, project_id: str):
+        self.project_id = project_id
+        self.slo_targets = {
+            'availability': SLOTarget('availability', 99.9, '99.9% uptime'),
+            'latency_p95': SLOTarget('latency_p95', 2.0, '95% of requests < 2s'),
+            'error_rate': SLOTarget('error_rate', 1.0, 'Error rate < 1%'),
+            'throughput': SLOTarget('throughput', 1000, '> 1000 requests/minute')
+        }
+    
+    def check_slo_compliance(self) -> Dict[str, bool]:
+        """Check if we're meeting our SLOs"""
+        compliance = {}
+        
+        # Check each SLO target
+        for name, target in self.slo_targets.items():
+            current_value = self._get_current_metric_value(name)
+            
+            if name == 'error_rate':
+                compliance[name] = current_value <= target.threshold
+            else:
+                compliance[name] = current_value >= target.threshold
+        
+        return compliance
+    
+    def _get_current_metric_value(self, metric_name: str) -> float:
+        """Get current metric value from monitoring"""
+        # Implementation to fetch from Cloud Monitoring
+        return 0.0
+```
+
+```bash
+# Set environment variables
+export GOOGLE_CLOUD_PROJECT="your-project-id"
+export GOOGLE_CLOUD_LOCATION="us-central1"
+export GOOGLE_GENAI_USE_VERTEXAI=True
+```
+
+**Deploy with ADK CLI (Recommended):**
+
+```bash
+# Minimal deployment
+adk deploy cloud_run \
+  --project=$GOOGLE_CLOUD_PROJECT \
+  --region=$GOOGLE_CLOUD_LOCATION \
+  ./my_agent_project
+
+# Full deployment with UI
+adk deploy cloud_run \
+  --project=$GOOGLE_CLOUD_PROJECT \
+  --region=$GOOGLE_CLOUD_LOCATION \
+  --service_name=production-agent \
+  --app_name=weather-agent \
+  --with_ui \
+  ./my_agent_project
+```
+
+**Custom Container Approach:**
+
+```python
+# main.py - Production ADK agent with custom monitoring
 import os
 import logging
-import asyncio
+import json
 from typing import Optional
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-from google.cloud import secretmanager
 from google.cloud import monitoring_v3
-from vertexai.generative_models import GenerativeModel
+from google.cloud import logging as cloud_logging
 
-# Configure structured logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s", "module": "%(name)s"}'
-)
-logger = logging.getLogger(__name__)
+# Configure structured logging for Google Cloud
+client = cloud_logging.Client()
+client.setup_logging()
 
-class AgentRequest(BaseModel):
-    query: str
-    session_id: Optional[str] = None
-    context: Optional[dict] = None
+## When to Scale vs. When to Optimize
 
-class AgentResponse(BaseModel):
-    response: str
-    session_id: str
-    confidence: float
-    processing_time: float
+### The Scaling Decision Matrix (Updated for ADK)
 
-class ProductionAgent:
-    def __init__(self):
-        self.project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
-        self.model = None
-        self.metrics_client = monitoring_v3.MetricServiceClient()
-        self.setup_monitoring()
+Based on official Google recommendations and real-world Agent Engine performance:
+
+```mermaid
+graph TD
+    A[Performance Issue Detected] --> B{Response Time > 2s?}
+    B -->|Yes| C{Agent Engine Auto-scaled?}
+    B -->|No| D{Error Rate > 1%?}
     
-    async def initialize(self):
-        """Initialize the agent with proper error handling"""
-        try:
-            # Load model with retry logic
-            self.model = await self._load_model_with_retry()
-            logger.info("Agent initialized successfully")
-        except Exception as e:
-            logger.error(f"Failed to initialize agent: {e}")
-            raise
+    C -->|Yes| E[Optimize Agent Logic]
+    C -->|No| F[Check Resource Limits]
     
-    async def _load_model_with_retry(self, max_retries: int = 3):
-        """Load model with exponential backoff retry"""
-        for attempt in range(max_retries):
-            try:
-                return GenerativeModel('gemini-pro')
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    raise
-                wait_time = 2 ** attempt
-                logger.warning(f"Model load attempt {attempt + 1} failed, retrying in {wait_time}s")
-                await asyncio.sleep(wait_time)
+    D -->|Yes| G{Memory Issues?}
+    D -->|No| H[Monitor Closely]
     
-    def setup_monitoring(self):
-        """Set up custom metrics for monitoring"""
-        self.request_counter = 0
-        self.error_counter = 0
-        self.response_times = []
+    E --> I[Profile Tool Functions]
+    F --> J[Increase Quotas]
+    G --> K[Optimize Data Processing]
+    H --> L[Set Up Alerts]
     
-    async def process_request(self, request: AgentRequest) -> AgentResponse:
-        """Process agent request with full monitoring"""
-        start_time = asyncio.get_event_loop().time()
-        
-        try:
-            # Increment request counter
-            self.request_counter += 1
-            
-            # Log request details
-            logger.info(f"Processing request: session={request.session_id}, query_length={len(request.query)}")
-            
-            # Process with the model
-            response = await self._generate_response(request)
-            
-            # Calculate processing time
-            processing_time = asyncio.get_event_loop().time() - start_time
-            self.response_times.append(processing_time)
-            
-            # Send metrics to Cloud Monitoring
-            await self._send_metrics(processing_time, "success")
-            
-            return AgentResponse(
-                response=response,
-                session_id=request.session_id or "anonymous",
-                confidence=0.95,  # Calculate actual confidence
-                processing_time=processing_time
-            )
-            
-        except Exception as e:
-            self.error_counter += 1
-            processing_time = asyncio.get_event_loop().time() - start_time
-            
-            logger.error(f"Request processing failed: {e}")
-            await self._send_metrics(processing_time, "error")
-            
-            raise HTTPException(status_code=500, detail="Internal server error")
-    
-    async def _generate_response(self, request: AgentRequest) -> str:
-        """Generate response using the model"""
-        # Implement your agent logic here
-        prompt = f"User query: {request.query}"
-        
-        if request.context:
-            prompt += f"\nContext: {request.context}"
-        
-        response = await self.model.generate_content_async(prompt)
-        return response.text
-    
-    async def _send_metrics(self, processing_time: float, status: str):
-        """Send custom metrics to Cloud Monitoring"""
-        try:
-            # Create time series data
-            series = monitoring_v3.TimeSeries()
-            series.metric.type = f"custom.googleapis.com/agent/response_time"
-            series.resource.type = "cloud_run_revision"
-            
-            # Add metric data point
-            point = series.points.add()
-            point.value.double_value = processing_time
-            point.interval.end_time.GetCurrentTime()
-            
-            # Send to Cloud Monitoring
-            project_name = f"projects/{self.project_id}"
-            self.metrics_client.create_time_series(
-                name=project_name, 
-                time_series=[series]
-            )
-            
-        except Exception as e:
-            logger.warning(f"Failed to send metrics: {e}")
-
-# Global agent instance
-agent = ProductionAgent()
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Manage application lifecycle"""
-    # Startup
-    await agent.initialize()
-    yield
-    # Shutdown
-    logger.info("Agent shutting down")
-
-# Create FastAPI app with production configuration
-app = FastAPI(
-    title="Production ADK Agent",
-    description="Enterprise-scale AI agent with full monitoring",
-    version="1.0.0",
-    lifespan=lifespan
-)
-
-# Add production middleware
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://*.yourdomain.com"],  # Restrict in production
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
-)
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint for load balancer"""
-    return {
-        "status": "healthy",
-        "timestamp": asyncio.get_event_loop().time(),
-        "version": "1.0.0"
-    }
-
-@app.get("/readiness")
-async def readiness_check():
-    """Readiness check for Kubernetes"""
-    if agent.model is None:
-        raise HTTPException(status_code=503, detail="Agent not ready")
-    return {"status": "ready"}
-
-@app.post("/chat", response_model=AgentResponse)
-async def chat_endpoint(request: AgentRequest):
-    """Main chat endpoint"""
-    return await agent.process_request(request)
-
-@app.get("/metrics")
-async def metrics_endpoint():
-    """Expose metrics for monitoring"""
-    return {
-        "requests_total": agent.request_counter,
-        "errors_total": agent.error_counter,
-        "avg_response_time": sum(agent.response_times) / len(agent.response_times) if agent.response_times else 0,
-        "uptime": asyncio.get_event_loop().time()
-    }
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8080))
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-        workers=1,  # Single worker for Cloud Run
-        log_level="info"
-    )
+    style E fill:#c8e6c9
+    style F fill:#ffcdd2
+    style I fill:#c8e6c9
+    style J fill:#ffcdd2
+    style K fill:#fff3e0
+    style L fill:#e1f5fe
 ```
 
-### Step 3: Infrastructure as Code with Terraform
+**Agent Engine Auto-Scaling Behavior:**
 
-Define your infrastructure declaratively:
+- **Scale to Zero:** Agents scale down to 0 instances when idle
+- **Cold Start:** ~3-5 seconds for first request after idle period
+- **Warm Scaling:** Sub-second scaling for traffic spikes
+- **Maximum Scale:** 100 concurrent requests per agent by default
 
-```hcl
-# terraform/main.tf
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 4.0"
-    }
-  }
-}
+### Production Anti-Patterns to Avoid
 
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
+**❌ Bad: Hardcoded Configuration**
 
-# VPC for secure networking
-resource "google_compute_network" "agent_network" {
-  name                    = "agent-network"
-  auto_create_subnetworks = false
-}
+```python
+# This will fail in production
+root_agent = Agent(
+    name="hardcoded_agent",
+    model="gemini-pro",  # Should be configurable
+    tools=[api_tool(api_key="sk-test-123")]  # Hardcoded secrets
+)
+```
 
-resource "google_compute_subnetwork" "agent_subnet" {
-  name          = "agent-subnet"
-  ip_cidr_range = "10.0.0.0/24"
-  region        = var.region
-  network       = google_compute_network.agent_network.id
-  
-  private_ip_google_access = true
-}
+**✅ Good: Environment-Based Configuration**
 
-# Cloud Run service
-resource "google_cloud_run_service" "agent_service" {
-  name     = "production-agent"
-  location = var.region
+```python
+# Production-ready configuration
+import os
 
-  template {
-    spec {
-      containers {
-        image = "gcr.io/${var.project_id}/agent:latest"
+root_agent = Agent(
+    name=os.getenv('AGENT_NAME', 'production_agent'),
+    model=os.getenv('MODEL_NAME', 'gemini-2.0-flash'),
+    tools=[
+        weather_tool(api_key=os.getenv('WEATHER_API_KEY')),
+        database_tool(connection_url=os.getenv('DATABASE_URL'))
+    ]
+)
+```
+
+**❌ Bad: No Error Handling in Tools**
+
+```python
+def fragile_tool(query: str) -> str:
+    # This will crash your agent
+    response = requests.get(f"https://api.example.com/search?q={query}")
+    return response.json()['result']
+```
+
+**✅ Good: Resilient Tool Implementation**
+
+```python
+def resilient_tool(query: str) -> dict:
+    """Production-ready tool with comprehensive error handling"""
+    try:
+        response = requests.get(
+            f"https://api.example.com/search?q={query}",
+            timeout=10,
+            headers={'User-Agent': 'ProductionAgent/1.0'}
+        )
+        response.raise_for_status()
         
-        ports {
-          container_port = 8080
-        }
-        
-        resources {
-          limits = {
-            cpu    = "2000m"
-            memory = "4Gi"
-          }
-          requests = {
-            cpu    = "1000m"
-            memory = "2Gi"
-          }
-        }
-        
-        env {
-          name  = "GOOGLE_CLOUD_PROJECT"
-          value = var.project_id
-        }
-        
-        env {
-          name = "DATABASE_URL"
-          value_from {
-            secret_key_ref {
-              name = google_secret_manager_secret.db_url.secret_id
-              key  = "latest"
+        data = response.json()
+        if 'result' not in data:
+            return {
+                "status": "error",
+                "message": "API returned unexpected format"
             }
-          }
+            
+        return {
+            "status": "success",
+            "result": data['result']
         }
-      }
-      
-      service_account_name = google_service_account.agent_sa.email
-      
-      container_concurrency = 100
-      timeout_seconds      = 300
-    }
-    
-    metadata {
-      annotations = {
-        "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.agent_connector.name
-        "autoscaling.knative.dev/maxScale"        = "100"
-        "autoscaling.knative.dev/minScale"        = "2"
-      }
-    }
-  }
+        
+    except requests.exceptions.Timeout:
+        return {
+            "status": "error", 
+            "message": "API request timed out"
+        }
+    except requests.exceptions.HTTPError as e:
+        return {
+            "status": "error",
+            "message": f"API returned error: {e.response.status_code}"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": "Service temporarily unavailable"
+        }
+```
 
-  traffic {
-    percent         = 100
-    latest_revision = true
-  }
-}
+### Enterprise Security Checklist
 
-# Service account with minimal permissions
-resource "google_service_account" "agent_sa" {
-  account_id   = "agent-service-account"
-  display_name = "Agent Service Account"
-}
+**✅ ADK Security Best Practices:**
 
-resource "google_project_iam_member" "agent_ai_user" {
-  project = var.project_id
-  role    = "roles/aiplatform.user"
-  member  = "serviceAccount:${google_service_account.agent_sa.email}"
-}
+1. **Use Agent Engine VPC-SC Support**
+   ```python
+   # VPC-SC is automatically supported in Agent Engine
+   # No code changes required for VPC Service Controls
+   ```
+
+2. **Implement Proper IAM Roles**
+   ```yaml
+   # Minimum required permissions
+   - roles/aiplatform.user
+   - roles/storage.objectViewer
+   - roles/monitoring.metricWriter
+   ```
+
+3. **Secure Tool Implementation**
+   ```python
+   def secure_database_tool(query: str) -> dict:
+       """Example: Secure database access with input validation"""
+       # Input validation
+       if not query or len(query) > 1000:
+           return {"error": "Invalid query parameters"}
+       
+       # SQL injection prevention
+       sanitized_query = sanitize_sql_input(query)
+       
+       # Use connection pooling and prepared statements
+       with get_secure_db_connection() as conn:
+           result = conn.execute_prepared(sanitized_query)
+           return {"result": result}
+   ```
+
+4. **Environment-Based Secrets Management**
+   ```python
+   from google.cloud import secretmanager
+   
+   def get_secret(secret_id: str) -> str:
+       """Retrieve secrets from Google Secret Manager"""
+       client = secretmanager.SecretManagerServiceClient()
+       name = f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/latest"
+       response = client.access_secret_version(request={"name": name})
+       return response.payload.data.decode("UTF-8")
+   ```
+
+## Reflection Questions
+
+1. **Production Readiness:** Is your agent using Agent Engine's built-in features (tracing, logging, auto-scaling) or recreating them manually?
+
+2. **Tool Resilience:** Do all your agent tools handle failures gracefully and return structured error responses?
+
+3. **Security Posture:** Are you using Google Cloud's managed security features (VPC-SC, IAM, Secret Manager) or rolling your own?
+
+4. **Monitoring Strategy:** Can you identify and debug issues using Cloud Trace and Cloud Logging, or do you need custom dashboards?
+
+5. **Cost Optimization:** Are you using Agent Engine's scale-to-zero capability, or maintaining unnecessary always-on infrastructure?
+
+## Your Production Deployment Checklist
+
+**🎯 Agent Engine Deployment (Recommended Path):**
+
+- [ ] **Setup (15 minutes)**
+  - [ ] Install `google-cloud-aiplatform[adk,agent_engines]`
+  - [ ] Configure project and staging bucket
+  - [ ] Set up proper IAM roles
+
+- [ ] **Development (30 minutes)**
+  - [ ] Structure agent with proper error handling
+  - [ ] Test locally with `AdkApp.stream_query()`
+  - [ ] Add custom metrics for business logic
+
+- [ ] **Deployment (10 minutes)**
+  - [ ] Deploy with `agent_engines.create()`
+  - [ ] Test production endpoint
+  - [ ] Verify observability in Cloud Console
+
+- [ ] **Production Monitoring (20 minutes)**
+  - [ ] Set up Cloud Monitoring alerts
+  - [ ] Configure SLO monitoring
+  - [ ] Test error scenarios and recovery
+
+**📊 Success Metrics:**
+
+- Agent handles 100+ concurrent requests without errors
+- 95th percentile latency < 2 seconds
+- Automatic scaling from 0 to peak load
+- Error rate < 1%
+- Complete request tracing in Cloud Trace
+
+## Pro Tips for ADK Production Excellence
+
+1. **Leverage Agent Engine's Built-ins:** Don't reinvent monitoring, scaling, or session management. Agent Engine provides these out-of-the-box.
+
+2. **Design Resilient Tools:** Every tool function should handle errors gracefully and return structured responses. Your agent's reliability depends on tool reliability.
+
+3. **Use Structured Logging:** Agent Engine integrates with Cloud Logging. Use structured logging for better observability and debugging.
+
+4. **Monitor Business Metrics:** Beyond system metrics, track agent-specific metrics like tool usage, query types, and user satisfaction.
+
+5. **Test Error Scenarios:** Use Agent Engine's local testing capabilities to simulate failures and verify your error handling.
+
+6. **Optimize for Cost:** Agent Engine's scale-to-zero means you only pay for actual usage. Design your agents to handle cold starts gracefully.
+
+Remember: With Agent Engine, focus on building great agent logic rather than infrastructure. Google Cloud handles the production complexities for you.
+
+Next, we'll explore Safety & Security—because production agents need bulletproof safety measures...
 
 resource "google_project_iam_member" "agent_monitoring" {
   project = var.project_id
@@ -611,402 +953,151 @@ output "load_balancer_ip" {
 }
 ```
 
-### Step 4: CI/CD Pipeline with Cloud Build
+### Step 6: CI/CD Pipeline for ADK Agents
 
-Automate your deployments:
+**For Vertex AI Agent Engine Deployments:**
 
 ```yaml
-# cloudbuild.yaml
-steps:
-  # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/agent:latest'
-      - '.'
-  
-  # Push the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-  
-  # Run security scan
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'beta'
-      - 'container'
-      - 'images'
-      - 'scan'
-      - 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-      - '--format=json'
-  
-  # Run tests
-  - name: 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-    entrypoint: 'python'
-    args: ['-m', 'pytest', 'tests/', '-v']
-    env:
-      - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID'
-  
-  # Deploy to staging
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'agent-staging'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--tag'
-      - 'staging-$BUILD_ID'
-      - '--no-traffic'
-  
-  # Run integration tests
-  - name: 'gcr.io/cloud-builders/curl'
-    args:
-      - '-f'
-      - 'https://agent-staging-$BUILD_ID---agent-staging-hash-uc.a.run.app/health'
-  
-  # Deploy to production (manual approval required)
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'production-agent'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/agent:$BUILD_ID'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-    waitFor: ['manual-approval']
+# .github/workflows/deploy-agent-engine.yml
+name: Deploy to Vertex AI Agent Engine
 
-# Build triggers
-options:
-  logging: CLOUD_LOGGING_ONLY
-  machineType: 'E2_HIGHCPU_8'
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-timeout: '1800s'
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  LOCATION: us-central1
 
-# Manual approval step
-availableSecrets:
-  secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/slack-webhook/versions/latest
-      env: 'SLACK_WEBHOOK'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+      
+      - name: Run tests
+        run: |
+          pytest tests/ -v
+      
+      - name: Validate agent structure
+        run: |
+          python -c "
+          import importlib.util
+          spec = importlib.util.spec_from_file_location('agent', 'agent.py')
+          module = importlib.util.module_from_spec(spec)
+
+└── requirements.txt
 ```
 
-## When to Scale vs. When to Optimize
+### The "Version Compatibility" Error
 
-### The Scaling Decision Matrix
-
-```mermaid
-graph TD
-    A[Performance Issue Detected] --> B{Response Time > 2s?}
-    B -->|Yes| C{CPU Usage > 80%?}
-    B -->|No| D{Error Rate > 1%?}
-    
-    C -->|Yes| E[Scale Horizontally]
-    C -->|No| F[Optimize Code]
-    
-    D -->|Yes| G{Memory Usage > 80%?}
-    D -->|No| H[Monitor Closely]
-    
-    G -->|Yes| I[Scale Vertically]
-    G -->|No| J[Debug Errors]
-    
-    E --> K[Add More Instances]
-    F --> L[Profile & Optimize]
-    I --> M[Increase Memory/CPU]
-    J --> N[Fix Error Sources]
-    
-    style E fill:#ffcdd2
-    style F fill:#c8e6c9
-    style I fill:#fff3e0
-    style J fill:#e1f5fe
-    style K fill:#ffcdd2
-    style L fill:#c8e6c9
-    style M fill:#fff3e0
-    style N fill:#e1f5fe
-```
-
-### Production Monitoring Strategy
-
-Set up comprehensive monitoring that actually tells you what matters:
+**❌ Bad:** Using unsupported Python versions
 
 ```python
-# monitoring.py - Production monitoring setup
-import time
-from typing import Dict, Any
-from dataclasses import dataclass
-from google.cloud import monitoring_v3
-from google.cloud import logging
+# This will fail - Python 3.8 not supported by Agent Engine
+FROM python:3.8-slim
+```
 
-@dataclass
-class MetricData:
-    name: str
-    value: float
-    labels: Dict[str, str]
-    timestamp: float = None
+**✅ Good:** Using supported Python versions
 
-class ProductionMonitor:
-    def __init__(self, project_id: str):
-        self.project_id = project_id
-        self.metrics_client = monitoring_v3.MetricServiceClient()
-        self.logging_client = logging.Client()
-        self.logger = self.logging_client.logger("agent-production")
-        
-        # SLI/SLO targets
-        self.slo_targets = {
-            'availability': 99.9,      # 99.9% uptime
-            'latency_p95': 2.0,        # 95% requests < 2s
-            'error_rate': 0.01,        # < 1% error rate
-            'throughput': 1000         # > 1000 requests/minute
-        }
+```python
+# Supported versions: Python >=3.9 and <=3.12
+FROM python:3.11-slim
+```
+
+### The "Custom Session Management" Trap
+
+**❌ Bad:** Building custom session management
+
+```python
+# Reinventing session management
+class CustomSessionManager:
+    def __init__(self):
+        self.sessions = {}
     
-    def record_request(self, duration: float, status: str, endpoint: str):
-        """Record request metrics"""
-        metrics = [
-            MetricData(
-                name="agent/request_duration",
-                value=duration,
-                labels={"endpoint": endpoint, "status": status}
-            ),
-            MetricData(
-                name="agent/request_count",
-                value=1,
-                labels={"endpoint": endpoint, "status": status}
-            )
-        ]
-        
-        self._send_metrics(metrics)
-        
-        # Log structured data
-        self.logger.log_struct({
-            "event": "request_processed",
-            "duration": duration,
-            "status": status,
-            "endpoint": endpoint,
-            "timestamp": time.time()
-        })
-    
-    def check_slo_compliance(self) -> Dict[str, bool]:
-        """Check if we're meeting our SLOs"""
-        compliance = {}
-        
-        # Check availability (using uptime checks)
-        availability = self._get_availability_percentage()
-        compliance['availability'] = availability >= self.slo_targets['availability']
-        
-        # Check latency P95
-        p95_latency = self._get_latency_percentile(95)
-        compliance['latency'] = p95_latency <= self.slo_targets['latency_p95']
-        
-        # Check error rate
-        error_rate = self._get_error_rate()
-        compliance['error_rate'] = error_rate <= self.slo_targets['error_rate']
-        
-        # Log SLO status
-        self.logger.log_struct({
-            "event": "slo_check",
-            "compliance": compliance,
-            "metrics": {
-                "availability": availability,
-                "p95_latency": p95_latency,
-                "error_rate": error_rate
-            }
-        })
-        
-        return compliance
-    
-    def _send_metrics(self, metrics: list[MetricData]):
-        """Send metrics to Cloud Monitoring"""
-        series_list = []
-        
-        for metric in metrics:
-            series = monitoring_v3.TimeSeries()
-            series.metric.type = f"custom.googleapis.com/{metric.name}"
-            series.resource.type = "cloud_run_revision"
-            
-            # Add labels
-            for key, value in metric.labels.items():
-                series.metric.labels[key] = value
-            
-            # Add data point
-            point = series.points.add()
-            point.value.double_value = metric.value
-            
-            if metric.timestamp:
-                point.interval.end_time.seconds = int(metric.timestamp)
-            else:
-                point.interval.end_time.GetCurrentTime()
-            
-            series_list.append(series)
-        
-        # Send all metrics
-        project_name = f"projects/{self.project_id}"
-        self.metrics_client.create_time_series(
-            name=project_name,
-            time_series=series_list
-        )
-    
-    def create_alerting_policies(self):
-        """Create production alerting policies"""
-        policies = [
-            {
-                'display_name': 'High Error Rate',
-                'condition': {
-                    'threshold': 0.05,  # 5% error rate
-                    'duration': '300s',
-                    'filter': 'metric.type="custom.googleapis.com/agent/request_count" AND metric.label.status="error"'
-                }
-            },
-            {
-                'display_name': 'High Latency',
-                'condition': {
-                    'threshold': 5.0,   # 5 second threshold
-                    'duration': '180s',
-                    'filter': 'metric.type="custom.googleapis.com/agent/request_duration"'
-                }
-            },
-            {
-                'display_name': 'Low Availability',
-                'condition': {
-                    'threshold': 0.999, # 99.9% availability
-                    'duration': '600s',
-                    'filter': 'resource.type="uptime_check"'
-                }
-            }
-        ]
-        
-        for policy_config in policies:
-            self._create_alert_policy(policy_config)
-    
-    def _create_alert_policy(self, config: Dict[str, Any]):
-        """Create individual alert policy"""
-        # Implementation for creating Cloud Monitoring alert policies
+    def create_session(self, user_id):
+        # Custom implementation that duplicates ADK functionality
         pass
 ```
 
-## Production Anti-Patterns to Avoid
-
-### The "It Works on My Machine" Trap
-
-**❌ Bad:** Testing only in development environment
+**✅ Good:** Using built-in ADK session management
 
 ```python
-# This will fail in production
-agent = Agent(
-    model="gpt-4",  # Hardcoded model
-    api_key="sk-test-123",  # Hardcoded API key
-    debug=True  # Debug mode in production
-)
-```
-
-**✅ Good:** Environment-aware configuration
-
-```python
-# Production-ready configuration
-agent = Agent(
-    model=os.getenv('MODEL_NAME', 'gemini-pro'),
-    credentials=get_service_account_credentials(),
-    debug=os.getenv('ENVIRONMENT') == 'development',
-    timeout=int(os.getenv('REQUEST_TIMEOUT', '30')),
-    retry_attempts=int(os.getenv('RETRY_ATTEMPTS', '3'))
-)
-```
-
-### The "Single Point of Failure" Mistake
-
-**❌ Bad:** Everything depends on one service
-
-```python
-# All requests go through one instance
-@app.post("/chat")
-async def chat(request: ChatRequest):
-    return single_agent.process(request)  # What if this fails?
-```
-
-**✅ Good:** Resilient architecture with circuit breakers
-
-```python
-from circuitbreaker import circuit
-
-@circuit(failure_threshold=5, recovery_timeout=30)
-async def process_with_primary_agent(request):
-    return await primary_agent.process(request)
-
-@app.post("/chat")
-async def chat(request: ChatRequest):
-    try:
-        return await process_with_primary_agent(request)
-    except CircuitBreakerError:
-        # Fallback to secondary agent
-        return await fallback_agent.process(request)
+# ADK provides built-in session management
+app = reasoning_engines.AdkApp(agent=root_agent, enable_tracing=True)
+session = app.create_session(user_id="user_123")
 ```
 
 ## Reflection Questions
 
-1. **Scalability Reality Check:** How will your agent handle 10x current traffic? What will break first?
+1. **Deployment Strategy:** Should you use Vertex AI Agent Engine for full management, or Cloud Run for custom control? What are the trade-offs for your use case?
 
-2. **Failure Scenarios:** What happens when your database goes down? When the AI model is unavailable? When your API rate limits are hit?
+2. **Session Management:** How will you handle user sessions and state? Are you leveraging ADK's built-in session management effectively?
 
-3. **Monitoring Blind Spots:** What metrics are you NOT collecting that could indicate problems before they become outages?
+3. **Monitoring & Observability:** What metrics matter most for your ADK agent? How will you monitor agent performance, tool usage, and user satisfaction?
 
-4. **Security Posture:** If a hacker gained access to your production environment today, what damage could they do?
+4. **Scaling Considerations:** How will your agent handle traffic spikes? What's your strategy for scaling tools and external API calls?
 
-5. **Compliance Readiness:** If an auditor asked for logs from six months ago, could you provide them? Are you meeting data retention requirements?
+5. **Cost Optimization:** Are you using the right model for your workload? How will you optimize costs while maintaining performance?
 
-## Your 24-Hour Production Challenge
+## Your 24-Hour ADK Production Challenge
 
-**The Mission:** Deploy a production-ready ADK agent that can handle real enterprise traffic.
+**The Mission:** Deploy a production-ready ADK agent using Google's recommended practices.
 
 **Today's Objectives:**
 
-1. **Morning (4 hours):** Set up infrastructure with Terraform
-   - Create VPC, Cloud Run service, load balancer
-   - Configure monitoring and alerting
-   - Set up proper IAM roles
+1. **Morning (4 hours):** Set up proper ADK project structure
+   - Create agent.py with root_agent variable
+   - Set up proper **init**.py
+   - Configure requirements.txt with correct dependencies
+   - Write tests for your agent
 
-2. **Afternoon (4 hours):** Implement production code
-   - Add health checks, metrics, and logging
-   - Implement circuit breakers and retries
-   - Add security middleware
+2. **Afternoon (4 hours):** Deploy to Vertex AI Agent Engine
+   - Initialize Vertex AI with proper project settings
+   - Deploy using reasoning_engines.AdkApp()
+   - Test local and remote deployment
+   - Set up monitoring and logging
 
-3. **Evening (4 hours):** Deploy and test
-   - Set up CI/CD pipeline
-   - Deploy to staging and production
-   - Run load tests and verify monitoring
+3. **Evening (4 hours):** Implement production best practices
+   - Set up CI/CD pipeline for automated deployments
+   - Configure monitoring alerts and SLOs
+   - Test session management and scaling
+   - Document deployment process
 
 **Success Metrics:**
 
-- Agent serves 1000+ requests without errors
-- All health checks pass
-- Monitoring dashboards show green metrics
-- Load balancer distributes traffic properly
-- CI/CD pipeline deploys automatically
+- Agent successfully deployed to Agent Engine
+- Session management working correctly
+- Built-in tracing and monitoring active
+- CI/CD pipeline deploying automatically
+- All health checks passing
 
-## Pro Tips for Production Excellence
+## Pro Tips for ADK Production Excellence
 
-1. **Start with SLIs/SLOs:** Define your Service Level Indicators and Objectives before you build. If you can't measure it, you can't improve it.
+1. **Start with Agent Engine:** Unless you have specific containerization needs, start with Vertex AI Agent Engine for the simplest production deployment.
 
-2. **Embrace the Circuit Breaker Pattern:** Use circuit breakers for all external dependencies. Your agent should degrade gracefully, not crash catastrophically.
+2. **Follow ADK Conventions:** Use the exact file naming conventions (agent.py, root_agent variable) to avoid deployment issues.
 
-3. **Monitor the Four Golden Signals:**
-   - **Latency:** How long requests take
-   - **Traffic:** How many requests you're getting
-   - **Errors:** Rate of failed requests
-   - **Saturation:** How full your services are
+3. **Leverage Built-in Features:** Don't reinvent session management, tracing, or monitoring—ADK provides these out of the box.
 
-4. **Plan for Disaster:** Have runbooks for common failures. Practice your incident response. Chaos engineering isn't optional.
+4. **Version Compatibility:** Always use supported Python versions (>=3.9, <=3.12) for Agent Engine compatibility.
 
-5. **Security by Design:** Never trust user input. Always validate, sanitize, and authorize. Use least-privilege access everywhere.
+5. **Test Locally First:** Always test your agent locally with reasoning_engines.AdkApp() before deploying to production.
 
-Remember: In production, being 99% reliable means 3.65 days of downtime per year. Every nine matters. Your users depend on you to get this right.
+6. **Monitor Agent-Specific Metrics:** Focus on tool usage, conversation flows, and user intent completion rates, not just generic web metrics.
 
-Next, we'll explore Safety & Security—because in production, one security vulnerability can undo years of hard work...
+Remember: ADK is designed to simplify AI agent deployment. Don't over-engineer what Google has already solved for you. The best production deployments are often the simplest ones that leverage the platform's built-in capabilities.
+
+Next, we'll explore Safety & Security—because even the most robust deployment means nothing if your agent isn't secure and safe...
