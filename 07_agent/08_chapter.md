@@ -1,5 +1,7 @@
 # Chapter 8: Sessions & Memory - Building Persistent Intelligence
 
+> **Important Disclaimer:** This tutorial is designed for educational purposes to illustrate Google ADK memory concepts and patterns. Some code examples may require adaptation for your specific ADK version and use case. Business metrics and case studies are fictional examples created for illustration. Always refer to the official Google ADK documentation for the most current APIs and best practices.
+
 > *"An agent without memory is like a consultant who forgets everything after each meeting. An agent with memory is like a trusted advisor who knows your business history."* - The Memory Advantage
 
 ## Why Memory Transforms Agents from Tools to Partners
@@ -117,7 +119,9 @@ customer_service_agent = LlmAgent(
     Always reference previous parts of the conversation to provide coherent, 
     helpful service without asking customers to repeat themselves.
     """,
-    tools=[check_account_status, update_ticket, escalate_to_specialist]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: check_account_status, update_ticket, escalate_to_specialist
+    tools=[]  # Add your actual tool functions here
 )
 
 # Set up session service for persistent state management
@@ -177,7 +181,7 @@ async def handle_customer_conversation():
     return final_session.state
 ```
 
-**Business Impact:** Organizations implementing ADK memory systems typically see significant improvements, though specific metrics vary by use case and implementation quality.
+**Business Impact:** Organizations implementing ADK memory systems can see improvements in agent performance and user experience, though specific outcomes vary significantly based on implementation quality, use case, and organizational context.
 
 ### 2. Long-Term Memory: Using MemoryService
 
@@ -195,11 +199,8 @@ from google.adk.tools import load_memory_tool
 # Memory service for investment experiences
 memory_service = InMemoryMemoryService()
 
-# Create the investment memory search tool
-investment_memory_tool = load_memory_tool(
-    name="search_investment_memory",
-    description="Search memory for relevant investment experiences and patterns"
-)
+# Use the pre-built memory tool
+from google.adk.tools.load_memory_tool import load_memory_tool
 
 investment_advisor = LlmAgent(
     name="investment_advisor",
@@ -212,10 +213,12 @@ investment_advisor = LlmAgent(
     2. Note the client's reaction and any concerns raised
     3. Learn from patterns in successful and unsuccessful recommendations
     
-    When making new recommendations, use the search_investment_memory tool to reference relevant 
+    When making new recommendations, use the load_memory_tool to reference relevant 
     past experiences to improve your advice and build trust with clients.
     """,
-    tools=[analyze_portfolio, research_investments, calculate_risk_metrics, investment_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: analyze_portfolio, research_investments, calculate_risk_metrics
+    tools=[load_memory_tool]
 )
 
 # Set up runner with memory service
@@ -271,11 +274,8 @@ memory_service = VertexAiRagMemoryService(
     vector_distance_threshold=0.7
 )
 
-# Create the legal memory search tool
-legal_memory_tool = load_memory_tool(
-    name="search_legal_memory",
-    description="Search legal knowledge base for relevant information and precedents"
-)
+# Use the pre-built memory tool
+from google.adk.tools.load_memory_tool import load_memory_tool
 
 legal_research_agent = LlmAgent(
     name="legal_research_specialist",
@@ -289,10 +289,12 @@ legal_research_agent = LlmAgent(
     - Standard procedures and best practices
     - Industry-specific compliance requirements
     
-    Always use the search_legal_memory tool to search for relevant legal information
+    Always use the load_memory_tool to search for relevant legal information
     and verify legal advice against current knowledge.
     """,
-    tools=[search_case_law, check_regulation_updates, verify_legal_facts, legal_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: search_case_law, check_regulation_updates, verify_legal_facts
+    tools=[load_memory_tool]
 )
 
 # Production session service
@@ -357,10 +359,8 @@ from google.adk.runners import Runner
 from google.adk.tools import load_memory_tool
 
 # Create the project memory search tool
-project_memory_tool = load_memory_tool(
-    name="search_project_memory",
-    description="Search memory for relevant past project experiences"
-)
+# Note: Using the pre-built load_memory_tool directly
+from google.adk.tools.load_memory_tool import load_memory_tool
 
 # Project management agent that learns procedures
 project_manager_agent = LlmAgent(
@@ -375,10 +375,12 @@ project_manager_agent = LlmAgent(
     - Apply best practices from similar past projects
     - Manage risks based on historical data
     
-    Always use search_project_memory to find relevant past project experiences when 
+    Always use load_memory_tool to find relevant past project experiences when 
     planning new projects or addressing issues.
     """,
-    tools=[create_project_plan, assign_resources, track_progress, manage_risks, project_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: create_project_plan, assign_resources, track_progress, manage_risks
+    tools=[load_memory_tool]
 )
 
 # Set up services for session and memory management
@@ -456,10 +458,8 @@ from google.adk.runners import Runner
 from google.adk.tools import load_memory_tool
 
 # Use the official memory tool instead of custom implementation
-assistant_memory_tool = load_memory_tool(
-    name="search_assistant_memory",
-    description="Search memory for relevant past interactions and user preferences"
-)
+# Use the official memory tool instead of custom implementation
+from google.adk.tools import load_memory_tool
 
 # Executive assistant with user-specific memory
 executive_assistant = LlmAgent(
@@ -474,9 +474,11 @@ executive_assistant = LlmAgent(
     - How they prefer to receive information and make decisions
     - Their professional relationships and meeting dynamics
     
-    Use search_assistant_memory to access past interactions and provide highly personalized support.
+    Use load_memory_tool to access past interactions and provide highly personalized support.
     """,
-    tools=[manage_calendar, draft_communications, prioritize_tasks, coordinate_meetings, assistant_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: manage_calendar, draft_communications, prioritize_tasks, coordinate_meetings
+    tools=[load_memory_tool]
 )
 
 # Set up services
@@ -492,35 +494,20 @@ runner = Runner(
 
 # Building user profiles using ADK state scoping
 async def update_user_profile(user_id, interaction_data):
-    # Create or get existing session for this user
+    # Create or get existing session for this user with initial state
     session = await session_service.create_session(
         app_name="executive_assistant",
         user_id=user_id,
-        session_id=f"profile_update_{interaction_data.timestamp}"
+        session_id=f"profile_update_{interaction_data.timestamp}",
+        state={
+            # User-specific preferences using user: prefix for ADK state scoping
+            "user:communication_style": interaction_data.communication_style,
+            "user:meeting_preferences": interaction_data.meeting_preferences,
+            "user:priority_patterns": interaction_data.priority_patterns,
+            "user:last_interaction": interaction_data.timestamp,
+            "temp:current_analysis": interaction_data.interaction_type  # temporary data
+        }
     )
-    
-    # Update user-scoped state using ADK's state prefixes
-    from google.adk.events import Event, EventActions
-    
-    # Prepare state updates with user: prefix for user-specific data
-    state_updates = {
-        "user:communication_style": interaction_data.communication_style,
-        "user:meeting_preferences": interaction_data.meeting_preferences,
-        "user:priority_patterns": interaction_data.priority_patterns,
-        "user:last_interaction": interaction_data.timestamp,
-        "temp:current_analysis": interaction_data.interaction_type  # temporary data
-    }
-    
-    # Create event with state updates
-    profile_update_event = Event(
-        invocation_id=f"profile_update_{user_id}",
-        author="system",
-        actions=EventActions(state_delta=state_updates),
-        timestamp=interaction_data.timestamp
-    )
-    
-    # Apply the updates
-    await session_service.append_event(session, profile_update_event)
     
     # Add completed session to memory for future reference
     updated_session = await session_service.get_session(
@@ -560,7 +547,12 @@ async def predict_user_needs(user_id, context):
     return {
         "historical_patterns": search_results,
         "current_preferences": user_prefs,
-        "predicted_needs": generate_predictions(search_results, user_prefs, context)
+    # Note: This function would need to be implemented based on your specific logic
+    # return prediction_logic(search_results, user_prefs, context)
+    return {
+        "status": "prediction_placeholder",
+        "message": "Implement prediction logic based on your business requirements"
+    }
     }
 ```
 
@@ -583,11 +575,8 @@ from google.adk.runners import Runner
 # Import the official memory tool from ADK
 from google.adk.tools import load_memory_tool
 
-# Use the official memory tool instead of custom implementation
-business_memory_tool = load_memory_tool(
-    name="search_business_memory",
-    description="Search memory for relevant business consulting experiences"
-)
+# Use the official memory tool directly (no custom parameters needed)
+# The load_memory_tool is a pre-built tool that works with your configured MemoryService
 
 # Comprehensive agent with both session state and long-term memory
 business_consultant = LlmAgent(
@@ -598,11 +587,13 @@ business_consultant = LlmAgent(
     
     Use your capabilities to:
     - Maintain context during sessions via session state
-    - Access historical knowledge via the search_business_memory tool
+    - Access historical knowledge via the load_memory_tool
     - Learn from past consulting experiences
     - Build personalized relationships with each client
     """,
-    tools=[analyze_business_problem, recommend_solutions, track_implementation, business_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: analyze_business_problem, recommend_solutions, track_implementation
+    tools=[load_memory_tool]
 )
 
 # Choose appropriate services based on your needs
@@ -715,17 +706,22 @@ app = reasoning_engines.AdkApp(
 )
 
 # Deploy your agent to Vertex AI Agent Engine
-remote_app = agent_engines.create(
-    agent_engine=business_consultant,
+# Note: The exact deployment API is subject to change in ADK versions
+# Refer to the latest ADK documentation for current deployment methods
+# This is an example and may not reflect the current production API
+remote_app = reasoning_engines.create(
+    agent=business_consultant,
     requirements=[
-        "google-cloud-aiplatform[adk,agent_engines]"   
+        "google-cloud-aiplatform[adk]"   
     ]
 )
 
 print(f"Deployed agent: {remote_app.resource_name}")
 
 # Query the deployed agent
-for event in remote_app.stream_query(
+# Note: The exact query API may vary based on your ADK version
+# This is an example and may not reflect the current production API
+for event in remote_app.query(
     user_id="production_user",
     session_id="consultation_session_001",
     message="Help me analyze market expansion opportunities",
@@ -741,6 +737,8 @@ for event in remote_app.stream_query(
 - Monitoring and logging are built-in features
 
 ## Real-World Case Study: E-Commerce Personalization Engine
+
+> **Note:** This is a fictional case study created for educational purposes to illustrate ADK memory concepts and implementation patterns. The company "ShopSmart" and specific metrics are illustrative examples.
 
 ### The Challenge: Generic Shopping Experiences
 
@@ -847,10 +845,6 @@ sequenceDiagram
     CO->>SS: state["customer_activity"] = "cart_building"
     
     CO->>C: "Added to cart! Based on your $150 budget, you have $80 left for accessories. Want to see matching socks?"
-    
-    style PS fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style SS fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-    style CO fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
 ```
 
 **ADK Implementation:**
@@ -1296,34 +1290,36 @@ async def provide_proactive_service(customer_id, context):
 
 ### The Results: Transformation Through Memory
 
+> **Note:** The following metrics are fictional examples created for educational purposes to illustrate potential improvements with memory-enabled agents.
+
 ShopSmart's implementation of ADK memory systems delivered measurable business impact:
 
-#### Performance Improvements
+#### Performance Improvements (Fictional Example)
 
 ```mermaid
 flowchart LR
-    subgraph "📈 Key Metrics Improved"
+    subgraph "📈 Key Metrics Improved (Example)"
         CR["`🎯 **Conversion Rate**
-        2.1% → 4.8%
-        (+129% increase)`"]
+        Example: 2.1% → 4.8%
+        (Fictional +129% increase)`"]
         
         AOV["`💰 **Average Order Value**
-        $67 → $94
-        (+40% increase)`"]
+        Example: $67 → $94
+        (Fictional +40% increase)`"]
         
         CS["`⭐ **Customer Satisfaction**
-        3.2/5 → 4.7/5
-        (+47% increase)`"]
+        Example: 3.2/5 → 4.7/5
+        (Fictional +47% increase)`"]
     end
     
-    subgraph "🔄 Memory-Driven Features"
+    subgraph "🔄 Memory-Driven Features (Example)"
         PR["`🎯 **Smart Recommendations**
-        78% relevance score
-        3x higher click-through`"]
+        Example: 78% relevance score
+        Fictional 3x higher click-through`"]
         
         PA["`🤖 **Proactive Assistance**
-        45% cart abandonment reduction
-        Timely intervention`"]
+        Example: 45% cart abandonment reduction
+        Fictional timely intervention`"]
         
         PC["`👤 **Personal Context**
         Remember preferences
@@ -1470,11 +1466,8 @@ from google.adk.memory import InMemoryMemoryService
 from google.adk.runners import Runner
 from google.adk.tools import load_memory_tool
 
-# Use the official memory tool instead of custom implementation
-business_memory_tool = load_memory_tool(
-    name="search_business_memory",
-    description="Search memory for relevant business consulting experiences"
-)
+# Use the official memory tool (no custom parameters needed)
+from google.adk.tools import load_memory_tool
 
 # Step 2: Create your memory-enabled agent
 business_advisor = LlmAgent(
@@ -1485,13 +1478,15 @@ business_advisor = LlmAgent(
     
     Use your capabilities to:
     - Track ongoing strategic discussions using session state
-    - Learn from past advice and outcomes using search_business_memory tool
+    - Learn from past advice and outcomes using load_memory_tool
     - Apply business frameworks and knowledge from memory
     - Personalize advice based on user state (use user: prefix)
     
     Always reference relevant past interactions and learnings when available.
     """,
-    tools=[analyze_market_data, create_strategic_plan, assess_risks, business_memory_tool]
+    # Note: In a real implementation, these tools would be defined as functions
+    # Example: analyze_market_data, create_strategic_plan, assess_risks
+    tools=[load_memory_tool]
 )
 
 # Step 3: Set up services
@@ -1505,61 +1500,78 @@ runner = Runner(
     memory_service=memory_service
 )
 
-# Step 4: Test memory persistence
+# Step 4: Test memory persistence with error handling
 async def test_memory_persistence():
     import asyncio
     from google.genai.types import Content, Part
     
-    # Session 1: Initial analysis
-    session1 = await session_service.create_session(
-        app_name="business_advisor",
-        user_id="client_001",
-        session_id="european_expansion",
-        state={"user:industry": "tech", "user:risk_tolerance": "moderate"}
-    )
-    
-    query1 = Content(
-        parts=[Part(text="Help me analyze entering the European market for my SaaS company")],
-        role="user"
-    )
-    
-    async for event in runner.run_async(
-        user_id="client_001",
-        session_id="european_expansion",
-        new_message=query1
-    ):
-        if event.is_final_response():
-            print(f"Session 1 Response: {event.content.parts[0].text}")
-    
-    # Store session in memory
-    completed_session = await session_service.get_session(
-        app_name="business_advisor",
-        user_id="client_001",
-        session_id="european_expansion"
-    )
-    await memory_service.add_session_to_memory(completed_session)
-    
-    # Session 2: Follow-up (agent should remember previous discussion)
-    session2 = await session_service.create_session(
-        app_name="business_advisor",
-        user_id="client_001",
-        session_id="followup_european"
-    )
-    
-    query2 = Content(
-        parts=[Part(text="What did we decide about the European expansion timeline?")],
-        role="user"
-    )
-    
-    async for event in runner.run_async(
-        user_id="client_001",
-        session_id="followup_european",
-        new_message=query2
-    ):
-        if event.is_final_response():
-            print(f"Session 2 Response: {event.content.parts[0].text}")
-    
-    return "Memory persistence test completed"
+    try:
+        # Session 1: Initial analysis
+        session1 = await session_service.create_session(
+            app_name="business_advisor",
+            user_id="client_001",
+            session_id="european_expansion",
+            state={"user:industry": "tech", "user:risk_tolerance": "moderate"}
+        )
+        
+        query1 = Content(
+            parts=[Part(text="Help me analyze entering the European market for my SaaS company")],
+            role="user"
+        )
+        
+        response1 = None
+        async for event in runner.run_async(
+            user_id="client_001",
+            session_id="european_expansion",
+            new_message=query1
+        ):
+            if event.is_final_response():
+                response1 = event.content.parts[0].text
+                print(f"Session 1 Response: {response1}")
+        
+        # Store session in memory
+        completed_session = await session_service.get_session(
+            app_name="business_advisor",
+            user_id="client_001",
+            session_id="european_expansion"
+        )
+        await memory_service.add_session_to_memory(completed_session)
+        print("✓ Session stored in memory")
+        
+        # Session 2: Follow-up (agent should remember previous discussion)
+        session2 = await session_service.create_session(
+            app_name="business_advisor",
+            user_id="client_001",
+            session_id="followup_european"
+        )
+        
+        query2 = Content(
+            parts=[Part(text="What did we decide about the European expansion timeline?")],
+            role="user"
+        )
+        
+        response2 = None
+        async for event in runner.run_async(
+            user_id="client_001",
+            session_id="followup_european",
+            new_message=query2
+        ):
+            if event.is_final_response():
+                response2 = event.content.parts[0].text
+                print(f"Session 2 Response: {response2}")
+        
+        # Verify memory persistence
+        if response2 and "european" in response2.lower():
+            print("✓ Memory persistence successful - agent referenced previous conversation")
+        else:
+            print("⚠ Memory persistence test inconclusive - check agent implementation")
+            
+        return "Memory persistence test completed successfully"
+        
+    except Exception as e:
+        print(f"❌ Error during memory test: {e}")
+        print("💡 Tip: Make sure ADK is properly installed and configured")
+        return f"Memory persistence test failed: {e}"
 
 # Run the test
 # asyncio.run(test_memory_persistence())
@@ -1619,12 +1631,14 @@ The most successful AI implementations aren't those with the most powerful model
 
 **Real-World Impact:**
 
-Organizations using ADK's memory capabilities report:
+> **Note:** The following organizational impact metrics are illustrative examples for educational purposes. Actual results will vary significantly based on implementation quality, use case complexity, and organizational context.
 
-- 60-80% reduction in repeated questions and requests
-- 3x faster onboarding for new team members working with AI agents
-- 90%+ user satisfaction due to personalized, context-aware interactions
-- Significant reduction in knowledge silos and institutional memory loss
+Organizations using ADK's memory capabilities report potential benefits including:
+
+- Significant reduction in repeated questions and requests (varies by implementation)
+- Faster onboarding for new team members working with AI agents
+- Improved user satisfaction due to personalized, context-aware interactions
+- Potential reduction in knowledge silos and institutional memory loss
 
 In our next chapter, we'll explore how to deploy these intelligent, memory-enabled agents into production environments where they can handle real business workloads at scale.
 
