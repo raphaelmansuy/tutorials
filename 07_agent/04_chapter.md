@@ -8,6 +8,10 @@ You've built your first agent. You understand the basics. Now it's time to dive 
 
 In this chapter, you'll master the art and science of creating LLM Agents that don't just follow scripts but truly understand and respond intelligently to complex business situations.
 
+**⚠️ Important Note**: The code examples in this chapter demonstrate patterns and concepts. Always refer to the [official Google ADK documentation](https://pypi.org/project/google-adk/) for the most current API specifications, import statements, and implementation details, as APIs may evolve.
+
+**✅ Multiple Tools Support**: ADK's `LlmAgent` fully supports multiple tools via the `tools` parameter, which accepts a list of tools. This enables rich, multi-capability agents as demonstrated in the examples below.
+
 **The Promise:** By the end of this chapter, you'll understand how to craft agent instructions that produce reliable, professional-grade AI reasoning, and you'll know how to choose and configure models for maximum business impact.
 
 ---
@@ -56,6 +60,7 @@ Consider this real-world example from a financial services company:
 
 **Intelligent ADK Agent Response:**
 The agent:
+
 1. **Analyzes user context** - checks portfolio composition, risk tolerance, investment timeline
 2. **Gathers market data** - current volatility indicators, sector performance, economic indicators  
 3. **Applies financial reasoning** - correlates portfolio exposure to current market conditions
@@ -199,12 +204,14 @@ Different LLM models have distinct strengths, like having different types of con
 #### Gemini Models: The Strategic Thinker
 
 **Best for:**
+
 - Complex reasoning and analysis
 - Multi-step problem solving
 - Integration with Google Cloud services
 - Code generation and technical tasks
 
 **Example Use Case - Strategic Planning Agent:**
+
 ```python
 strategic_planner = LlmAgent(
     name="strategic_planner",
@@ -222,12 +229,14 @@ strategic_planner = LlmAgent(
 #### GPT Models: The Creative Communicator
 
 **Best for:**
+
 - Content creation and marketing
 - Customer-facing interactions
 - Creative problem solving
 - Natural conversation flow
 
 **Example Use Case - Marketing Communications Agent:**
+
 ```python
 from google.adk.models.lite_llm import LiteLlm
 
@@ -247,12 +256,14 @@ marketing_agent = LlmAgent(
 #### Claude Models: The Analytical Perfectionist
 
 **Best for:**
+
 - Detailed analysis and research
 - Technical documentation
 - Careful reasoning and fact-checking
 - Ethical and safety considerations
 
 **Example Use Case - Compliance and Risk Agent:**
+
 ```python
 from google.adk.models.lite_llm import LiteLlm
 
@@ -893,7 +904,7 @@ You've now learned how to create production-ready LLM Agents that think, reason,
 
 **🎯 Key Takeaways:**
 
-- **ADK is Production-Ready** - Python v1.0.0 provides stable, enterprise-grade agent development
+- **ADK is Actively Developed** - Python v1.4.2+ (as of June 2025) provides stable agent development capabilities
 - **Instructions are everything** - The SCOPE framework shapes intelligent agent behavior
 - **Model selection matters** - Gemini 2.0 Flash for speed, Gemini 2.5 Pro for complexity, external models via LiteLLM
 - **Context and memory** enable truly intelligent, personalized interactions using ADK's state management
@@ -1050,29 +1061,36 @@ Share your implementation with:
 
 ---
 
-## Latest ADK Updates & Production Readiness
+## Latest ADK Updates & Current Status
 
-### 🆕 Key Updates in ADK 2025
+> **Note:** Information current as of June 2025. For the latest updates, please refer to the [official ADK documentation](https://google.github.io/adk-docs/).
 
-**ADK Python v1.0.0** - Production Ready
-- **Production Stability**: ADK Python has reached v1.0.0, offering stability for production-ready agents
+### 🆕 Current ADK Status
+
+**ADK Python v1.4.2+** - Actively Developed
+
+- **Stable Development**: ADK Python is actively maintained with regular weekly releases
 - **Enhanced Performance**: Improved streaming capabilities and performance optimizations
 - **Better Error Handling**: More robust error recovery and graceful degradation
 
-**ADK Java v0.1.0** - Now Available
+**ADK Java v0.1.0+** - Available
+
 - **Java Ecosystem Support**: Extending agent capabilities to the Java ecosystem
 - **Enterprise Integration**: Better integration with existing Java enterprise applications
-- **Model Support**: Currently supports Gemini and Anthropic models (more coming soon)
+- **Model Support**: Currently supports Gemini and select external models
 
-### 📊 Model Availability Updates
+### 📊 Model Availability (June 2025)
 
-Based on the latest ADK documentation, here are the current model recommendations:
+Based on the latest Google Cloud documentation, here are the current model recommendations:
 
-**Recommended Production Models:**
+**Available Gemini Models:**
+
 - **Gemini 2.0 Flash**: `"gemini-2.0-flash"` - Fastest, most cost-effective for most use cases
-- **Gemini 2.5 Pro**: `"gemini-2.5-pro-preview-03-25"` - Most capable for complex reasoning tasks
-- **Claude 3 Sonnet**: Via LiteLLM or Vertex AI for detailed analysis
-- **GPT-4**: Via LiteLLM for creative tasks
+- **Gemini 2.0 Flash Experimental**: `"gemini-2.0-flash-exp"` - Latest experimental features
+- **Gemini 1.5 Pro**: `"gemini-1.5-pro"` - Available in projects with prior usage
+- **Gemini 1.5 Flash**: `"gemini-1.5-flash"` - Available in projects with prior usage
+
+⚠️ **Important Limitation**: Starting April 29, 2025, Gemini 1.5 Pro and Gemini 1.5 Flash models are not available in projects that have no prior usage of these models, including new projects.
 
 **🔄 Model Integration Patterns:**
 
@@ -1108,6 +1126,7 @@ vertex_agent = LlmAgent(
 ### 🔒 Agent Security Fundamentals
 
 **Instruction Security:**
+
 ```python
 secure_agent = LlmAgent(
     name="secure_financial_advisor",
@@ -1134,6 +1153,7 @@ secure_agent = LlmAgent(
 ```
 
 **State Management Security:**
+
 ```python
 def secure_user_data_access(user_id: str, tool_context: ToolContext) -> dict:
     """Secure access to user data with proper validation."""
@@ -1159,6 +1179,7 @@ def secure_user_data_access(user_id: str, tool_context: ToolContext) -> dict:
 ```
 
 **Input Validation:**
+
 ```python
 from google.adk.tools import FunctionTool
 import re
@@ -1206,6 +1227,7 @@ def secure_financial_analysis(query: str, tool_context: ToolContext) -> dict:
 ### 🛡️ Production Deployment Security
 
 **Environment Configuration:**
+
 ```bash
 # Production environment variables
 export GOOGLE_GENAI_USE_VERTEXAI=TRUE
@@ -1222,6 +1244,7 @@ unset GOOGLE_API_KEY  # Use Vertex AI instead
 ```
 
 **Session Security:**
+
 ```python
 from google.adk.sessions import DatabaseSessionService
 
@@ -1242,6 +1265,7 @@ secure_session_service = DatabaseSessionService(
 ### 🔍 Agent Debugging Techniques
 
 **Enable Debug Logging:**
+
 ```python
 import logging
 import litellm
@@ -1263,6 +1287,7 @@ debug_agent = LlmAgent(
 ```
 
 **Callback-Based Monitoring:**
+
 ```python
 from google.adk.agents import CallbackContext
 
@@ -1297,6 +1322,7 @@ monitored_agent = LlmAgent(
 ### 📊 Performance Monitoring
 
 **Response Time Tracking:**
+
 ```python
 import time
 from functools import wraps
