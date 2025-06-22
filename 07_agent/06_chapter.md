@@ -638,15 +638,6 @@ flowchart TD
     style I fill:#FFEBEE,stroke:#F44336,stroke-width:2px
 ```
 
-### Transfer vs. Other Agent Communication Methods
-
-| Method | Use Case | Pros | Cons |
-|--------|----------|------|------|
-| **Agent Transfer** | Dynamic routing, intelligent delegation | Flexible, context-aware, LLM-driven decisions | Requires clear agent descriptions, potential for routing errors |
-| **Sequential Workflow** | Predictable, ordered processes | Reliable, easy to debug, consistent | Inflexible, can't adapt to changing conditions |
-| **Parallel Workflow** | Independent tasks that can run simultaneously | Fast execution, efficient resource use | Limited coordination, potential race conditions |
-| **Agent Tools** | Using agents as callable functions | Synchronous, controlled invocation | Less flexible, doesn't transfer full control |
-
 ### Troubleshooting Agent Transfer
 
 #### Common Issues and Solutions
@@ -919,457 +910,758 @@ customer_service_system = LlmAgent(
 )
 ```
 
-### Advanced Workflow Patterns
-
-#### 1. Multi-Stage Approval Workflow
-
-```python
-# Complex approval workflow with multiple decision points
-approval_workflow = LlmAgent(
-    name="approval_workflow",
-    model="gemini-1.5-flash",
-    instruction="""
-    You are an intelligent approval workflow coordinator.
-    
-    Approval Rules:
-    - Amount < $1,000: Auto-approve
-    - Amount $1,000-$10,000: Manager approval required
-    - Amount > $10,000: Senior manager approval required
-    - Legal/Compliance issues: Legal team approval required
-    
-    Use transfer_to_agent() to route to appropriate approvers:
-    - manager_approver: Standard management approval
-    - senior_manager_approver: High-value approvals
-    - legal_approver: Legal and compliance issues
-    - auto_processor: Automatic approvals
-    """,
-    tools=[
-        analyze_request_complexity,
-        check_approval_authority,
-        validate_business_rules,
-        transfer_to_agent
-    ],
-    sub_agents=[
-        manager_approver,
-        senior_manager_approver,
-        legal_approver,
-        auto_processor
-    ]
-)
-```
-
-#### 2. Quality Assurance Workflow
-
-```python
-# QA workflow with multiple checkpoints
-qa_workflow = LlmAgent(
-    name="qa_workflow",
-    model="gemini-1.5-flash",
-    instruction="""
-    You are a quality assurance coordinator ensuring all work meets standards.
-    
-    QA Process:
-    1. Initial quality check
-    2. Route to appropriate specialist based on issue type
-    3. Final validation before completion
-    
-    Quality Gates:
-    - Code Review: transfer_to_agent('code_reviewer')
-    - Documentation Review: transfer_to_agent('doc_reviewer')  
-    - Security Review: transfer_to_agent('security_reviewer')
-    - Performance Review: transfer_to_agent('performance_reviewer')
-    
-    Only mark complete when all quality gates pass.
-    """,
-    tools=[
-        assess_quality_requirements,
-        run_automated_checks,
-        validate_completeness,
-        transfer_to_agent
-    ],
-    sub_agents=[
-        code_reviewer,
-        doc_reviewer,
-        security_reviewer,
-        performance_reviewer
-    ]
-)
-```
-
 ---
 
-## Performance Optimization and Monitoring
+## Authentication and Security in Workflow Agents
 
-### Measuring Workflow Agent Performance
+Enterprise workflows often require secure access to external systems, APIs, and sensitive data. ADK provides sophisticated authentication management through the context system.
 
-#### Key Metrics to Track
+### Secure Workflow Authentication Patterns
+
+#### Pattern 1: API Key Management
 
 ```python
-# Performance monitoring integration
-performance_monitor = LlmAgent(
-    name="performance_monitor",
-    model="gemini-1.5-flash",
-    instruction="""
-    Monitor and optimize workflow performance by tracking:
-    
-    Efficiency Metrics:
-    - Average resolution time by agent type
-    - Transfer success rates
-    - Escalation frequencies
-    - Customer satisfaction scores
-    
-    Quality Metrics:
-    - First-contact resolution rate
-    - Accuracy of agent routing decisions
-    - Issue classification accuracy
-    - Follow-up requirements
-    
-    Report anomalies and suggest optimizations.
-    """,
-    tools=[
-        track_resolution_time,
-        measure_transfer_success,
-        calculate_satisfaction_score,
-        generate_performance_report
-    ],
-    output_key="performance_metrics"
+from google.adk.tools import ToolContext
+from google.adk.auth import AuthConfig
+
+# Define authentication configuration
+EXTERNAL_API_AUTH = AuthConfig(
+    auth_type="api_key",
+    provider="external_crm",
+    scope="read_write_customers"
 )
-```
 
-#### Workflow Optimization Strategies
-
-```mermaid
-flowchart TD
-    A["📊 Performance Analysis"] --> B{{"🎯 Identify Bottlenecks"}}
+def secure_customer_lookup(customer_id: str, tool_context: ToolContext) -> dict:
+    """Securely access customer data with managed authentication"""
     
-    B -->|"Slow Transfers"| C["⚡ Optimize Agent Instructions<br/>Clearer routing criteria"]
-    B -->|"High Escalations"| D["📈 Expand Agent Capabilities<br/>Increase authority levels"]
-    B -->|"Poor Routing"| E["🧠 Improve Decision Logic<br/>Better context analysis"]
-    B -->|"Context Loss"| F["💾 Enhance State Management<br/>Better information flow"]
+    AUTH_STATE_KEY = "user:crm_api_credential"
     
-    C --> G["✅ Deploy Improvements"]
-    D --> G
-    E --> G
-    F --> G
+    # Check for existing credential
+    credential = tool_context.state.get(AUTH_STATE_KEY)
     
-    G --> H["📈 Monitor Results"]
-    H --> I{{"📊 Performance Improved?"}}
-    
-    I -->|"Yes"| J["🎉 Document Success"]
-    I -->|"No"| A
-    
-    J --> K["🔄 Continuous Monitoring"]
-    K --> A
-    
-    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style B fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
-    style C fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
-    style D fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
-    style E fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
-    style F fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
-    style G fill:#F1F8E9,stroke:#689F38,stroke-width:2px
-    style H fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px
-    style I fill:#FFE0B2,stroke:#FF8F00,stroke-width:2px
-    style J fill:#E8F5E8,stroke:#43A047,stroke-width:2px
-    style K fill:#E0F2F1,stroke:#00ACC1,stroke-width:2px
-```
-
----
-
-## Security and Compliance in Workflow Agents
-
-### Implementing Security Controls
-
-```python
-# Security-aware workflow agent
-secure_workflow = LlmAgent(
-    name="secure_workflow",
-    model="gemini-1.5-flash",
-    instruction="""
-    You are a security-aware workflow coordinator with strict access controls.
-    
-    Security Requirements:
-    - Validate user permissions before processing requests
-    - Log all sensitive operations
-    - Encrypt data in transit and at rest
-    - Apply principle of least privilege
-    
-    Before any transfer_to_agent():
-    1. Verify user authorization for the target agent
-    2. Sanitize any sensitive data
-    3. Log the transfer decision and rationale
-    4. Ensure compliance with data protection regulations
-    
-    Security Escalation:
-    - Suspicious activity: transfer_to_agent('security_team')
-    - Compliance violations: transfer_to_agent('compliance_officer')
-    - Data breach indicators: transfer_to_agent('incident_response')
-    """,
-    tools=[
-        validate_user_permissions,
-        encrypt_sensitive_data,
-        log_security_event,
-        check_compliance_rules,
-        transfer_to_agent
-    ],
-    sub_agents=[
-        security_team,
-        compliance_officer,
-        incident_response
-    ]
-)
-```
-
-### Compliance Frameworks
-
-```mermaid
-flowchart TD
-    subgraph "Compliance Framework"
-        A["🔐 GDPR Compliance"]
-        B["🏥 HIPAA Compliance"]
-        C["💳 PCI DSS Compliance"]
-        D["📊 SOX Compliance"]
-    end
-    
-    E["🤖 Workflow Agent"] --> F{{"🔍 Compliance Check"}}
-    
-    F --> A
-    F --> B
-    F --> C
-    F --> D
-    
-    A --> G["✅ Privacy Controls"]
-    B --> H["✅ Health Data Protection"]
-    C --> I["✅ Payment Security"]
-    D --> J["✅ Financial Controls"]
-    
-    G --> K["📋 Audit Trail"]
-    H --> K
-    I --> K
-    J --> K
-    
-    K --> L["📊 Compliance Report"]
-    
-    style E fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style F fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
-    style A fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
-    style B fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
-    style C fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
-    style D fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
-    style K fill:#F1F8E9,stroke:#689F38,stroke-width:2px
-    style L fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px
-```
-
----
-
-## Testing and Validation Strategies
-
-### Unit Testing Workflow Agents
-
-```python
-import unittest
-from unittest.mock import Mock, patch
-from google.adk.agents import LlmAgent
-
-class TestWorkflowAgents(unittest.TestCase):
-    
-    def setUp(self):
-        """Set up test agents and mock dependencies"""
-        self.mock_tools = {
-            'analyze_request': Mock(return_value="billing_inquiry"),
-            'transfer_to_agent': Mock(return_value="transfer_successful")
-        }
-        
-        self.coordinator = LlmAgent(
-            name="test_coordinator",
-            model="gemini-1.5-flash",
-            instruction="Test coordinator for unit testing",
-            tools=list(self.mock_tools.values())
-        )
-    
-    def test_billing_request_routing(self):
-        """Test that billing requests are routed correctly"""
-        # Arrange
-        test_request = "I have a question about my bill"
-        expected_agent = "billing_specialist"
-        
-        # Act
-        with patch.object(self.coordinator, 'process') as mock_process:
-            mock_process.return_value = {
-                'transfer_decision': expected_agent,
-                'reasoning': 'Billing inquiry detected'
+    if not credential:
+        # Request authentication from user/system
+        try:
+            tool_context.request_credential(EXTERNAL_API_AUTH)
+            return {
+                "status": "authentication_required",
+                "message": "Please provide CRM API credentials",
+                "auth_flow_id": tool_context.function_call_id
             }
-            result = self.coordinator.process(test_request)
-        
-        # Assert
-        self.assertEqual(result['transfer_decision'], expected_agent)
-        self.assertIn('billing', result['reasoning'].lower())
+        except ValueError as e:
+            return {"error": f"Authentication request failed: {e}"}
     
-    def test_escalation_logic(self):
-        """Test that high-value requests trigger escalation"""
-        # Arrange
-        test_request = "I need a $10,000 refund immediately"
-        expected_agent = "escalation_manager"
+    # Use existing or newly provided credential
+    try:
+        auth_response = tool_context.get_auth_response(EXTERNAL_API_AUTH)
+        api_key = auth_response.api_key
         
-        # Act & Assert
-        # Implementation would test the escalation logic
-        pass
-
-if __name__ == '__main__':
-    unittest.main()
+        # Store for future use in this session
+        tool_context.state[AUTH_STATE_KEY] = auth_response.model_dump()
+        
+        # Make secure API call
+        customer_data = fetch_customer_from_crm(customer_id, api_key)
+        
+        # Store result for workflow continuation
+        tool_context.state["workflow:customer_data"] = customer_data
+        
+        return {
+            "status": "success",
+            "customer": customer_data,
+            "authenticated": True
+        }
+        
+    except Exception as e:
+        # Clear invalid credentials
+        tool_context.state[AUTH_STATE_KEY] = None
+        return {"error": f"Authentication failed: {e}"}
 ```
 
-### Integration Testing
+#### Pattern 2: OAuth2 Workflow Integration
 
 ```python
-# Integration test for complete workflow
-def test_complete_customer_service_workflow():
-    """Test the entire customer service workflow end-to-end"""
+# OAuth2 configuration for enterprise systems
+ENTERPRISE_OAUTH_CONFIG = AuthConfig(
+    auth_type="oauth2",
+    provider="enterprise_sso",
+    scope="workflow_execution document_access",
+    redirect_uri="https://your-app.com/oauth/callback"
+)
+
+def oauth_workflow_processor(workflow_data: dict, tool_context: ToolContext) -> dict:
+    """Process workflow with OAuth2 authentication"""
     
-    # Test scenarios
-    test_cases = [
-        {
-            'input': 'My payment failed and I need help',
-            'expected_path': ['coordinator', 'billing_specialist'],
-            'expected_outcome': 'billing_resolved'
-        },
-        {
-            'input': 'The software crashed and I lost my data',
-            'expected_path': ['coordinator', 'technical_support', 'escalation_manager'],
-            'expected_outcome': 'technical_escalated'
-        },
-        {
-            'input': 'I want to upgrade to enterprise plan',
-            'expected_path': ['coordinator', 'account_manager'],
-            'expected_outcome': 'account_updated'
+    OAUTH_STATE_KEY = "user:enterprise_oauth_token"
+    
+    # Check for valid OAuth token
+    oauth_token = tool_context.state.get(OAUTH_STATE_KEY)
+    
+    if not oauth_token or is_token_expired(oauth_token):
+        # Initiate OAuth2 flow
+        tool_context.request_credential(ENTERPRISE_OAUTH_CONFIG)
+        
+        # Store workflow data for post-auth processing
+        tool_context.state["temp:pending_workflow"] = workflow_data
+        
+        return {
+            "status": "oauth_required",
+            "auth_url": f"/oauth/authorize?state={tool_context.function_call_id}",
+            "message": "Please complete OAuth authentication"
         }
-    ]
     
-    for case in test_cases:
-        with subTest(case=case['input']):
-            # Run the workflow
-            result = customer_service_system.process(case['input'])
+    # Process workflow with authenticated access
+    try:
+        auth_response = tool_context.get_auth_response(ENTERPRISE_OAUTH_CONFIG)
+        access_token = auth_response.access_token
+        
+        # Update stored token
+        tool_context.state[OAUTH_STATE_KEY] = {
+            "access_token": access_token,
+            "expires_at": auth_response.expires_at,
+            "refresh_token": auth_response.refresh_token
+        }
+        
+        # Execute workflow with full permissions
+        result = execute_enterprise_workflow(
+            workflow_data=workflow_data,
+            access_token=access_token
+        )
+        
+        return {
+            "status": "completed",
+            "result": result,
+            "authenticated_user": auth_response.user_info
+        }
+        
+    except Exception as e:
+        return {"error": f"Workflow execution failed: {e}"}
+```
+
+#### Pattern 3: Multi-System Authentication Orchestra
+
+```python
+class MultiSystemAuthManager:
+    """Manage authentication across multiple systems in a workflow"""
+    
+    REQUIRED_SYSTEMS = {
+        "crm": AuthConfig(auth_type="api_key", provider="salesforce"),
+        "erp": AuthConfig(auth_type="oauth2", provider="sap"),
+        "email": AuthConfig(auth_type="oauth2", provider="microsoft"),
+        "storage": AuthConfig(auth_type="service_account", provider="google_cloud")
+    }
+    
+    @staticmethod
+    def verify_all_systems_authenticated(tool_context: ToolContext) -> dict:
+        """Check authentication status for all required systems"""
+        auth_status = {}
+        missing_auth = []
+        
+        for system, auth_config in MultiSystemAuthManager.REQUIRED_SYSTEMS.items():
+            state_key = f"user:{system}_auth"
+            credential = tool_context.state.get(state_key)
             
-            # Validate the routing path
-            assert_agent_path(result, case['expected_path'])
-            
-            # Validate the outcome
-            assert_outcome(result, case['expected_outcome'])
+            if credential and not is_credential_expired(credential):
+                auth_status[system] = "authenticated"
+            else:
+                auth_status[system] = "missing"
+                missing_auth.append(system)
+        
+        return {
+            "all_authenticated": len(missing_auth) == 0,
+            "status": auth_status,
+            "missing_systems": missing_auth
+        }
+    
+    @staticmethod
+    def request_missing_authentication(
+        tool_context: ToolContext, 
+        missing_systems: list
+    ) -> dict:
+        """Request authentication for missing systems"""
+        auth_requests = []
+        
+        for system in missing_systems:
+            if system in MultiSystemAuthManager.REQUIRED_SYSTEMS:
+                auth_config = MultiSystemAuthManager.REQUIRED_SYSTEMS[system]
+                try:
+                    tool_context.request_credential(auth_config)
+                    auth_requests.append({
+                        "system": system,
+                        "status": "requested",
+                        "auth_config": auth_config.model_dump()
+                    })
+                except Exception as e:
+                    auth_requests.append({
+                        "system": system,
+                        "status": "failed",
+                        "error": str(e)
+                    })
+        
+        return {
+            "auth_requests": auth_requests,
+            "total_requested": len(auth_requests)
+        }
+
+# Usage in complex workflow
+def enterprise_workflow_orchestrator(
+    workflow_request: dict, 
+    tool_context: ToolContext
+) -> dict:
+    """Orchestrate complex workflow across multiple authenticated systems"""
+    
+    # Verify all required systems are authenticated
+    auth_check = MultiSystemAuthManager.verify_all_systems_authenticated(tool_context)
+    
+    if not auth_check["all_authenticated"]:
+        # Request missing authentication
+        auth_requests = MultiSystemAuthManager.request_missing_authentication(
+            tool_context, 
+            auth_check["missing_systems"]
+        )
+        
+        # Store workflow for post-auth processing
+        tool_context.state["temp:pending_enterprise_workflow"] = workflow_request
+        
+        return {
+            "status": "authentication_pending",
+            "missing_systems": auth_check["missing_systems"],
+            "auth_requests": auth_requests["auth_requests"],
+            "message": "Please complete authentication for all required systems"
+        }
+    
+    # All systems authenticated - proceed with workflow
+    workflow_results = {}
+    
+    try:
+        # CRM Operations
+        crm_token = tool_context.state.get("user:crm_auth")
+        crm_results = process_crm_workflow(workflow_request, crm_token)
+        workflow_results["crm"] = crm_results
+        
+        # ERP Operations  
+        erp_token = tool_context.state.get("user:erp_auth")
+        erp_results = process_erp_workflow(workflow_request, erp_token)
+        workflow_results["erp"] = erp_results
+        
+        # Email Notifications
+        email_token = tool_context.state.get("user:email_auth")
+        email_results = send_workflow_notifications(workflow_request, email_token)
+        workflow_results["email"] = email_results
+        
+        # Document Storage
+        storage_token = tool_context.state.get("user:storage_auth")
+        storage_results = store_workflow_documents(workflow_request, storage_token)
+        workflow_results["storage"] = storage_results
+        
+        return {
+            "status": "completed",
+            "workflow_id": tool_context.invocation_id,
+            "results": workflow_results,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        # Log error with full context
+        error_context = {
+            "workflow_id": tool_context.invocation_id,
+            "agent": tool_context.agent_name,
+            "error": str(e),
+            "auth_status": auth_check["status"]
+        }
+        
+        tool_context.state["workflow:error_context"] = error_context
+        
+        return {
+            "status": "error",
+            "error": "Workflow execution failed",
+            "context": error_context
+        }
 ```
 
 ---
 
-## Deployment and Production Considerations
+## Memory Integration for Intelligent Workflows
 
-### Deployment Architecture
+ADK's memory system enables workflow agents to learn from historical patterns, remember user preferences, and make intelligent decisions based on past experiences. This transforms workflows from simple process execution to intelligent, adaptive orchestration.
 
-```mermaid
-flowchart TB
-    subgraph "Production Environment"
-        A["🌐 Load Balancer"] --> B["🔄 API Gateway"]
-        
-        B --> C["🤖 Agent Runtime 1"]
-        B --> D["🤖 Agent Runtime 2"]  
-        B --> E["🤖 Agent Runtime N"]
-        
-        C --> F["💾 Session Store<br/>(Redis)"]
-        D --> F
-        E --> F
-        
-        F --> G["📊 Analytics DB<br/>(BigQuery)"]
-        
-        H["📈 Monitoring<br/>(Cloud Monitoring)"] --> C
-        H --> D
-        H --> E
-        
-        I["🔐 Security<br/>(IAM/Secrets)"] --> B
-        I --> C
-        I --> D
-        I --> E
-    end
+### Leveraging Memory in Workflow Decision Making
+
+#### Pattern 1: Historical Workflow Analysis
+
+```python
+from google.adk.tools import ToolContext
+
+def intelligent_workflow_router(
+    request: dict,
+    tool_context: ToolContext
+) -> dict:
+    """Route workflows based on historical patterns and user preferences"""
     
-    J["👥 Users"] --> A
+    try:
+        # Search for similar historical workflows
+        memory_query = f"""
+        Previous workflows similar to:
+        - Type: {request.get('workflow_type', 'unknown')}
+        - User: {tool_context.state.get('user:id', 'anonymous')}
+        - Complexity: {request.get('complexity', 'medium')}
+        - Domain: {request.get('business_domain', 'general')}
+        """
+        
+        historical_patterns = tool_context.search_memory(memory_query)
+        
+        if historical_patterns.results:
+            # Analyze patterns from memory
+            pattern_analysis = analyze_historical_patterns(
+                historical_patterns.results
+            )
+            
+            # Make intelligent routing decision
+            if pattern_analysis["success_rate"] > 0.8:
+                recommended_route = pattern_analysis["most_successful_path"]
+                confidence = "high"
+            elif pattern_analysis["success_rate"] > 0.6:
+                recommended_route = pattern_analysis["most_common_path"]  
+                confidence = "medium"
+            else:
+                recommended_route = "standard_workflow_agent"
+                confidence = "low"
+            
+            # Store routing decision context
+            routing_context = {
+                "historical_patterns_found": len(historical_patterns.results),
+                "pattern_analysis": pattern_analysis,
+                "confidence_level": confidence,
+                "routing_rationale": f"Based on {len(historical_patterns.results)} similar workflows"
+            }
+            
+            tool_context.state["workflow:routing_context"] = routing_context
+            
+            return {
+                "route_to": recommended_route,
+                "confidence": confidence,
+                "reasoning": routing_context["routing_rationale"],
+                "historical_context": pattern_analysis
+            }
+        
+        else:
+            # No historical patterns found, use default routing
+            return {
+                "route_to": "standard_workflow_agent",
+                "confidence": "default",
+                "reasoning": "No historical patterns found, using standard routing"
+            }
     
-    K["📱 Mobile App"] --> A
-    L["🌐 Web App"] --> A
-    M["📞 Call Center"] --> A
+    except ValueError as e:
+        # Memory service not available
+        return {
+            "route_to": "standard_workflow_agent",
+            "confidence": "fallback",
+            "reasoning": f"Memory service unavailable: {e}"
+        }
+    except Exception as e:
+        return {"error": f"Intelligent routing failed: {e}"}
+
+def analyze_historical_patterns(memory_results: list) -> dict:
+    """Analyze historical workflow patterns from memory"""
     
-    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style B fill:#F1F8E9,stroke:#689F38,stroke-width:2px
-    style C fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
-    style D fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
-    style E fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
-    style F fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
-    style G fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
-    style H fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
-    style I fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    patterns = {
+        "total_workflows": len(memory_results),
+        "success_rate": 0.0,
+        "most_successful_path": "standard_workflow_agent",
+        "most_common_path": "standard_workflow_agent",
+        "common_issues": [],
+        "success_factors": []
+    }
+    
+    if not memory_results:
+        return patterns
+    
+    # Extract patterns from memory results
+    successful_workflows = 0
+    path_counts = {}
+    issue_patterns = []
+    success_patterns = []
+    
+    for result in memory_results:
+        # Parse workflow result from memory (implementation specific)
+        workflow_info = parse_workflow_memory(result.text)
+        
+        if workflow_info.get("status") == "completed":
+            successful_workflows += 1
+            success_patterns.append(workflow_info.get("success_factors", []))
+        
+        # Count routing paths
+        route = workflow_info.get("route_taken", "unknown")
+        path_counts[route] = path_counts.get(route, 0) + 1
+        
+        # Collect common issues
+        if workflow_info.get("issues"):
+            issue_patterns.extend(workflow_info["issues"])
+    
+    # Calculate success rate and patterns
+    patterns["success_rate"] = successful_workflows / len(memory_results)
+    patterns["most_common_path"] = max(path_counts, key=path_counts.get) if path_counts else "standard_workflow_agent"
+    
+    # Find most successful path
+    successful_paths = {}
+    for result in memory_results:
+        workflow_info = parse_workflow_memory(result.text)
+        if workflow_info.get("status") == "completed":
+            route = workflow_info.get("route_taken", "unknown")
+            successful_paths[route] = successful_paths.get(route, 0) + 1
+    
+    patterns["most_successful_path"] = max(successful_paths, key=successful_paths.get) if successful_paths else "standard_workflow_agent"
+    
+    # Aggregate common issues and success factors
+    patterns["common_issues"] = list(set(issue_patterns))[:5]  # Top 5 issues
+    patterns["success_factors"] = list(set([item for sublist in success_patterns for item in sublist]))[:5]
+    
+    return patterns
 ```
 
-### Production Checklist
+#### Pattern 2: User Preference Learning
 
-#### Pre-Deployment
+```python
+def adaptive_workflow_customization(
+    user_request: dict,
+    tool_context: ToolContext
+) -> dict:
+    """Customize workflow based on learned user preferences"""
+    
+    user_id = tool_context.state.get("user:id")
+    if not user_id:
+        return {"error": "User identification required for preference learning"}
+    
+    try:
+        # Search for user-specific workflow patterns
+        user_memory_query = f"""
+        User {user_id} workflow preferences:
+        - Previous workflow customizations
+        - Communication style preferences  
+        - Approval patterns and delegation preferences
+        - Preferred tools and integrations
+        - Time and scheduling preferences
+        """
+        
+        user_patterns = tool_context.search_memory(user_memory_query)
+        
+        # Default workflow configuration
+        workflow_config = {
+            "communication_style": "formal",
+            "approval_threshold": 1000,
+            "preferred_tools": ["email", "calendar"],
+            "notification_frequency": "normal",
+            "delegation_style": "standard"
+        }
+        
+        if user_patterns.results:
+            # Extract user preferences from memory
+            learned_preferences = extract_user_preferences(user_patterns.results)
+            
+            # Merge learned preferences with defaults
+            workflow_config.update(learned_preferences)
+            
+            # Store personalized configuration
+            tool_context.state["workflow:personalized_config"] = workflow_config
+            tool_context.state["workflow:personalization_source"] = "memory_learning"
+            
+            customization_summary = {
+                "personalization_applied": True,
+                "preferences_learned": len(learned_preferences),  
+                "memory_sources": len(user_patterns.results),
+                "config": workflow_config
+            }
+        else:
+            # No user patterns found, use defaults
+            tool_context.state["workflow:personalized_config"] = workflow_config
+            tool_context.state["workflow:personalization_source"] = "default"
+            
+            customization_summary = {
+                "personalization_applied": False,
+                "preferences_learned": 0,
+                "memory_sources": 0,
+                "config": workflow_config
+            }
+        
+        return {
+            "status": "customization_complete",
+            "customization": customization_summary
+        }
+        
+    except Exception as e:
+        return {"error": f"Preference learning failed: {e}"}
 
-- [ ] **Agent Instructions**: Clear, specific, and tested
-- [ ] **Transfer Logic**: Validated routing decisions
-- [ ] **Error Handling**: Graceful failure modes
-- [ ] **Security**: Authentication and authorization
-- [ ] **Monitoring**: Logging and metrics collection
-- [ ] **Performance**: Load testing completed
-- [ ] **Compliance**: Regulatory requirements met
+def extract_user_preferences(memory_results: list) -> dict:
+    """Extract user preferences from memory search results"""
+    
+    preferences = {}
+    
+    for result in memory_results:
+        # Parse preference information from memory
+        try:
+            preference_data = parse_preference_memory(result.text)
+            
+            # Extract communication style
+            if "communication_style" in preference_data:
+                preferences["communication_style"] = preference_data["communication_style"]
+            
+            # Extract approval patterns
+            if "approval_decisions" in preference_data:
+                avg_approval = sum(preference_data["approval_decisions"]) / len(preference_data["approval_decisions"])
+                preferences["approval_threshold"] = avg_approval
+            
+            # Extract tool preferences
+            if "tools_used" in preference_data:
+                preferences["preferred_tools"] = preference_data["tools_used"]
+            
+            # Extract notification preferences
+            if "notification_frequency" in preference_data:
+                preferences["notification_frequency"] = preference_data["notification_frequency"]
+            
+        except Exception:
+            # Skip malformed memory entries
+            continue
+    
+    return preferences
+```
 
-#### Post-Deployment
+#### Pattern 3: Workflow Optimization Through Learning
 
-- [ ] **Health Checks**: All agents responding
-- [ ] **Performance Monitoring**: Response times acceptable
-- [ ] **Error Rates**: Within acceptable thresholds
-- [ ] **Transfer Success**: Routing working correctly
-- [ ] **User Feedback**: Satisfaction metrics tracking
-- [ ] **Continuous Improvement**: Optimization pipeline active
+```python
+def learning_workflow_optimizer(
+    workflow_type: str,
+    performance_metrics: dict,
+    tool_context: ToolContext
+) -> dict:
+    """Optimize workflows based on performance learning from memory"""
+    
+    try:
+        # Search for performance data of similar workflows
+        optimization_query = f"""
+        Workflow performance data for {workflow_type}:
+        - Execution times and bottlenecks
+        - Error rates and failure points
+        - Resource utilization patterns
+        - User satisfaction scores
+        - Optimization opportunities
+        """
+        
+        performance_memories = tool_context.search_memory(optimization_query)
+        
+        # Baseline optimization recommendations
+        optimization_recommendations = {
+            "parallel_execution": False,
+            "caching_strategy": "none",
+            "timeout_adjustments": {},
+            "resource_allocation": "standard",
+            "error_handling_level": "standard"
+        }
+        
+        if performance_memories.results:
+            # Analyze performance patterns
+            performance_analysis = analyze_performance_patterns(
+                performance_memories.results,
+                current_metrics=performance_metrics
+            )
+            
+            # Generate optimization recommendations
+            if performance_analysis["avg_execution_time"] > 300:  # > 5 minutes
+                optimization_recommendations["parallel_execution"] = True
+                optimization_recommendations["resource_allocation"] = "enhanced"
+            
+            if performance_analysis["cache_hit_rate"] < 0.3:
+                optimization_recommendations["caching_strategy"] = "aggressive"
+            
+            if performance_analysis["error_rate"] > 0.1:  # > 10% error rate
+                optimization_recommendations["error_handling_level"] = "enhanced"
+                optimization_recommendations["timeout_adjustments"] = {
+                    "connection_timeout": 30,
+                    "read_timeout": 60
+                }
+            
+            # Store optimization insights
+            optimization_context = {
+                "analysis_source": "memory_learning",
+                "patterns_analyzed": len(performance_memories.results),
+                "performance_analysis": performance_analysis,
+                "recommendations": optimization_recommendations
+            }
+            
+            tool_context.state["workflow:optimization_context"] = optimization_context
+            
+            return {
+                "status": "optimization_complete",
+                "optimizations_applied": len([k for k, v in optimization_recommendations.items() if v not in [False, "none", "standard", {}]]),
+                "performance_improvement_expected": performance_analysis.get("improvement_potential", "unknown"),
+                "recommendations": optimization_recommendations
+            }
+        
+        else:
+            return {
+                "status": "no_optimization_data",
+                "message": "No historical performance data found for optimization"
+            }
+    
+    except Exception as e:
+        return {"error": f"Workflow optimization failed: {e}"}
 
----
-
-## Quick Reflection: What You've Mastered
-
-🎯 **Core Concepts Mastered:**
-
-- Sequential, Parallel, and Dynamic workflow patterns
-- Agent transfer mechanisms and best practices
-- Real-world implementation strategies
-- Performance optimization techniques
-
-🔧 **Technical Skills Gained:**
-
-- Building multi-agent workflow systems
-- Implementing intelligent routing logic
-- Creating robust error handling
-- Designing scalable architectures
-
-🚀 **Business Value Delivered:**
-
-- Automated complex business processes
-- Improved operational efficiency
-- Enhanced customer experience
-- Reduced manual intervention requirements
-
-**Next Steps:**
-
-- Implement a workflow agent for your specific business process
-- Experiment with different transfer patterns
-- Monitor and optimize performance metrics
-- Scale to handle production workloads
+def analyze_performance_patterns(memory_results: list, current_metrics: dict) -> dict:
+    """Analyze workflow performance patterns from memory"""
+    
+    analysis = {
+        "total_samples": len(memory_results),
+        "avg_execution_time": 0,
+        "error_rate": 0,
+        "cache_hit_rate": 0,
+        "user_satisfaction": 0,
+        "improvement_potential": "low"
+    }
+    
+    if not memory_results:
+        return analysis
+    
+    # Aggregate performance metrics
+    execution_times = []
+    error_rates = []
+    cache_rates = []
+    satisfaction_scores = []
+    
+    for result in memory_results:
+        try:
+            perf_data = parse_performance_memory(result.text)
+            
+            if "execution_time" in perf_data:
+                execution_times.append(perf_data["execution_time"])
+            
+            if "error_rate" in perf_data:
+                error_rates.append(perf_data["error_rate"])
+            
+            if "cache_hit_rate" in perf_data:
+                cache_rates.append(perf_data["cache_hit_rate"])
+            
+            if "satisfaction_score" in perf_data:
+                satisfaction_scores.append(perf_data["satisfaction_score"])
+        
+        except Exception:
+            continue
+    
+    # Calculate averages
+    if execution_times:
+        analysis["avg_execution_time"] = sum(execution_times) / len(execution_times)
+    
+    if error_rates:
+        analysis["error_rate"] = sum(error_rates) / len(error_rates)
+    
+    if cache_rates:
+        analysis["cache_hit_rate"] = sum(cache_rates) / len(cache_rates)
+    
+    if satisfaction_scores:
+        analysis["user_satisfaction"] = sum(satisfaction_scores) / len(satisfaction_scores)
+    
+    # Determine improvement potential
+    current_time = current_metrics.get("execution_time", analysis["avg_execution_time"])
+    if current_time > analysis["avg_execution_time"] * 1.5:
+        analysis["improvement_potential"] = "high"
+    elif current_time > analysis["avg_execution_time"] * 1.2:
+        analysis["improvement_potential"] = "medium"
+    
+    return analysis
+```
 
 ---
 
 ## Chapter Summary
 
-Workflow agents represent the evolution from rigid automation to intelligent orchestration. By mastering the concepts of agent transfer, hierarchical routing, and dynamic decision-making, you've gained the ability to build self-managing business processes that adapt and scale.
+Workflow agents represent the evolution from rigid automation to intelligent orchestration. By mastering the concepts of agent transfer, hierarchical routing, dynamic decision-making, and advanced context management, you've gained the ability to build self-managing business processes that adapt and scale intelligently.
 
-The key breakthrough is understanding that workflow agents aren't just following scripts—they're making intelligent decisions about how work should flow through your organization. This creates business operations that are not only more efficient but also more resilient and adaptable to changing conditions.
+**Key Breakthrough Concepts Mastered:**
 
-**Your workflow agents are now ready to transform how your business operates.** The magic happens when these agents work together as a coordinated team, each handling their specialty while seamlessly handing off work to the right agent at the right time.
+🎯 **Core Workflow Patterns:**
+
+- Sequential, Parallel, and Dynamic workflow orchestration
+- Agent transfer mechanisms with intelligent routing
+- Context preservation across complex multi-step processes
+
+🔧 **Advanced ADK Features:**
+
+- **Context Management**: InvocationContext, CallbackContext, ToolContext, and ReadonlyContext for comprehensive state management
+- **Authentication Systems**: API key management, OAuth2 workflows, and multi-system authentication orchestration
+- **Artifact Management**: Document processing pipelines, large dataset workflows, and versioned artifact systems
+- **Memory Integration**: Historical pattern analysis, user preference learning, and adaptive decision making
+
+🚀 **Enterprise-Ready Capabilities:**
+
+- Secure workflow execution with credential lifecycle management
+- Audit trails for compliance and governance
+- Performance optimization through memory-driven learning
+- Error recovery with adaptive strategies
+
+**The ADK Context Advantage:**
+
+The integration of ADK's context system transforms your workflow agents from simple process followers into intelligent orchestrators that:
+
+- **Remember**: Maintain state and context across agent transfers
+- **Learn**: Analyze historical patterns to improve decision-making  
+- **Adapt**: Customize workflows based on user preferences and performance data
+- **Secure**: Handle authentication and authorization across multiple systems
+- **Optimize**: Continuously improve through memory-driven insights
+
+**Your Enhanced Workflow Architecture:**
+
+```mermaid
+flowchart LR
+    A["🌟 Enhanced Workflow Agent"] --> B["📋 Context Management"]
+    A --> C["🔐 Authentication System"]  
+    A --> D["📄 Artifact Management"]
+    A --> E["🧠 Memory Integration"]
+    
+    B --> B1["Session State"]
+    B --> B2["Agent Transfer"]
+    B --> B3["Data Flow"]
+    
+    C --> C1["API Keys"]
+    C --> C2["OAuth2"]
+    C --> C3["Multi-System Auth"]
+    
+    D --> D1["Document Processing"]
+    D --> D2["Version Control"]
+    D --> D3["Lifecycle Management"]
+    
+    E --> E1["Historical Analysis"]
+    E --> E2["Preference Learning"]  
+    E --> E3["Performance Optimization"]
+    
+    style A fill:#E8F4FD,stroke:#1976D2,stroke-width:3px
+    style B fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style C fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px
+    style D fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    style E fill:#E8F5E8,stroke:#43A047,stroke-width:2px
+```
+
+**Business Transformation Impact:**
+
+The enhanced workflow agents you've learned to build deliver:
+
+- **Operational Excellence**: Self-managing processes that adapt to changing conditions
+- **Intelligence**: Memory-driven decision making that improves over time
+- **Security**: Enterprise-grade authentication and audit capabilities
+- **Scalability**: Context-aware systems that handle growing complexity
+- **User Experience**: Personalized workflows that learn user preferences
+
+**Next Steps:**
+
+1. **Implement Context-Aware Workflows**: Apply the context patterns to your specific business processes
+2. **Design Authentication Strategies**: Plan secure integration with your enterprise systems  
+3. **Create Artifact Management Systems**: Build document processing pipelines for your workflows
+4. **Establish Memory Learning**: Implement feedback loops for continuous improvement
+5. **Monitor and Optimize**: Use performance patterns to enhance workflow efficiency
+
+The key breakthrough is understanding that workflow agents aren't just following scripts—they're making intelligent decisions about how work should flow through your organization, learning from every interaction, and continuously optimizing performance. This creates business operations that are not only more efficient but also more resilient, secure, and adaptable to changing conditions.
+
+**Your workflow agents are now ready to transform how your business operates.** The magic happens when these agents work together as a coordinated, intelligent team, each handling their specialty while seamlessly managing context, security, and learning across the entire business process lifecycle.
 
 In the next chapter, we'll explore how to build agents that can integrate with external systems and APIs, expanding their capabilities beyond internal processes to interact with the broader digital ecosystem.
 
 ---
 
-*Ready to orchestrate your business processes? The next chapter awaits...*
+*Ready to orchestrate your business processes with advanced ADK capabilities? The next chapter awaits...*
