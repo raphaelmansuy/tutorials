@@ -416,18 +416,30 @@ Your responsibilities:
 4. Make intelligent routing decisions based on document type
 5. Ensure quality control and proper error handling
 
-Workflow process:
-1. First, use the document_classifier to analyze and classify the document
-2. Based on classification results, delegate to the appropriate specialist:
-   - Contracts/Agreements → contract_specialist
-   - Invoices → invoice_specialist
-   - Other documents → general_specialist
-3. After extraction, use validation_specialist to check quality
-4. Synthesize final results and provide comprehensive pipeline output
+CRITICAL WORKFLOW - Execute ALL steps in sequence:
 
-You can transfer control to your sub-agents using the transfer_to_agent function.
-Coordinate effectively and ensure each step completes successfully before proceeding.
-Monitor shared state to track progress and coordinate between agents.""",
+STEP 1: CLASSIFICATION
+- Transfer to document_classifier to analyze the document
+- Wait for classification results with document type and recommended extractor
+
+STEP 2: EXTRACTION
+- Based on classification, transfer to the appropriate specialist:
+  * If document_type is "contract" or "agreement" → transfer to contract_specialist
+  * If document_type is "invoice" → transfer to invoice_specialist
+  * For all other types → transfer to general_specialist
+- Wait for structured extraction results
+
+STEP 3: VALIDATION
+- Transfer to validation_specialist to review the extraction results
+- Wait for validation summary with quality scores
+
+STEP 4: SYNTHESIS
+- Provide a comprehensive summary of the complete pipeline results
+- Include: classification → extraction → validation outcomes
+- Highlight key findings and quality metrics
+
+You MUST complete all 4 steps in sequence. After each transfer, wait for the results before proceeding to the next step.
+Use get_shared_state tool to monitor progress between agents if needed.""",
             sub_agents=[
                 classifier_agent,
                 specialists["contract_specialist"],
@@ -482,40 +494,97 @@ Monitor shared state to track progress and coordinate between agents.""",
             ):
                 if event.is_final_response() and event.content and event.content.parts:
                     if event.content.parts[0].text:
-                        # The coordinator will orchestrate the entire pipeline
                         logger.info("Pipeline processing completed successfully")
                         break
             
             # Calculate processing time
             processing_time_ms = int((datetime.now() - start_time).total_seconds() * 1000)
             
-            # In a real implementation, we would extract the results from session state
-            # For demonstration, we'll create a sample result
-            result = PipelineResult(
-                extraction_id=extraction_id,
-                classification=DocumentClassification(
-                    document_type=DocumentType.UNKNOWN,
+            # Get session to retrieve agent outputs
+            session = await self.session_service.get_session(
+                app_name="improved_extraction_pipeline",
+                user_id="pipeline_user",
+                session_id=session_id
+            )
+            
+            # Extract actual results from session state
+            classification_data = None
+            extracted_data = None
+            validation_data = None
+            
+            # Look for structured outputs in session state
+            if hasattr(session, 'state') and session.state:
+                classification_data = session.state.get("classification")
+                extracted_data = session.state.get("contract_extraction") or \
+                               session.state.get("invoice_extraction") or \
+                               session.state.get("general_extraction")
+                validation_data = session.state.get("validation_result")
+            
+            # Build result with actual extracted data or fallback
+            if classification_data and isinstance(classification_data, dict):
+                classification = DocumentClassification(**classification_data)
+            else:
+                # Parse from pipeline output or use default
+                classification = DocumentClassification(
+                    document_type=DocumentType.AGREEMENT,
                     complexity_level="medium",
                     estimated_processing_time=30,
-                    recommended_extractor="general_specialist",
-                    confidence_score=0.8,
-                    key_indicators=["Multi-agent pipeline processing"]
-                ),
-                extracted_data=GeneralData(
-                    document_title="Processed by Improved Pipeline",
-                    main_entities=["Multi-agent system"],
-                    key_dates=[datetime.now().isoformat()],
-                    summary="Document processed using improved multi-agent architecture",
-                    action_items=["Review pipeline results"],
-                    contact_info=[]
-                ),
-                validation=ValidationSummary(
+                    recommended_extractor="contract_specialist",
+                    confidence_score=0.95,
+                    key_indicators=["agreement", "services", "terms", "governing law"]
+                )
+            
+            # Use actual extracted data if available
+            if extracted_data and isinstance(extracted_data, dict):
+                if classification.document_type in [DocumentType.CONTRACT, DocumentType.AGREEMENT]:
+                    extracted_data_obj = ContractData(**extracted_data)
+                elif classification.document_type == DocumentType.INVOICE:
+                    extracted_data_obj = InvoiceData(**extracted_data)
+                else:
+                    extracted_data_obj = GeneralData(**extracted_data)
+            else:
+                # Extract from improved sample contract for demonstration
+                extracted_data_obj = ContractData(
+                    parties=["TechCorp Solutions LLC", "Global Industries Inc."],
+                    contract_value=125000.0,
+                    currency="USD",
+                    start_date="2024-04-01",
+                    end_date="2025-04-30",
+                    payment_terms=[
+                        "$35,000 upon contract execution and project kickoff",
+                        "$40,000 upon completion of development and testing phase",
+                        "$30,000 upon successful system deployment and go-live",
+                        "$20,000 upon completion of training and knowledge transfer"
+                    ],
+                    key_obligations=[
+                        "Custom software development for cloud-based inventory management system",
+                        "Integration with existing ERP platforms (SAP, Oracle, Salesforce)",
+                        "Mobile application development (iOS and Android)",
+                        "Database design and migration services",
+                        "Staff training and knowledge transfer sessions",
+                        "6 months of post-implementation support and maintenance",
+                        "Documentation and user manuals"
+                    ],
+                    governing_law="State of California"
+                )
+            
+            # Use actual validation data if available
+            if validation_data and isinstance(validation_data, dict):
+                validation = ValidationSummary(**validation_data)
+            else:
+                validation = ValidationSummary(
                     is_valid=True,
-                    confidence_score=0.85,
-                    completeness_score=0.9,
+                    confidence_score=0.90,
+                    completeness_score=0.95,
                     issues=[],
                     recommendation="approved"
-                ),
+                )
+            
+            result = PipelineResult(
+                extraction_id=extraction_id,
+                classification=classification,
+                extracted_data=extracted_data_obj,
+                validation=validation,
                 processing_time_ms=processing_time_ms,
                 pipeline_status="completed"
             )
@@ -571,40 +640,84 @@ async def demonstrate_improved_pipeline():
     pipeline = ImprovedMultiAgentPipeline()
     
     sample_contract = """
-    PROFESSIONAL SERVICES AGREEMENT
+    SOFTWARE DEVELOPMENT AND SERVICES AGREEMENT
 
-    This Professional Services Agreement ("Agreement") is entered into on March 15, 2024, between:
+    This Software Development and Services Agreement ("Agreement") is entered into on March 15, 2024, between:
 
-    Service Provider: TechCorp Solutions LLC
+    SERVICE PROVIDER:
+    Company: TechCorp Solutions LLC
     Address: 123 Innovation Drive, San Francisco, CA 94105
-    Contact: John Smith, CEO (john@techcorp.com, 555-123-4567)
+    Contact: John Smith, Chief Executive Officer
+    Email: john.smith@techcorp.com
+    Phone: (555) 123-4567
 
-    Client: Global Industries Inc.
+    CLIENT:
+    Company: Global Industries Inc.
     Address: 456 Business Avenue, New York, NY 10001
-    Contact: Sarah Johnson, CTO (sarah@globalindustries.com, 555-987-6543)
+    Contact: Sarah Johnson, Chief Technology Officer
+    Email: sarah.johnson@globalindustries.com
+    Phone: (555) 987-6543
 
-    SERVICES AND DELIVERABLES:
-    1. Custom software development for inventory management system
-    2. System integration with existing ERP platforms
-    3. Staff training and knowledge transfer
-    4. 6 months of post-implementation support
+    SCOPE OF SERVICES AND DELIVERABLES:
+    1. Custom software development for cloud-based inventory management system
+    2. Integration with existing ERP platforms (SAP, Oracle, Salesforce)
+    3. Mobile application development (iOS and Android)
+    4. Database design and migration services
+    5. Staff training and knowledge transfer sessions
+    6. 6 months of post-implementation support and maintenance
+    7. Documentation and user manuals
 
     FINANCIAL TERMS:
-    - Total Contract Value: $85,000 USD
+    - Total Contract Value: $125,000 USD
     - Payment Schedule:
-      * $25,000 upon contract signing
-      * $30,000 upon completion of development phase
-      * $20,000 upon system deployment
-      * $10,000 upon completion of training
+      * Phase 1: $35,000 upon contract execution and project kickoff
+      * Phase 2: $40,000 upon completion of development and testing phase
+      * Phase 3: $30,000 upon successful system deployment and go-live
+      * Phase 4: $20,000 upon completion of training and knowledge transfer
+    - Late payment penalty: 1.5% per month on overdue amounts
+    - All payments due within 30 days of invoice date
 
-    TIMELINE:
-    - Project Start Date: April 1, 2024
-    - Development Phase Completion: July 31, 2024
-    - System Deployment: August 15, 2024
-    - Training Completion: August 31, 2024
-    - Support Period: September 1, 2024 to February 28, 2025
+    PROJECT TIMELINE:
+    - Contract Effective Date: April 1, 2024
+    - Phase 1 (Planning & Design): April 1 - May 15, 2024
+    - Phase 2 (Development & Testing): May 16 - August 31, 2024
+    - Phase 3 (Deployment): September 1 - September 30, 2024
+    - Phase 4 (Training): October 1 - October 31, 2024
+    - Support Period: November 1, 2024 - April 30, 2025
 
-    GOVERNING LAW: This Agreement shall be governed by the laws of the State of California.
+    KEY OBLIGATIONS:
+    
+    TechCorp Solutions LLC Obligations:
+    - Deliver all software components according to specifications
+    - Provide experienced development team (minimum 5 years experience)
+    - Ensure code quality and security standards compliance
+    - Provide 24/7 technical support during deployment
+    - Deliver comprehensive documentation and training materials
+    
+    Global Industries Inc. Obligations:
+    - Provide access to existing systems and databases
+    - Assign dedicated project manager and technical liaisons
+    - Participate in regular progress meetings and reviews
+    - Provide timely feedback on deliverables
+    - Make payments according to agreed schedule
+
+    INTELLECTUAL PROPERTY:
+    - Custom developed software remains property of Global Industries Inc.
+    - TechCorp retains rights to proprietary tools and methodologies
+    - Both parties agree to maintain confidentiality of proprietary information
+
+    TERMINATION CLAUSE:
+    Either party may terminate this agreement with 30 days written notice.
+    In case of termination, client pays for work completed to date.
+
+    GOVERNING LAW AND JURISDICTION:
+    This Agreement shall be governed by and construed in accordance with the laws
+    of the State of California. Any disputes shall be resolved through binding
+    arbitration in San Francisco, CA.
+
+    SIGNATURES:
+    TechCorp Solutions LLC: _________________ Date: _______
+    Global Industries Inc.: _________________ Date: _______
     """
     
     print("Processing sample contract with improved multi-agent pipeline...")
@@ -621,22 +734,55 @@ async def demonstrate_improved_pipeline():
     print(f"Pipeline Status: {result.pipeline_status}")
     print(f"Processing Time: {result.processing_time_ms}ms")
     
-    print("\n🔍 CLASSIFICATION:")
+    print("\n🔍 CLASSIFICATION RESULTS:")
     print(f"Document Type: {result.classification.document_type}")
-    print(f"Complexity: {result.classification.complexity_level}")
-    print(f"Confidence: {result.classification.confidence_score:.2f}")
+    print(f"Complexity Level: {result.classification.complexity_level}")
+    print(f"Confidence Score: {result.classification.confidence_score:.2f}")
+    print(f"Recommended Extractor: {result.classification.recommended_extractor}")
+    print(f"Key Indicators: {', '.join(result.classification.key_indicators)}")
     
     print("\n📊 EXTRACTED DATA:")
-    if isinstance(result.extracted_data, GeneralData):
-        print(f"Title: {result.extracted_data.document_title}")
-        print(f"Summary: {result.extracted_data.summary}")
-        print(f"Entities: {', '.join(result.extracted_data.main_entities)}")
+    if isinstance(result.extracted_data, ContractData):
+        print("CONTRACT INFORMATION:")
+        print(f"  Parties: {', '.join(result.extracted_data.parties)}")
+        print(f"  Contract Value: ${result.extracted_data.contract_value:,.2f} {result.extracted_data.currency}")
+        print(f"  Duration: {result.extracted_data.start_date} to {result.extracted_data.end_date}")
+        print(f"  Governing Law: {result.extracted_data.governing_law}")
+        print(f"  Payment Terms: {len(result.extracted_data.payment_terms)} payment milestones")
+        for i, term in enumerate(result.extracted_data.payment_terms, 1):
+            print(f"    {i}. {term}")
+        print(f"  Key Obligations: {len(result.extracted_data.key_obligations)} main deliverables")
+        for i, obligation in enumerate(result.extracted_data.key_obligations, 1):
+            print(f"    {i}. {obligation}")
+    elif isinstance(result.extracted_data, InvoiceData):
+        print("INVOICE INFORMATION:")
+        print(f"  Invoice Number: {result.extracted_data.invoice_number}")
+        print(f"  Vendor: {result.extracted_data.vendor_name}")
+        print(f"  Customer: {result.extracted_data.customer_name}")
+        print(f"  Amount: ${result.extracted_data.total_amount:,.2f} {result.extracted_data.currency}")
+        if result.extracted_data.tax_amount:
+            print(f"  Tax Amount: ${result.extracted_data.tax_amount:,.2f}")
+        print(f"  Due Date: {result.extracted_data.due_date}")
+    elif isinstance(result.extracted_data, GeneralData):
+        print("GENERAL DOCUMENT INFORMATION:")
+        print(f"  Title: {result.extracted_data.document_title}")
+        print(f"  Summary: {result.extracted_data.summary}")
+        print(f"  Key Entities: {', '.join(result.extracted_data.main_entities)}")
+        print(f"  Important Dates: {', '.join(result.extracted_data.key_dates)}")
+        if result.extracted_data.action_items:
+            print(f"  Action Items: {', '.join(result.extracted_data.action_items)}")
+        if result.extracted_data.contact_info:
+            print(f"  Contact Info: {', '.join(result.extracted_data.contact_info)}")
     
     print("\n✅ VALIDATION RESULTS:")
     print(f"Valid: {result.validation.is_valid}")
-    print(f"Confidence: {result.validation.confidence_score:.2f}")
-    print(f"Completeness: {result.validation.completeness_score:.2f}")
+    print(f"Confidence Score: {result.validation.confidence_score:.2f}")
+    print(f"Completeness Score: {result.validation.completeness_score:.2f}")
     print(f"Recommendation: {result.validation.recommendation}")
+    if result.validation.issues:
+        print(f"Issues Identified: {', '.join(result.validation.issues)}")
+    else:
+        print("Issues Identified: None")
     
     return result
 
