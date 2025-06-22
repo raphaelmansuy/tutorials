@@ -828,38 +828,15 @@ In 24 hours, you could be the person your organization turns to when they need t
 
 Start today. Your journey from AI integration chaos to standardized success starts with a single MCP server. The future of connected AI is here—and it's waiting for you to build it.
 
- https://www.anthropic.com/news/model-context-protocol
- https://github.com/modelcontextprotocol/modelcontextprotocol
- https://modelcontextprotocol.io/specification/2025-06-18/changelog
- https://news.ycombinator.com/item?id=44314289
- https://den.dev/blog/mcp-authorization-resource/
- https://en.wikipedia.org/wiki/Model_Context_Protocol
- https://modelcontextprotocol.io/introduction
- https://blog.christianposta.com/the-updated-mcp-oauth-spec-is-a-mess/
- https://www.linkedin.com/posts/kamal-manchanda_ai-agenticai-generativeai-activity-7341394484087164928-4OjO
- https://www.linkedin.com/posts/ferrants_new-mcp-spec-structured-tool-output-oauth-activity-7341262013953622020-dLF1
- https://modelcontextprotocol.io/docs/concepts/tools
- https://modelcontextprotocol.io/specification/draft/server/tools
- https://modelcontextprotocol.io/specification/2025-06-18/client/elicitation
- https://www.digitalocean.com/community/tutorials/model-context-protocol
- https://modelcontextprotocol.io/specification/2025-03-26
- https://google.github.io/adk-docs/tools/mcp-tools/
- https://spring.io/blog/2025/05/19/spring-ai-mcp-client-oauth2
- https://hackteam.io/blog/build-your-first-mcp-server-with-typescript-in-under-10-minutes/
- https://www.codica.com/blog/model-context-protocol-explained-new-standart-for-ai-agents/
- https://code.visualstudio.com/blogs/2025/06/12/full-mcp-spec-support
- https://github.com/invariantlabs-ai/mcp-streamable-http
- https://www.linkedin.com/posts/danvega_build-your-own-mcp-server-in-under-15-minutes-activity-7310754539165343744-02Si
- https://github.com/modelcontextprotocol/typescript-sdk
- https://www.byteplus.com/en/topic/541913
- https://workos.com/blog/mcp-elicitation
- https://socket.dev/blog/mcp-spec-updated-to-add-structured-tool-output-and-improved-oauth-2-1-compliance
- https://opencv.org/blog/model-context-protocol/
- https://mpgone.com/model-context-protocol-mcp/
- https://www.philschmid.de/mcp-introduction
- https://app.daily.dev/posts/mcp-spec-updated-to-add-structured-tool-output-and-improved--jqcoqxrdd
- https://www.elastic.co/search-labs/blog/mcp-current-state
- https://learn.microsoft.com/en-us/power-platform/test-engine/ai-mcp
- https://modelcontextprotocol.io/quickstart/client
- https://modelcontextprotocol.io/examples
- https://docs.anthropic.com/en/docs/claude-code/sdk
+## References
+
+- [Anthropic MCP Announcement](https://www.anthropic.com/news/model-context-protocol)
+- [MCP Specification Repository](https://github.com/modelcontextprotocol/modelcontextprotocol)
+- [MCP 2025-06-18 Changelog](https://modelcontextprotocol.io/specification/2025-06-18/changelog)
+- [MCP Introduction Guide](https://modelcontextprotocol.io/introduction)
+- [MCP Client Elicitation](https://modelcontextprotocol.io/specification/2025-06-18/client/elicitation)
+- [MCP Tools Documentation](https://modelcontextprotocol.io/docs/concepts/tools)
+- [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
+- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+- [MCP Examples](https://modelcontextprotocol.io/examples)
+- [MCP Client Quickstart](https://modelcontextprotocol.io/quickstart/client)
