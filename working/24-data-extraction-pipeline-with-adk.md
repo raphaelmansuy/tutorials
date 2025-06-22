@@ -2,50 +2,38 @@
 
 ## Prerequisites and Setup
 
-Before diving into structured data extraction, ensure you have the proper environment set up:
+> **📋 Complete Setup Guide**: For detailed installation and configuration instructions, please see our comprehensive **[ADK Setup Guide](adk-setup-guide.md)**
 
-### Installation Requirements
+Before diving into the examples below, you'll need to set up your development environment. The setup process varies depending on whether you're:
 
-```bash
-# Install Google ADK and dependencies
-pip install google-generativeai google-adk pydantic asyncio
+- **🚀 Getting Started**: Using Google AI Studio for quick prototyping and experimentation
+- **🏢 Going to Production**: Using Vertex AI for enterprise applications and team collaboration
 
-# For additional document processing (optional)
-pip install PyMuPDF python-docx pandas openpyxl
-```
+### Quick Setup Summary
 
-### API Key Configuration
+The setup guide covers:
 
-1. Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Set your environment variable:
+- ✅ **Installation**: Python environment, ADK, and dependencies
+- ✅ **Authentication**: API keys (Google AI Studio) or Service Account (Vertex AI)
+- ✅ **Configuration**: Environment variables and project setup
+- ✅ **Verification**: Testing your installation with simple agents
+- ✅ **Troubleshooting**: Common issues and solutions
 
-```bash
-export GOOGLE_API_KEY="your-api-key-here"
-```
+### Why Two Setup Options?
 
-Or in Python:
+| Google AI Studio | Vertex AI |
+|------------------|-----------|
+| ⚡ **Fast setup** with API keys | 🔒 **Enterprise security** with IAM |
+| 🧪 **Perfect for learning** and prototypes | 🏭 **Production-ready** with monitoring |
+| 💰 **Pay-per-use** pricing | 📊 **Advanced analytics** and logging |
 
-```python
-import os
-os.environ["GOOGLE_API_KEY"] = "your-api-key-here"
-```
+### Ready to Start?
 
-### Quick Test
+1. **[Complete the setup →](adk-setup-guide.md)** (5-15 minutes depending on your approach)
+2. **Return here** to start building extraction agents
+3. **Run the examples** below to master structured data extraction
 
-```python
-from google.adk.agents import LlmAgent
-from google.adk.runtime import Runner
-from google.adk.sessions import InMemorySessionService
-
-# Test your setup with a simple agent
-test_agent = LlmAgent(
-    model="gemini-2.0-flash",
-    name="test_agent", 
-    instruction="You are a helpful assistant."
-)
-
-print("✅ ADK setup successful!")
-```
+> **� Pro Tip**: If you're new to ADK, start with the Google AI Studio setup for faster onboarding. You can always migrate to Vertex AI later for production deployments.
 
 ---
 
