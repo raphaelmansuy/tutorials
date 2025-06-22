@@ -23,19 +23,20 @@ classifiers = [
 ]
 
 dependencies = [
-    "google-adk>=1.0.0",
+    "google-generativeai>=0.8.0",
+    "google-cloud-aiplatform>=1.50.0",
     "pydantic>=2.0.0",
     "python-dotenv>=1.0.0",
-    "asyncio",
     "aiofiles>=23.0.0",
     "rich>=13.0.0",
     "typer>=0.9.0",
     "loguru>=0.7.0",
     "httpx>=0.25.0",
-    "PyMuPDF>=1.23.0",  # For PDF processing
-    "python-multipart>=0.0.6",  # For file uploads
+    "PyMuPDF>=1.23.0", # For PDF processing
+    "python-multipart>=0.0.6", # For file uploads
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
+    "google-adk>=1.4.2",
 ]
 
 [project.optional-dependencies]
@@ -67,14 +68,17 @@ jupyter = [
 ]
 
 [project.scripts]
-adk-extract = "adk_data_extraction.cli:main"
-adk-serve = "adk_data_extraction.api:serve"
+adk-extract-contacts = "adk_data_extraction.examples.basic_contact_extraction:main"
+adk-analyze-legal = "adk_data_extraction.examples.legal_document_analysis:main"
 
 [project.urls]
 Homepage = "https://github.com/your-org/adk-data-extraction"
 Documentation = "https://your-org.github.io/adk-data-extraction"
 Repository = "https://github.com/your-org/adk-data-extraction"
 "Bug Tracker" = "https://github.com/your-org/adk-data-extraction/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/adk_data_extraction"]
 
 [tool.ruff]
 target-version = "py311"

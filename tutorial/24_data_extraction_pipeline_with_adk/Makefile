@@ -1,0 +1,46 @@
+.PHONY: help venv install test lint format clean run_basic_example run_legal_example cli_contacts cli_legal
+
+help:
+	@echo "ADK Data Extraction Tutorial Makefile"
+	@echo "Available targets:"
+	@echo "  venv      - Create virtual environment using uv"
+	@echo "  install   - Install dependencies"
+	@echo "  test      - Run tests"
+	@echo "  lint      - Run linters (ruff, mypy)"
+	@echo "  format    - Format code with black"
+	@echo "  clean     - Remove .venv and __pycache__"
+	@echo "  run_basic_example - Run basic_contact_extraction.py example"
+	@echo "  run_legal_example - Run legal_document_analysis.py example"
+	@echo "  cli_contacts      - Run contact extraction via CLI"
+	@echo "  cli_legal         - Run legal analysis via CLI"
+
+venv:
+	uv venv .venv
+
+install: venv
+	. .venv/bin/activate && uv pip install -e .[dev]
+
+test:
+	. .venv/bin/activate && pytest
+
+lint:
+	. .venv/bin/activate && ruff check src/ tests/
+	. .venv/bin/activate && mypy src/
+
+format:
+	. .venv/bin/activate && black src/ tests/
+
+clean:
+	rm -rf .venv __pycache__ src/__pycache__ tests/__pycache__
+
+run_basic_example: install
+	. .venv/bin/activate && python -m adk_data_extraction.examples.basic_contact_extraction
+
+run_legal_example: install
+	. .venv/bin/activate && python -m adk_data_extraction.examples.legal_document_analysis
+
+cli_contacts: install
+	. .venv/bin/activate && adk-extract-contacts
+
+cli_legal: install
+	. .venv/bin/activate && adk-analyze-legal

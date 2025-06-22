@@ -17,6 +17,6 @@ cp .env.example .env  # Edit credentials
 ## Project Structure
 
 - `src/adk_data_extraction/` — Main package code
-- `examples/` — Example scripts for each tutorial section
+- `src/adk_data_extraction/examples/` — Example scripts for each tutorial section
 - `tests/` — Unit and integration tests
 - `notebooks/` — Jupyter notebooks for exploration

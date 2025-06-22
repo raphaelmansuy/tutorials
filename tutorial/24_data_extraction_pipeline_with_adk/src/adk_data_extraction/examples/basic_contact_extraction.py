@@ -5,8 +5,8 @@ See tutorial for details.
 
 import asyncio
 
-from google.adk import Runner
 from google.adk.agents import LlmAgent
+from google.adk import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 from pydantic import BaseModel, Field
@@ -26,7 +26,9 @@ contact_extractor = LlmAgent(
     model="gemini-2.0-flash",
     name="contact_extractor",
     description="Extracts contact information from text",
-    instruction="""Extract contact information from the provided text.\nFocus on accuracy and completeness. If information is unclear or missing,\nleave those fields empty rather than guessing.""",
+    instruction="""Extract contact information from the provided text.
+Focus on accuracy and completeness. If information is unclear or missing,
+leave those fields empty rather than guessing.""",
     output_schema=ContactInfo,
     output_key="extracted_contacts",
     disallow_transfer_to_parent=True,
@@ -57,7 +59,10 @@ async def extract_contacts(text_content):
         app_name="contact_extraction_app", user_id="user_001", session_id="session_001"
     )
 
-    user_content = types.Content(role="user", parts=[types.Part(text=text_content)])
+    user_content = types.Content(
+        role="user", 
+        parts=[types.Part.from_text(text=text_content)]
+    )
     async for event in runner.run_async(
         user_id="user_001",
         session_id="session_001",
@@ -69,7 +74,12 @@ async def extract_contacts(text_content):
     return None
 
 
-if __name__ == "__main__":
+def main():
+    """CLI entry point for contact extraction."""
     SAMPLE_EMAIL = """Hi,\nMy name is Jane Doe, I work at Acme Corp. You can reach me at jane.doe@acme.com or 555-1234.\nBest,\nJane\n"""
     result = asyncio.run(extract_contacts(SAMPLE_EMAIL))
     print(result)
+
+
+if __name__ == "__main__":
+    main()
