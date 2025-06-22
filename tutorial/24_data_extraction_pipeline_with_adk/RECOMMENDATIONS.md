@@ -240,7 +240,7 @@ The investment in refactoring will pay dividends in terms of performance, mainta
 
 ## Next Steps
 
-1. **Review the improved implementation** in `improved_multi_agent_pipeline.py`
+1. **Review the smart document extraction implementation** in `smart_document_extraction_pipeline.py`
 2. **Analyze the architectural comparison** diagram
 3. **Plan the migration** using the phased approach outlined above
 4. **Implement Phase 1** changes to create the foundation
