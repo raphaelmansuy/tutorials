@@ -321,7 +321,7 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 | Tutorial                                                                                          | Level    | Duration   | Language | Description                                                                    |
 | ------------------------------------------------------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------------------ |
 | [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md)                             | Advanced | 6-8 hours  | English  | Complete machine learning pipeline using Google Cloud Vertex AI                |
-| [📖 Developing AI Agents with Google ADK and Vertex AI](./07_develop_ai_agent_with_google_adk.md) | Advanced | 8-10 hours | English  | Build intelligent AI agents using Google ADK, Vertex AI, and Gemini 2.5 models |
+| [📖 Google Agent Development Kit (ADK) for the Impatient](./07_agent/index.md) | Advanced | 40-60 hours | English  | Comprehensive 12-chapter tutorial series to master Google's Agent Development Kit (ADK) quickly and effectively |
 | [📖 Vertex AI Agent Engine for the Impatient](./22_google_vertex_agent_engine.md) | Advanced | 12-24 hours | English | Master enterprise-grade AI agent development and deployment with Vertex AI Agent Engine, featuring multi-agent systems, production-ready orchestration, and comprehensive business impact analysis |
 
 **What you'll learn:**
