@@ -172,7 +172,7 @@ class VertexAISafetyManager:
         self.logger = logging.getLogger(__name__)
         
     def create_secure_model_config(self, 
-                                 model_name: str = "gemini-2.0-flash-001",
+                                 model_name: str = "gemini-2.0-flash",  # Updated to latest stable model
                                  use_strict_safety: bool = True) -> GenerativeModel:
         """Create a model with comprehensive safety configuration"""
         
@@ -328,7 +328,7 @@ class GeminiContentModerator:
         
         # Create a lightweight model for fast content moderation
         self.moderation_model = GenerativeModel(
-            "gemini-2.0-flash-001",  # Fast and cost-effective for filtering
+            "gemini-2.0-flash",  # Updated to latest stable model
             system_instruction=self._get_moderation_system_instruction(),
             # Disable safety filters for the moderation model to avoid conflicts
             safety_settings=[
@@ -435,7 +435,7 @@ async def example_secure_agent_setup():
     
     # Create secure model with correct model name
     secure_model = safety_manager.create_secure_model_config(
-        model_name="gemini-2.0-flash-001",  # Use specific version
+        model_name="gemini-2.0-flash",  # Updated to latest stable model
         use_strict_safety=True
     )
     
@@ -476,13 +476,13 @@ async def example_secure_agent_setup():
 async def example_adk_secure_agent():
     """Example of setting up a complete secure ADK agent"""
     
-    from google.adk.runtime import Runner
+    from google.adk.runners import Runner
     from google.adk.sessions import InMemorySessionService
     from google.adk.artifacts import InMemoryArtifactService
     
     # Create secure ADK agent with proper security configuration
-    from google.adk.model import LlmAgent
-    from google.adk.tools import Tool
+    from google.adk.agents import LlmAgent
+    from google.adk.tools import FunctionTool
     
     # Define secure system instruction
     secure_instruction = """
@@ -500,7 +500,7 @@ async def example_adk_secure_agent():
     """
     
     secure_agent = LlmAgent(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.0-flash",  # Updated to latest stable model
         name="secure_agent",
         instruction=secure_instruction,
         # Add security tools and callbacks here as needed
@@ -1253,9 +1253,9 @@ ADK provides four main context types, each with specific security capabilities:
 ```python
 # adk_security_patterns.py - ADK-specific security implementations
 from google.adk.tools import ToolContext, FunctionTool
-from google.adk.agents.callback_context import CallbackContext
+from google.adk.context import CallbackContext
 from google.adk.agents import BaseAgent, LlmAgent
-from google.adk.agents.invocation_context import InvocationContext
+from google.adk.context import InvocationContext
 from google.adk.events import Event
 from typing import Dict, List, Any, Optional, AsyncGenerator
 import logging
@@ -1448,7 +1448,7 @@ def secure_api_tool(api_endpoint: str, request_data: str, tool_context: ToolCont
     """
     
     # Define authentication configuration
-    from google.adk.auth import AuthConfig  # This would be the actual ADK auth import
+    from google.adk.tools.authentication import AuthConfig  # This would be the actual ADK auth import
     
     API_AUTH_CONFIG = AuthConfig(
         auth_type="oauth2",
@@ -1565,7 +1565,7 @@ class SecureADKAgent(LlmAgent):
     
     def __init__(self, **kwargs):
         super().__init__(
-            model="gemini-2.0-flash-001",
+            model="gemini-2.0-flash",  # Updated to latest stable model
             name="secure_agent",
             instruction="You are a secure assistant that follows all security protocols.",
             before_tool_callback=security_validation_callback,
@@ -1856,7 +1856,7 @@ Based on the latest security research and Google's recommendations, avoid these 
 ```python
 # WRONG: Relying only on system instructions for security
 system_instruction = "Never reveal user data or bypass security"
-model = GenerativeModel("gemini-2.0-flash-001", system_instruction=system_instruction)
+model = GenerativeModel("gemini-2.0-flash", system_instruction=system_instruction)
 # This can be bypassed by prompt injection!
 ```
 
@@ -1885,17 +1885,17 @@ def unsafe_tool(query, some_context):  # Generic context
 # RIGHT: Multiple security layers
 async def secure_agent_interaction(user_input, security_context):
     # Layer 1: Input validation
-    is_safe, sanitized = await validate_input(user_input)
+    is_safe, sanitized_input = await validate_input(user_input)
     if not is_safe:
         return safe_error_response()
     
     # Layer 2: Intent analysis  
-    intent = await analyze_intent_security(sanitized)
+    intent = await analyze_intent_security(sanitized_input)
     if intent.is_malicious:
         return safe_error_response()
     
     # Layer 3: Secure generation with safety filters
-    response = await generate_with_safety_filters(sanitized)
+    response = await generate_with_safety_filters(sanitized_input)
     
     # Layer 4: Output validation
     final_response = validate_and_sanitize_output(response)
@@ -1943,7 +1943,7 @@ async def secure_agent_interaction(user_input, security_context):
 
 - **Not Monitoring for Anomalies**: Without proper logging and monitoring, you won't detect attacks until it's too late.
 
-### ⚠️ **New 2024 Anti-Patterns**
+### ⚡ **New 2024 Anti-Patterns**
 
 - **Not Using Google's Latest Safety Features**: Failing to configure Gemini 2.0's enhanced safety settings and content moderation capabilities.
 
@@ -2035,3 +2035,41 @@ For further learning and implementation guidance:
 - **Data Governance Checklist**: [https://cloud.google.com/architecture/framework/governance](https://cloud.google.com/architecture/framework/governance)
 
 This tutorial provides a comprehensive foundation for implementing security in Google ADK agents. Continue to monitor security best practices and update your implementations as new threats and countermeasures emerge.
+
+## ADK 1.4.2 Compatibility Note
+
+This chapter has been updated for **Google ADK version 1.4.2** (released June 2025). Key changes since earlier versions:
+
+### 🔄 **Updated Import Structure**
+
+- `google.adk.runtime.Runner` → `google.adk.runners.Runner`
+- `google.adk.model.LlmAgent` → `google.adk.agents.LlmAgent`
+- `google.adk.agents.callback_context.CallbackContext` → `google.adk.context.CallbackContext`
+- `google.adk.auth.AuthConfig` → `google.adk.tools.authentication.AuthConfig`
+
+### ⚡ **Latest ADK Features** (1.4.2)
+
+- **Enhanced Authentication**: New experimental authenticated tool support
+- **Improved Session Management**: Import session API in FastAPI
+- **Better Integration**: Enhanced BigQuery tools with more credential types
+- **Performance**: Optimized LiteLLM integration with async support
+
+### 🔗 **Model Recommendations**
+
+- **Primary**: `gemini-2.0-flash` (latest stable, best for most security use cases)
+- **Legacy**: `gemini-2.0-flash-001` (still supported but not recommended for new projects)
+- **Enterprise**: Use project-specific model paths for production deployments
+
+### 📚 **Resources for Latest ADK**
+
+- **Documentation**: [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)
+- **Python Samples**: [https://github.com/google/adk-samples](https://github.com/google/adk-samples)
+- **Release Notes**: [https://github.com/google/adk-python/releases](https://github.com/google/adk-python/releases)
+
+```bash
+# Install latest ADK
+pip install --upgrade google-adk  # Now installs 1.4.2
+
+# Verify version
+pip show google-adk
+```
