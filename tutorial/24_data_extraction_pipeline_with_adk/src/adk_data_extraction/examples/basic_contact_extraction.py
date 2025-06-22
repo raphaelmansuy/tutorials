@@ -5,8 +5,8 @@ See tutorial for details.
 
 import asyncio
 
-from google.adk.agents import LlmAgent
 from google.adk import Runner
+from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 from pydantic import BaseModel, Field
@@ -60,7 +60,7 @@ async def extract_contacts(text_content):
     )
 
     user_content = types.Content(
-        role="user", 
+        role="user",
         parts=[types.Part.from_text(text=text_content)]
     )
     async for event in runner.run_async(
