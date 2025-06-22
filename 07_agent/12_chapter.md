@@ -7,9 +7,9 @@
 Sarah, Chief Innovation Officer at a Fortune 100 financial services firm, just finished reviewing her company's 2025 AI transformation roadmap. What she saw wasn't science fiction—it was this quarter's reality:
 
 - **Multi-agent trading systems** that collaborate across global markets 24/7 using Gemini 2.5 Pro
-- **Live conversational AI** providing real-time financial advice in 24 languages via GA Live API
-- **Video-generating agents** creating personalized investment presentations with Veo 3
-- **Enhanced thinking agents** solving complex regulatory compliance using Deep Think mode
+- **Live conversational AI** providing real-time financial advice in 24 languages via Live API
+- **Video-generating agents** creating personalized investment presentations with Veo 2 (production) and Veo 3 (private preview)
+- **Enhanced thinking agents** solving complex regulatory compliance using configurable thinking budgets
 - **Grounded agents** accessing real-time market data with 2M token context windows
 
 The most remarkable part? All of these capabilities are **production-ready today** on Google's Vertex AI platform. The future of AI agents isn't a distant possibility—it's happening right now, and the organizations that understand this are already pulling ahead.
@@ -19,13 +19,14 @@ The most remarkable part? All of these capabilities are **production-ready today
 Based on recent official Google announcements and documentation (as of June 2025), here's what's happening in the enterprise AI agent space:
 
 - **Gemini 2.5 models** with up to 2 million token context windows are enabling entirely new classes of agents
-- **Gemini 2.5 Flash and Pro** are now Generally Available (GA) on Vertex AI for enterprise production use
-- **Gemini 2.5 Flash-Lite** is available in Preview as the fastest, most cost-efficient model for high-frequency tasks
-- **Live API** brings human-like voice interactions to enterprise systems (generally available on Vertex AI)
-- **Thinking capabilities** provide explicit reasoning with enhanced "thinking models" across the 2.5 family
-- **Video generation (Veo 3)** is expanding to more regions and users, including mobile app integration
+- **Gemini 2.5 Flash and Pro** are now Generally Available (GA) with stable pricing and production-ready deployment
+- **Gemini 2.5 Flash-Lite** is available in Preview (model: `gemini-2.5-flash-lite-preview-06-17`) as the fastest, most cost-efficient model for high-frequency tasks
+- **Live API** with Gemini 2.0 Flash Live (model: `gemini-2.0-flash-live-001`) enables low-latency bidirectional voice and video interactions
+- **Thinking capabilities** with configurable thinking budgets provide explicit reasoning across the 2.5 family
+- **Video generation (Veo 2)** is production-ready with text-to-video and image-to-video capabilities, while **Veo 3** is in private preview
 - **Agent Development Kit (ADK)** v1.0.0 for Python and v0.1.0 for Java provide production-ready agent frameworks
-- **Native image generation** is now available directly within Gemini 2.0 Flash models
+- **Imagen 4** delivers highest quality image generation in public preview on Vertex AI
+- **Lyria 2** provides enterprise-grade music generation, now generally available
 
 This chapter explores not just what's possible, but what's **available today** and how to position your organization for the agent-driven future that's already arriving.
 
@@ -79,9 +80,9 @@ flowchart TB
     style C4 fill:#e3f2fd
 ```
 
-### Live API: Voice-First Enterprise Revolution (Now Generally Available)
+### Live API: Voice-First Enterprise Revolution (Production Ready)
 
-**Updated Status:** Google's Live API is now Generally Available on Vertex AI for enterprise use, removing previous Private GA restrictions.
+**Updated Status:** Google's Live API is production-ready through the Gemini 2.0 Flash Live model (`gemini-2.0-flash-live-001`), enabling low-latency bidirectional voice and video interactions for enterprise applications.
 
 Google's Live API is transforming how businesses interact with AI agents. Here's a production-ready implementation:
 
@@ -135,7 +136,7 @@ class EnterpriseVoiceAgent:
         )
 
         session = await self.client.aio.live.connect(
-            model="gemini-2.0-flash-live-001",  # Latest live model
+            model="gemini-2.0-flash-live-001",  # Production Live model
             config=config
         )
 
@@ -204,9 +205,9 @@ async def deploy_voice_assistant():
     # Agent provides real-time analysis with voice response
 ```
 
-### Thinking Agents: Enhanced Reasoning with Latest Models
+### Thinking Agents: Enhanced Reasoning with Configurable Thinking Budgets
 
-Google's enhanced "thinking models" in the Gemini 2.5 family provide explicit reasoning capabilities with improved accuracy and performance. The latest updates include Deep Think mode for enhanced reasoning.
+Google's Gemini 2.5 family provides configurable thinking capabilities with explicit reasoning capabilities. The latest updates include dynamic thinking budgets and improved performance across all models.
 
 ```python
 # thinking_business_agent.py - Reasoning agent for strategic decisions
@@ -220,8 +221,8 @@ class StrategyThinkingAgent:
             project=project_id
         )
 
-    async def analyze_business_scenario(self, scenario: str, thinking_budget: int = 8192):
-        """Analyze complex business scenarios with explicit reasoning"""
+    async def analyze_business_scenario(self, scenario: str, thinking_budget: int = -1):
+        """Analyze complex business scenarios with configurable reasoning"""
 
         system_instruction = """
         You are a senior business strategy consultant with expertise in:
@@ -239,25 +240,23 @@ class StrategyThinkingAgent:
         """
 
         model = genai.GenerativeModel(
-            model="gemini-2.5-pro",
+            model="gemini-2.5-pro",  # GA model with thinking enabled by default
             system_instruction=system_instruction
         )
 
-        # Configure thinking with appropriate budget
-        thinking_config = ThinkingConfig(
-            thinking_budget=thinking_budget,
-            include_thought_summary=True
-        )
+        # Configure thinking budget (-1 = dynamic, 0 = disabled, >0 = specific budget)
+        generation_config = {
+            "thinking_budget": thinking_budget  # -1 for dynamic thinking
+        }
 
         response = await model.generate_content_async(
             scenario,
-            thinking_config=thinking_config
+            generation_config=generation_config
         )
 
         return {
             "analysis": response.text,
-            "thinking_process": response.thinking_process,
-            "thought_summary": response.thought_summary,
+            "thinking_tokens": getattr(response.usage_metadata, 'thinking_token_count', 0),
             "confidence_score": self._calculate_confidence(response)
         }
 
@@ -294,18 +293,18 @@ async def strategic_decision_example():
 
     print("Strategic Analysis:")
     print(result["analysis"])
-    print("\nReasoning Process:")
-    print(result["thinking_process"])
-    print(f"\nConfidence: {result['confidence_score']:.1%}")
+    print(f"\nThinking Tokens Used: {result['thinking_tokens']}")
+    print(f"Confidence: {result['confidence_score']:.1%}")
 ```
 
-### Video Generation Revolution: Veo 3 Expansion and Native Image Generation
+### Video Generation Evolution: Veo 2 Production, Veo 3 Preview, and Imagen 4
 
 **Latest Updates (June 2025):**
 
-- **Veo 3** is expanding to more countries and regions
-- **Mobile integration** now available in Gemini mobile app
-- **Native image generation** within Gemini 2.0 Flash eliminates need for separate image models
+- **Veo 2** (`veo-2.0-generate-001`) is production-ready for enterprise video generation
+- **Veo 3** is in private preview with enhanced quality, speech, and audio capabilities
+- **Imagen 4** delivers highest quality image generation in public preview
+- **Lyria 2** provides production-ready music generation, now generally available
 
 Google's video and image generation capabilities are rapidly evolving:
 
@@ -347,7 +346,7 @@ class EnterpriseVideoAgent:
         script_model = genai.GenerativeModel("gemini-2.5-flash")
         script_response = await script_model.generate_content_async(script_prompt)
 
-        # Generate video from script
+        # Generate video from script with current production model
         video_prompt = f"""
         Professional corporate training video showing:
         {script_response.text}
@@ -359,7 +358,7 @@ class EnterpriseVideoAgent:
         Tone: Educational and engaging
         """
 
-        # Note: Use latest Veo models. Veo 3 is expanding to more regions
+        # Use production-ready Veo 2 model
         video_request = {
             "instances": [{
                 "prompt": video_prompt
@@ -372,9 +371,9 @@ class EnterpriseVideoAgent:
             }
         }
 
-        # Use latest available Veo model (check regional availability)
+        # Use current production Veo model
         operation = await self.client.predict_long_running(
-            model="veo-3.0-generate-001",  # Use Veo 3 where available
+            model="veo-2.0-generate-001",  # Production-ready Veo 2
             request=video_request
         )
 
@@ -423,7 +422,7 @@ class EnterpriseVideoAgent:
         }
 
         operation = await self.client.predict_long_running(
-            model="veo-3.0-generate-001",  # Use latest available model
+            model="veo-2.0-generate-001",  # Production-ready Veo 2
             request=request
         )
 
@@ -464,6 +463,159 @@ async def automate_video_content():
         "training_video": training_video,
         "product_demo": product_demo
     }
+```
+
+### Production Video Generation: Veo 2 vs Veo 3 Reality Check
+
+**Current Status (June 2025):** Let's clarify the actual state of video generation models:
+
+#### **Veo 2: Production Ready**
+
+- **Model**: `veo-2.0-generate-001`
+- **Status**: Generally Available
+- **Features**: Text-to-video, Image-to-video, 5-8 second generation
+- **Quality**: 720p, 24fps, 16:9 or 9:16 aspect ratios
+- **Enterprise Ready**: Yes, with SynthID watermarking
+
+#### **Veo 3: Private Preview**
+
+- **Status**: Private preview (request access required)
+- **New Features**: Speech/dialogue, Audio/music, Enhanced quality
+- **Availability**: Limited access, expanding gradually
+- **Timeline**: Broader availability "in coming weeks"
+
+```python
+# production_video_strategy.py - Current video generation approach
+from google import genai
+from google.genai import types
+import time
+
+class EnterpriseVideoStrategy:
+    """Production video generation with current available models"""
+    
+    def __init__(self, project_id: str):
+        self.client = genai.Client(
+            vertexai=True,
+            project=project_id
+        )
+    
+    async def generate_training_video_production(self, script: str) -> dict:
+        """Generate training video with production-ready Veo 2"""
+        
+        # Optimize prompt for Veo 2 capabilities
+        video_prompt = f"""
+        Professional corporate training video:
+        
+        {script}
+        
+        Visual style: Clean, modern corporate aesthetic
+        Setting: Professional office environment, well-lit
+        Camera work: Steady shots, professional framing
+        Tone: Educational, engaging, trustworthy
+        Focus: Clear visual storytelling, professional presentation
+        """
+        
+        try:
+            # Use production Veo 2 model
+            operation = self.client.models.generate_videos(
+                model="veo-2.0-generate-001",
+                prompt=video_prompt,
+                config=types.GenerateVideosConfig(
+                    person_generation="allow_adult",  # Enable professional presenters
+                    aspect_ratio="16:9",  # Standard video format
+                    duration_seconds=8,  # Maximum for Veo 2
+                    number_of_videos=1
+                )
+            )
+            
+            # Wait for completion (typically 2-6 minutes)
+            while not operation.done:
+                time.sleep(30)
+                operation = self.client.operations.get(operation)
+            
+            if operation.response and operation.response.generated_videos:
+                video = operation.response.generated_videos[0]
+                return {
+                    "status": "success",
+                    "model_used": "veo-2.0-generate-001",
+                    "video_file": video.video,
+                    "duration": 8,
+                    "quality": "720p_24fps",
+                    "watermarked": True  # SynthID included
+                }
+            else:
+                return {
+                    "status": "failed",
+                    "error": "No video generated",
+                    "retry_recommended": True
+                }
+                
+        except Exception as e:
+            return {
+                "status": "error",
+                "error": str(e),
+                "fallback": "Use image generation + simple animations"
+            }
+    
+    async def request_veo3_access(self) -> dict:
+        """Request access to Veo 3 private preview"""
+        
+        # Note: This is the actual process as of June 2025
+        access_info = {
+            "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSfdksQf4brbFzAx5l1geMx7DlBTjoZKjA4DuI3uTiETCB-0hg/viewform",
+            "status": "private_preview",
+            "features": {
+                "speech_generation": "Dialogue and voice-overs",
+                "audio_generation": "Music and sound effects", 
+                "enhanced_quality": "Improved visual fidelity",
+                "longer_duration": "Up to 8 seconds (same as Veo 2)"
+            },
+            "timeline": "Broader availability in coming weeks",
+            "recommendation": "Use Veo 2 for production, request Veo 3 for future"
+        }
+        
+        return access_info
+
+# Example: Current production video workflow
+async def enterprise_video_workflow():
+    video_strategy = EnterpriseVideoStrategy("your-project-id")
+    
+    # Production video generation
+    training_script = """
+    Welcome to our Data Privacy Training module.
+    
+    Today we'll cover:
+    1. GDPR compliance requirements
+    2. Data handling best practices  
+    3. Incident response procedures
+    
+    This 8-second overview introduces our comprehensive training program.
+    """
+    
+    # Generate with production model
+    result = await video_strategy.generate_training_video_production(training_script)
+    
+    if result["status"] == "success":
+        print(f"✅ Video generated successfully with {result['model_used']}")
+        print(f"📹 Quality: {result['quality']}")
+        print(f"🔒 Watermarked: {result['watermarked']}")
+        
+        # Save video
+        result["video_file"].save("enterprise_training.mp4")
+        
+    else:
+        print(f"❌ Generation failed: {result.get('error')}")
+        
+        # Fallback strategy: Use Imagen 4 for static content
+        print("🔄 Falling back to image generation + presentation slides")
+    
+    # Check Veo 3 status
+    veo3_info = await video_strategy.request_veo3_access()
+    print(f"\n📋 Veo 3 Status: {veo3_info['status']}")
+    print(f"🎯 New Features: {list(veo3_info['features'].keys())}")
+    print(f"⏰ Timeline: {veo3_info['timeline']}")
+    
+    return result
 ```
 
 ## How Leading Organizations Are Preparing for the Agent Future
@@ -573,7 +725,7 @@ class NextGenAgentBuilder:
         self.project_id = project_id
         self.available_capabilities = {
             AgentCapability.VOICE_INTERACTION: "gemini-2.0-flash-live-001",
-            AgentCapability.VIDEO_GENERATION: "veo-3.0-generate-001",
+            AgentCapability.VIDEO_GENERATION: "veo-2.0-generate-001",  # Production ready
             AgentCapability.THINKING_REASONING: "gemini-2.5-pro",
             AgentCapability.MULTIMODAL_PROCESSING: "gemini-2.5-flash", 
             AgentCapability.REAL_TIME_GROUNDING: "gemini-2.5-flash",
@@ -781,17 +933,17 @@ Based on Google's current and planned capabilities, here's how to prepare:
 
 ### Pro Tips for Agent Future Success
 
-1. **Start with Voice and Thinking**: Google's Live API (now GA) and enhanced Thinking capabilities provide immediate business value with production-ready availability.
+1. **Start with Voice and Thinking**: Google's Live API (production-ready) and configurable Thinking capabilities provide immediate business value with stable model availability.
 
-2. **Leverage Latest Models**: Gemini 2.5 Flash-Lite offers the best cost-performance ratio for high-frequency tasks, while 2.5 Pro provides maximum reasoning capability.
+2. **Leverage Latest Models**: Gemini 2.5 Flash-Lite (Preview) offers the best cost-performance ratio for high-frequency tasks, while 2.5 Pro provides maximum reasoning capability.
 
-3. **Plan for Native Multimodal**: Future agents will seamlessly combine text, voice, image, and video. Gemini 2.0 Flash now includes native image generation capabilities.
+3. **Plan for Production Video**: Veo 2 is production-ready for enterprise video generation, while Veo 3 (private preview) offers enhanced capabilities for early adopters.
 
-4. **Use Production ADK**: With Python ADK v1.0.0 and Java ADK v0.1.0, you can build enterprise-grade agents with confidence.
+4. **Use Production ADK**: With Python ADK v1.0.0 and Java ADK v0.1.0, you can build enterprise-grade agents with production stability guarantees.
 
 5. **Invest in Data Quality**: Advanced agents with 2M token context windows require high-quality, well-structured data. Start improving your data infrastructure now.
 
-6. **Build for Integration**: Design agents that can easily connect with existing business systems using the latest ADK capabilities.
+6. **Build for Integration**: Design agents that can easily connect with existing business systems using the latest production ADK capabilities.
 
 7. **Focus on Business Value**: Don't build agents for technology's sake. Always tie agent capabilities to specific business outcomes with measurable ROI.
 
@@ -819,8 +971,8 @@ Based on Google's current and planned capabilities, here's how to prepare:
    - Set up proper IAM and security
    - Create development environment
 
-2. **Week 3-4**: Implement your first production agent
-   - Use Live API (now GA) for voice agent or enhanced Thinking agent with Gemini 2.5 models
+1. **Week 3-4**: Implement your first production agent
+   - Use Live API (production-ready) for voice agent or configurable Thinking agent with Gemini 2.5 models
    - Build and deploy using ADK v1.0.0 for Python or v0.1.0 for Java
    - Measure initial impact and user feedback
 
@@ -828,13 +980,13 @@ Based on Google's current and planned capabilities, here's how to prepare:
 
 1. **Week 5-6**: Add advanced capabilities
 
-   - Integrate Veo 3 video generation where available
-   - Implement native image generation with Gemini 2.0 Flash
+   - Integrate Veo 2 video generation (production-ready) or request Veo 3 private preview access
+   - Implement Imagen 4 image generation (public preview)
    - Connect to business data sources with 2M token context
 
 2. **Week 7-8**: Scale and optimize
    - Expand to additional use cases with Gemini 2.5 Flash-Lite for cost efficiency
-   - Optimize performance using latest ADK streaming capabilities
+   - Optimize performance using latest ADK production features
    - Establish monitoring and governance frameworks
 
 ### **Days 61-90: Transformation**
@@ -846,16 +998,16 @@ Based on Google's current and planned capabilities, here's how to prepare:
    - Prepare for autonomous operations
 
 2. **Week 11-12**: Future planning
-   - Evaluate emerging Google capabilities (Deep Think mode, expanded Veo 3)
-   - Plan next phase of agent adoption with latest model updates
+   - Evaluate emerging Google capabilities (Veo 3 private preview, expanded Imagen 4)
+   - Plan next phase of agent adoption with latest stable model features
    - Establish innovation pipeline with ADK production framework
 
 **Success Metrics:**
 
-- At least one production agent using latest GA models (Gemini 2.5 Flash/Pro)
+- At least one production agent using latest GA models (Gemini 2.5 Flash/Pro, Veo 2)
 - Measurable ROI from agent implementation with cost optimization via 2.5 Flash-Lite
 - Team trained and confident in ADK v1.0+ development
-- Clear roadmap leveraging next 12 months of Google AI model evolution
+- Clear roadmap leveraging next 12 months of Google AI evolution
 
 Remember: The future of AI agents isn't something that will happen to your organization—it's something you can actively shape and leverage. The tools are available today. The question is: Will you be among the organizations that seize this opportunity, or will you be the ones trying to catch up later?
 
@@ -863,9 +1015,9 @@ The agent revolution is here. Your future starts now.
 
 ---
 
-## Advanced Enterprise Implementation with Google ADK
+## Advanced Enterprise Implementation with Google ADK Production Framework
 
-Before we conclude this comprehensive guide, let's explore the advanced enterprise features that make Google's Agent Development Kit truly production-ready for large-scale deployments.
+Before we conclude this comprehensive guide, let's explore the advanced enterprise features that make Google's Agent Development Kit (ADK) v1.0.0 truly production-ready for large-scale deployments.
 
 ### Enterprise Context Management with Google ADK
 
@@ -1049,12 +1201,12 @@ enterprise_agent = Agent(
 
 ### ADK Streaming: Production-Ready Voice and Video Agents
 
-**Major Update (June 2025):** Google's Agent Development Kit (ADK) has reached significant milestones:
+**Production Status (June 2025):** Google's Agent Development Kit (ADK) has achieved production readiness:
 
-- **Python ADK v1.0.0** - Production-ready with stability guarantees
-- **Java ADK v0.1.0** - New Java ecosystem support
-- **Enhanced streaming capabilities** with bidirectional voice/video
-- **Improved context management** for enterprise deployments
+- **Python ADK v1.0.0** - Generally Available with enterprise stability guarantees
+- **Java ADK v0.1.0** - Initial release for Java ecosystem support
+- **Enhanced streaming capabilities** with Live API integration
+- **Enterprise context management** for large-scale deployments
 
 While the Live API provides powerful capabilities, the Agent Development Kit (ADK) offers a more comprehensive framework for building production-ready streaming agents. ADK's streaming capabilities enable low-latency, bidirectional voice and video communication with advanced features like streaming tools and enterprise-grade session management.
 
@@ -1078,7 +1230,7 @@ from google.adk.tools import google_search
 # Create a streaming-enabled agent
 root_agent = Agent(
     name="enterprise_search_agent",
-    # Use Gemini models that support streaming
+    # Use production Live model for voice capabilities
     model="gemini-2.0-flash-live-001",
     description="Professional assistant for enterprise search and research",
     instruction="""
@@ -1189,7 +1341,7 @@ class EnterpriseStreamingServer:
         # Create agent for this session
         agent = Agent(
             name=f"streaming_agent_{user_id}",
-            model="gemini-2.0-flash-live-001",  # Latest streaming model
+            model="gemini-2.0-flash-live-001",  # Production Live model
             instruction="You are a helpful enterprise assistant."
         )
 
@@ -1239,7 +1391,7 @@ class EnterpriseStreamingServer:
         # Create agent
         agent = Agent(
             name=f"sse_agent_{user_id}",
-            model="gemini-2.0-flash-live-001",  # Latest streaming model
+            model="gemini-2.0-flash-live-001",  # Production Live model
             instruction="You are a helpful enterprise assistant."
         )
 
@@ -1402,10 +1554,11 @@ As we conclude this comprehensive journey through Google's Agent Development Kit
 
 Throughout this chapter, we've explored:
 
-- **Current Capabilities**: Live API for voice interactions, Thinking agents for transparent reasoning, and video generation for automated content creation
+- **Current Production Capabilities**: Live API with Gemini 2.0 Flash Live, Thinking agents with configurable budgets, and Veo 2 video generation
+- **Latest Model Updates**: Gemini 2.5 Flash-Lite for cost optimization, stable pricing for 2.5 Flash/Pro, and enhanced enterprise features
 - **Strategic Frameworks**: How to evaluate and adopt new agent technologies based on your organization's needs and risk tolerance
 - **Implementation Patterns**: From basic agents to sophisticated multi-modal, reasoning systems with proper enterprise context management
-- **Production Considerations**: Streaming architectures, security, monitoring, and scalability for enterprise deployments
+- **Production Considerations**: Streaming architectures, security, monitoring, and scalability for enterprise deployments using ADK v1.0.0
 
 The capabilities we've covered represent just the beginning. With Google's continued innovation in Vertex AI, new breakthroughs in agent capabilities emerge regularly. The organizations that understand this evolution and position themselves strategically will be the ones that lead their industries.
 
@@ -1413,10 +1566,10 @@ The capabilities we've covered represent just the beginning. With Google's conti
 
 Your mission now is clear:
 
-1. **Start Today**: Begin with Google's production-ready capabilities—Live API, Thinking agents, and basic ADK implementations
-2. **Think Strategically**: Use the adoption frameworks we've covered to plan your agent roadmap
-3. **Build for Scale**: Implement proper enterprise patterns from the beginning using ADK's context management and streaming capabilities
-4. **Stay Adaptable**: Keep monitoring Google's releases and be ready to evolve your agent architecture
+1. **Start Today**: Begin with Google's production-ready capabilities—Live API with Gemini 2.0 Flash Live, Thinking agents with Gemini 2.5 models, and cost-optimized implementations with Flash-Lite
+2. **Think Strategically**: Use the adoption frameworks we've covered to plan your agent roadmap with current model availability
+3. **Build for Scale**: Implement proper enterprise patterns from the beginning using ADK v1.0.0 context management and streaming capabilities
+4. **Stay Adaptable**: Keep monitoring Google's releases (Veo 3 private preview, expanded Imagen 4) and be ready to evolve your agent architecture
 
 ### The Agent Revolution Is Here
 
