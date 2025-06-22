@@ -584,7 +584,7 @@ resilient_coordinator = LlmAgent(
 #### The Triage Pattern
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["📞 Customer Service<br/>Main Entry Point"] --> B{{"🔍 Request Analysis<br/>What type of issue?"}}
     
     B -->|"Billing Question"| C["💳 Billing Agent<br/>transfer_to_agent('billing_specialist')"]
