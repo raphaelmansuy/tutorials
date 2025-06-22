@@ -34,6 +34,89 @@ Remember when chatbots could only handle simple FAQ questions? Those days are ov
 
 As AI agents become more sophisticated, developers are moving beyond basic request-response interactions to build complex, multi-agent systems that mirror how human teams collaborate to solve problems.
 
+## Understanding ADK Context Management
+
+Before diving into advanced patterns, it's crucial to understand Google ADK's context system, which is the foundation for how agents share information and maintain state.
+
+### What is Context in ADK?
+
+In ADK, "context" refers to the crucial bundle of information available to your agent and its tools during operations. Think of it as the necessary background knowledge and resources needed to handle tasks effectively.
+
+### Types of Context Objects
+
+ADK provides specialized context objects for different situations:
+
+#### 1. `InvocationContext`
+- **Where Used**: Within agent's core implementation methods (`_run_async_impl`)
+- **Purpose**: Provides access to the entire state of the current invocation
+- **Key Contents**: Direct access to `session`, `agent` instance, `invocation_id`, user content
+
+#### 2. `ToolContext`
+- **Where Used**: Passed to function tools
+- **Purpose**: Everything `CallbackContext` does, plus specialized tool methods
+- **Key Capabilities**: Authentication methods, artifact listing, memory search
+
+#### 3. `CallbackContext`
+- **Where Used**: Agent lifecycle callbacks and model interaction callbacks
+- **Purpose**: Facilitates inspecting and modifying state, interacting with artifacts
+
+### Practical Context Usage
+
+```python
+from google.adk.tools import FunctionTool
+from google.adk.tools.tool_context import ToolContext
+
+def analyze_data(query: str, tool_context: ToolContext) -> dict:
+    """Example tool function using ADK context properly."""
+    
+    # Read previous state
+    previous_analysis = tool_context.state.get("previous_analysis", {})
+    user_preferences = tool_context.state.get("user_preferences", {})
+    
+    # Perform analysis
+    results = {
+        "query": query,
+        "findings": ["insight1", "insight2"],
+        "confidence": 0.85
+    }
+    
+    # Save results to state for future agents
+    tool_context.state["current_analysis"] = results
+    tool_context.state["last_query"] = query
+    
+    return results
+
+def create_context_aware_agent():
+    """Create an agent that properly uses ADK context."""
+    
+    analysis_tool = FunctionTool(
+        func=analyze_data,
+        name="analyze_data",
+        description="Analyze data with context awareness"
+    )
+    
+    agent = LlmAgent(
+        name="ContextAwareAgent",
+        model="gemini-2.5-flash",
+        instruction="""You are a data analyst with memory.
+        
+        Use the analyze_data tool to process queries. You can reference
+        previous analyses from the conversation state to provide continuity
+        and build upon earlier insights.""",
+        tools=[analysis_tool]
+    )
+    
+    return agent
+```
+
+### State Management Best Practices
+
+- **Use Prefixes**: `user:` for user-level data, `temp:` for temporary data
+- **Keep State Minimal**: Only store essential information
+- **Document State Keys**: Use consistent naming conventions
+
+---
+
 ## Pattern 1: Multimodal Agents - Beyond Text
 
 ### The "Why" Behind Multimodal Agents
@@ -105,6 +188,7 @@ Here's how to build a multimodal insurance claims agent using Google ADK with th
 ```python
 from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
+from google.adk.runners import Runner
 from google.genai import types
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
@@ -357,7 +441,7 @@ def create_multimodal_claims_agent():
     agent = LlmAgent(
         name="MultimodalClaimsAgent",
         model="gemini-2.5-flash",  # Latest model with enhanced multimodal capabilities
-        system_instruction="""You are an intelligent insurance claims processing agent with advanced multimodal capabilities.
+        instruction="""You are an intelligent insurance claims processing agent with advanced multimodal capabilities.
         
         ## Your Core Capabilities:
         - **Visual Analysis**: Analyze damage photos using analyze_damage_photo tool
@@ -404,9 +488,11 @@ def process_insurance_claim(claim_data: dict):
     multimodal_agent = create_multimodal_claims_agent()
     
     try:
+        # Create a runner to execute the agent
+        runner = Runner(agent=multimodal_agent)
+        
         # Process the claim
-        response = multimodal_agent.execute(
-            query=f"""
+        response = runner.run(f"""
             Process this insurance claim:
             
             Claim ID: {claim_data.get('claim_id', 'Unknown')}
@@ -418,13 +504,7 @@ def process_insurance_claim(claim_data: dict):
             - Description: {claim_data.get('description', 'None provided')}
             
             Please analyze all provided materials and provide a comprehensive claim assessment.
-            """,
-            context={
-                "photos": claim_data.get('photos', []),
-                "audio_files": claim_data.get('audio_files', []),
-                "additional_context": claim_data.get('context', {})
-            }
-        )
+            """)
         
         return {
             "status": "success",
@@ -458,7 +538,9 @@ sample_claim = {
 result = process_insurance_claim(sample_claim)
 print(f"Claim processing result: {result}")
 
+# Create and use the agent properly
 multimodal_agent = create_multimodal_claims_agent()
+runner = Runner(agent=multimodal_agent)
 ```
 
 ### Advanced Multimodal Use Case: Video Analysis
@@ -572,6 +654,7 @@ Let's create a comprehensive enterprise knowledge assistant using the latest Ver
 ```python
 from google.adk.agents import LlmAgent, SequentialAgent
 from google.adk.tools import FunctionTool
+from google.adk.runners import Runner
 from google.cloud import discoveryengine_v1beta
 from google.cloud import aiplatform
 import vertexai
@@ -862,7 +945,7 @@ def create_enterprise_rag_agent(project_id: str, location: str = "us-central1"):
     search_agent = LlmAgent(
         name="KnowledgeSearchAgent",
         model="gemini-2.5-flash",
-        system_instruction="""You are a knowledge search specialist for enterprise information retrieval.
+        instruction="""You are a knowledge search specialist for enterprise information retrieval.
         
         ## Your Expertise:
         - Query analysis and enhancement
@@ -897,7 +980,7 @@ def create_enterprise_rag_agent(project_id: str, location: str = "us-central1"):
     response_agent = LlmAgent(
         name="GroundedResponseAgent", 
         model="gemini-2.5-flash",
-        system_instruction="""You are an expert at creating comprehensive, well-grounded responses from enterprise knowledge.
+        instruction="""You are an expert at creating comprehensive, well-grounded responses from enterprise knowledge.
         
         ## Your Expertise:
         - Information synthesis and analysis
@@ -950,11 +1033,7 @@ def create_enterprise_rag_agent(project_id: str, location: str = "us-central1"):
         - Confidence assessment and uncertainty handling
         - Professional enterprise communication standards
         - Advanced search refinement and quality control
-        """,
-        # Configure pipeline behavior
-        retry_on_failure=True,
-        max_retries=2,
-        failure_fallback="Apologize and suggest contacting subject matter expert"
+        """
     )
     
     return rag_pipeline
@@ -984,8 +1063,9 @@ def query_enterprise_knowledge(question: str, context: dict = None):
             """
             enhanced_query = context_str
         
-        # Execute the query
-        response = rag_agent.execute(enhanced_query)
+        # Execute the query with proper Runner pattern
+        runner = Runner(agent=rag_agent)
+        response = runner.run(enhanced_query)
         
         return {
             "status": "success",
@@ -1028,785 +1108,7 @@ tech_response = query_enterprise_knowledge(
 )
 ```
 
-### Advanced RAG Techniques
-
-#### 1. Multi-Source RAG
-
-Combine multiple knowledge sources for comprehensive answers:
-
-```python
-def multi_source_search(self, query: str) -> dict:
-    """Searches across multiple knowledge sources."""
-    sources = {
-        "internal_docs": self.search_internal_documents(query),
-        "external_apis": self.search_external_apis(query),
-        "real_time_data": self.get_real_time_data(query)
-    }
-    
-    return {
-        "status": "success",
-        "multi_source_results": sources,
-        "synthesis_required": True
-    }
-```
-
-#### 2. Contextual RAG
-
-Maintain conversation context for better retrieval:
-
-```python
-def contextual_search(self, query: str, conversation_history: list) -> dict:
-    """Performs context-aware search using conversation history."""
-    # Build context from previous interactions
-    context = self.build_conversation_context(conversation_history)
-    
-    # Enhance query with context
-    enhanced_query = f"Context: {context}\nCurrent question: {query}"
-    
-    return self.search_enterprise_knowledge(enhanced_query, context)
-```
-
-### RAG Best Practices and Common Pitfalls
-
-**✅ Do:**
-
-- Always cite sources in your responses
-- Implement semantic chunking for better retrieval
-- Use hybrid search (keyword + semantic)
-- Regularly update your knowledge base
-- Monitor retrieval quality metrics
-
-**❌ Avoid:**
-
-- Generating answers without retrieved context
-- Using stale or outdated information
-- Ignoring source credibility
-- Over-relying on single sources
-- Forgetting to handle empty search results
-
-### Pro Tips for Production RAG
-
-1. **Chunk Optimization**: Test different chunk sizes (256, 512, 1024 tokens) for your domain
-2. **Reranking**: Implement a reranking step to improve result quality
-3. **Caching**: Cache frequent queries to reduce latency and costs
-4. **Monitoring**: Track retrieval accuracy and answer quality metrics
-5. **Fallback Strategies**: Have fallback responses when retrieval fails
-
----
-
----
-
-## Pattern 3: Distributed Agent Systems - Teamwork at Scale
-
-### The "Why" Behind Distributed Agents
-
-**Why have one superhero when you can have the Avengers?**
-
-Think about how a successful software company operates:
-
-- **Product Managers** gather requirements and prioritize features
-- **Architects** design system blueprints  
-- **Developers** implement the features
-- **QA Engineers** test and validate
-- **DevOps Engineers** deploy and monitor
-
-Each role has specialized expertise. Similarly, distributed agent systems break complex problems into smaller, manageable tasks handled by specialized agents working together.
-
-### What Are Distributed Agent Systems?
-
-**Distributed agent systems** consist of multiple specialized agents collaborating to achieve a common goal. This approach mirrors human teamwork, allowing for:
-
-- **Specialization**: Each agent excels at specific tasks
-- **Scalability**: Add more agents as needs grow
-- **Reliability**: If one agent fails, others can continue
-- **Maintainability**: Update individual agents without affecting the entire system
-
-### Orchestration Patterns in Google ADK
-
-Google ADK provides powerful primitives for building distributed agent systems:
-
-```mermaid
-flowchart TD
-    subgraph "Agent Orchestration Patterns"
-        A[Hierarchical Pattern] --> A1[Manager Agent]
-        A1 --> A2[Worker Agent 1]
-        A1 --> A3[Worker Agent 2]
-        A1 --> A4[Worker Agent N]
-        
-        B[Sequential Pattern] --> B1[Agent 1]
-        B1 --> B2[Agent 2]
-        B2 --> B3[Agent 3]
-        
-        C[Parallel Pattern] --> C1[Agent A]
-        C[Parallel Pattern] --> C2[Agent B]
-        C[Parallel Pattern] --> C3[Agent C]
-        C1 --> C4[Aggregator]
-        C2 --> C4
-        C3 --> C4
-        
-        D[Collaborative Pattern] --> D1[Agent X]
-        D1 <--> D2[Agent Y]
-        D2 <--> D3[Agent Z]
-        D3 <--> D1
-    end
-    
-    style A1 fill:#ffeb3b
-    style B2 fill:#4caf50
-    style C4 fill:#2196f3
-    style D2 fill:#ff9800
-```
-
-#### 1. Hierarchical Pattern - The Manager-Worker Model with Thinking
-
-**When to use**: Complex tasks requiring delegation, coordination, and strategic thinking.
-
-```python
-from google.adk.agents import LlmAgent, SequentialAgent
-from google.adk.tools import FunctionTool, agent_tool
-
-class AdvancedSoftwareDevelopmentTeam:
-    def __init__(self):
-        self.setup_specialized_agents()
-    
-    def setup_specialized_agents(self):
-        # Specialized worker agents with enhanced capabilities
-        self.requirements_agent = LlmAgent(
-            name="RequirementsAnalyst",
-            model="gemini-2.5-pro",  # Use Pro model for complex analysis
-            description="Analyzes and clarifies project requirements with strategic thinking",
-            system_instruction="""You are a senior business analyst with 15+ years of experience in requirements gathering.
-            
-            ## Your Expertise:
-            - Requirements analysis and decomposition
-            - Stakeholder management and communication
-            - Risk assessment and mitigation planning
-            - Business process optimization
-            - Technical feasibility evaluation
-            
-            ## Your Process:
-            1. **Requirement Decomposition**: Break down high-level requests into detailed, actionable requirements
-            2. **Stakeholder Analysis**: Identify all affected parties and their needs
-            3. **Risk Assessment**: Evaluate potential risks and constraints
-            4. **Feasibility Study**: Assess technical and business feasibility
-            5. **Documentation**: Create clear, comprehensive requirement specifications
-            
-            ## Thinking Guidelines:
-            - Use systematic thinking to identify edge cases
-            - Consider long-term implications of requirements
-            - Question assumptions and seek clarification
-            - Think through user journey and experience impacts
-            
-            Always use the thinking capabilities to work through complex requirement analysis step by step.""",
-            # Enable thinking for complex reasoning
-            generation_config={
-                "temperature": 0.3,
-                "thinking_budget": 8192  # Allow substantial thinking for complex analysis
-            }
-        )
-        
-        self.architect_agent = LlmAgent(
-            name="SolutionArchitect",
-            model="gemini-2.5-pro",
-            description="Designs scalable technical architecture with strategic foresight",
-            system_instruction="""You are a principal solution architect with expertise in enterprise-scale systems.
-            
-            ## Your Expertise:
-            - System architecture design and patterns
-            - Technology selection and evaluation
-            - Scalability and performance optimization
-            - Security and compliance planning
-            - Integration and interoperability design
-            
-            ## Your Process:
-            1. **Requirements Analysis**: Review and understand business requirements
-            2. **Technology Evaluation**: Assess and select appropriate technologies
-            3. **Architecture Design**: Create comprehensive system blueprints
-            4. **Risk Mitigation**: Identify and address architectural risks
-            5. **Implementation Planning**: Create detailed development roadmaps
-            
-            ## Design Principles:
-            - Scalability: Design for growth and change
-            - Maintainability: Ensure long-term system health
-            - Security: Build security into the architecture foundation
-            - Performance: Optimize for speed and efficiency
-            - Flexibility: Enable future adaptability
-            
-            Use thinking to work through complex architectural decisions and trade-offs.""",
-            generation_config={
-                "temperature": 0.3,
-                "thinking_budget": 12288  # Higher budget for architectural thinking
-            }
-        )
-        
-        self.developer_agent = LlmAgent(
-            name="SeniorDeveloper",
-            model="gemini-2.5-flash",  # Flash for faster code generation
-            description="Implements features with code excellence and best practices",
-            system_instruction="""You are a senior full-stack developer with expertise in modern development practices.
-            
-            ## Your Expertise:
-            - Full-stack development (frontend, backend, database)
-            - Code quality and best practices
-            - Testing strategies and implementation
-            - Performance optimization
-            - Security coding practices
-            
-            ## Your Standards:
-            - Clean Code: Write readable, maintainable code
-            - Testing: Implement comprehensive test coverage
-            - Documentation: Create clear code documentation
-            - Performance: Optimize for speed and efficiency
-            - Security: Follow secure coding practices
-            
-            ## Your Process:
-            1. **Design Review**: Understand architectural guidelines
-            2. **Implementation Planning**: Break down features into tasks
-            3. **Code Development**: Write high-quality, tested code
-            4. **Code Review**: Self-review and optimize code
-            5. **Documentation**: Document code and APIs
-            
-            Use thinking to work through complex implementation challenges.""",
-            generation_config={
-                "temperature": 0.2,
-                "thinking_budget": 4096  # Moderate thinking for code development
-            }
-        )
-        
-        # Advanced Quality Assurance Agent
-        self.qa_agent = LlmAgent(
-            name="QualityAssuranceEngineer", 
-            model="gemini-2.5-flash",
-            description="Ensures comprehensive quality and testing coverage",
-            system_instruction="""You are a senior QA engineer specializing in comprehensive quality assurance.
-            
-            ## Your Expertise:
-            - Test strategy and planning
-            - Automated testing frameworks
-            - Performance and load testing
-            - Security testing and validation
-            - User experience testing
-            
-            ## Your Process:
-            1. **Test Planning**: Develop comprehensive test strategies
-            2. **Test Case Design**: Create detailed test scenarios
-            3. **Automation**: Implement automated testing where appropriate
-            4. **Execution**: Execute tests and validate results
-            5. **Reporting**: Document findings and recommendations
-            
-            Focus on identifying potential issues before they reach production.""",
-            generation_config={
-                "temperature": 0.2,
-                "thinking_budget": 3072
-            }
-        )
-        
-        # Create agent tools for cross-collaboration
-        requirements_tool = agent_tool.AgentTool(agent=self.requirements_agent)
-        architect_tool = agent_tool.AgentTool(agent=self.architect_agent)
-        developer_tool = agent_tool.AgentTool(agent=self.developer_agent)
-        qa_tool = agent_tool.AgentTool(agent=self.qa_agent)
-        
-        # Enhanced Project Manager with Live API capabilities (for real-time collaboration)
-        self.project_manager = LlmAgent(
-            name="ProjectManager",
-            model="gemini-2.5-pro",
-            description="Orchestrates software development projects with strategic oversight",
-            system_instruction="""You are an experienced project manager leading a high-performance software development team.
-            
-            ## Your Team:
-            - **RequirementsAnalyst**: Clarifies and documents detailed requirements
-            - **SolutionArchitect**: Designs scalable technical solutions and blueprints
-            - **SeniorDeveloper**: Implements features with code excellence
-            - **QualityAssuranceEngineer**: Ensures comprehensive quality and testing
-            
-            ## Your Leadership Process:
-            1. **Project Initiation**: Understand project goals and constraints
-            2. **Team Coordination**: Delegate tasks to appropriate specialists
-            3. **Progress Monitoring**: Track project status and identify blockers
-            4. **Quality Assurance**: Ensure deliverables meet standards
-            5. **Stakeholder Communication**: Keep stakeholders informed
-            6. **Risk Management**: Identify and mitigate project risks
-            
-            ## Coordination Guidelines:
-            - Use agent tools to delegate specialized tasks
-            - Synthesize inputs from all team members
-            - Maintain project timeline and quality standards
-            - Facilitate communication between team members
-            - Make strategic decisions when there are trade-offs
-            
-            ## Decision-Making Framework:
-            - Quality: Never compromise on code quality
-            - Timeline: Balance speed with thoroughness
-            - Resources: Optimize team member utilization
-            - Risk: Proactively address potential issues
-            
-            Use thinking to work through complex project decisions and coordination challenges.""",
-            tools=[requirements_tool, architect_tool, developer_tool, qa_tool],
-            generation_config={
-                "temperature": 0.3,
-                "thinking_budget": 16384,  # Maximum thinking for strategic decisions
-                "max_output_tokens": 3072
-            }
-        )
-
-# Create and deploy the enhanced development team
-def create_software_development_team():
-    """Create an advanced software development team with thinking capabilities."""
-    return AdvancedSoftwareDevelopmentTeam()
-
-# Usage example with complex project
-def execute_development_project(project_description: str, constraints: dict = None):
-    """Execute a software development project with the AI team."""
-    
-    dev_team = create_software_development_team()
-    project_manager = dev_team.project_manager
-    
-    # Prepare project context
-    project_context = f"""
-    Project Description: {project_description}
-    
-    Constraints:
-    - Timeline: {constraints.get('timeline', 'Standard') if constraints else 'Standard'}
-    - Budget: {constraints.get('budget', 'Standard') if constraints else 'Standard'}
-    - Team Size: {constraints.get('team_size', 'Full Team') if constraints else 'Full Team'}
-    - Technology Constraints: {constraints.get('tech_constraints', 'None') if constraints else 'None'}
-    
-    Please coordinate with your team to:
-    1. Analyze and clarify requirements
-    2. Design the technical architecture
-    3. Plan the implementation approach
-    4. Define the quality assurance strategy
-    5. Create a comprehensive project plan
-    
-    Work with your team systematically and provide a complete project blueprint.
-    """
-    
-    try:
-        response = project_manager.execute(project_context)
-        
-        return {
-            "status": "success",
-            "project_plan": response,
-            "team_coordination": "Successful multi-agent collaboration",
-            "thinking_enabled": True,
-            "next_steps": "Begin implementation with defined plan"
-        }
-        
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "fallback": "Escalate to human project management"
-        }
-
-# Example usage
-sample_project = """
-Build a customer service chatbot platform that can:
-- Handle text, voice, and image inputs
-- Access company knowledge base
-- Route complex issues to human agents
-- Provide analytics and reporting
-- Support multiple languages
-- Ensure data privacy and security
-"""
-
-project_constraints = {
-    "timeline": "3 months",
-    "budget": "Medium",
-    "team_size": "4 developers",
-    "tech_constraints": "Must use Google Cloud services"
-}
-
-project_result = execute_development_project(sample_project, project_constraints)
-print(f"Project planning result: {project_result['status']}")
-```
-
-#### 2. Sequential Pattern - Pipeline Processing
-
-**When to use**: Multi-step processes where each stage depends on the previous one.
-
-```python
-from google.adk.agents import SequentialAgent, LlmAgent
-
-def create_content_creation_pipeline():
-    """Creates a content creation pipeline with sequential agents."""
-    
-    # Research Agent
-    researcher = LlmAgent(
-        name="ContentResearcher",
-        model="gemini-2.0-flash",
-        instruction="""You are a content researcher specializing in gathering information for articles.
-        
-        Your process:
-        1. Analyze the topic and target audience
-        2. Identify key points to cover
-        3. Gather supporting facts and statistics
-        4. Note current trends and insights
-        
-        Save your research findings to state with key 'research_data'.""",
-        output_key="research_data"
-    )
-    
-    # Writer Agent  
-    writer = LlmAgent(
-        name="ContentWriter",
-        model="gemini-2.0-flash",
-        instruction="""You are a skilled content writer who creates engaging articles.
-        
-        Your process:
-        1. Review research data from state key 'research_data'
-        2. Create a compelling article structure
-        3. Write engaging, informative content
-        4. Include relevant examples and insights
-        
-        Save your draft to state with key 'article_draft'.""",
-        output_key="article_draft"
-    )
-    
-    # Editor Agent
-    editor = LlmAgent(
-        name="ContentEditor",
-        model="gemini-2.0-flash",
-        instruction="""You are an experienced editor who polishes content for publication.
-        
-        Your process:
-        1. Review the article draft from state key 'article_draft'
-        2. Check for clarity, flow, and engagement
-        3. Correct grammar and style issues
-        4. Ensure consistency and accuracy
-        5. Optimize for target audience
-        
-        Provide the final, publication-ready version."""
-    )
-    
-    # Sequential pipeline
-    content_pipeline = SequentialAgent(
-        name="ContentCreationPipeline",
-        sub_agents=[researcher, writer, editor],
-        description="End-to-end content creation from research to publication"
-    )
-    
-    return content_pipeline
-```
-
-#### 3. Parallel Pattern - Concurrent Processing
-
-**When to use**: Independent tasks that can be executed simultaneously.
-
-```python
-from google.adk.agents import ParallelAgent, SequentialAgent, LlmAgent
-
-def create_market_analysis_system():
-    """Creates a comprehensive market analysis system using parallel processing."""
-    
-    # Parallel analysis agents
-    competitor_analyst = LlmAgent(
-        name="CompetitorAnalyst",
-        model="gemini-2.0-flash",
-        instruction="""Analyze competitor landscape and market positioning.
-        
-        Focus on:
-        - Key competitors and their strategies
-        - Market share analysis
-        - Pricing strategies
-        - Competitive advantages and weaknesses
-        
-        Save findings to state key 'competitor_analysis'.""",
-        output_key="competitor_analysis"
-    )
-    
-    trend_analyst = LlmAgent(
-        name="TrendAnalyst", 
-        model="gemini-2.0-flash",
-        instruction="""Analyze market trends and future opportunities.
-        
-        Focus on:
-        - Emerging market trends
-        - Consumer behavior shifts
-        - Technology disruptions
-        - Growth opportunities
-        
-        Save findings to state key 'trend_analysis'.""",
-        output_key="trend_analysis"
-    )
-    
-    financial_analyst = LlmAgent(
-        name="FinancialAnalyst",
-        model="gemini-2.0-flash", 
-        instruction="""Analyze financial metrics and market performance.
-        
-        Focus on:
-        - Revenue and profit trends
-        - Market valuation analysis
-        - Financial health indicators
-        - Investment opportunities
-        
-        Save findings to state key 'financial_analysis'.""",
-        output_key="financial_analysis"
-    )
-    
-    # Parallel execution of analysis
-    parallel_analysis = ParallelAgent(
-        name="ParallelMarketAnalysis",
-        sub_agents=[competitor_analyst, trend_analyst, financial_analyst],
-        description="Concurrent analysis of different market aspects"
-    )
-    
-    # Synthesis agent to combine results
-    synthesis_agent = LlmAgent(
-        name="MarketSynthesizer",
-        model="gemini-2.0-flash",
-        instruction="""Synthesize parallel analysis results into comprehensive market report.
-        
-        Combine insights from:
-        - Competitor analysis (state key 'competitor_analysis')
-        - Trend analysis (state key 'trend_analysis') 
-        - Financial analysis (state key 'financial_analysis')
-        
-        Create a unified market assessment with strategic recommendations."""
-    )
-    
-    # Complete analysis workflow
-    market_analysis_system = SequentialAgent(
-        name="ComprehensiveMarketAnalysis",
-        sub_agents=[parallel_analysis, synthesis_agent],
-        description="Complete market analysis with parallel processing and synthesis"
-    )
-    
-    return market_analysis_system
-```
-
-#### 4. Collaborative Pattern - Dynamic Interaction
-
-**When to use**: Complex problem-solving requiring dynamic collaboration and iteration.
-
-```python
-from google.adk.agents import LlmAgent
-from google.adk.tools import agent_tool
-
-def create_research_collaboration_system():
-    """Creates a collaborative research system where agents can call each other as tools."""
-    
-    # Specialized research agents
-    data_scientist = LlmAgent(
-        name="DataScientist",
-        model="gemini-2.0-flash",
-        description="Analyzes data patterns and statistical insights",
-        instruction="""You are a senior data scientist specializing in data analysis and machine learning.
-        
-        Your expertise includes:
-        - Statistical analysis and hypothesis testing
-        - Machine learning model recommendations
-        - Data visualization strategies
-        - Pattern recognition and insights extraction
-        
-        Provide data-driven recommendations with confidence levels."""
-    )
-    
-    domain_expert = LlmAgent(
-        name="DomainExpert",
-        model="gemini-2.0-flash",
-        description="Provides domain-specific knowledge and context",
-        instruction="""You are a domain expert with deep industry knowledge.
-        
-        Your role:
-        - Provide context for technical findings
-        - Validate assumptions against industry practices
-        - Suggest practical implementation approaches
-        - Identify potential challenges and solutions
-        
-        Ground technical insights in real-world practicality."""
-    )
-    
-    # Create agent tools for cross-collaboration
-    data_scientist_tool = agent_tool.AgentTool(agent=data_scientist)
-    domain_expert_tool = agent_tool.AgentTool(agent=domain_expert)
-    
-    # Research coordinator that can collaborate with specialists
-    research_coordinator = LlmAgent(
-        name="ResearchCoordinator",
-        model="gemini-2.0-flash",
-        instruction="""You are a research coordinator leading interdisciplinary projects.
-        
-        Available specialists:
-        - DataScientist: For statistical analysis and ML insights
-        - DomainExpert: For industry context and practical validation
-        
-        Your approach:
-        1. Break down complex research questions
-        2. Consult appropriate specialists using available tools
-        3. Synthesize insights from multiple perspectives
-        4. Iterate based on specialist feedback
-        5. Provide comprehensive, actionable conclusions
-        
-        Always validate technical findings with domain expertise.""",
-        tools=[data_scientist_tool, domain_expert_tool]
-    )
-    
-    return research_coordinator
-```
-
-### Real-World Example: Smart Customer Service System
-
-Let's combine all three patterns into a comprehensive customer service system:
-
-```python
-def create_smart_customer_service():
-    """Creates an enterprise-grade customer service system combining all patterns."""
-    
-    # Multimodal intake agent
-    intake_agent = create_multimodal_claims_agent()  # From earlier example
-    
-    # RAG-enabled knowledge agent  
-    knowledge_agent = create_enterprise_rag_agent(
-        project_id="your-project-id",
-        search_engine_id="customer-service-kb"
-    )
-    
-    # Specialized service agents
-    technical_support = LlmAgent(
-        name="TechnicalSupport",
-        model="gemini-2.0-flash",
-        description="Handles technical issues and troubleshooting",
-        instruction="""You are a senior technical support specialist.
-        
-        Your expertise:
-        - Troubleshoot technical issues
-        - Provide step-by-step solutions
-        - Escalate complex technical problems
-        - Document solutions for knowledge base"""
-    )
-    
-    billing_support = LlmAgent(
-        name="BillingSupport", 
-        model="gemini-2.0-flash",
-        description="Handles billing inquiries and account issues",
-        instruction="""You are a billing support specialist.
-        
-        Your expertise:
-        - Resolve billing discrepancies
-        - Explain charges and fees
-        - Process refunds and adjustments
-        - Update account information"""
-    )
-    
-    # Supervisor agent for coordination
-    customer_service_supervisor = LlmAgent(
-        name="CustomerServiceSupervisor",
-        model="gemini-2.0-flash",
-        instruction="""You are a customer service supervisor managing a team of specialists.
-        
-        Your team:
-        - TechnicalSupport: For technical issues
-        - BillingSupport: For billing and account questions
-        
-        Process:
-        1. Analyze customer inquiry
-        2. Route to appropriate specialist using transfer_to_agent
-        3. Monitor case progression
-        4. Ensure customer satisfaction
-        
-        Always prioritize customer experience and resolution quality.""",
-        sub_agents=[technical_support, billing_support]
-    )
-    
-    # Complete service pipeline
-    service_pipeline = SequentialAgent(
-        name="SmartCustomerService",
-        sub_agents=[
-            intake_agent,           # Multimodal input processing
-            knowledge_agent,        # RAG-based knowledge retrieval
-            customer_service_supervisor  # Distributed agent coordination
-        ],
-        description="Complete customer service system with multimodal, RAG, and distributed capabilities"
-    )
-    
-    return service_pipeline
-
-# Deploy the complete system
-smart_service = create_smart_customer_service()
-```
-
-### Best Practices for Distributed Agent Systems
-
-**✅ Do:**
-
-- **Define Clear Responsibilities**: Each agent should have a specific, well-defined role
-- **Implement Graceful Handoffs**: Use proper state management for agent transitions  
-- **Monitor Agent Performance**: Track individual agent metrics and overall system health
-- **Plan for Failures**: Implement fallback strategies when agents are unavailable
-- **Document Agent Interactions**: Maintain clear logs of agent-to-agent communications
-
-**❌ Avoid:**
-
-- **Creating Too Many Agents**: Start simple and add complexity gradually
-- **Circular Dependencies**: Prevent infinite loops in agent interactions
-- **Shared State Conflicts**: Use proper state management to avoid race conditions
-- **Single Points of Failure**: Ensure system can function with degraded capabilities
-- **Ignoring Latency**: Consider performance implications of agent orchestration
-
-### Pro Tips for Production Systems
-
-1. **Start Small**: Begin with 2-3 agents and expand based on needs
-2. **Use Circuit Breakers**: Implement fallback mechanisms for failed agents
-3. **Monitor Token Usage**: Distributed systems can consume tokens quickly
-4. **Implement Caching**: Cache agent responses for common scenarios
-5. **Version Your Agents**: Track agent updates and their impact on system behavior
-
----
-
-## Building Your First Advanced Agent System
-
-### When to Use Each Pattern
-
-Understanding **when** to apply each pattern is crucial for success:
-
-| Pattern | Best For | Complexity | Implementation Time |
-|---------|----------|------------|-------------------|
-| **Multimodal** | Rich media processing, customer support, content analysis | Medium | 1-2 weeks |
-| **RAG** | Knowledge-intensive tasks, dynamic information needs | Medium | 2-3 weeks |
-| **Distributed** | Complex workflows, scalable systems, team-like behavior | High | 3-6 weeks |
-
-### Quick Assessment Quiz 🧠
-
-**Scenario 1**: A real estate company wants an AI assistant that can analyze property photos, search MLS listings, and coordinate with different specialists (financing, inspection, legal).
-
-**Which patterns would you combine?**
-
-- A) Just RAG
-- B) Multimodal + RAG
-- C) All three patterns
-- D) Just Distributed Agents
-
-#### Answer: C) All three patterns
-
-**Why?**
-
-- **Multimodal**: For analyzing property photos and documents
-- **RAG**: For searching MLS listings and market data
-- **Distributed**: For coordinating specialists (financing, inspection, legal)
-
-This scenario perfectly demonstrates how advanced patterns work together in real-world applications.
-
-**Scenario 2**: A financial services company needs an AI that can answer questions about their investment products using the latest regulatory documents.
-
-**Which pattern is most important?**
-
-- A) Multimodal
-- B) RAG
-- C) Distributed
-- D) None needed
-
-#### Answer: B) RAG
-
-**Why?**
-
-- Financial regulations change frequently
-- Accuracy is critical (can't rely on training data alone)
-- Must cite authoritative sources
-- Perfect use case for real-time document retrieval
-
-## Advanced Integration Patterns
+### Advanced Integration Patterns
 
 ### Pattern Combination: The Trinity Architecture
 
@@ -2032,7 +1334,7 @@ class AgentSystemMonitor:
             }
         }
 
-# Deploy the complete system with latest features
+# Deploy the complete system
 def deploy_production_system():
     """Deploy a production-ready advanced agent system."""
     
@@ -2114,7 +1416,7 @@ print(f"Features enabled: {', '.join(production_deployment['features_enabled'])}
 
 **Problem**: Trying to build one agent that does everything.
 
-**Solution**: Embrace specialization. Each agent should excel at one specific task.
+**Solution**: Embrace specialization. Each agent should excel at one specific task
 
 ```python
 # ❌ DON'T: One agent for everything
