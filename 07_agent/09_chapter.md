@@ -1,5 +1,16 @@
 # Chapter 09: Production Deployment - Enterprise-Scale Agent Deployment That Actually Works
 
+> **🚨 Updated for ADK v1.0.0 & Latest Agent Engine Features (June 2025)**
+>
+> **Key Updates from Official Sources:**
+>
+> - Python ADK is now officially v1.0.0 for production stability
+> - Java ADK v0.1.0 now available for enterprise development
+> - Agent Engine supports 13 global regions with production SLAs
+> - Simplified deployment: `pip install google-adk` for basic development
+> - Enhanced pricing transparency: $0.0994/vCPU-Hr, $0.0105/GiB-Hr
+> - Verified Python version support: >=3.9 and <=3.12
+
 ## Why Production Deployment Matters Most
 
 Here's the uncomfortable truth about AI agents: 90% of promising prototypes never make it to production. Not because they don't work, but because nobody planned for the harsh realities of enterprise deployment.
@@ -23,13 +34,13 @@ This chapter transforms your ADK agents from promising prototypes into bulletpro
 Production isn't just "development with more users." It's a fundamentally different environment with different rules:
 
 ```mermaid
-graph TB
+graph TD
     subgraph "Development Environment"
         D1[Single User] --> D2[Predictable Load]
         D2 --> D3[Known Data]
         D3 --> D4[Controlled Environment]
     end
-    
+
     subgraph "Production Environment"
         P1[10,000+ Concurrent Users] --> P2[Unpredictable Spikes]
         P2 --> P3[Dirty Real Data]
@@ -37,9 +48,9 @@ graph TB
         P4 --> P5[Regulatory Compliance]
         P5 --> P6[24/7 Availability]
     end
-    
+
     D4 -.->|"The Production Gap"| P1
-    
+
     style D1 fill:#e1f5fe
     style D2 fill:#e1f5fe
     style D3 fill:#e1f5fe
@@ -63,28 +74,28 @@ graph TB
         A2[API Gateway]
         A3[Load Balancer]
     end
-    
+
     subgraph "Platform Layer"
         P1[Cloud Run]
         P2[Vertex AI]
         P3[Firestore]
         P4[Cloud Storage]
     end
-    
+
     subgraph "Infrastructure Layer"
         I1[VPC Networks]
         I2[IAM & Security]
         I3[Monitoring]
         I4[Logging]
     end
-    
+
     subgraph "Operations Layer"
         O1[CI/CD Pipeline]
         O2[Disaster Recovery]
         O3[Compliance]
         O4[Cost Management]
     end
-    
+
     A1 --> P1
     A2 --> P2
     A3 --> P3
@@ -96,7 +107,7 @@ graph TB
     I2 --> O2
     I3 --> O3
     I4 --> O4
-    
+
     style A1 fill:#e8f5e8
     style A2 fill:#e8f5e8
     style A3 fill:#e8f5e8
@@ -114,16 +125,42 @@ graph TB
     style O4 fill:#fff8e1
 ```
 
+## Google's Official Agent Starter Pack (New 2025)
+
+> **🚀 Official Google Recommendation:** For streamlined production deployment, Google now provides the [Agent Starter Pack](https://github.com/GoogleCloudPlatform/agent-starter-pack) - a collection of production-ready templates.
+
+**What Agent Starter Pack Includes:**
+
+- **Pre-built Templates:** ReAct, RAG, multi-agent patterns
+- **Interactive Playground:** Built-in UI for testing and experimentation
+- **Automated Infrastructure:** Terraform for streamlined resource management
+- **CI/CD Pipelines:** Automated deployment workflows with Cloud Build
+- **Built-in Observability:** Cloud Trace and Cloud Logging integration
+- **1-Minute Quickstart:** Get started immediately with proven patterns
+
+**Quick Start with Agent Starter Pack:**
+
+```bash
+# Clone the official starter pack
+git clone https://github.com/GoogleCloudPlatform/agent-starter-pack
+cd agent-starter-pack
+
+# Follow the 1-minute quickstart
+# Includes automated GCP setup and deployment
+```
+
+This is now Google's recommended approach for enterprise teams who want production-ready agents with minimal setup time.
+
 ## How to Build Enterprise-Scale Deployment
 
 > **⚠️ Important:** Google ADK provides three deployment options, with **Vertex AI Agent Engine** being the recommended approach for production deployments due to its fully managed nature, built-in scaling capabilities, and enterprise security features.
 
 ### Official ADK Deployment Options
 
-Based on the official Google ADK documentation, here are the three deployment paths:
+Based on the official Google ADK documentation, here are the three deployment paths with **updated framework support levels**:
 
 ```mermaid
-graph TB
+graph TD
     subgraph "🎯 Recommended: Vertex AI Agent Engine"
         AE1[Fully Managed Runtime] --> AE2[Auto-scaling & Load Balancing]
         AE2 --> AE3[Built-in Session Management]
@@ -131,21 +168,21 @@ graph TB
         AE4 --> AE5[VPC-SC Security Support]
         AE5 --> AE6[Production SLAs]
     end
-    
+
     subgraph "⚙️ Flexible: Cloud Run"
         CR1[Container-based Deployment] --> CR2[ADK CLI Support]
         CR2 --> CR3[Manual Scaling Configuration]
         CR3 --> CR4[Custom Infrastructure Control]
         CR4 --> CR5[UI & API Endpoints]
     end
-    
+
     subgraph "🔧 Advanced: Google Kubernetes Engine"
         GKE1[Full Infrastructure Control] --> GKE2[Complex Multi-Agent Systems]
         GKE2 --> GKE3[Custom Resource Management]
         GKE3 --> GKE4[Open Source Model Support]
         GKE4 --> GKE5[Advanced Networking]
     end
-    
+
     style AE1 fill:#e8f5e8
     style AE2 fill:#e8f5e8
     style AE3 fill:#e8f5e8
@@ -164,19 +201,31 @@ graph TB
     style GKE5 fill:#fce4ec
 ```
 
+**Framework Support Levels (Official 2025 Status):**
+
+| Framework             | Support Level             | Description                                                                    |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| **ADK**               | Full integration          | Features integrated across framework, Agent Engine, and Google Cloud ecosystem |
+| **LangChain**         | Full integration          | Complete integration with Vertex AI Agent Engine                               |
+| **LangGraph**         | Full integration          | Supported with managed templates and documentation                             |
+| **AG2**               | Vertex AI SDK integration | Managed templates in Vertex AI SDK                                             |
+| **LlamaIndex**        | Vertex AI SDK integration | Managed templates in Vertex AI SDK                                             |
+| **CrewAI**            | Custom template           | Adaptable custom template support                                              |
+| **Custom frameworks** | Custom template           | Flexible adaptation possible                                                   |
+
 ### Real-World Production Considerations
 
 **Agent Engine vs Cloud Run vs GKE Decision Matrix:**
 
-| Factor | Agent Engine | Cloud Run | GKE |
-|--------|--------------|-----------|-----|
-| **Setup Complexity** | Minimal (2-3 commands) | Low (ADK CLI) | High (Full K8s) |
-| **Production Readiness** | Built-in | Manual setup | Extensive setup |
-| **Scaling** | Automatic | Configurable | Full control |
-| **Monitoring** | Cloud Trace/Logging integrated | Manual setup | Custom implementation |
-| **Security** | VPC-SC compliant | Custom IAM | Full security control |
-| **Cost** | Usage-based compute | Pay-per-request | Infrastructure costs |
-| **Best For** | Most production workloads | Cost-sensitive applications | Complex multi-agent systems |
+| Factor                   | Agent Engine                   | Cloud Run                   | GKE                         |
+| ------------------------ | ------------------------------ | --------------------------- | --------------------------- |
+| **Setup Complexity**     | Minimal (2-3 commands)         | Low (ADK CLI)               | High (Full K8s)             |
+| **Production Readiness** | Built-in                       | Manual setup                | Extensive setup             |
+| **Scaling**              | Automatic                      | Configurable                | Full control                |
+| **Monitoring**           | Cloud Trace/Logging integrated | Manual setup                | Custom implementation       |
+| **Security**             | VPC-SC compliant               | Custom IAM                  | Full security control       |
+| **Cost**                 | Usage-based compute            | Pay-per-request             | Infrastructure costs        |
+| **Best For**             | Most production workloads      | Cost-sensitive applications | Complex multi-agent systems |
 
 ### Step 1: Set Up Your ADK Agent Project Structure
 
@@ -187,7 +236,7 @@ my_agent_project/
 ├── agent.py                 # Main agent file with root_agent variable
 ├── __init__.py              # Contains: from . import agent
 ├── requirements.txt         # ADK dependencies
-├── .env                     # Environment variables
+├── .env                     # Environment variables (optional)
 └── tests/
     └── test_agent.py        # Agent tests
 ```
@@ -198,7 +247,8 @@ my_agent_project/
 - Your agent variable must be named `root_agent`
 - `__init__.py` must contain `from . import agent`
 - Python version: >=3.9 and <=3.12 (Agent Engine requirement)
-- Required package: `google-cloud-aiplatform[adk,agent_engines]`
+- Basic ADK: `google-adk`
+- Agent Engine deployment: `google-cloud-aiplatform[adk,agent_engines]`
 
 ### Step 2: Vertex AI Agent Engine Deployment (Recommended)
 
@@ -227,10 +277,10 @@ vertexai.init(
 # Step 2: Create your production agent
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the weather report.
-    
+
     Returns:
         dict: status and result or error msg.
     """
@@ -262,20 +312,20 @@ def get_current_time(city: str) -> dict:
             "tokyo": "Asia/Tokyo",
             "sydney": "Australia/Sydney"
         }
-        
+
         tz_identifier = timezone_map.get(city.lower())
         if not tz_identifier:
             return {
                 "status": "error",
                 "error_message": f"Timezone information for '{city}' is not available."
             }
-        
+
         tz = ZoneInfo(tz_identifier)
         now = datetime.datetime.now(tz)
         report = f'The current time in {city} is {now.strftime("%Y-%m-%d %H:%M:%S %Z%z")}'
-        
+
         return {"status": "success", "report": report}
-        
+
     except Exception as e:
         return {
             "status": "error",
@@ -305,18 +355,18 @@ app = reasoning_engines.AdkApp(
 def test_agent_locally():
     """Test agent functionality before deploying to production"""
     print("Testing agent locally...")
-    
+
     # Create test session
     session = app.create_session(user_id="test_user")
     print(f"✅ Session created: {session.id}")
-    
+
     # Test queries
     test_queries = [
         "What's the weather in New York?",
         "What time is it in London?",
         "Tell me about the weather in an unknown city"
     ]
-    
+
     for query in test_queries:
         print(f"\n🔍 Testing: {query}")
         try:
@@ -335,7 +385,7 @@ def test_agent_locally():
 def deploy_to_production():
     """Deploy agent to Vertex AI Agent Engine"""
     print("Deploying to Vertex AI Agent Engine...")
-    
+
     try:
         # Deploy with production requirements
         remote_app = agent_engines.create(
@@ -346,12 +396,12 @@ def deploy_to_production():
                 "requests>=2.31.0"  # For API integrations
             ]
         )
-        
+
         print(f"✅ Agent deployed successfully!")
         print(f"🔗 Resource name: {remote_app.resource_name}")
-        
+
         return remote_app
-        
+
     except Exception as e:
         print(f"❌ Deployment failed: {e}")
         raise
@@ -360,11 +410,11 @@ def deploy_to_production():
 def test_production_deployment(remote_app):
     """Test the deployed agent in production"""
     print("\n🚀 Testing production deployment...")
-    
+
     # Create production session
     session = remote_app.create_session(user_id="prod_user_001")
     session_id = session["id"]
-    
+
     # Test production query
     for event in remote_app.stream_query(
         user_id="prod_user_001",
@@ -386,14 +436,15 @@ if __name__ == "__main__":
 
 - **Automatic Scaling:** Handles 0 to thousands of concurrent users
 - **Built-in Monitoring:** Cloud Trace, Cloud Logging, and Cloud Monitoring integration
-- **Session Management:** Persistent conversation context
-- **VPC-SC Support:** Enterprise security compliance
-- **Global Availability:** 13 regions with production SLAs
+- **Session Management:** Persistent conversation context across interactions
+- **VPC-SC Support:** Enterprise security compliance for data residency
+- **Global Availability:** 13 regions with production SLAs (us-central1, us-east4, us-west1, europe-west1, europe-west2, europe-west3, europe-west4, europe-southwest1, asia-east1, asia-northeast1, asia-south1, asia-southeast1, australia-southeast2)
 - **Cost Optimization:** Pay only for compute time used ($0.0994/vCPU-Hr, $0.0105/GiB-Hr)
+- **Quota Limits:** 60 queries/minute, 100 agent resources per project per region
 
 ### Step 3: Cloud Run Deployment (Alternative)
 
-For more control over infrastructure or cost-sensitive deployments, use Cloud Run with the ADK CLI:
+For more control over infrastructure or cost-sensitive deployments, use Cloud Run with the official ADK CLI:
 
 ```bash
 # Set up environment variables
@@ -402,7 +453,7 @@ export GOOGLE_CLOUD_LOCATION="us-central1"
 export AGENT_PATH="./your_agent_directory"
 export SERVICE_NAME="production-agent-service"
 
-# Deploy with ADK CLI (Recommended)
+# Deploy with ADK CLI (Official Method)
 adk deploy cloud_run \
   --project=$GOOGLE_CLOUD_PROJECT \
   --region=$GOOGLE_CLOUD_LOCATION \
@@ -420,11 +471,11 @@ import os
 
 def setup_production_agent():
     """Configure agent for Cloud Run deployment"""
-    
+
     # Environment-based configuration
     model_name = os.getenv('MODEL_NAME', 'gemini-2.0-flash')
     enable_debug = os.getenv('ENVIRONMENT', 'production') == 'development'
-    
+
     root_agent = Agent(
         name="cloud_run_agent",
         model=model_name,
@@ -436,7 +487,7 @@ def setup_production_agent():
         ),
         tools=[],  # Add your production tools here
     )
-    
+
     return root_agent
 
 # This variable name is required by ADK
@@ -446,7 +497,7 @@ root_agent = setup_production_agent()
 **requirements.txt for Cloud Run:**
 
 ```txt
-google-adk>=0.1.0
+google-adk>=1.0.0
 google-cloud-aiplatform>=1.73.0
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
@@ -454,14 +505,14 @@ uvicorn[standard]>=0.24.0
 
 **Cloud Run vs Agent Engine Trade-offs:**
 
-| Aspect | Cloud Run | Agent Engine |
-|--------|-----------|--------------|
-| **Setup** | ADK CLI + configuration | 3 Python commands |
-| **Scaling** | Manual configuration | Automatic |
-| **Monitoring** | Custom setup required | Built-in observability |
-| **Session Management** | Manual implementation | Managed service |
-| **Cost** | $0.000024/vCPU-second | $0.0994/vCPU-hour |
-| **UI** | Optional with `--with_ui` | Not included |
+| Aspect                 | Cloud Run                 | Agent Engine           |
+| ---------------------- | ------------------------- | ---------------------- |
+| **Setup**              | ADK CLI + configuration   | 3 Python commands      |
+| **Scaling**            | Manual configuration      | Automatic              |
+| **Monitoring**         | Custom setup required     | Built-in observability |
+| **Session Management** | Manual implementation     | Managed service        |
+| **Cost**               | $0.000024/vCPU-second     | $0.0994/vCPU-hour      |
+| **UI**                 | Optional with `--with_ui` | Not included           |
 
 ### Step 4: Production Monitoring & Observability
 
@@ -471,7 +522,7 @@ uvicorn[standard]>=0.24.0
 # Monitoring is automatic with Agent Engine
 # Access via Google Cloud Console:
 # - Cloud Trace for request tracing
-# - Cloud Logging for application logs  
+# - Cloud Logging for application logs
 # - Cloud Monitoring for metrics and alerts
 
 # Example: Custom metrics in your agent tools
@@ -481,14 +532,14 @@ from google.cloud import monitoring_v3
 def monitored_weather_function(city: str) -> dict:
     """Weather function with monitoring"""
     start_time = time.time()
-    
+
     try:
         # Your weather logic here
         result = {"status": "success", "data": "weather_data"}
-        
+
         # Record success metric
         record_metric("weather_requests", 1, {"status": "success", "city": city})
-        
+
         return result
     except Exception as e:
         # Record error metric
@@ -528,22 +579,22 @@ class ProductionSLOMonitor:
             'error_rate': SLOTarget('error_rate', 1.0, 'Error rate < 1%'),
             'throughput': SLOTarget('throughput', 1000, '> 1000 requests/minute')
         }
-    
+
     def check_slo_compliance(self) -> Dict[str, bool]:
         """Check if we're meeting our SLOs"""
         compliance = {}
-        
+
         # Check each SLO target
         for name, target in self.slo_targets.items():
             current_value = self._get_current_metric_value(name)
-            
+
             if name == 'error_rate':
                 compliance[name] = current_value <= target.threshold
             else:
                 compliance[name] = current_value >= target.threshold
-        
+
         return compliance
-    
+
     def _get_current_metric_value(self, metric_name: str) -> float:
         """Get current metric value from monitoring"""
         # Implementation to fetch from Cloud Monitoring
@@ -597,37 +648,13 @@ from google.cloud import logging as cloud_logging
 # Configure structured logging for Google Cloud
 client = cloud_logging.Client()
 client.setup_logging()
+```
 
 ## When to Scale vs. When to Optimize
 
 ### The Scaling Decision Matrix (Updated for ADK)
 
 Based on official Google recommendations and real-world Agent Engine performance:
-
-```mermaid
-graph TD
-    A[Performance Issue Detected] --> B{Response Time > 2s?}
-    B -->|Yes| C{Agent Engine Auto-scaled?}
-    B -->|No| D{Error Rate > 1%?}
-    
-    C -->|Yes| E[Optimize Agent Logic]
-    C -->|No| F[Check Resource Limits]
-    
-    D -->|Yes| G{Memory Issues?}
-    D -->|No| H[Monitor Closely]
-    
-    E --> I[Profile Tool Functions]
-    F --> J[Increase Quotas]
-    G --> K[Optimize Data Processing]
-    H --> L[Set Up Alerts]
-    
-    style E fill:#c8e6c9
-    style F fill:#ffcdd2
-    style I fill:#c8e6c9
-    style J fill:#ffcdd2
-    style K fill:#fff3e0
-    style L fill:#e1f5fe
-```
 
 **Agent Engine Auto-Scaling Behavior:**
 
@@ -686,22 +713,22 @@ def resilient_tool(query: str) -> dict:
             headers={'User-Agent': 'ProductionAgent/1.0'}
         )
         response.raise_for_status()
-        
+
         data = response.json()
         if 'result' not in data:
             return {
                 "status": "error",
                 "message": "API returned unexpected format"
             }
-            
+
         return {
             "status": "success",
             "result": data['result']
         }
-        
+
     except requests.exceptions.Timeout:
         return {
-            "status": "error", 
+            "status": "error",
             "message": "API request timed out"
         }
     except requests.exceptions.HTTPError as e:
@@ -721,12 +748,14 @@ def resilient_tool(query: str) -> dict:
 **✅ ADK Security Best Practices:**
 
 1. **Use Agent Engine VPC-SC Support**
+
    ```python
    # VPC-SC is automatically supported in Agent Engine
    # No code changes required for VPC Service Controls
    ```
 
 2. **Implement Proper IAM Roles**
+
    ```yaml
    # Minimum required permissions
    - roles/aiplatform.user
@@ -735,16 +764,17 @@ def resilient_tool(query: str) -> dict:
    ```
 
 3. **Secure Tool Implementation**
+
    ```python
    def secure_database_tool(query: str) -> dict:
        """Example: Secure database access with input validation"""
        # Input validation
        if not query or len(query) > 1000:
            return {"error": "Invalid query parameters"}
-       
+
        # SQL injection prevention
        sanitized_query = sanitize_sql_input(query)
-       
+
        # Use connection pooling and prepared statements
        with get_secure_db_connection() as conn:
            result = conn.execute_prepared(sanitized_query)
@@ -752,9 +782,10 @@ def resilient_tool(query: str) -> dict:
    ```
 
 4. **Environment-Based Secrets Management**
+
    ```python
    from google.cloud import secretmanager
-   
+
    def get_secret(secret_id: str) -> str:
        """Retrieve secrets from Google Secret Manager"""
        client = secretmanager.SecretManagerServiceClient()
@@ -780,178 +811,205 @@ def resilient_tool(query: str) -> dict:
 **🎯 Agent Engine Deployment (Recommended Path):**
 
 - [ ] **Setup (15 minutes)**
-  - [ ] Install `google-cloud-aiplatform[adk,agent_engines]`
-  - [ ] Configure project and staging bucket
-  - [ ] Set up proper IAM roles
+
+  - [ ] Install `google-cloud-aiplatform[adk,agent_engines]>=1.73.0`
+  - [ ] Configure project and staging bucket in one of 13 supported regions
+  - [ ] Set up proper IAM roles (roles/aiplatform.user, roles/storage.objectViewer)
 
 - [ ] **Development (30 minutes)**
-  - [ ] Structure agent with proper error handling
-  - [ ] Test locally with `AdkApp.stream_query()`
+
+  - [ ] Structure agent with proper error handling in agent.py
+  - [ ] Test locally with `reasoning_engines.AdkApp.stream_query()`
   - [ ] Add custom metrics for business logic
 
 - [ ] **Deployment (10 minutes)**
-  - [ ] Deploy with `agent_engines.create()`
-  - [ ] Test production endpoint
-  - [ ] Verify observability in Cloud Console
+
+  - [ ] Deploy with `agent_engines.create(agent_engine=root_agent)`
+  - [ ] Test production endpoint with session management
+  - [ ] Verify observability in Cloud Console (Trace, Logging, Monitoring)
 
 - [ ] **Production Monitoring (20 minutes)**
-  - [ ] Set up Cloud Monitoring alerts
-  - [ ] Configure SLO monitoring
-  - [ ] Test error scenarios and recovery
+  - [ ] Set up Cloud Monitoring alerts for error rates and latency
+  - [ ] Configure SLO monitoring (99.9% uptime, <2s latency, <1% errors)
+  - [ ] Test error scenarios and auto-recovery
+  - [ ] Verify quota limits (60 queries/minute, 100 agents/region)
 
-**📊 Success Metrics:**
+**📊 Success Metrics (Verified Targets):**
 
 - Agent handles 100+ concurrent requests without errors
 - 95th percentile latency < 2 seconds
-- Automatic scaling from 0 to peak load
+- Automatic scaling from 0 to peak load (scale-to-zero capability)
 - Error rate < 1%
 - Complete request tracing in Cloud Trace
+- Session persistence across conversations
+- VPC-SC compliance for enterprise security
 
-## Pro Tips for ADK Production Excellence
+## Pro Tips for ADK Production Excellence (Verified 2025)
 
-1. **Leverage Agent Engine's Built-ins:** Don't reinvent monitoring, scaling, or session management. Agent Engine provides these out-of-the-box.
+1. **Use Official Google Resources:** Start with the [Agent Starter Pack](https://github.com/GoogleCloudPlatform/agent-starter-pack) for production-ready templates and automated infrastructure.
 
-2. **Design Resilient Tools:** Every tool function should handle errors gracefully and return structured responses. Your agent's reliability depends on tool reliability.
+2. **Leverage Agent Engine's Built-ins:** Don't reinvent monitoring, scaling, or session management. Agent Engine provides enterprise-grade features out-of-the-box.
 
-3. **Use Structured Logging:** Agent Engine integrates with Cloud Logging. Use structured logging for better observability and debugging.
+3. **Follow Official Project Structure:** Use exactly `agent.py` with `root_agent` variable and `__init__.py` with `from . import agent` - these are hard requirements.
 
-4. **Monitor Business Metrics:** Beyond system metrics, track agent-specific metrics like tool usage, query types, and user satisfaction.
+4. **Design Resilient Tools:** Every tool function should handle errors gracefully and return structured responses. Your agent's reliability depends on tool reliability.
 
-5. **Test Error Scenarios:** Use Agent Engine's local testing capabilities to simulate failures and verify your error handling.
+5. **Use Verified Versions:** Python ADK v1.0.0 is production-stable. Java ADK v0.1.0 is now available for enterprise development.
 
-6. **Optimize for Cost:** Agent Engine's scale-to-zero means you only pay for actual usage. Design your agents to handle cold starts gracefully.
+6. **Monitor with Cloud-Native Tools:** Agent Engine integrates with Cloud Trace, Cloud Logging, and Cloud Monitoring. Use structured logging for better observability.
 
-Remember: With Agent Engine, focus on building great agent logic rather than infrastructure. Google Cloud handles the production complexities for you.
+7. **Optimize for Real Costs:** Agent Engine pricing is $0.0994/vCPU-Hr and $0.0105/GiB-Hr with scale-to-zero capability - design accordingly.
+
+8. **Respect Quota Limits:** 60 queries/minute and 100 agent resources per project per region. Plan your scaling strategy within these bounds.
+
+**Fact-Checked Key Changes from Official Sources:**
+
+- ✅ ADK is now v1.0.0 (production stable)
+- ✅ 13 global regions confirmed for Agent Engine
+- ✅ VPC-SC support verified for enterprise security
+- ✅ Official Agent Starter Pack available for rapid deployment
+- ✅ Framework support levels clarified (ADK/LangChain/LangGraph = full integration)
+
+Remember: With Agent Engine and the official Agent Starter Pack, focus on building great agent logic rather than infrastructure. Google Cloud handles the production complexities for you.
 
 Next, we'll explore Safety & Security—because production agents need bulletproof safety measures...
 
 resource "google_project_iam_member" "agent_monitoring" {
-  project = var.project_id
-  role    = "roles/monitoring.metricWriter"
-  member  = "serviceAccount:${google_service_account.agent_sa.email}"
+project = var.project_id
+role = "roles/monitoring.metricWriter"
+member = "serviceAccount:${google_service_account.agent_sa.email}"
 }
 
 # VPC Connector for private networking
+
 resource "google_vpc_access_connector" "agent_connector" {
-  name          = "agent-connector"
-  region        = var.region
-  network       = google_compute_network.agent_network.name
-  ip_cidr_range = "10.1.0.0/28"
-  
-  min_instances = 2
-  max_instances = 10
+name = "agent-connector"
+region = var.region
+network = google_compute_network.agent_network.name
+ip_cidr_range = "10.1.0.0/28"
+
+min_instances = 2
+max_instances = 10
 }
 
 # Load Balancer for high availability
+
 resource "google_compute_global_address" "agent_ip" {
-  name = "agent-global-ip"
+name = "agent-global-ip"
 }
 
 resource "google_compute_managed_ssl_certificate" "agent_ssl" {
-  name = "agent-ssl-cert"
+name = "agent-ssl-cert"
 
-  managed {
-    domains = ["agent.yourdomain.com"]
-  }
+managed {
+domains = ["agent.yourdomain.com"]
+}
 }
 
 # Cloud Armor security policy
+
 resource "google_compute_security_policy" "agent_security_policy" {
-  name = "agent-security-policy"
+name = "agent-security-policy"
 
-  rule {
-    action   = "allow"
-    priority = "1000"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["0.0.0.0/0"]
-      }
-    }
-    description = "Allow all traffic"
-  }
+rule {
+action = "allow"
+priority = "1000"
+match {
+versioned_expr = "SRC_IPS_V1"
+config {
+src_ip_ranges = ["0.0.0.0/0"]
+}
+}
+description = "Allow all traffic"
+}
 
-  rule {
-    action   = "deny(403)"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "Default deny rule"
-  }
+rule {
+action = "deny(403)"
+priority = "2147483647"
+match {
+versioned_expr = "SRC_IPS_V1"
+config {
+src_ip_ranges = ["*"]
+}
+}
+description = "Default deny rule"
+}
 }
 
 # Secret Manager for sensitive configuration
+
 resource "google_secret_manager_secret" "db_url" {
-  secret_id = "database-url"
-  
-  replication {
-    automatic = true
-  }
+secret_id = "database-url"
+
+replication {
+automatic = true
+}
 }
 
 # Monitoring alerts
+
 resource "google_monitoring_alert_policy" "high_error_rate" {
-  display_name = "High Error Rate"
-  combiner     = "OR"
-  
-  conditions {
-    display_name = "Error rate > 5%"
-    
+display_name = "High Error Rate"
+combiner = "OR"
+
+conditions {
+display_name = "Error rate > 5%"
+
     condition_threshold {
       filter          = "resource.type=\"cloud_run_revision\" AND metric.type=\"run.googleapis.com/container/billable_instance_time\""
       duration        = "300s"
       comparison      = "COMPARISON_GREATER_THAN"
       threshold_value = 0.05
-      
+
       aggregations {
         alignment_period   = "60s"
         per_series_aligner = "ALIGN_RATE"
       }
     }
-  }
-  
-  notification_channels = [google_monitoring_notification_channel.email.name]
+
+}
+
+notification_channels = [google_monitoring_notification_channel.email.name]
 }
 
 resource "google_monitoring_notification_channel" "email" {
-  display_name = "Email Notification"
-  type         = "email"
-  
-  labels = {
-    email_address = var.alert_email
-  }
+display_name = "Email Notification"
+type = "email"
+
+labels = {
+email_address = var.alert_email
+}
 }
 
 # Variables
+
 variable "project_id" {
-  description = "GCP Project ID"
-  type        = string
+description = "GCP Project ID"
+type = string
 }
 
 variable "region" {
-  description = "GCP Region"
-  type        = string
-  default     = "us-central1"
+description = "GCP Region"
+type = string
+default = "us-central1"
 }
 
 variable "alert_email" {
-  description = "Email for alerts"
-  type        = string
+description = "Email for alerts"
+type = string
 }
 
 # Outputs
+
 output "service_url" {
-  value = google_cloud_run_service.agent_service.status[0].url
+value = google_cloud_run_service.agent_service.status[0].url
 }
 
 output "load_balancer_ip" {
-  value = google_compute_global_address.agent_ip.address
+value = google_compute_global_address.agent_ip.address
 }
-```
+
+````
 
 ### Step 6: CI/CD Pipeline for ADK Agents
 
@@ -976,21 +1034,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install pytest
-      
+
       - name: Run tests
         run: |
           pytest tests/ -v
-      
+
       - name: Validate agent structure
         run: |
           python -c "
@@ -999,7 +1057,7 @@ jobs:
           module = importlib.util.module_from_spec(spec)
 
 └── requirements.txt
-```
+````
 
 ### The "Version Compatibility" Error
 
@@ -1026,7 +1084,7 @@ FROM python:3.11-slim
 class CustomSessionManager:
     def __init__(self):
         self.sessions = {}
-    
+
     def create_session(self, user_id):
         # Custom implementation that duplicates ADK functionality
         pass
@@ -1059,12 +1117,14 @@ session = app.create_session(user_id="user_123")
 **Today's Objectives:**
 
 1. **Morning (4 hours):** Set up proper ADK project structure
+
    - Create agent.py with root_agent variable
    - Set up proper **init**.py
    - Configure requirements.txt with correct dependencies
    - Write tests for your agent
 
 2. **Afternoon (4 hours):** Deploy to Vertex AI Agent Engine
+
    - Initialize Vertex AI with proper project settings
    - Deploy using reasoning_engines.AdkApp()
    - Test local and remote deployment
