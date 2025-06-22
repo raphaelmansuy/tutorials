@@ -237,6 +237,60 @@ content_optimizer = LoopAgent(
 
 Custom Agents are your "expert contractors" - they handle specialized tasks that require unique logic or external integrations.
 
+```mermaid
+graph LR
+    A[Custom Agent Request] --> B{Agent Type Needed?}
+    
+    B -->|Legacy Integration| C[Legacy System Agent]
+    B -->|Business Rules| D[Rules Engine Agent]
+    B -->|High Performance| E[Optimized Processing Agent]
+    B -->|Unique Processing| F[Specialized Data Agent]
+    
+    C --> G[COBOL/Mainframe<br/>APIs]
+    C --> H[Database Protocols<br/>FTP/SFTP]
+    C --> I[Proprietary Systems<br/>Custom Formats]
+    
+    D --> J[Regulatory Compliance<br/>Validation Rules]
+    D --> K[Business Logic<br/>Calculations]
+    D --> L[Policy Enforcement<br/>Approval Workflows]
+    
+    E --> M[Real-time Processing<br/>Low Latency]
+    E --> N[Batch Processing<br/>Large Datasets]
+    E --> O[Memory Optimization<br/>Resource Management]
+    
+    F --> P[Scientific Computing<br/>ML Pipelines]
+    F --> Q[Image/Video Processing<br/>Media Analysis]
+    F --> R[Financial Models<br/>Risk Calculations]
+    
+    G --> S[BaseAgent Implementation]
+    H --> S
+    I --> S
+    J --> S
+    K --> S
+    L --> S
+    M --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    
+    S --> T["Custom run() Method"]
+    S --> U[Specialized Tools]
+    S --> V[External Libraries]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+    style D fill:#f3e5f5
+    style E fill:#fce4ec
+    style F fill:#e1f5fe
+    style S fill:#e0f2f1
+    style T fill:#f1f8e9
+    style U fill:#ffecb3
+    style V fill:#f8bbd9
+```
+
 **When to Build Custom Agents:**
 
 - **Legacy system integration** with complex protocols
@@ -399,7 +453,707 @@ One of ADK's superpowers is seamless integration with existing tool ecosystems:
 - Expose your ADK tools as MCP servers for other applications
 - Access the growing ecosystem of MCP-compatible tools and services
 
+
 ---
+
+## Custom Agents vs. MCP: Understanding the Fundamental Differences
+
+**The Short Answer:** Custom Agents and MCP (Model Context Protocol) serve completely different purposes in the AI ecosystem. Custom Agents are **execution environments** that define *how* intelligent behavior happens, while MCP is a **communication protocol** that defines *how* tools and data are shared between applications.
+
+### Architectural Perspective
+
+#### Custom Agents: The Intelligence Layer
+
+Custom Agents in ADK are **intelligent execution environments** that inherit from `BaseAgent` and implement their own reasoning and orchestration logic:
+
+```mermaid
+graph TD
+    A[Business Problem] --> B[Custom Agent]
+    B --> C["Custom run() Method"]
+    C --> D[Decision Logic]
+    C --> E[State Management]
+    C --> F[Tool Orchestration]
+    C --> G[Error Handling]
+    
+    D --> H[Business Rules Engine]
+    E --> I[Complex State Patterns]
+    F --> J[Multi-step Workflows]
+    G --> K[Recovery Strategies]
+    
+    H --> L[Intelligent Response]
+    I --> L
+    J --> L
+    K --> L
+    
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#fce4ec
+    style F fill:#e1f5fe
+    style G fill:#ffecb3
+    style L fill:#e0f2f1
+```
+
+#### MCP: The Interoperability Layer
+
+MCP is a **standardized protocol** that enables different applications to share tools, resources, and prompts:
+
+```mermaid
+graph TD
+    A[Host Application<br/>Claude Desktop, IDE, etc.] --> B[MCP Client]
+    B --> C[MCP Protocol<br/>JSON-RPC 2.0]
+    
+    C --> D[MCP Server A<br/>Database Access]
+    C --> E[MCP Server B<br/>File System]
+    C --> F[MCP Server C<br/>API Integration]
+    
+    D --> G[Tools: query_db, insert_record]
+    D --> H[Resources: table_schemas, data]
+    
+    E --> I[Tools: read_file, write_file]
+    E --> J[Resources: file_contents]
+    
+    F --> K[Tools: api_call, webhook]
+    F --> L[Resources: api_responses]
+    
+    style A fill:#e3f2fd
+    style B fill:#f1f8e9
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#fce4ec
+    style F fill:#e1f5fe
+    style G fill:#e0f2f1
+    style H fill:#f3e5f5
+    style I fill:#ffecb3
+    style J fill:#e8f4f8
+    style K fill:#fdf2e9
+    style L fill:#e8f6f3
+```
+
+### Core Philosophical Differences
+
+#### 1. **Purpose and Scope**
+
+**Custom Agents:**
+- **Purpose**: Create specialized intelligent behavior for specific business problems
+- **Scope**: Application-level intelligence and orchestration
+- **Control**: Complete control over reasoning, decision-making, and execution flow
+- **Flexibility**: Unlimited customization of agent behavior
+
+**MCP:**
+- **Purpose**: Standardize how AI applications access external tools and data
+- **Scope**: Inter-application communication and tool sharing
+- **Control**: Protocol-level standards for tool invocation and data exchange
+- **Flexibility**: Standardized interface with flexibility in implementation
+
+#### 2. **Implementation Level**
+
+**Custom Agents:**
+```python
+from google.adk.agents import BaseAgent
+
+class FinancialComplianceAgent(BaseAgent):
+    async def run(self, input_data):
+        # Custom business logic
+        risk_score = self.calculate_risk(input_data)
+        violations = self.check_violations(input_data)
+        
+        # Custom decision-making
+        if risk_score > 0.8:
+            return await self.escalate_to_human(input_data)
+        
+        # Custom workflows
+        if violations:
+            return await self.generate_compliance_report(violations)
+            
+        return {"status": "compliant", "risk_score": risk_score}
+```
+
+**MCP Server:**
+```python
+from mcp import server
+
+# MCP provides tools, not intelligence
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+    return {
+        tools: [{
+            name: "check_compliance",
+            description: "Check financial compliance rules",
+            inputSchema: {
+                type: "object",
+                properties: {
+                    transaction_data: { type: "object" }
+                }
+            }
+        }]
+    }
+})
+```
+
+#### 3. **Intelligence vs. Capability**
+
+**Custom Agents** = **Intelligence** + **Capability**
+- Embed domain expertise and reasoning
+- Make complex decisions based on context
+- Orchestrate multi-step workflows
+- Adapt behavior based on state and history
+
+**MCP** = **Capability** only
+- Provides tools and data access
+- No built-in intelligence or decision-making
+- Stateless function execution
+- Standardized input/output contracts
+
+### When to Use Which
+
+#### Choose Custom Agents When:
+
+✅ **Complex Business Logic**: You need sophisticated decision-making that can't be expressed through simple tool calls
+
+✅ **Stateful Workflows**: Your process requires maintaining context across multiple interactions
+
+✅ **Custom Orchestration**: You need to coordinate multiple tools and agents in specific ways
+
+✅ **Specialized Intelligence**: Your domain requires unique reasoning patterns or expertise
+
+✅ **Performance Optimization**: You need fine-tuned control over execution flow and resource usage
+
+**Example Use Cases:**
+- Financial risk assessment with regulatory compliance
+- Medical diagnosis with patient history consideration
+- Multi-step manufacturing process optimization
+- Legal document analysis with jurisdiction-specific rules
+
+#### Choose MCP When:
+
+✅ **Tool Standardization**: You want to make your tools available across multiple AI applications
+
+✅ **Ecosystem Integration**: You need to connect with the broader MCP ecosystem
+
+✅ **Cross-Platform Compatibility**: Your tools should work with Claude Desktop, IDEs, and other MCP clients
+
+✅ **Simple Tool Exposure**: You have well-defined functions that don't require complex orchestration
+
+✅ **Data Access Patterns**: You want to expose resources (files, databases, APIs) in a standardized way
+
+**Example Use Cases:**
+- Database query tools for multiple AI applications
+- File system access for IDEs and AI assistants
+- API integrations that work across platforms
+- Standardized data processing utilities
+
+### Integration Patterns
+
+#### ADK + MCP: Best of Both Worlds
+
+You can combine Custom Agents with MCP tools to get both intelligence and interoperability:
+
+```python
+from google.adk.agents import BaseAgent
+from google.adk.tools import McpTool
+
+class IntelligentAnalysisAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(name="intelligent_analyzer")
+        # Use MCP tools for standardized capabilities
+        self.mcp_tools = [
+            McpTool(server_uri="database-server"),
+            McpTool(server_uri="file-server"),
+            McpTool(server_uri="api-server")
+        ]
+    
+    async def run(self, input_data):
+        # Custom intelligence decides which tools to use and how
+        if self.requires_data_analysis(input_data):
+            data = await self.mcp_tools[0].query_database(input_data.query)
+            analysis = await self.perform_custom_analysis(data)
+            
+            # Custom decision: should we save results?
+            if analysis.confidence > 0.9:
+                await self.mcp_tools[1].save_file(analysis.results)
+                
+        return self.synthesize_response(analysis)
+```
+
+#### Pattern 1: Custom Agent Using Multiple Tools
+
+```python
+class IntelligentAnalysisAgent(BaseAgent):
+    async def _run_async_impl(self, ctx):
+        # Use multiple tools in orchestrated fashion
+        raw_data = await self.data_tool.fetch_data(ctx.input)
+        processed = await self.analysis_tool.analyze(raw_data)
+        
+        # Custom decision logic
+        if processed.confidence > 0.9:
+            await self.report_tool.generate_report(processed)
+        else:
+            await self.escalation_tool.request_review(processed)
+```
+
+#### Pattern 2: Tools as Agent Building Blocks
+
+```python
+# Reusable tools across multiple agents
+risk_calculator = FunctionTool(func=calculate_risk_score)
+compliance_checker = FunctionTool(func=check_compliance_rules)
+notification_sender = FunctionTool(func=send_notification)
+
+# Different agents use same tools differently
+risk_agent = LlmAgent(
+    name="risk_assessor",
+    tools=[risk_calculator, compliance_checker]
+)
+
+audit_agent = LlmAgent(
+    name="auditor", 
+    tools=[compliance_checker, notification_sender]
+)
+```
+
+#### Pattern 3: Agent-as-Tool Pattern
+
+```python
+# Specialized agent used as a tool by other agents
+specialist_agent = LlmAgent(
+    name="financial_specialist",
+    model="gemini-2.0-flash",
+    instruction="Expert in financial risk analysis...",
+    tools=[risk_calculator, market_data_tool]
+)
+
+# Use specialist as a tool in coordinating agent
+coordinator = LlmAgent(
+    name="coordinator",
+    tools=[
+        AgentTool(agent=specialist_agent),
+        notification_tool,
+        approval_tool
+    ]
+)
+```
+
+### Technical Architecture Comparison
+
+| Aspect | Custom Agents | Tools |
+|--------|---------------|-------|
+| **Purpose** | Workflow orchestration | Capability provision |
+| **Complexity** | High - custom business logic | Low - focused functionality |
+| **State Management** | Full session state access | Stateless execution |
+| **Execution Model** | Long-running, multi-step | Single call, immediate return |
+| **Reusability** | Application-specific | Cross-agent reusable |
+| **Error Handling** | Custom recovery strategies | Simple success/failure |
+| **Testing** | Complex integration testing | Unit testable |
+| **Maintenance** | High - custom orchestration | Low - focused scope |
+| **Performance** | Variable - depends on workflow | Predictable - single operation |
+
+### Real-World Analogy
+
+Think of the difference like a **restaurant kitchen**:
+
+**Custom Agents** are like the **Head Chef** - they coordinate the entire meal preparation process, make decisions about timing and quality, manage multiple cooking stations, and adapt based on changing conditions (busy night, special dietary requests, ingredient availability).
+
+**Tools** are like **kitchen equipment** - the oven, knife, blender, or thermometer. Each has a specific purpose, works reliably when used correctly, and can be used by different chefs for various recipes. The oven doesn't decide what to cook, but it's essential for baking.
+
+The Head Chef (Custom Agent) uses multiple tools (kitchen equipment) and coordinates with sous chefs (sub-agents) to deliver a complete dining experience, while each tool provides a specific, reliable capability that enables the overall process.
+
+### Best Practices and Guidelines
+
+#### Custom Agent Design Principles
+
+1. **Clear Responsibility Boundaries**: Define exactly what business process the agent orchestrates
+2. **Robust Error Handling**: Implement comprehensive error recovery and rollback strategies
+3. **State Management**: Use session state effectively without creating tight coupling
+4. **Composability**: Design sub-agents and tools that can be reused in different workflows
+5. **Testability**: Create integration tests that validate the entire workflow
+
+#### Tool Design Principles
+
+1. **Single Responsibility**: Each tool should do one thing exceptionally well
+2. **Clear Interfaces**: Use descriptive docstrings and type hints for LLM understanding
+3. **Consistent Return Formats**: Standardize response structures across similar tools
+4. **Error Communication**: Return detailed error information that agents can act upon
+5. **Stateless Design**: Avoid dependencies on external state or previous calls
+
+### The Development Decision Framework
+
+When building new functionality, ask yourself:
+
+**"Am I defining HOW a complex process should work?"** → Custom Agent
+- Multi-step workflows
+- Conditional business logic
+- State-dependent decisions
+- Error recovery strategies
+
+**"Am I providing WHAT capability an agent needs?"** → Tool
+- API integrations
+- Data transformations
+- Calculations
+- External service calls
+
+**"Am I creating intelligence or capability?"** 
+- Intelligence (reasoning, decision-making, orchestration) → Custom Agent
+- Capability (functions, integrations, computations) → Tool
+
+Remember: Most ADK applications use **both** Custom Agents and Tools together. Custom Agents provide the intelligent orchestration, while Tools provide the atomic capabilities that make complex workflows possible.
+
+---
+
+## Custom Agents vs. Tools: Choosing the Right Abstraction Layer
+
+**The Short Answer:** Custom Agents and Tools operate at fundamentally different abstraction layers in ADK. **Custom Agents** are *intelligent orchestrators* that define complex workflows and decision-making logic, while **Tools** are *atomic capabilities* that agents can invoke to perform specific tasks.
+
+### Agent-Tool Architectural Perspective
+
+#### Custom Agents: The Orchestration Intelligence
+
+Custom Agents inherit from `BaseAgent` and implement sophisticated workflow orchestration through the `_run_async_impl()` method:
+
+```mermaid
+graph TD
+    A[Business Problem] --> B[Custom Agent]
+    B --> C["_run_async_impl()"]
+    C --> D[Decision Logic]
+    C --> E[State Management]
+    C --> F[Multi-Agent Orchestration]
+    C --> G[Error Handling]
+    
+    D --> H[Conditional Workflows]
+    E --> I[Session State Control]
+    F --> J[Sub-Agent Coordination]
+    G --> K[Recovery Strategies]
+    
+    H --> L[Intelligent Solution]
+    I --> L
+    J --> L
+    K --> L
+    
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#e8f5e9
+    style E fill:#fce4ec
+    style F fill:#e1f5fe
+    style G fill:#f1f8e9
+    style L fill:#e0f2f1
+```
+
+#### Tools: The Capability Providers
+
+Tools are discrete functions that agents can invoke to perform specific tasks:
+
+```mermaid
+graph TD
+    A[Agent Needs Capability] --> B{Tool Type?}
+    
+    B -->|Function Tool| C[Custom Function]
+    B -->|Built-in Tool| D[Google Search/Code Exec]
+    B -->|Agent Tool| E[Another Agent as Tool]
+    
+    C --> F[Business Logic<br/>API Calls<br/>Calculations]
+    D --> G[Pre-built Capabilities<br/>No Custom Code]
+    E --> H[Specialized Intelligence<br/>Delegated Reasoning]
+    
+    F --> I[Structured Response]
+    G --> I
+    H --> I
+    
+    I --> J[Agent Continues<br/>Workflow]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#e8f5e9
+    style D fill:#fce4ec
+    style E fill:#e1f5fe
+    style F fill:#f1f8e9
+    style G fill:#ffecb3
+    style H fill:#f8bbd9
+    style I fill:#e0f2f1
+    style J fill:#e3f2fd
+```
+
+### Agent-Tool Philosophical Differences
+
+#### 1. **Abstraction Level**
+
+**Custom Agents:**
+
+- **High-level orchestration**: Define *how* complex workflows execute
+- **Business logic containers**: Embed domain-specific decision-making
+- **Stateful coordination**: Maintain context across multiple operations
+- **Control flow ownership**: Determine execution paths and error handling
+
+**Tools:**
+
+- **Low-level capabilities**: Define *what* specific actions can be performed
+- **Stateless functions**: Execute discrete tasks without maintaining context
+- **Input/output contracts**: Clear interfaces for data transformation
+- **Single responsibility**: Each tool does one thing well
+
+#### 2. **Implementation Complexity**
+
+**Custom Agents:**
+
+```python
+from google.adk.agents import BaseAgent
+from typing import AsyncGenerator
+
+class ComplianceWorkflowAgent(BaseAgent):
+    async def _run_async_impl(self, ctx):
+        # Complex orchestration logic
+        analysis = await self.risk_agent.run_async(ctx)
+        
+        if ctx.session.state.get("risk_score", 0) > 0.8:
+            # Conditional logic based on results
+            yield await self.escalation_agent.run_async(ctx)
+        else:
+            # Different path for low risk
+            yield await self.auto_approval_agent.run_async(ctx)
+        
+        # Custom error handling and state management
+        if ctx.session.state.get("approval_status") == "pending":
+            await self.notification_agent.run_async(ctx)
+```
+
+**Tools:**
+```python
+from google.adk.tools import FunctionTool
+
+def calculate_risk_score(transaction_data: dict) -> dict:
+    """Calculate risk score for a financial transaction.
+    
+    Args:
+        transaction_data: Dictionary containing transaction details
+        
+    Returns:
+        dict: Risk analysis results with score and factors
+    """
+    # Simple, focused logic
+    risk_factors = analyze_transaction(transaction_data)
+    score = sum(risk_factors.values()) / len(risk_factors)
+    
+    return {
+        "status": "success",
+        "risk_score": score,
+        "factors": risk_factors,
+        "recommendation": "approve" if score < 0.5 else "review"
+    }
+
+# Automatically wrapped as FunctionTool when added to agent
+```
+
+#### 3. **Lifecycle and Execution**
+
+**Custom Agents:**
+- **Long-running orchestration**: Can execute for minutes or hours
+- **Multi-step coordination**: Coordinate multiple sub-agents and tools
+- **Session-aware**: Full access to session state and history
+- **Event streaming**: Yield events throughout execution
+
+**Tools:**
+- **Single execution**: Complete one specific task and return
+- **Atomic operations**: Indivisible units of work
+- **Context-limited**: Receive only necessary input parameters
+- **Result-focused**: Return structured data for agent consumption
+
+### Tool Usage Decision Matrix
+
+#### Build Custom Agents For
+
+✅ **Complex Decision Trees**: Your workflow requires sophisticated conditional logic that can't be expressed through simple tool calls
+
+✅ **Multi-Stage Orchestration**: You need to coordinate multiple agents, tools, and external systems in specific sequences
+
+✅ **Stateful Workflows**: Your process maintains context and makes decisions based on accumulated state
+
+✅ **Business Process Automation**: You're modeling real-world business processes with approval workflows, escalations, and compliance checks
+
+✅ **Dynamic Routing**: Execution paths change based on runtime conditions and previous results
+
+**Example Use Cases:**
+
+- **Financial compliance workflows** with risk assessment, approval chains, and audit trails
+- **Customer onboarding processes** with document verification, credit checks, and account setup
+- **Content moderation pipelines** with AI analysis, human review, and policy enforcement
+- **Manufacturing quality control** with testing, analysis, and corrective action workflows
+
+#### Build Tools For
+
+✅ **Discrete Capabilities**: You need specific functionality that agents can use as building blocks
+
+✅ **Reusable Logic**: The same functionality will be used across multiple agents
+
+✅ **External Integrations**: You're connecting to APIs, databases, or external services
+
+✅ **Computational Tasks**: You need to perform calculations, data transformations, or analysis
+
+✅ **Single Responsibility**: The functionality has a clear, focused purpose
+
+**Example Use Cases:**
+
+- **API integrations** for CRM, payment processing, or notification systems
+- **Data processing functions** for calculations, validation, or transformation
+- **External service calls** for weather, stock prices, or geolocation data
+- **Database operations** for querying, updating, or reporting
+
+### Integration Patterns
+
+#### ADK + MCP: Best of Both Worlds
+
+You can combine Custom Agents with MCP tools to get both intelligence and interoperability:
+
+```python
+from google.adk.agents import BaseAgent
+from google.adk.tools import McpTool
+
+class IntelligentAnalysisAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(name="intelligent_analyzer")
+        # Use MCP tools for standardized capabilities
+        self.mcp_tools = [
+            McpTool(server_uri="database-server"),
+            McpTool(server_uri="file-server"),
+            McpTool(server_uri="api-server")
+        ]
+    
+    async def run(self, input_data):
+        # Custom intelligence decides which tools to use and how
+        if self.requires_data_analysis(input_data):
+            data = await self.mcp_tools[0].query_database(input_data.query)
+            analysis = await self.perform_custom_analysis(data)
+            
+            # Custom decision: should we save results?
+            if analysis.confidence > 0.9:
+                await self.mcp_tools[1].save_file(analysis.results)
+                
+        return self.synthesize_response(analysis)
+```
+
+#### Pattern 1: Custom Agent Using Multiple Tools
+
+```python
+class IntelligentAnalysisAgent(BaseAgent):
+    async def _run_async_impl(self, ctx):
+        # Use multiple tools in orchestrated fashion
+        raw_data = await self.data_tool.fetch_data(ctx.input)
+        processed = await self.analysis_tool.analyze(raw_data)
+        
+        # Custom decision logic
+        if processed.confidence > 0.9:
+            await self.report_tool.generate_report(processed)
+        else:
+            await self.escalation_tool.request_review(processed)
+```
+
+#### Pattern 2: Tools as Agent Building Blocks
+
+```python
+# Reusable tools across multiple agents
+risk_calculator = FunctionTool(func=calculate_risk_score)
+compliance_checker = FunctionTool(func=check_compliance_rules)
+notification_sender = FunctionTool(func=send_notification)
+
+# Different agents use same tools differently
+risk_agent = LlmAgent(
+    name="risk_assessor",
+    tools=[risk_calculator, compliance_checker]
+)
+
+audit_agent = LlmAgent(
+    name="auditor", 
+    tools=[compliance_checker, notification_sender]
+)
+```
+
+#### Pattern 3: Agent-as-Tool Pattern
+
+```python
+# Specialized agent used as a tool by other agents
+specialist_agent = LlmAgent(
+    name="financial_specialist",
+    model="gemini-2.0-flash",
+    instruction="Expert in financial risk analysis...",
+    tools=[risk_calculator, market_data_tool]
+)
+
+# Use specialist as a tool in coordinating agent
+coordinator = LlmAgent(
+    name="coordinator",
+    tools=[
+        AgentTool(agent=specialist_agent),
+        notification_tool,
+        approval_tool
+    ]
+)
+```
+
+### Technical Architecture Comparison
+
+| Aspect | Custom Agents | Tools |
+|--------|---------------|-------|
+| **Purpose** | Workflow orchestration | Capability provision |
+| **Complexity** | High - custom business logic | Low - focused functionality |
+| **State Management** | Full session state access | Stateless execution |
+| **Execution Model** | Long-running, multi-step | Single call, immediate return |
+| **Reusability** | Application-specific | Cross-agent reusable |
+| **Error Handling** | Custom recovery strategies | Simple success/failure |
+| **Testing** | Complex integration testing | Unit testable |
+| **Maintenance** | High - custom orchestration | Low - focused scope |
+| **Performance** | Variable - depends on workflow | Predictable - single operation |
+
+### Real-World Analogy
+
+Think of the difference like a **restaurant kitchen**:
+
+**Custom Agents** are like the **Head Chef** - they coordinate the entire meal preparation process, make decisions about timing and quality, manage multiple cooking stations, and adapt based on changing conditions (busy night, special dietary requests, ingredient availability).
+
+**Tools** are like **kitchen equipment** - the oven, knife, blender, or thermometer. Each has a specific purpose, works reliably when used correctly, and can be used by different chefs for various recipes. The oven doesn't decide what to cook, but it's essential for baking.
+
+The Head Chef (Custom Agent) uses multiple tools (kitchen equipment) and coordinates with sous chefs (sub-agents) to deliver a complete dining experience, while each tool provides a specific, reliable capability that enables the overall process.
+
+### Best Practices and Guidelines
+
+#### Custom Agent Design Principles
+
+1. **Clear Responsibility Boundaries**: Define exactly what business process the agent orchestrates
+2. **Robust Error Handling**: Implement comprehensive error recovery and rollback strategies
+3. **State Management**: Use session state effectively without creating tight coupling
+4. **Composability**: Design sub-agents and tools that can be reused in different workflows
+5. **Testability**: Create integration tests that validate the entire workflow
+
+#### Tool Design Principles
+
+1. **Single Responsibility**: Each tool should do one thing exceptionally well
+2. **Clear Interfaces**: Use descriptive docstrings and type hints for LLM understanding
+3. **Consistent Return Formats**: Standardize response structures across similar tools
+4. **Error Communication**: Return detailed error information that agents can act upon
+5. **Stateless Design**: Avoid dependencies on external state or previous calls
+
+### The Development Decision Framework
+
+When building new functionality, ask yourself:
+
+**"Am I defining HOW a complex process should work?"** → Custom Agent
+- Multi-step workflows
+- Conditional business logic
+- State-dependent decisions
+- Error recovery strategies
+
+**"Am I providing WHAT capability an agent needs?"** → Tool
+- API integrations
+- Data transformations
+- Calculations
+- External service calls
+
+**"Am I creating intelligence or capability?"** 
+- Intelligence (reasoning, decision-making, orchestration) → Custom Agent
+- Capability (functions, integrations, computations) → Tool
+
+Remember: Most ADK applications use **both** Custom Agents and Tools together. Custom Agents provide the intelligent orchestration, while Tools provide the atomic capabilities that make complex workflows possible.
+
+---
+
 
 ## Sessions and State: Memory That Matters
 
@@ -853,4 +1607,3 @@ ADK incorporates security and safety patterns:
 - **Server-Sent Events (SSE)**: Streaming responses for web applications
 - **WebSocket Support**: Full-duplex communication channels
 - **Audio Streaming**: Support for voice-enabled applications
-
