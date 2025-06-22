@@ -579,133 +579,590 @@ customer_search_tool = FunctionTool(func=search_customer_data)
 
 **Pause and Reflect:** *Notice how this tool goes beyond simple data retrieval. It provides caching, error handling, business insights, and actionable recommendations. This is what separates enterprise-grade tools from basic functions.*
 
-### Tool Composition and Chaining
+### Mastering ToolContext: The Foundation of Smart Tools 🎯
 
-Build tools that work together intelligently:
+Every function tool receives a `ToolContext` object that provides access to the entire execution environment. Understanding and leveraging ToolContext is what separates basic tools from intelligent, context-aware business systems.
+
+#### Understanding ToolContext Architecture
+
+```mermaid
+flowchart LR
+    A[ToolContext] --> B[State Management]
+    A --> C[Authentication]
+    A --> D[Artifact Storage]
+    A --> E[Memory Search]
+    A --> F[Execution Tracking]
+    
+    B --> B1[Session State]
+    B --> B2[User Preferences]
+    B --> B3[Temporary Data]
+    B --> B4[Application Config]
+    
+    C --> C1[API Credentials]
+    C --> C2[OAuth Flows]
+    C --> C3[Secure Storage]
+    
+    D --> D1[File References]
+    D --> D2[Document Processing]
+    D --> D3[Large Data Blobs]
+    
+    E --> E1[Historical Context]
+    E --> E2[Knowledge Base]
+    E --> E3[Previous Interactions]
+    
+    F --> F1[Invocation ID]
+    F --> F2[Function Call ID]
+    F --> F3[Agent Name]
+    
+    %% Styling
+    classDef rootStyle fill:#E8F4FD,stroke:#2E86AB,stroke-width:3px,color:#1A1A1A
+    classDef categoryStyle fill:#F0F8E8,stroke:#A8E6CF,stroke-width:2px,color:#2D2D2D
+    classDef featureStyle fill:#FAFAFA,stroke:#B0B0B0,stroke-width:1px,color:#404040
+    
+    class A rootStyle
+    class B,C,D,E,F categoryStyle
+    class B1,B2,B3,B4,C1,C2,C3,D1,D2,D3,E1,E2,E3,E4,F1,F2,F3 featureStyle
+```
+
+#### State Management: Data Flow Across Tools
+
+The most powerful aspect of ToolContext is its ability to maintain state across tool executions, creating intelligent workflows:
 
 ```python
-async def comprehensive_customer_analysis(
-    customer_identifier: str,
-    analysis_type: str = "full",
-    tool_context: ToolContext = None
+from google.adk.tools import ToolContext, FunctionTool
+from typing import Dict, List, Optional
+
+async def analyze_customer_journey(
+    customer_id: str,
+    tool_context: ToolContext
 ) -> Dict:
-    """Comprehensive customer analysis using multiple data sources.
+    """Multi-step customer analysis with state management."""
     
-    Args:
-        customer_identifier: Customer ID, email, or company name
-        analysis_type: Type of analysis (quick, standard, full, competitive)
-        
-    Returns:
-        Complete customer analysis with actionable insights
-    """
-    
-    # Step 1: Get customer data
-    customer_result = await search_customer_data(
-        search_query=customer_identifier,
-        tool_context=tool_context
-    )
-    
-    if customer_result["status"] != "success" or not customer_result["customers"]:
+    # Step 1: Check if we already have cached analysis
+    cache_key = f"customer_analysis:{customer_id}"
+    cached_result = tool_context.state.get(f"temp:{cache_key}")
+    if cached_result:
         return {
-            "status": "error",
-            "message": f"Could not find customer: {customer_identifier}"
+            "status": "success",
+            "source": "cache",
+            "analysis": cached_result,
+            "invocation_id": tool_context.invocation_id
         }
     
-    customer = customer_result["customers"][0]
+    # Step 2: Start analysis pipeline - save progress to state
+    tool_context.state["temp:analysis_stage"] = "data_collection"
+    tool_context.state["temp:current_customer"] = customer_id
     
-    # Step 2: Get interaction history
-    interaction_result = await get_customer_interactions(
-        customer_id=customer["id"],
-        tool_context=tool_context
-    )
+    # Step 3: Collect customer data (this could fail, state helps recovery)
+    try:
+        customer_data = await fetch_customer_profile(customer_id)
+        tool_context.state["temp:customer_profile"] = customer_data
+        tool_context.state["temp:analysis_stage"] = "interaction_analysis"
+        
+        # Step 4: Analyze interaction history
+        interactions = await fetch_customer_interactions(customer_id)
+        tool_context.state["temp:interactions"] = interactions
+        tool_context.state["temp:analysis_stage"] = "sentiment_analysis"
+        
+        # Step 5: Perform sentiment analysis
+        sentiment_scores = analyze_interaction_sentiment(interactions)
+        tool_context.state["temp:sentiment_data"] = sentiment_scores
+        tool_context.state["temp:analysis_stage"] = "insights_generation"
+        
+        # Step 6: Generate business insights
+        insights = generate_business_insights(customer_data, interactions, sentiment_scores)
+        
+        # Step 7: Cache the complete analysis
+        complete_analysis = {
+            "customer_profile": customer_data,
+            "interaction_summary": interactions,
+            "sentiment_analysis": sentiment_scores,
+            "business_insights": insights,
+            "analysis_timestamp": datetime.now().isoformat(),
+            "confidence_score": calculate_confidence(customer_data, interactions)
+        }
+        
+        tool_context.state[f"temp:{cache_key}"] = complete_analysis
+        tool_context.state["temp:analysis_stage"] = "completed"
+        
+        return {
+            "status": "success",
+            "source": "fresh_analysis",
+            "analysis": complete_analysis,
+            "execution_context": {
+                "invocation_id": tool_context.invocation_id,
+                "function_call_id": tool_context.function_call_id,
+                "agent_name": tool_context.agent_name
+            }
+        }
+        
+    except Exception as e:
+        # Save error state for debugging and recovery
+        error_stage = tool_context.state.get("temp:analysis_stage", "unknown")
+        tool_context.state["temp:last_error"] = {
+            "stage": error_stage,
+            "error": str(e),
+            "customer_id": customer_id,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        return {
+            "status": "error",
+            "message": f"Analysis failed at stage: {error_stage}",
+            "recoverable_data": {
+                "customer_profile": tool_context.state.get("temp:customer_profile"),
+                "interactions": tool_context.state.get("temp:interactions")
+            }
+        }
+
+async def resume_failed_analysis(tool_context: ToolContext) -> Dict:
+    """Resume analysis from where it failed using state."""
     
-    # Step 3: Analyze communication sentiment
-    if interaction_result["status"] == "success":
-        sentiment_result = await analyze_communication_sentiment(
-            interactions=interaction_result["interactions"],
-            tool_context=tool_context
-        )
-    else:
-        sentiment_result = {"status": "error", "message": "No interaction data available"}
+    error_data = tool_context.state.get("temp:last_error")
+    if not error_data:
+        return {"status": "error", "message": "No failed analysis to resume"}
     
-    # Step 4: Get competitive intelligence (for full analysis)
-    competitive_data = {}
-    if analysis_type == "full":
-        competitive_data = await get_competitive_intelligence(
-            company=customer["company"],
-            tool_context=tool_context
-        )
+    failed_stage = error_data["stage"]
+    customer_id = error_data["customer_id"]
     
-    # Step 5: Generate strategic recommendations
-    recommendations = generate_customer_strategy(
-        customer_data=customer,
-        interactions=interaction_result.get("interactions", []),
-        sentiment=sentiment_result.get("overall_sentiment", "neutral"),
-        competitive_info=competitive_data
-    )
+    # Resume from the appropriate stage
+    if failed_stage == "interaction_analysis":
+        customer_data = tool_context.state.get("temp:customer_profile")
+        if customer_data:
+            # Continue from interaction analysis
+            return await analyze_customer_journey(customer_id, tool_context)
+    
+    return {"status": "error", "message": f"Cannot resume from stage: {failed_stage}"}
+```
+
+#### Smart State Prefixes: Organizing Data Intelligently
+
+Use state prefixes to organize data by scope and lifecycle:
+
+```python
+def manage_customer_preferences(
+    customer_id: str,
+    preference_type: str,
+    value: str,
+    tool_context: ToolContext
+) -> Dict:
+    """Demonstrate intelligent state organization with prefixes."""
+    
+    # Different state scopes for different use cases
+    state_keys = {
+        # User-level preferences (persist across sessions)
+        "user_pref": f"user:{customer_id}:preferences:{preference_type}",
+        
+        # Application-level configuration (shared across users)
+        "app_config": f"app:preference_defaults:{preference_type}",
+        
+        # Session-specific data (current conversation only)
+        "session_data": f"session:customer_context:{customer_id}",
+        
+        # Temporary data (current invocation only)
+        "temp_data": f"temp:preference_update:{preference_type}:{datetime.now().isoformat()}"
+    }
+    
+    # Save user preference
+    tool_context.state[state_keys["user_pref"]] = {
+        "value": value,
+        "updated_at": datetime.now().isoformat(),
+        "updated_by": tool_context.agent_name
+    }
+    
+    # Update session context
+    session_context = tool_context.state.get(state_keys["session_data"], {})
+    session_context[f"last_preference_update"] = preference_type
+    tool_context.state[state_keys["session_data"]] = session_context
+    
+    # Log temporary operation data
+    tool_context.state[state_keys["temp_data"]] = {
+        "operation": "preference_update",
+        "invocation_id": tool_context.invocation_id,
+        "function_call_id": tool_context.function_call_id
+    }
     
     return {
         "status": "success",
-        "customer_profile": customer,
-        "interaction_summary": interaction_result,
-        "sentiment_analysis": sentiment_result,
-        "competitive_context": competitive_data,
-        "strategic_recommendations": recommendations,
-        "analysis_confidence": calculate_analysis_confidence(
-            customer, interaction_result, sentiment_result
-        )
+        "message": f"Updated {preference_type} preference for customer {customer_id}",
+        "state_keys_used": state_keys,
+        "execution_context": {
+            "invocation_id": tool_context.invocation_id,
+            "agent_name": tool_context.agent_name
+        }
     }
 
-def generate_customer_strategy(
-    customer_data: Dict,
-    interactions: List[Dict],
-    sentiment: str,
-    competitive_info: Dict
-) -> List[Dict]:
-    """Generate strategic recommendations based on comprehensive analysis."""
+def get_customer_context(
+    customer_id: str,
+    tool_context: ToolContext
+) -> Dict:
+    """Retrieve comprehensive customer context from all state scopes."""
     
-    recommendations = []
+    # Gather data from different state scopes
+    user_preferences = {}
+    for key in tool_context.state.keys():
+        if key.startswith(f"user:{customer_id}:preferences:"):
+            pref_type = key.split(":")[-1]
+            user_preferences[pref_type] = tool_context.state[key]
     
-    # Revenue opportunity analysis
-    if customer_data["lifetime_value"] > 50000:
-        recommendations.append({
-            "category": "account_growth",
-            "priority": "high",
-            "action": "Assign dedicated account manager",
-            "rationale": f"High-value customer (${customer_data['lifetime_value']:,}) warrants premium service",
-            "expected_impact": "15-25% increase in customer lifetime value"
+    session_context = tool_context.state.get(f"session:customer_context:{customer_id}", {})
+    
+    # Get application defaults
+    app_defaults = {}
+    for key in tool_context.state.keys():
+        if key.startswith("app:preference_defaults:"):
+            pref_type = key.split(":")[-1]
+            app_defaults[pref_type] = tool_context.state[key]
+    
+    return {
+        "customer_id": customer_id,
+        "user_preferences": user_preferences,
+        "session_context": session_context,
+        "application_defaults": app_defaults,
+        "context_metadata": {
+            "retrieved_at": datetime.now().isoformat(),
+            "invocation_id": tool_context.invocation_id,
+            "total_preference_keys": len(user_preferences)
+        }
+    }
+```
+
+#### Advanced Authentication Patterns with ToolContext
+
+Handle secure API access with intelligent credential management:
+
+```python
+from google.adk.auth import AuthConfig
+from typing import Optional
+
+# Define authentication configurations
+SALESFORCE_AUTH = AuthConfig(
+    name="salesforce_api",
+    auth_type="oauth2",
+    client_id=os.getenv("SALESFORCE_CLIENT_ID"),
+    scopes=["api", "refresh_token"]
+)
+
+SLACK_AUTH = AuthConfig(
+    name="slack_bot",
+    auth_type="api_key",
+    description="Slack Bot Token for notifications"
+)
+
+async def secure_salesforce_integration(
+    query: str,
+    operation: str = "search",
+    tool_context: ToolContext
+) -> Dict:
+    """Demonstrate advanced authentication patterns with ToolContext."""
+    
+    auth_state_key = "user:salesforce_credential"
+    
+    # Step 1: Check for existing credential
+    stored_credential = tool_context.state.get(auth_state_key)
+    
+    if not stored_credential:
+        # Step 2: Request authentication
+        try:
+            tool_context.request_credential(SALESFORCE_AUTH)
+            
+            # Store auth request metadata for tracking
+            tool_context.state["temp:auth_request"] = {
+                "service": "salesforce",
+                "requested_at": datetime.now().isoformat(),
+                "function_call_id": tool_context.function_call_id,
+                "invocation_id": tool_context.invocation_id
+            }
+            
+            return {
+                "status": "auth_required",
+                "message": "Salesforce authentication required",
+                "auth_config": SALESFORCE_AUTH.name,
+                "next_steps": "Please complete OAuth flow to continue"
+            }
+            
+        except ValueError as e:
+            return {
+                "status": "error",
+                "message": f"Authentication setup error: {str(e)}"
+            }
+    
+    # Step 3: Use credential for API calls
+    try:
+        # Retrieve the credential (may be from previous turn or just completed)
+        auth_response = tool_context.get_auth_response(SALESFORCE_AUTH)
+        
+        if auth_response and auth_response.access_token:
+            # Update stored credential
+            credential_data = {
+                "access_token": auth_response.access_token,
+                "refresh_token": getattr(auth_response, 'refresh_token', None),
+                "expires_at": datetime.now() + timedelta(hours=1),  # Typical OAuth expiry
+                "updated_at": datetime.now().isoformat()
+            }
+            tool_context.state[auth_state_key] = credential_data
+            
+            # Perform the actual Salesforce operation
+            api_result = await call_salesforce_api(
+                query=query,
+                operation=operation,
+                access_token=auth_response.access_token
+            )
+            
+            # Update usage statistics
+            usage_key = "app:salesforce_api_usage"
+            usage_stats = tool_context.state.get(usage_key, {"total_calls": 0, "last_call": None})
+            usage_stats["total_calls"] += 1
+            usage_stats["last_call"] = datetime.now().isoformat()
+            tool_context.state[usage_key] = usage_stats
+            
+            return {
+                "status": "success",
+                "operation": operation,
+                "query": query,
+                "results": api_result,
+                "api_usage": usage_stats,
+                "execution_context": {
+                    "invocation_id": tool_context.invocation_id,
+                    "function_call_id": tool_context.function_call_id
+                }
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "Failed to retrieve valid authentication credentials"
+            }
+            
+    except Exception as e:
+        # Handle authentication errors gracefully
+        error_msg = str(e)
+        
+        # Clear potentially invalid credentials
+        if "unauthorized" in error_msg.lower() or "expired" in error_msg.lower():
+            tool_context.state[auth_state_key] = None
+            
+        return {
+            "status": "error",
+            "message": f"Salesforce API error: {error_msg}",
+            "suggestion": "Authentication may have expired. Try again to re-authenticate."
+        }
+
+async def call_salesforce_api(query: str, operation: str, access_token: str) -> Dict:
+    """Simulate Salesforce API call."""
+    # This would be your actual Salesforce API integration
+    await asyncio.sleep(0.1)  # Simulate API call
+    return {
+        "query": query,
+        "operation": operation,
+        "results": ["Sample Salesforce Record 1", "Sample Salesforce Record 2"],
+        "total_found": 2
+    }
+
+# Multi-service authentication management
+async def manage_multi_service_auth(
+    services: List[str],
+    tool_context: ToolContext
+) -> Dict:
+    """Manage authentication for multiple services intelligently."""
+    
+    auth_configs = {
+        "salesforce": SALESFORCE_AUTH,
+        "slack": SLACK_AUTH
+    }
+    
+    authentication_status = {}
+    
+    for service in services:
+        if service not in auth_configs:
+            authentication_status[service] = {
+                "status": "error",
+                "message": f"Unknown service: {service}"
+            }
+            continue
+        
+        auth_key = f"user:{service}_credential"
+        stored_cred = tool_context.state.get(auth_key)
+        
+        if stored_cred:
+            # Check if credential is still valid
+            if service == "salesforce":
+                expires_at = stored_cred.get("expires_at")
+                if expires_at and datetime.fromisoformat(expires_at) > datetime.now():
+                    authentication_status[service] = {"status": "authenticated", "expires_at": expires_at}
+                else:
+                    authentication_status[service] = {"status": "expired", "needs_refresh": True}
+            else:
+                authentication_status[service] = {"status": "authenticated"}
+        else:
+            authentication_status[service] = {"status": "not_authenticated", "needs_auth": True }
+    
+    return {
+        "services_checked": services,
+        "authentication_status": authentication_status,
+        "summary": {
+            "authenticated": sum(1 for s in authentication_status.values() if s["status"] == "authenticated"),
+            "needs_auth": sum(1 for s in authentication_status.values() if s.get("needs_auth")),
+            "expired": sum(1 for s in authentication_status.values() if s["status"] == "expired")
+        }
+    }
+```
+
+#### Execution Tracking and Debugging
+
+ToolContext provides powerful debugging capabilities:
+
+```python
+def create_debug_enabled_tool(
+    operation: str,
+    tool_context: ToolContext
+) -> Dict:
+    """Tool with comprehensive debugging and tracking."""
+    
+    # Execution context for debugging
+    execution_context = {
+        "invocation_id": tool_context.invocation_id,
+        "function_call_id": tool_context.function_call_id,
+        "agent_name": tool_context.agent_name,
+        "operation": operation,
+        "started_at": datetime.now().isoformat()
+    }
+    
+    # Save execution start for tracking
+    tool_context.state[f"temp:execution_start:{tool_context.function_call_id}"] = execution_context
+    
+    try:
+        # Simulate tool operation
+        result = perform_business_operation(operation)
+        
+        # Update execution context with success
+        execution_context.update({
+            "status": "success",
+            "completed_at": datetime.now().isoformat(),
+            "duration_ms": (datetime.now() - datetime.fromisoformat(execution_context["started_at"])).total_seconds() * 1000
         })
-    
-    # Sentiment-based recommendations
-    if sentiment == "negative":
-        recommendations.append({
-            "category": "retention_risk",
-            "priority": "urgent",
-            "action": "Schedule immediate customer success call",
-            "rationale": "Negative sentiment indicates churn risk",
-            "expected_impact": "Reduce churn probability by 40-60%"
+        
+        # Save execution history
+        history_key = "app:tool_execution_history"
+        history = tool_context.state.get(history_key, [])
+        history.append(execution_context)
+        # Keep only last 100 executions
+        tool_context.state[history_key] = history[-100:]
+        
+        return {
+            "status": "success",
+            "operation": operation,
+            "result": result,
+            "execution_context": execution_context
+        }
+        
+    except Exception as e:
+        # Update execution context with error
+        execution_context.update({
+            "status": "error",
+            "error": str(e),
+            "failed_at": datetime.now().isoformat()
         })
-    elif sentiment == "positive":
-        recommendations.append({
-            "category": "expansion_opportunity", 
-            "priority": "medium",
-            "action": "Present upsell opportunities",
-            "rationale": "Positive sentiment creates favorable conditions for expansion",
-            "expected_impact": "20-30% probability of successful upsell"
-        })
+        
+        # Save error for analysis
+        error_key = f"temp:execution_error:{tool_context.function_call_id}"
+        tool_context.state[error_key] = execution_context
+        
+        return {
+            "status": "error",
+            "operation": operation,
+            "error": str(e),
+            "execution_context": execution_context,
+            "debug_info": {
+                "invocation_id": tool_context.invocation_id,
+                "function_call_id": tool_context.function_call_id,
+                "agent_name": tool_context.agent_name
+            }
+        }
+
+def get_execution_analytics(tool_context: ToolContext) -> Dict:
+    """Analyze tool execution patterns and performance."""
     
-    # Engagement frequency analysis
-    recent_interactions = [i for i in interactions if days_since(i["date"]) <= 30]
-    if len(recent_interactions) < 2:
-        recommendations.append({
-            "category": "engagement",
-            "priority": "medium", 
-            "action": "Increase communication frequency",
-            "rationale": "Low engagement may indicate declining relationship",
-            "expected_impact": "Improve relationship strength and retention"
-        })
+    history = tool_context.state.get("app:tool_execution_history", [])
     
-    return recommendations
+    if not history:
+        return {"message": "No execution history available"}
+    
+    # Analyze performance patterns
+    successful_executions = [h for h in history if h["status"] == "success"]
+    failed_executions = [h for h in history if h["status"] == "error"]
+    
+    # Calculate average duration for successful operations
+    avg_duration = 0
+    if successful_executions:
+        durations = [h.get("duration_ms", 0) for h in successful_executions]
+        avg_duration = sum(durations) / len(durations)
+    
+    # Group by operation type
+    operations = {}
+    for h in history:
+        op = h["operation"]
+        if op not in operations:
+            operations[op] = {"count": 0, "success": 0, "errors": 0}
+        operations[op]["count"] += 1
+        if h["status"] == "success":
+            operations[op]["success"] += 1
+        else:
+            operations[op]["errors"] += 1
+    
+    return {
+        "total_executions": len(history),
+        "success_rate": len(successful_executions) / len(history) * 100,
+        "average_duration_ms": round(avg_duration, 2),
+        "operations_breakdown": operations,
+        "recent_errors": failed_executions[-5:],  # Last 5 errors
+        "performance_insights": generate_performance_insights(history)
+    }
+
+def generate_performance_insights(history: List[Dict]) -> List[str]:
+    """Generate actionable performance insights."""
+    insights = []
+    
+    if not history:
+        return insights
+    
+    # Error rate analysis
+    error_rate = len([h for h in history if h["status"] == "error"]) / len(history)
+    if error_rate > 0.1:  # More than 10% error rate
+        insights.append(f"High error rate detected: {error_rate:.1%}. Consider reviewing error handling.")
+    
+    # Performance analysis
+    successful = [h for h in history if h["status"] == "success" and "duration_ms" in h]
+    if successful:
+        durations = [h["duration_ms"] for h in successful]
+        avg_duration = sum(durations) / len(durations)
+        if avg_duration > 5000:  # More than 5 seconds
+            insights.append(f"Average execution time is high: {avg_duration:.0f}ms. Consider optimization.")
+    
+    # Usage pattern analysis
+    operations = {}
+    for h in history:
+        op = h["operation"]
+        operations[op] = operations.get(op, 0) + 1
+    
+    if operations:
+        most_used = max(operations, key=operations.get)
+        insights.append(f"Most frequently used operation: {most_used} ({operations[most_used]} times)")
+    
+    return insights
+
+def perform_business_operation(operation: str) -> Dict:
+    """Simulate business operation."""
+    # This would be your actual business logic
+    import random
+    
+    if random.random() < 0.1:  # 10% chance of error for demo
+        raise Exception(f"Simulated error in operation: {operation}")
+    
+    return {
+        "operation": operation,
+        "data": f"Result data for {operation}",
+        "timestamp": datetime.now().isoformat()
+    }
 ```
 
 ---
@@ -1304,6 +1761,9 @@ You've now mastered the full spectrum of tool development - from simple function
 - **Built-in tools** provide powerful capabilities like search, code execution, and enterprise search with optimal performance
 - **Custom function tools** handle unlimited business logic with enterprise-grade patterns  
 - **Third-party integrations** unlock entire ecosystems of functionality
+- **ToolContext mastery** enables intelligent state management, authentication, and execution tracking
+- **Artifact management** handles documents and files with sophisticated processing workflows
+- **Memory-enabled tools** provide contextual learning and personalized experiences
 - **Security and validation** protect against common vulnerabilities
 - **Performance optimization** ensures tools scale with your business
 - **Caching and async patterns** maximize efficiency and user experience
@@ -1315,7 +1775,13 @@ You've now mastered the full spectrum of tool development - from simple function
 ✅ Are your tools secure against common attack vectors?  
 ✅ Do your tools cache results effectively?  
 ✅ Can your tools work together in composition patterns?  
-✅ Do your tools provide clear success/failure feedback?
+✅ Do your tools provide clear success/failure feedback?  
+✅ Do you leverage ToolContext for state management across tool executions?  
+✅ Are your tools context-aware and personalized based on history?  
+✅ Do your tools handle authentication and credentials securely?  
+✅ Can your tools process documents and manage artifacts effectively?  
+✅ Do your tools learn from memory and past interactions?  
+✅ Are your tools equipped with comprehensive debugging and tracking?
 
 ### The Architecture Patterns You've Learned
 
@@ -1401,7 +1867,11 @@ In Chapter 6, we'll explore how to coordinate multiple agents and tools in sophi
 3. **All Built-in Tools**: Google Search, Code Execution, and Vertex AI Search implementations
 4. **Advanced Integrations**: Complex API integrations with rate limiting and retry logic
 5. **Tool Composition**: Building tools that work together intelligently
-6. **Security Best Practices**: Protecting against common vulnerabilities and attack vectors
+6. **ToolContext Mastery**: State management, authentication, and execution tracking
+7. **Artifact Management**: Document processing and file handling workflows
+8. **Memory-Enabled Tools**: Context-aware tools that learn from past interactions
+9. **Security Best Practices**: Protecting against common vulnerabilities and attack vectors
+10. **Performance Optimization**: Scalable tools with caching and async patterns
 
 ### 🔧 Tools in Your Arsenal
 
@@ -1410,6 +1880,10 @@ In Chapter 6, we'll explore how to coordinate multiple agents and tools in sophi
 - **Vertex AI Search**: Enterprise knowledge base and document retrieval
 - **Custom Functions**: Unlimited business logic and API integrations
 - **LangChain Integration**: Access to 100+ pre-built community tools
+- **Context-Aware Tools**: State management and cross-tool data sharing
+- **Authentication Tools**: Secure credential management and OAuth flows
+- **Document Processors**: Artifact-based file handling and processing pipelines
+- **Memory-Enabled Support**: Learning tools that improve over time
 - **Robust API Clients**: Production-ready integrations with error handling
 
 ### 🚀 Ready for the Next Level
