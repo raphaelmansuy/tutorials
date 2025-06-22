@@ -90,7 +90,7 @@ from google.adk.agents import LlmAgent, SequentialAgent
 # Define individual process agents
 claim_validator = LlmAgent(
     name="claim_validator",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="""
     You are a claims validation specialist. Analyze submitted insurance 
     claims for completeness, accuracy, and fraud indicators.
@@ -109,7 +109,7 @@ claim_validator = LlmAgent(
 
 damage_assessor = LlmAgent(
     name="damage_assessor",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="""
     You are a damage assessment specialist. Evaluate property damage 
     claims using photos, descriptions, and repair estimates.
@@ -128,7 +128,7 @@ damage_assessor = LlmAgent(
 
 approval_agent = LlmAgent(
     name="approval_agent", 
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="""
     You are a claims approval specialist. Make final decisions on 
     insurance payouts based on validation and assessment results.
@@ -154,7 +154,7 @@ claims_workflow = SequentialAgent(
 )
 ```
 
-**Business Impact:** Acme Insurance reduced claim processing time from 14 days to 2 hours while maintaining 99.2% accuracy in payouts.
+**Business Impact:** Organizations implementing similar claims processing workflows report significant improvements in processing time while maintaining high accuracy in payouts.
 
 ### 2. Parallel Workflow Agents: The Efficiency Maximizers
 
@@ -168,7 +168,7 @@ from google.adk.agents import LlmAgent, ParallelAgent
 # Agents that can work simultaneously
 inventory_agent = LlmAgent(
     name="inventory_checker",
-    model="gemini-2.0-flash", 
+    model="gemini-1.5-flash", 
     instruction="Check product availability and reserve inventory",
     tools=[check_stock, reserve_items, update_inventory],
     output_key="inventory_status"
@@ -176,7 +176,7 @@ inventory_agent = LlmAgent(
 
 payment_agent = LlmAgent(
     name="payment_processor",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="Process payment and handle fraud detection",
     tools=[process_payment, fraud_check, generate_receipt],
     output_key="payment_status"
@@ -184,7 +184,7 @@ payment_agent = LlmAgent(
 
 shipping_agent = LlmAgent(
     name="shipping_calculator", 
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="Calculate shipping options and costs",
     tools=[calculate_shipping, check_carrier_availability, optimize_routing],
     output_key="shipping_options"
@@ -192,7 +192,7 @@ shipping_agent = LlmAgent(
 
 fraud_agent = LlmAgent(
     name="fraud_detector",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="Analyze order for fraud indicators",
     tools=[analyze_buyer_history, check_shipping_address, risk_scoring],
     output_key="fraud_assessment"
@@ -206,7 +206,7 @@ order_processing_workflow = ParallelAgent(
 )
 ```
 
-**The Magic:** What used to take 15 minutes of sequential processing now completes in 3 minutes, with better fraud detection and customer experience.
+**Business Impact:** Organizations implementing similar parallel processing workflows report significant improvements in processing speed and customer experience.
 
 ### 3. Dynamic Workflow Orchestration: The Intelligent Decision Makers
 
@@ -214,16 +214,15 @@ order_processing_workflow = ParallelAgent(
 
 **Real-World Example:** Employee Onboarding Orchestration
 
-> **Note:** Advanced dynamic routing in ADK is typically handled through LlmAgent transfer capabilities rather than a separate "AdaptiveAgent" class. Here's how to implement intelligent workflow routing:
+**Implementation using LlmAgent with Dynamic Routing:**
 
 ```python
-from google.adk.agents import LlmAgent, SequentialAgent
-from google.adk.tools import transfer_to_agent
+from google.adk.agents import LlmAgent
 
 # The orchestrator that makes routing decisions
 onboarding_orchestrator = LlmAgent(
     name="onboarding_orchestrator",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="""
     You are an employee onboarding orchestrator. Analyze new hire 
     information and determine the appropriate onboarding path.
@@ -241,13 +240,13 @@ onboarding_orchestrator = LlmAgent(
     - Manager preferences
     - Company policies
     """,
-    tools=[transfer_to_agent, analyze_employee_profile, check_security_requirements]
+    tools=[analyze_employee_profile, check_security_requirements]
 )
 
 # Specialist agents for different scenarios
 security_clearance_agent = LlmAgent(
     name="security_processor",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="Handle security clearance and background check processes",
     tools=[initiate_background_check, setup_security_accounts, 
            schedule_security_training],
@@ -256,7 +255,7 @@ security_clearance_agent = LlmAgent(
 
 equipment_provisioning_agent = LlmAgent(
     name="equipment_provisioner", 
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="Handle laptop, phone, and equipment setup",
     tools=[order_equipment, configure_devices, schedule_delivery],
     output_key="equipment_ready"
@@ -264,21 +263,20 @@ equipment_provisioning_agent = LlmAgent(
 
 manager_introduction_agent = LlmAgent(
     name="manager_coordinator",
-    model="gemini-2.0-flash", 
+    model="gemini-1.5-flash", 
     instruction="Coordinate manager meetings and team introductions",
     tools=[schedule_meetings, create_team_introductions, setup_mentorship],
     output_key="introductions_scheduled"
 )
 
-# Multi-agent onboarding system
+# Multi-agent onboarding system using proper ADK patterns
 onboarding_system = LlmAgent(
     name="employee_onboarding_system",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     instruction="""
-    You are the main onboarding coordinator. Route new employees to appropriate 
-    specialists based on their profile and requirements.
+    You are the main onboarding coordinator. Analyze employee requirements 
+    and delegate to appropriate specialists using sub-agent routing.
     """,
-    tools=[transfer_to_agent],
     sub_agents=[
         onboarding_orchestrator,
         security_clearance_agent,
@@ -288,883 +286,1090 @@ onboarding_system = LlmAgent(
 )
 ```
 
-**Business Transformation:** TechCorp reduced new hire time-to-productivity from 3 weeks to 5 days while improving satisfaction scores by 40%.
+**Business Transformation:** Organizations implementing similar onboarding workflows have reported significant improvements in new hire time-to-productivity and employee satisfaction scores.
 
 ---
 
-## Building Production-Ready Workflow Agents
+## Understanding Agent Transfer: The Heart of Dynamic Orchestration
 
-### Error Handling and Recovery Strategies
+The concept of **Agent Transfer** is fundamental to building intelligent, adaptive workflow systems with ADK. When an agent uses `transfer_to_agent()`, it's not just calling a function - it's intelligently delegating control to another specialized agent based on the current context and requirements.
 
-ADK provides robust error handling through callbacks and built-in resilience patterns:
+### What Is Agent Transfer?
 
-```python
-from google.adk.agents import LlmAgent, SequentialAgent
+Agent Transfer is ADK's mechanism for **dynamic, intelligent routing** between agents within a multi-agent system. Unlike rigid workflow engines that follow predetermined paths, agent transfer allows LLM agents to make real-time decisions about which agent should handle the current task.
 
-def create_resilient_workflow():
-    # Define agents with error handling callbacks
-    invoice_validator = LlmAgent(
-        name="invoice_validator",
-        model="gemini-2.0-flash",
-        instruction="Validate invoice data and format",
-        tools=[validate_invoice_format, check_vendor_data],
-        output_key="validation_result"
-    )
-    
-    approval_checker = LlmAgent(
-        name="approval_checker", 
-        model="gemini-2.0-flash",
-        instruction="Check approval requirements and routing",
-        tools=[check_approval_matrix, route_for_approval],
-        output_key="approval_status"
-    )
-    
-    payment_processor = LlmAgent(
-        name="payment_processor",
-        model="gemini-2.0-flash",
-        instruction="Process approved payments with validation: {validation_result} and approval: {approval_status}",
-        tools=[process_payment, send_confirmation],
-        output_key="payment_result"
-    )
-    
-    notification_sender = LlmAgent(
-        name="notification_sender",
-        model="gemini-2.0-flash", 
-        instruction="Send notifications based on payment result: {payment_result}",
-        tools=[send_email_notification, update_accounting_system],
-        output_key="notification_sent"
-    )
+**Key Characteristics:**
 
-    workflow = SequentialAgent(
-        name="resilient_invoice_processor",
-        sub_agents=[
-            invoice_validator,
-            approval_checker, 
-            payment_processor,
-            notification_sender
-        ],
-        description="Invoice processing with error handling"
-    )
+- **Intelligent Decision Making**: The LLM analyzes the context and determines the best agent to handle the task
+- **Dynamic Routing**: No predetermined paths - decisions are made based on current state and requirements
+- **Context Preservation**: Session state, conversation history, and artifacts are maintained across transfers
+- **Hierarchical Scope**: Agents can transfer to sub-agents, siblings, or parent agents (based on configuration)
+
+### How Agent Transfer Works: The Technical Flow
+
+```mermaid
+flowchart TD
+    A["🤖 User Request<br/>'Onboard new employee John'"] --> B["📋 Coordinator Agent<br/>Analyzes Request"]
     
-    # Add error handling callbacks
-    def handle_agent_error(error, agent_name):
-        print(f"Error in {agent_name}: {error}")
-        # Implement custom error handling logic
-        if agent_name == "payment_processor":
-            # Critical financial operation failed
-            send_alert_to_finance_team(error)
-            create_incident_ticket(error)
-        
-        # Log for analysis
-        log_workflow_failure(error, agent_name)
+    B --> C{{"🧠 LLM Decision<br/>What type of onboarding?"}}
     
-    # Apply error handler to all agents
-    for agent in workflow.sub_agents:
-        agent.after_agent_callback = lambda error, agent_name=agent.name: handle_agent_error(error, agent_name)
+    C --> D["💡 Generate Function Call<br/>transfer_to_agent('security_processor')"]
     
-    return workflow
+    D --> E["⚡ ADK AutoFlow<br/>Intercepts Transfer Call"]
+    
+    E --> F["🔍 Agent Discovery<br/>root_agent.find_agent('security_processor')"]
+    
+    F --> G["🔄 Context Switch<br/>Update InvocationContext"]
+    
+    G --> H["🎯 Security Agent<br/>Takes Control"]
+    
+    H --> I["✅ Task Completion<br/>Returns Result to Context"]
+    
+    I --> J["📊 Session State Update<br/>Results Available to Other Agents"]
+    
+    style A fill:#E8F4FD,stroke:#1E88E5,stroke-width:2px
+    style B fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    style C fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px
+    style D fill:#E8F5E8,stroke:#43A047,stroke-width:2px
+    style E fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
+    style F fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style G fill:#FCE4EC,stroke:#E91E63,stroke-width:2px
+    style H fill:#E0F2F1,stroke:#00ACC1,stroke-width:2px
+    style I fill:#F9FBE7,stroke:#827717,stroke-width:2px
+    style J fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px
 ```
 
-### State Management and Data Flow
+### The Three Types of Agent Transfer
 
-ADK manages state through session state and output keys for seamless data flow:
+#### 1. Hierarchical Transfer (Sub-Agent Delegation)
 
-```python
-from google.adk.agents import LlmAgent, SequentialAgent
+**Most Common Pattern**: A parent agent transfers control to one of its sub-agents.
 
-# Workflow with explicit state management
-loan_approval_workflow = SequentialAgent(
-    name="loan_approval_process",
-    sub_agents=[
-        LlmAgent(
-            name="credit_checker",
-            model="gemini-2.0-flash",
-            instruction="Check credit score and history for loan application",
-            tools=[get_credit_score, analyze_credit_history],
-            output_key="credit_analysis"  # Stored in session state
-        ),
-        LlmAgent(
-            name="income_verifier",
-            model="gemini-2.0-flash", 
-            instruction="Verify income based on credit analysis: {credit_analysis}",
-            tools=[verify_employment, calculate_debt_ratio],
-            output_key="income_verification"  # Available to next agent
-        ),
-        LlmAgent(
-            name="approval_agent",
-            model="gemini-2.0-flash",
-            instruction="""
-            Make loan approval decision based on:
-            Credit Analysis: {credit_analysis}
-            Income Verification: {income_verification}
-            
-            Provide final approval decision with reasoning.
-            """,
-            tools=[calculate_risk_score, make_approval_decision],
-            output_key="final_decision"
-        )
-    ],
-    description="Loan approval workflow with state management"
-)
+```mermaid
+flowchart LR
+    subgraph "Agent Hierarchy"
+        A["🎯 Main Coordinator<br/>(Parent Agent)"]
+        
+        A --> B["👤 HR Specialist<br/>(Sub-Agent)"]
+        A --> C["💻 IT Setup<br/>(Sub-Agent)"]
+        A --> D["🔐 Security<br/>(Sub-Agent)"]
+        
+        B --> B1["📋 Document Processing"]
+        B --> B2["👥 Team Introduction"]
+        
+        C --> C1["💻 Equipment Order"]
+        C --> C2["⚙️ Software Setup"]
+        
+        D --> D1["🔍 Background Check"]
+        D --> D2["🎫 Access Cards"]
+    end
+    
+    E["🤖 'Setup new developer John'"] --> A
+    A -.->|"transfer_to_agent('security')"| D
+    D -.->|"Completed: security_cleared"| A
+    A -.->|"transfer_to_agent('it_setup')"| C
+    
+    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:3px
+    style B fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style C fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    style D fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style E fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
 ```
 
-### Monitoring and Observability
+#### 2. Peer Transfer (Sibling Agent Routing)
 
-Production workflows need comprehensive monitoring through ADK's callback system:
+**Specialized Handoffs**: Agents at the same level transfer tasks between each other.
 
-```python
-from google.adk.agents import LlmAgent, SequentialAgent
-
-# Custom monitoring callbacks
-def before_agent_execution(context):
-    """Log agent execution start"""
-    print(f"Starting agent: {context.agent.name}")
-    start_time = time.time()
-    context.metadata["start_time"] = start_time
-
-def after_agent_execution(context):
-    """Log agent execution completion and metrics"""
-    end_time = time.time()
-    duration = end_time - context.metadata.get("start_time", end_time)
+```mermaid
+flowchart TD
+    subgraph "Peer Agent Network"
+        A["🛒 Order Processor"] 
+        B["💳 Payment Handler"]
+        C["📦 Inventory Manager"]
+        D["🚚 Shipping Coordinator"]
+        E["📧 Customer Notifier"]
+    end
     
-    print(f"Agent {context.agent.name} completed in {duration:.2f}s")
+    F["🛍️ Customer Order"] --> A
+    A -.->|"transfer_to_agent('payment_handler')"| B
+    B -.->|"transfer_to_agent('inventory_manager')"| C
+    C -.->|"transfer_to_agent('shipping_coordinator')"| D
+    D -.->|"transfer_to_agent('customer_notifier')"| E
     
-    # Send metrics to monitoring system
-    send_metric("agent_execution_time", duration, {
-        "agent_name": context.agent.name,
-        "workflow_name": context.workflow_name
-    })
-
-# Apply monitoring to workflow
-monitored_workflow = SequentialAgent(
-    name="monitored_invoice_workflow",
-    sub_agents=[invoice_validator, approval_checker, payment_processor],
-    description="Invoice workflow with monitoring"
-)
-
-# Add monitoring callbacks to each agent
-for agent in monitored_workflow.sub_agents:
-    agent.before_agent_callback = before_agent_execution
-    agent.after_agent_callback = after_agent_execution
+    A -.->|"order_validated"| G["💾 Session State"]
+    B -.->|"payment_processed"| G
+    C -.->|"items_reserved"| G
+    D -.->|"shipping_scheduled"| G
+    E -.->|"customer_notified"| G
+    
+    style A fill:#E8F4FD,stroke:#1E88E5,stroke-width:2px
+    style B fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    style C fill:#E8F5E8,stroke:#43A047,stroke-width:2px
+    style D fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px
+    style E fill:#FCE4EC,stroke:#E91E63,stroke-width:2px
+    style F fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style G fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
 ```
 
-### Real-World Production Considerations
+#### 3. Escalation Transfer (Parent Agent Routing)
 
-**Key ADK Features for Production:**
+**Exception Handling**: When a task exceeds an agent's capabilities or authority.
 
-1. **Session Management**: ADK automatically manages conversation history and state
-2. **Memory Services**: Built-in memory for long-term context retention
-3. **Artifact Services**: File and data management across agent interactions
-4. **Authentication**: Secure tool access and API integrations
-5. **Deployment**: Ready for Cloud Run, Vertex AI, or container deployment
-
-
----
-
-## Advanced Workflow Patterns with ADK
-
-### Dynamic Workflow Creation with Agent Factories
-
-Create workflows dynamically based on business context using proper ADK patterns:
-
-```python
-from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent
-
-class OrderWorkflowFactory:
-    def __init__(self):
-        self.base_tools = [check_inventory, process_payment, calculate_shipping]
+```mermaid
+flowchart TD
+    A["👨‍💼 Senior Manager<br/>(Parent)"] 
     
-    def create_workflow(self, order_context):
-        """Create appropriate workflow based on order characteristics"""
-        
-        if order_context.value > 10000:
-            return self.create_premium_workflow(order_context)
-        elif order_context.international:
-            return self.create_international_workflow(order_context)
-        elif order_context.quantity > 100:
-            return self.create_bulk_workflow(order_context)
-        else:
-            return self.create_standard_workflow(order_context)
+    A --> B["👩‍💻 Junior Agent<br/>(Sub-Agent)"]
+    A --> C["🔧 Technical Specialist<br/>(Sub-Agent)"]
     
-    def create_standard_workflow(self, context):
-        """Standard order processing workflow"""
-        inventory_agent = LlmAgent(
-            name=f"inventory_checker_{context.order_id}",
-            model="gemini-2.0-flash",
-            instruction="Check standard inventory availability",
-            tools=[check_inventory, reserve_standard_items],
-            output_key="inventory_result"
-        )
-        
-        payment_agent = LlmAgent(
-            name=f"payment_processor_{context.order_id}",
-            model="gemini-2.0-flash", 
-            instruction="Process standard payment with inventory: {inventory_result}",
-            tools=[process_standard_payment, send_receipt],
-            output_key="payment_result"
-        )
-        
-        return SequentialAgent(
-            name=f"standard_order_workflow_{context.order_id}",
-            sub_agents=[inventory_agent, payment_agent],
-            description="Standard order processing workflow"
-        )
+    D["❓ Complex Request"] --> B
+    B --> E{{"🤔 Can I Handle This?<br/>Check complexity & authority"}}
     
-    def create_premium_workflow(self, context):
-        """High-value order workflow with additional checks"""
-        # Parallel processing for premium orders
-        risk_agent = LlmAgent(
-            name="risk_assessor",
-            model="gemini-2.0-flash",
-            instruction="Assess risk for high-value orders",
-            tools=[assess_financial_risk, verify_customer_history],
-            output_key="risk_assessment"
-        )
-        
-        inventory_agent = LlmAgent(
-            name="premium_inventory",
-            model="gemini-2.0-flash",
-            instruction="Handle premium inventory with special checks",
-            tools=[check_premium_inventory, priority_reserve],
-            output_key="premium_inventory_status"
-        )
-        
-        parallel_checks = ParallelAgent(
-            name="premium_parallel_checks",
-            sub_agents=[risk_agent, inventory_agent],
-            description="Parallel risk and inventory assessment"
-        )
-        
-        approval_agent = LlmAgent(
-            name="premium_approver",
-            model="gemini-2.0-flash",
-            instruction="""
-            Review premium order based on:
-            Risk Assessment: {risk_assessment}
-            Inventory Status: {premium_inventory_status}
-            """,
-            tools=[premium_approval_check, escalate_if_needed],
-            output_key="approval_decision"
-        )
-        
-        return SequentialAgent(
-            name=f"premium_order_workflow_{context.order_id}",
-            sub_agents=[parallel_checks, approval_agent],
-            description="Premium order workflow with enhanced checks"
-        )
+    E -->|"Yes, within scope"| F["✅ Process Request"]
+    E -->|"No, needs escalation"| G["⬆️ transfer_to_agent('senior_manager')"]
+    
+    G --> A
+    A --> H["🔍 Manager Analysis"]
+    H --> I{{"📊 Route Decision"}}
+    
+    I -->|"Technical Issue"| J["⬇️ transfer_to_agent('technical_specialist')"]
+    I -->|"Policy Decision"| K["📋 Handle Personally"]
+    
+    J --> C
+    
+    style A fill:#FFE0B2,stroke:#FF8F00,stroke-width:3px
+    style B fill:#E1F5FE,stroke:#0277BD,stroke-width:2px
+    style C fill:#E8F5E8,stroke:#2E7D32,stroke-width:2px
+    style D fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    style E fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style G fill:#FFEBEE,stroke:#D32F2F,stroke-width:2px
+    style H fill:#F1F8E9,stroke:#558B2F,stroke-width:2px
+    style I fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px
 ```
 
-### Error Resilience Patterns
+### Implementing Agent Transfer in Practice
 
-Implement robust error handling using ADK's callback system:
+#### Basic Transfer Pattern
 
 ```python
 from google.adk.agents import LlmAgent
 
-def create_resilient_payment_agent():
-    """Create a payment agent with built-in error handling"""
+# Coordinator agent with transfer capabilities
+coordinator = LlmAgent(
+    name="task_coordinator",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are a task coordinator. Analyze incoming requests and route them 
+    to the appropriate specialist agent using transfer_to_agent().
     
-    def handle_payment_error(context, error):
-        """Custom error handling for payment operations"""
-        print(f"Payment error in {context.agent.name}: {error}")
-        
-        # Implement fallback strategies
-        if "timeout" in str(error).lower():
-            # Retry with alternative payment provider
-            context.state["use_backup_provider"] = True
-        elif "insufficient_funds" in str(error).lower():
-            # Suggest alternative payment methods
-            context.state["suggest_alternatives"] = True
-        
-        # Log for monitoring
-        log_payment_error(context.agent.name, error)
+    Available agents:
+    - billing_specialist: Handle billing inquiries and payment issues
+    - technical_support: Handle technical problems and troubleshooting
+    - account_manager: Handle account changes and upgrades
     
-    payment_agent = LlmAgent(
-        name="resilient_payment_processor",
-        model="gemini-2.0-flash",
-        instruction="""
-        Process payments with error resilience.
-        
-        If use_backup_provider is True, use the backup payment provider.
-        If suggest_alternatives is True, suggest payment alternatives to customer.
-        """,
-        tools=[
-            process_primary_payment,
-            process_backup_payment, 
-            suggest_payment_alternatives,
-            notify_customer
-        ],
-        output_key="payment_status"
-    )
+    When you receive a request:
+    1. Analyze the request type and urgency
+    2. Determine the best agent to handle it
+    3. Use transfer_to_agent(agent_name='target_agent') to route the request
     
-    # Add error handling callback
-    payment_agent.after_agent_callback = handle_payment_error
-    
-    return payment_agent
-```
+    Example: For "My payment failed", use transfer_to_agent(agent_name='billing_specialist')
+    """,
+    tools=[analyze_request_type, check_agent_availability],
+    sub_agents=[billing_specialist, technical_support, account_manager]
+)
 ```
 
----
+#### Advanced Transfer with Context
 
-## Real-World Case Study: MegaCorp's Digital Transformation
+```python
+# Advanced coordinator with context-aware routing
+smart_coordinator = LlmAgent(
+    name="smart_coordinator",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are an intelligent request router. Use the session state and 
+    conversation history to make optimal routing decisions.
+    
+    Routing Logic:
+    - Check session state for customer tier: {customer_tier}
+    - Consider previous interactions: {interaction_history}
+    - Route VIP customers to senior agents
+    - Route technical issues based on complexity level
+    - Route billing issues based on amount involved
+    
+    Always provide context when transferring:
+    "Transferring to billing specialist due to payment amount ${amount} 
+    exceeding standard limits for {customer_tier} customer."
+    """,
+    tools=[
+        get_customer_tier,
+        analyze_interaction_history,
+        calculate_complexity_score,
+        transfer_to_agent  # Explicitly available as a tool
+    ],
+    sub_agents=[
+        senior_billing_agent,
+        standard_billing_agent,
+        technical_expert,
+        technical_support,
+        vip_account_manager,
+        standard_account_manager
+    ]
+)
+```
 
-### The Challenge: Order-to-Cash Process Nightmare
+### Transfer Best Practices
 
-MegaCorp, a $2B manufacturing company, had a order-to-cash process that involved:
+#### 1. Clear Agent Descriptions
 
-- 12 different systems
-- 47 manual touchpoints  
-- Average cycle time: 18 days
-- Error rate: 23%
-- Customer complaints: 15% of orders
+Each agent needs a clear, specific description for intelligent routing:
 
-### The ADK Workflow Solution
+```python
+# ❌ Vague description
+billing_agent = LlmAgent(
+    name="billing_helper",
+    description="Helps with billing"  # Too generic
+)
+
+# ✅ Specific description
+billing_agent = LlmAgent(
+    name="billing_specialist", 
+    description="Handles billing inquiries, payment processing issues, invoice disputes, refund requests, and subscription changes. Specializes in complex billing scenarios requiring policy interpretation."
+)
+```
+
+#### 2. Transfer with Context
+
+Always provide context when transferring:
+
+```python
+coordinator_instruction = """
+When transferring, always explain the reasoning:
+
+Good: "Transferring to technical_support because this is a server connectivity 
+issue requiring network diagnostics."
+
+Bad: Just calling transfer_to_agent('technical_support') without explanation.
+"""
+```
+
+#### 3. Handle Transfer Failures
+
+```python
+# Agent with transfer error handling
+resilient_coordinator = LlmAgent(
+    name="resilient_coordinator",
+    instruction="""
+    When using transfer_to_agent():
+    1. First check if the target agent exists
+    2. Provide clear reasoning for the transfer
+    3. If transfer fails, gracefully handle the request yourself or escalate
+    
+    If transfer_to_agent fails:
+    - Acknowledge the issue to the user
+    - Attempt to handle the request directly if possible
+    - Escalate to a human operator if necessary
+    """,
+    tools=[
+        check_agent_availability,
+        handle_request_directly,
+        escalate_to_human,
+        transfer_to_agent
+    ]
+)
+```
+
+### Common Transfer Patterns
+
+#### The Triage Pattern
 
 ```mermaid
-graph TB
-    A[Customer Order] --> B{Order Intelligence Agent}
-    B --> C[Credit Check Workflow]
-    B --> D[Inventory Workflow] 
-    B --> E[Pricing Workflow]
+flowchart TD
+    A["📞 Customer Service<br/>Main Entry Point"] --> B{{"🔍 Request Analysis<br/>What type of issue?"}}
     
-    C --> F[Credit Decision Agent]
-    D --> G[Availability Agent]
-    E --> H[Quote Generator]
+    B -->|"Billing Question"| C["💳 Billing Agent<br/>transfer_to_agent('billing_specialist')"]
+    B -->|"Technical Issue"| D["🔧 Tech Support<br/>transfer_to_agent('tech_support')"]  
+    B -->|"Account Changes"| E["👤 Account Manager<br/>transfer_to_agent('account_manager')"]
+    B -->|"Complex/Unclear"| F["👨‍💼 Senior Agent<br/>transfer_to_agent('senior_specialist')"]
     
-    F --> I{Order Approval Orchestrator}
-    G --> I
-    H --> I
+    C --> G["💾 Update Session<br/>billing_handled: true"]
+    D --> H["💾 Update Session<br/>technical_resolved: true"]
+    E --> I["💾 Update Session<br/>account_updated: true"]
+    F --> J["💾 Update Session<br/>escalated: true"]
     
-    I -->|Approved| J[Manufacturing Workflow]
-    I -->|Rejected| K[Customer Notification]
-    I -->|Manual Review| L[Human Escalation]
-    
-    J --> M[Production Planning Agent]
-    M --> N[Quality Control Workflow] 
-    N --> O[Shipping Coordination]
-    O --> P[Invoice Generation]
-    P --> Q[Payment Processing]
-    
-    style A fill:#e3f2fd
-    style B fill:#f1f8e9
-    style I fill:#fff3e0
-    style J fill:#e8f5e8
-    style Q fill:#e0f2f1
+    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style B fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style C fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style D fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    style E fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    style F fill:#FFE0B2,stroke:#FF8F00,stroke-width:2px
 ```
 
-**Implementation Strategy:**
+#### The Approval Chain Pattern
 
-#### Phase 1: Critical Path Automation (Month 1-2)
+```mermaid
+flowchart LR
+    A["📄 Request Submitted"] --> B["🔍 Initial Validator<br/>Basic checks & formatting"]
+    
+    B --> C{{"💰 Amount Check<br/>< $1000?"}}
+    
+    C -->|"Yes"| D["✅ Auto-Approve<br/>transfer_to_agent('processing_agent')"]
+    C -->|"No"| E["👨‍💼 Manager Review<br/>transfer_to_agent('manager_agent')"]
+    
+    E --> F{{"🎯 Manager Decision<br/>Approve or Escalate?"}}
+    
+    F -->|"Approve"| D
+    F -->|"Escalate > $10K"| G["👔 Senior Manager<br/>transfer_to_agent('senior_manager')"]
+    
+    G --> H{{"📊 Final Decision"}}
+    H -->|"Approve"| D
+    H -->|"Reject"| I["❌ Rejection Handler<br/>transfer_to_agent('rejection_processor')"]
+    
+    D --> J["🎉 Process Complete"]
+    I --> K["📧 Notify Requester"]
+    
+    style A fill:#E8F4FD,stroke:#1E88E5,stroke-width:2px
+    style B fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style C fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px
+    style D fill:#E8F5E8,stroke:#43A047,stroke-width:2px
+    style E fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    style F fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
+    style G fill:#FCE4EC,stroke:#E91E63,stroke-width:2px
+    style I fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+```
+
+### Transfer vs. Other Agent Communication Methods
+
+| Method | Use Case | Pros | Cons |
+|--------|----------|------|------|
+| **Agent Transfer** | Dynamic routing, intelligent delegation | Flexible, context-aware, LLM-driven decisions | Requires clear agent descriptions, potential for routing errors |
+| **Sequential Workflow** | Predictable, ordered processes | Reliable, easy to debug, consistent | Inflexible, can't adapt to changing conditions |
+| **Parallel Workflow** | Independent tasks that can run simultaneously | Fast execution, efficient resource use | Limited coordination, potential race conditions |
+| **Agent Tools** | Using agents as callable functions | Synchronous, controlled invocation | Less flexible, doesn't transfer full control |
+
+### Troubleshooting Agent Transfer
+
+#### Common Issues and Solutions
+
+##### Issue 1: Transfer Not Working
 
 ```python
-from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent
+# Problem: Agent not found
+transfer_to_agent(agent_name='non_existent_agent')  # Fails silently
 
-# Start with the most painful bottleneck
-credit_approval_workflow = SequentialAgent(
-    name="credit_approval",
-    sub_agents=[
-        LlmAgent(
-            name="credit_score_agent",
-            model="gemini-2.0-flash",
-            instruction="Automated credit checking and scoring",
-            tools=[get_credit_score, check_credit_history],
-            output_key="credit_score_result"
-        ),
-        LlmAgent(
-            name="risk_assessment_agent", 
-            model="gemini-2.0-flash",
-            instruction="Risk analysis based on credit score: {credit_score_result}",
-            tools=[calculate_risk_metrics, assess_default_probability],
-            output_key="risk_analysis"
-        ),
-        LlmAgent(
-            name="approval_decision_agent",
-            model="gemini-2.0-flash",
-            instruction="""
-            Make approval decision based on:
-            Credit Score: {credit_score_result}
-            Risk Analysis: {risk_analysis}
-            
-            Use transfer_to_agent for escalation if needed.
-            """,
-            tools=[make_approval_decision, transfer_to_agent],
-            output_key="approval_decision"
-        )
-    ],
-    description="Credit approval workflow with escalation"
+# Solution: Check agent hierarchy and names
+coordinator = LlmAgent(
+    name="coordinator",
+    instruction="Available agents: billing_specialist, tech_support, account_manager",
+    sub_agents=[billing_specialist, tech_support, account_manager]  # Must be in sub_agents
 )
 ```
 
-#### Phase 2: End-to-End Orchestration (Month 3-4)
+##### Issue 2: Infinite Transfer Loops
 
 ```python
-# Parallel processing for independent operations
-parallel_analysis = ParallelAgent(
-    name="parallel_order_analysis",
-    sub_agents=[
-        LlmAgent(
-            name="credit_analyzer",
-            model="gemini-2.0-flash",
-            instruction="Analyze customer credit worthiness",
-            tools=[analyze_credit, check_payment_history],
-            output_key="credit_analysis"
-        ),
-        LlmAgent(
-            name="inventory_analyzer", 
-            model="gemini-2.0-flash",
-            instruction="Check inventory availability and allocation",
-            tools=[check_stock_levels, reserve_inventory],
-            output_key="inventory_status"
-        ),
-        LlmAgent(
-            name="pricing_optimizer",
-            model="gemini-2.0-flash", 
-            instruction="Calculate optimal pricing and discounts",
-            tools=[calculate_pricing, apply_discounts],
-            output_key="pricing_result"
-        )
-    ],
-    description="Parallel analysis of credit, inventory, and pricing"
-)
+# Problem: Agents transferring back and forth
+# Solution: Add transfer history tracking
+coordinator_instruction = """
+Before transferring, check if this agent has already been tried.
+Session state tracks: {previous_agents_tried}
 
-# Sequential workflow for dependent operations
-order_to_cash_workflow = SequentialAgent(
-    name="order_to_cash_orchestrator",
-    sub_agents=[
-        parallel_analysis,  # Run parallel analysis first
-        LlmAgent(
-            name="order_coordinator",
-            model="gemini-2.0-flash",
-            instruction="""
-            Coordinate order processing based on:
-            Credit Analysis: {credit_analysis}
-            Inventory Status: {inventory_status}  
-            Pricing: {pricing_result}
-            """,
-            tools=[coordinate_manufacturing, schedule_production],
-            output_key="production_schedule"
-        ),
-        LlmAgent(
-            name="fulfillment_manager",
-            model="gemini-2.0-flash",
-            instruction="Manage order fulfillment with schedule: {production_schedule}",
-            tools=[quality_check, arrange_shipping, generate_invoice],
-            output_key="fulfillment_complete"
-        )
-    ],
-    description="End-to-end order-to-cash workflow"
-)
+If agent has been tried, either:
+1. Handle the request directly
+2. Escalate to a higher-level agent
+3. Ask for more information from the user
+"""
 ```
 
-### The Transformation Results
-
-**Operational Metrics:**
-
-- **Cycle time:** 18 days → 3 days (83% reduction)
-- **Error rate:** 23% → 2% (91% reduction)  
-- **Manual touchpoints:** 47 → 8 (83% reduction)
-- **Processing cost per order:** $127 → $23 (82% reduction)
-
-**Business Impact:**
-
-- **Customer satisfaction:** 67% → 94%
-- **Sales team productivity:** +156% (freed from process management)
-- **Cash flow improvement:** $47M (faster order processing)
-- **New market expansion:** Enabled entry into 3 new geographic markets
-
-**The Secret Sauce:** They didn't try to automate everything at once. They started with the highest-pain, highest-value processes and gradually expanded the automation.
-
----
-
-## Best Practices for Workflow Agent Design
-
-### 1. The Single Responsibility Principle
-
-Each agent should have one clear purpose:
+##### Issue 3: Lost Context After Transfer
 
 ```python
-# ❌ Bad: Monolithic agent
-giant_agent = LlmAgent(
-    name="everything_processor",
-    model="gemini-2.0-flash",
-    instruction="Handle orders, payments, shipping, and customer service..."
+# Problem: Information not preserved across transfers
+# Solution: Use session state and output_key
+source_agent = LlmAgent(
+    name="source_agent",
+    instruction="Before transferring, save important context to session state",
+    output_key="transfer_context"  # Automatically saves agent output
 )
-
-# ✅ Good: Specialized agents
-order_validator = LlmAgent(
-    name="order_validator", 
-    model="gemini-2.0-flash",
-    instruction="Validate order data and customer information",
-    tools=[validate_order_format, check_customer_data],
-    output_key="order_validation"
-)
-
-payment_processor = LlmAgent(
-    name="payment_processor",
-    model="gemini-2.0-flash", 
-    instruction="Process payments using validation: {order_validation}",
-    tools=[process_payment, handle_payment_errors],
-    output_key="payment_result"
-)
-
-shipping_coordinator = LlmAgent(
-    name="shipping_coordinator",
-    model="gemini-2.0-flash",
-    instruction="Coordinate shipping based on payment: {payment_result}",
-    tools=[calculate_shipping, schedule_delivery],
-    output_key="shipping_arranged"
-)
-
-customer_notifier = LlmAgent(
-    name="customer_notifier",
-    model="gemini-2.0-flash",
-    instruction="Notify customer of order status: {shipping_arranged}",
-    tools=[send_email, send_sms, update_order_status],
-    output_key="notification_sent"
-)
-```
-
-### 2. Design for Failure with ADK Patterns
-
-Assume everything will fail and plan accordingly using ADK's built-in capabilities:
-
-```python
-from google.adk.agents import LlmAgent, SequentialAgent
-
-def create_failure_resilient_workflow():
-    """Create a workflow with proper error handling"""
-    
-    # Agent with error handling callback
-    def handle_agent_failure(context, error):
-        """Handle agent failures with fallback strategies"""
-        agent_name = context.agent.name
-        
-        if agent_name == "external_api_agent":
-            # Fall back to manual process for external API failures
-            context.state["use_manual_process"] = True
-            context.state["failure_reason"] = str(error)
-        elif agent_name == "payment_processor":
-            # Critical payment failure - escalate immediately
-            context.state["escalate_to_human"] = True
-            context.state["priority"] = "high"
-        
-        # Log all failures for monitoring
-        log_agent_failure(agent_name, error)
-    
-    agent1 = LlmAgent(
-        name="data_validator",
-        model="gemini-2.0-flash",
-        instruction="Validate input data with error handling",
-        tools=[validate_data, log_validation_issues],
-        output_key="validation_result"
-    )
-    agent1.after_agent_callback = handle_agent_failure
-    
-    agent2 = LlmAgent(
-        name="external_api_agent",
-        model="gemini-2.0-flash",
-        instruction="""
-        Call external API with fallback handling.
-        If use_manual_process is True, use manual fallback process.
-        """,
-        tools=[call_external_api, manual_fallback_process],
-        output_key="api_result"
-    )
-    agent2.after_agent_callback = handle_agent_failure
-    
-    agent3 = LlmAgent(
-        name="result_processor",
-        model="gemini-2.0-flash",
-        instruction="""
-        Process results with escalation support.
-        If escalate_to_human is True, create escalation ticket.
-        """,
-        tools=[process_results, create_escalation_ticket],
-        output_key="final_result"
-    )
-    agent3.after_agent_callback = handle_agent_failure
-    
-    return SequentialAgent(
-        name="resilient_process",
-        sub_agents=[agent1, agent2, agent3],
-        description="Workflow with comprehensive error handling"
-    )
-```
-
-### 3. Measure Business Outcomes, Not Just Technical Metrics
-
-```python
-# Track what matters to the business
-business_metrics = {
-    "customer_satisfaction": "avg_rating_after_process_completion",
-    "revenue_impact": "orders_processed * average_order_value",
-    "cost_savings": "manual_hours_saved * hourly_rate",
-    "quality_improvement": "error_rate_reduction",
-    "time_to_value": "process_completion_time"
-}
-```
-
-### 4. Build in Observability from Day One with ADK Callbacks
-
-```python
-import time
-from google.adk.agents import LlmAgent, SequentialAgent
-
-def create_observable_workflow():
-    """Create workflow with comprehensive monitoring"""
-    
-    # Custom monitoring functions
-    def log_agent_start(context):
-        """Log when agent starts execution"""
-        context.metadata = {"start_time": time.time()}
-        print(f"Starting agent: {context.agent.name}")
-        
-        # Track business metrics
-        track_metric("agent_started", {
-            "agent_name": context.agent.name,
-            "workflow_name": "customer_onboarding"
-        })
-    
-    def log_agent_completion(context):
-        """Log when agent completes execution"""
-        if hasattr(context, 'metadata') and 'start_time' in context.metadata:
-            duration = time.time() - context.metadata['start_time']
-            print(f"Agent {context.agent.name} completed in {duration:.2f}s")
-            
-            # Track performance metrics
-            track_metric("agent_execution_time", duration, {
-                "agent_name": context.agent.name,
-                "workflow_name": "customer_onboarding"
-            })
-    
-    # Create agents with monitoring
-    agents = []
-    for agent_config in [
-        {"name": "data_collector", "instruction": "Collect customer data"},
-        {"name": "validator", "instruction": "Validate collected data"},
-        {"name": "processor", "instruction": "Process validated data"}
-    ]:
-        agent = LlmAgent(
-            name=agent_config["name"],
-            model="gemini-2.0-flash",
-            instruction=agent_config["instruction"],
-            tools=[],  # Add appropriate tools
-            output_key=f"{agent_config['name']}_result"
-        )
-        
-        # Add monitoring callbacks
-        agent.before_agent_callback = log_agent_start
-        agent.after_agent_callback = log_agent_completion
-        
-        agents.append(agent)
-    
-    return SequentialAgent(
-        name="observable_workflow",
-        sub_agents=agents,
-        description="Workflow with comprehensive monitoring"
-    )
-
-def track_metric(metric_name, value, tags=None):
-    """Send metrics to monitoring system"""
-    # Implement your monitoring system integration
-    print(f"Metric: {metric_name} = {value}, Tags: {tags}")
-```
 ```
 
 ---
 
-## Anti-Patterns to Avoid
+## Real-World Implementation: Building a Complete Customer Service Workflow
 
-### ❌ The Everything Workflow
+Let's put everything together by building a comprehensive customer service workflow that demonstrates all the concepts we've covered.
 
-Don't try to build one workflow that handles all variations of a process. Instead, create specialized workflows and use orchestration:
+### The Business Scenario
+
+**CompanyXYZ** receives hundreds of customer inquiries daily across multiple channels:
+
+- Billing questions and payment issues
+- Technical support requests
+- Account management and upgrades
+- General information requests
+- Escalated complaints
+
+**Challenge:** Route each inquiry to the right specialist while maintaining context and ensuring nothing falls through the cracks.
+
+**Solution:** A dynamic workflow agent system with intelligent transfer capabilities.
+
+### The Complete Implementation
 
 ```python
-# Bad approach
-mega_workflow = SequentialAgent(
-    name="handles_everything",
-    sub_agents=[
-        huge_conditional_agent,  # Giant if-then-else logic
-        another_huge_agent,      # Even more conditional logic
-        cleanup_agent           # Trying to handle all edge cases
-    ]
-)
+from google.adk.agents import LlmAgent
 
-# Better approach using LlmAgent routing
-workflow_router = LlmAgent(
-    name="workflow_router",
-    model="gemini-2.0-flash",
-    instruction="Analyze request and route to appropriate specialized workflow",
+# 1. Main Customer Service Coordinator
+customer_service_coordinator = LlmAgent(
+    name="customer_service_coordinator",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are the main customer service coordinator for CompanyXYZ. 
+    Your role is to analyze incoming customer requests and intelligently 
+    route them to the appropriate specialist using transfer_to_agent().
+    
+    Available specialists:
+    - billing_specialist: Payment issues, billing questions, refunds, invoice disputes
+    - technical_support: Software problems, connectivity issues, troubleshooting
+    - account_manager: Account upgrades, plan changes, feature requests
+    - escalation_manager: Complex complaints, legal issues, VIP customers
+    
+    Analysis Process:
+    1. Identify the customer and their tier (Basic, Premium, VIP)
+    2. Categorize the request type and urgency
+    3. Check for any previous interactions in this session
+    4. Route to the most appropriate specialist
+    5. Always explain your routing decision
+    
+    Customer Context Available:
+    - Customer Tier: {customer_tier}
+    - Previous Issues: {previous_issues}
+    - Account Status: {account_status}
+    """,
     tools=[
-        transfer_to_agent,  # Use ADK's built-in transfer capability
-        route_to_standard_workflow, 
-        route_to_premium_workflow, 
-        route_to_bulk_workflow, 
-        route_to_international_workflow
+        analyze_customer_request,
+        get_customer_profile,
+        check_previous_interactions,
+        transfer_to_agent
+    ],
+    output_key="coordination_notes"
+)
+
+# 2. Billing Specialist
+billing_specialist = LlmAgent(
+    name="billing_specialist",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are a billing specialist for CompanyXYZ. Handle all billing-related 
+    inquiries with expertise and empathy.
+    
+    Capabilities:
+    - Process refund requests up to $500 (higher amounts need escalation)
+    - Explain billing charges and payment methods
+    - Update payment information
+    - Handle invoice disputes
+    - Set up payment plans
+    
+    Escalation Rules:
+    - Refunds > $500: transfer_to_agent('escalation_manager')
+    - Legal disputes: transfer_to_agent('escalation_manager')
+    - VIP customers with complex issues: transfer_to_agent('escalation_manager')
+    
+    Always:
+    - Verify customer identity before discussing billing
+    - Document all actions taken
+    - Provide clear next steps
+    """,
+    tools=[
+        process_refund,
+        update_payment_method,
+        generate_invoice_explanation,
+        check_payment_history,
+        transfer_to_agent
+    ],
+    output_key="billing_resolution"
+)
+
+# 3. Technical Support Specialist
+technical_support = LlmAgent(
+    name="technical_support",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are a technical support specialist for CompanyXYZ software products.
+    
+    Expertise Areas:
+    - Software installation and configuration
+    - Connectivity and network issues
+    - Feature usage and troubleshooting
+    - Integration problems
+    - Performance optimization
+    
+    Diagnostic Process:
+    1. Gather system information and error details
+    2. Reproduce the issue if possible
+    3. Provide step-by-step solutions
+    4. Escalate complex technical issues when needed
+    
+    Escalation Triggers:
+    - Server-side issues: transfer_to_agent('escalation_manager')
+    - Data corruption or security concerns: transfer_to_agent('escalation_manager')
+    - Issues affecting multiple customers: transfer_to_agent('escalation_manager')
+    """,
+    tools=[
+        run_diagnostic_check,
+        access_system_logs,
+        generate_troubleshooting_steps,
+        create_support_ticket,
+        transfer_to_agent
+    ],
+    output_key="technical_resolution"
+)
+
+# 4. Account Manager
+account_manager = LlmAgent(
+    name="account_manager",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are an account manager focused on customer success and growth.
+    
+    Responsibilities:
+    - Handle account upgrades and downgrades
+    - Explain plan features and benefits
+    - Process feature requests
+    - Manage contract renewals
+    - Identify upselling opportunities
+    
+    Decision Framework:
+    - Upgrades: Process immediately for existing customers
+    - Downgrades: Understand reasons, offer alternatives
+    - Custom requests: Evaluate feasibility
+    - Contract changes: Verify authority and terms
+    
+    When to escalate:
+    - Custom pricing requests: transfer_to_agent('escalation_manager')
+    - Contract disputes: transfer_to_agent('escalation_manager')
+    - Enterprise-level requests: transfer_to_agent('escalation_manager')
+    """,
+    tools=[
+        process_plan_change,
+        calculate_pricing,
+        check_feature_availability,
+        schedule_renewal_discussion,
+        transfer_to_agent
+    ],
+    output_key="account_updates"
+)
+
+# 5. Escalation Manager
+escalation_manager = LlmAgent(
+    name="escalation_manager",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are the escalation manager handling complex, high-value, or sensitive 
+    customer issues that require senior attention.
+    
+    Authority Level:
+    - Approve refunds up to $5,000
+    - Make custom pricing decisions
+    - Handle legal and compliance issues
+    - Manage VIP customer relationships
+    - Override standard policies when justified
+    
+    Escalation Sources:
+    - High-value refund requests from billing_specialist
+    - Complex technical issues from technical_support
+    - Custom pricing from account_manager
+    - Direct VIP customer complaints
+    
+    Process:
+    1. Review all previous interactions and context
+    2. Assess business impact and customer value
+    3. Make decisions within authority or escalate to executive team
+    4. Document detailed resolution notes
+    5. Follow up to ensure satisfaction
+    """,
+    tools=[
+        approve_high_value_refund,
+        create_custom_pricing,
+        escalate_to_executive,
+        schedule_vip_call,
+        document_resolution
+    ],
+    output_key="escalation_resolution"
+)
+
+# 6. Complete Multi-Agent System
+customer_service_system = LlmAgent(
+    name="customer_service_system",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are the entry point for CompanyXYZ customer service. 
+    Greet customers warmly and immediately transfer them to the 
+    customer_service_coordinator for intelligent routing.
+    
+    Always use: transfer_to_agent('customer_service_coordinator')
+    """,
+    sub_agents=[
+        customer_service_coordinator,
+        billing_specialist,
+        technical_support,
+        account_manager,
+        escalation_manager
+    ],
+    output_key="service_summary"
+)
+```
+
+### Advanced Workflow Patterns
+
+#### 1. Multi-Stage Approval Workflow
+
+```python
+# Complex approval workflow with multiple decision points
+approval_workflow = LlmAgent(
+    name="approval_workflow",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are an intelligent approval workflow coordinator.
+    
+    Approval Rules:
+    - Amount < $1,000: Auto-approve
+    - Amount $1,000-$10,000: Manager approval required
+    - Amount > $10,000: Senior manager approval required
+    - Legal/Compliance issues: Legal team approval required
+    
+    Use transfer_to_agent() to route to appropriate approvers:
+    - manager_approver: Standard management approval
+    - senior_manager_approver: High-value approvals
+    - legal_approver: Legal and compliance issues
+    - auto_processor: Automatic approvals
+    """,
+    tools=[
+        analyze_request_complexity,
+        check_approval_authority,
+        validate_business_rules,
+        transfer_to_agent
+    ],
+    sub_agents=[
+        manager_approver,
+        senior_manager_approver,
+        legal_approver,
+        auto_processor
     ]
 )
 ```
 
-### ❌ The Synchronous Trap
-
-Don't make everything synchronous when parallel execution would be faster:
+#### 2. Quality Assurance Workflow
 
 ```python
-# Slow: Sequential when parallel would work
-slow_workflow = SequentialAgent(
-    agents=[
-        inventory_checker,    # Could run in parallel
-        credit_checker,      # Could run in parallel  
-        fraud_checker,       # Could run in parallel
-        pricing_calculator   # Depends on above, so sequential is OK
+# QA workflow with multiple checkpoints
+qa_workflow = LlmAgent(
+    name="qa_workflow",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are a quality assurance coordinator ensuring all work meets standards.
+    
+    QA Process:
+    1. Initial quality check
+    2. Route to appropriate specialist based on issue type
+    3. Final validation before completion
+    
+    Quality Gates:
+    - Code Review: transfer_to_agent('code_reviewer')
+    - Documentation Review: transfer_to_agent('doc_reviewer')  
+    - Security Review: transfer_to_agent('security_reviewer')
+    - Performance Review: transfer_to_agent('performance_reviewer')
+    
+    Only mark complete when all quality gates pass.
+    """,
+    tools=[
+        assess_quality_requirements,
+        run_automated_checks,
+        validate_completeness,
+        transfer_to_agent
+    ],
+    sub_agents=[
+        code_reviewer,
+        doc_reviewer,
+        security_reviewer,
+        performance_reviewer
     ]
 )
-
-# Fast: Parallel where possible
-fast_workflow = AdaptiveAgent(
-    parallel_agents=[inventory_checker, credit_checker, fraud_checker],
-    sequential_agents=[pricing_calculator],  # Runs after parallel completion
-)
 ```
 
-### ❌ The No-Escape Workflow
+---
 
-Always provide escape hatches for human intervention:
+## Performance Optimization and Monitoring
+
+### Measuring Workflow Agent Performance
+
+#### Key Metrics to Track
 
 ```python
-# Every workflow should have human escalation
-workflow_with_escape = SequentialAgent(
-    agents=[agent1, agent2, agent3],
-    escalation_conditions={
-        "confidence_too_low": "human_review_required",
-        "high_value_transaction": "manager_approval_needed", 
-        "unusual_pattern_detected": "specialist_review_required"
-    },
-    manual_override_enabled=True
+# Performance monitoring integration
+performance_monitor = LlmAgent(
+    name="performance_monitor",
+    model="gemini-1.5-flash",
+    instruction="""
+    Monitor and optimize workflow performance by tracking:
+    
+    Efficiency Metrics:
+    - Average resolution time by agent type
+    - Transfer success rates
+    - Escalation frequencies
+    - Customer satisfaction scores
+    
+    Quality Metrics:
+    - First-contact resolution rate
+    - Accuracy of agent routing decisions
+    - Issue classification accuracy
+    - Follow-up requirements
+    
+    Report anomalies and suggest optimizations.
+    """,
+    tools=[
+        track_resolution_time,
+        measure_transfer_success,
+        calculate_satisfaction_score,
+        generate_performance_report
+    ],
+    output_key="performance_metrics"
 )
+```
+
+#### Workflow Optimization Strategies
+
+```mermaid
+flowchart TD
+    A["📊 Performance Analysis"] --> B{{"🎯 Identify Bottlenecks"}}
+    
+    B -->|"Slow Transfers"| C["⚡ Optimize Agent Instructions<br/>Clearer routing criteria"]
+    B -->|"High Escalations"| D["📈 Expand Agent Capabilities<br/>Increase authority levels"]
+    B -->|"Poor Routing"| E["🧠 Improve Decision Logic<br/>Better context analysis"]
+    B -->|"Context Loss"| F["💾 Enhance State Management<br/>Better information flow"]
+    
+    C --> G["✅ Deploy Improvements"]
+    D --> G
+    E --> G
+    F --> G
+    
+    G --> H["📈 Monitor Results"]
+    H --> I{{"📊 Performance Improved?"}}
+    
+    I -->|"Yes"| J["🎉 Document Success"]
+    I -->|"No"| A
+    
+    J --> K["🔄 Continuous Monitoring"]
+    K --> A
+    
+    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style B fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style C fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    style D fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style E fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    style F fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
+    style G fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style H fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px
+    style I fill:#FFE0B2,stroke:#FF8F00,stroke-width:2px
+    style J fill:#E8F5E8,stroke:#43A047,stroke-width:2px
+    style K fill:#E0F2F1,stroke:#00ACC1,stroke-width:2px
 ```
 
 ---
 
-## Your 24-Hour Challenge: Build Your First Workflow Agent
+## Security and Compliance in Workflow Agents
 
-**The Challenge:** Create a simple but complete workflow agent for a business process you understand well.
-
-**Requirements:**
-
-1. **Identify a Process:** Choose something with 3-5 steps (e.g., expense approval, content review, customer onboarding)
-2. **Design the Workflow:** Map out the agents and their responsibilities  
-3. **Implement Error Handling:** Add callback-based error handling
-4. **Add Monitoring:** Include basic metrics tracking using callbacks
-5. **Test Edge Cases:** What happens when things go wrong?
-
-**Starter Template:**
+### Implementing Security Controls
 
 ```python
-from google.adk.agents import LlmAgent, SequentialAgent
-
-# Define your workflow agents
-step1_agent = LlmAgent(
-    name="your_first_step",
-    model="gemini-2.0-flash",
-    instruction="Your first step instructions...",
-    tools=[your_tools_here],
-    output_key="step1_result"
+# Security-aware workflow agent
+secure_workflow = LlmAgent(
+    name="secure_workflow",
+    model="gemini-1.5-flash",
+    instruction="""
+    You are a security-aware workflow coordinator with strict access controls.
+    
+    Security Requirements:
+    - Validate user permissions before processing requests
+    - Log all sensitive operations
+    - Encrypt data in transit and at rest
+    - Apply principle of least privilege
+    
+    Before any transfer_to_agent():
+    1. Verify user authorization for the target agent
+    2. Sanitize any sensitive data
+    3. Log the transfer decision and rationale
+    4. Ensure compliance with data protection regulations
+    
+    Security Escalation:
+    - Suspicious activity: transfer_to_agent('security_team')
+    - Compliance violations: transfer_to_agent('compliance_officer')
+    - Data breach indicators: transfer_to_agent('incident_response')
+    """,
+    tools=[
+        validate_user_permissions,
+        encrypt_sensitive_data,
+        log_security_event,
+        check_compliance_rules,
+        transfer_to_agent
+    ],
+    sub_agents=[
+        security_team,
+        compliance_officer,
+        incident_response
+    ]
 )
-
-step2_agent = LlmAgent(
-    name="your_second_step", 
-    model="gemini-2.0-flash",
-    instruction="Your second step based on: {step1_result}",
-    tools=[your_tools_here],
-    output_key="step2_result"
-)
-
-# Add error handling callbacks
-def handle_error(context, error):
-    print(f"Error in {context.agent.name}: {error}")
-    # Add your error handling logic here
-
-step1_agent.after_agent_callback = handle_error
-step2_agent.after_agent_callback = handle_error
-
-# Create the workflow
-your_workflow = SequentialAgent(
-    name="your_workflow_name",
-    sub_agents=[step1_agent, step2_agent],
-    description="Your workflow description"
-)
-
-# Test it using ADK Runner
-from google.adk.runners import InMemoryRunner
-
-runner = InMemoryRunner(agent=your_workflow)
-result = runner.run(input_text="your_test_data")
-print(result)
 ```
 
-**Success Criteria:**
+### Compliance Frameworks
 
-- Workflow completes successfully for normal cases
-- Handles at least one error scenario gracefully  
-- Provides clear logging and monitoring
-- Can be explained to a business stakeholder in 2 minutes
-
----
-
-## Chapter Wrap-Up: The Orchestration Advantage
-
-Workflow agents represent the next evolution in business process automation. They're not just faster than manual processes - they're smarter, more adaptable, and more reliable.
-
-The companies that master workflow orchestration will have a sustainable competitive advantage. While their competitors are still hiring more people to handle growing complexity, they'll be building intelligent systems that scale automatically.
-
-### Key ADK Workflow Concepts Covered
-
-**Official ADK Workflow Agent Types:**
-
-- **SequentialAgent**: Executes sub-agents in order
-- **ParallelAgent**: Executes sub-agents concurrently  
-- **LoopAgent**: Repeats execution until conditions are met
-- **LlmAgent**: Provides intelligent routing via `transfer_to_agent`
-
-**Core ADK Patterns:**
-
-- **State Management**: Use `output_key` for data flow between agents
-- **Error Handling**: Implement callbacks for robust error management
-- **Monitoring**: Use `before_agent_callback` and `after_agent_callback`
-- **Dynamic Routing**: Use LlmAgent with `transfer_to_agent` tool
-
-**Production Deployment:**
-
-- **Runner Pattern**: Use `InMemoryRunner` for local testing
-- **Session Management**: Built-in conversation history and state
-- **Authentication**: Secure tool access and API integrations
-- **Deployment Options**: Cloud Run, Vertex AI Agent Engine, containers
-
-In our next chapter, we'll explore how multiple agents can collaborate in even more sophisticated patterns, creating true multi-agent systems that can tackle enterprise-scale challenges.
-
-**Remember:** Start with one workflow, perfect it, then expand. The goal isn't to automate everything immediately - it's to build the foundation for intelligent, scalable operations.
+```mermaid
+flowchart TD
+    subgraph "Compliance Framework"
+        A["🔐 GDPR Compliance"]
+        B["🏥 HIPAA Compliance"]
+        C["💳 PCI DSS Compliance"]
+        D["📊 SOX Compliance"]
+    end
+    
+    E["🤖 Workflow Agent"] --> F{{"🔍 Compliance Check"}}
+    
+    F --> A
+    F --> B
+    F --> C
+    F --> D
+    
+    A --> G["✅ Privacy Controls"]
+    B --> H["✅ Health Data Protection"]
+    C --> I["✅ Payment Security"]
+    D --> J["✅ Financial Controls"]
+    
+    G --> K["📋 Audit Trail"]
+    H --> K
+    I --> K
+    J --> K
+    
+    K --> L["📊 Compliance Report"]
+    
+    style E fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style F fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style A fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    style B fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style C fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    style D fill:#FFF8E1,stroke:#FFB300,stroke-width:2px
+    style K fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style L fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px
+```
 
 ---
 
-*Next Chapter Preview: "Multi-Agent Systems: Building Agent Teams" - Where we'll learn how to coordinate dozens of agents working together, handle complex inter-agent communication, and build systems that can solve problems no single agent could handle alone.*
+## Testing and Validation Strategies
 
-**Quick Reflection:**
+### Unit Testing Workflow Agents
 
-- What's the most time-consuming multi-step process in your current work?
-- Which steps require human judgment vs. could be automated?  
-- How would you measure success if you automated this process?
+```python
+import unittest
+from unittest.mock import Mock, patch
+from google.adk.agents import LlmAgent
 
-**Pro Tip:** The best workflow agents feel invisible to end users. They should make complex processes feel simple, not expose the underlying complexity.
+class TestWorkflowAgents(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test agents and mock dependencies"""
+        self.mock_tools = {
+            'analyze_request': Mock(return_value="billing_inquiry"),
+            'transfer_to_agent': Mock(return_value="transfer_successful")
+        }
+        
+        self.coordinator = LlmAgent(
+            name="test_coordinator",
+            model="gemini-1.5-flash",
+            instruction="Test coordinator for unit testing",
+            tools=list(self.mock_tools.values())
+        )
+    
+    def test_billing_request_routing(self):
+        """Test that billing requests are routed correctly"""
+        # Arrange
+        test_request = "I have a question about my bill"
+        expected_agent = "billing_specialist"
+        
+        # Act
+        with patch.object(self.coordinator, 'process') as mock_process:
+            mock_process.return_value = {
+                'transfer_decision': expected_agent,
+                'reasoning': 'Billing inquiry detected'
+            }
+            result = self.coordinator.process(test_request)
+        
+        # Assert
+        self.assertEqual(result['transfer_decision'], expected_agent)
+        self.assertIn('billing', result['reasoning'].lower())
+    
+    def test_escalation_logic(self):
+        """Test that high-value requests trigger escalation"""
+        # Arrange
+        test_request = "I need a $10,000 refund immediately"
+        expected_agent = "escalation_manager"
+        
+        # Act & Assert
+        # Implementation would test the escalation logic
+        pass
 
-**Updated for ADK v1.0.0** - All examples in this chapter use the official Google ADK API patterns and are compatible with the production-ready ADK release.
+if __name__ == '__main__':
+    unittest.main()
+```
 
-*Next Chapter Preview: "Multi-Agent Systems: Building Agent Teams" - Where we'll learn how to coordinate dozens of agents working together, handle complex inter-agent communication, and build systems that can solve problems no single agent could handle alone.*
+### Integration Testing
 
-**Quick Reflection:**
+```python
+# Integration test for complete workflow
+def test_complete_customer_service_workflow():
+    """Test the entire customer service workflow end-to-end"""
+    
+    # Test scenarios
+    test_cases = [
+        {
+            'input': 'My payment failed and I need help',
+            'expected_path': ['coordinator', 'billing_specialist'],
+            'expected_outcome': 'billing_resolved'
+        },
+        {
+            'input': 'The software crashed and I lost my data',
+            'expected_path': ['coordinator', 'technical_support', 'escalation_manager'],
+            'expected_outcome': 'technical_escalated'
+        },
+        {
+            'input': 'I want to upgrade to enterprise plan',
+            'expected_path': ['coordinator', 'account_manager'],
+            'expected_outcome': 'account_updated'
+        }
+    ]
+    
+    for case in test_cases:
+        with subTest(case=case['input']):
+            # Run the workflow
+            result = customer_service_system.process(case['input'])
+            
+            # Validate the routing path
+            assert_agent_path(result, case['expected_path'])
+            
+            # Validate the outcome
+            assert_outcome(result, case['expected_outcome'])
+```
 
-- What's the most time-consuming multi-step process in your current work?
-- Which steps require human judgment vs. could be automated?  
-- How would you measure success if you automated this process?
+---
 
-**Pro Tip:** The best workflow agents feel invisible to end users. They should make complex processes feel simple, not expose the underlying complexity.
+## Deployment and Production Considerations
+
+### Deployment Architecture
+
+```mermaid
+flowchart TB
+    subgraph "Production Environment"
+        A["🌐 Load Balancer"] --> B["🔄 API Gateway"]
+        
+        B --> C["🤖 Agent Runtime 1"]
+        B --> D["🤖 Agent Runtime 2"]  
+        B --> E["🤖 Agent Runtime N"]
+        
+        C --> F["💾 Session Store<br/>(Redis)"]
+        D --> F
+        E --> F
+        
+        F --> G["📊 Analytics DB<br/>(BigQuery)"]
+        
+        H["📈 Monitoring<br/>(Cloud Monitoring)"] --> C
+        H --> D
+        H --> E
+        
+        I["🔐 Security<br/>(IAM/Secrets)"] --> B
+        I --> C
+        I --> D
+        I --> E
+    end
+    
+    J["👥 Users"] --> A
+    
+    K["📱 Mobile App"] --> A
+    L["🌐 Web App"] --> A
+    M["📞 Call Center"] --> A
+    
+    style A fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style B fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style C fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style D fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style E fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style F fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style G fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    style H fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    style I fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+```
+
+### Production Checklist
+
+#### Pre-Deployment
+
+- [ ] **Agent Instructions**: Clear, specific, and tested
+- [ ] **Transfer Logic**: Validated routing decisions
+- [ ] **Error Handling**: Graceful failure modes
+- [ ] **Security**: Authentication and authorization
+- [ ] **Monitoring**: Logging and metrics collection
+- [ ] **Performance**: Load testing completed
+- [ ] **Compliance**: Regulatory requirements met
+
+#### Post-Deployment
+
+- [ ] **Health Checks**: All agents responding
+- [ ] **Performance Monitoring**: Response times acceptable
+- [ ] **Error Rates**: Within acceptable thresholds
+- [ ] **Transfer Success**: Routing working correctly
+- [ ] **User Feedback**: Satisfaction metrics tracking
+- [ ] **Continuous Improvement**: Optimization pipeline active
+
+---
+
+## Quick Reflection: What You've Mastered
+
+🎯 **Core Concepts Mastered:**
+
+- Sequential, Parallel, and Dynamic workflow patterns
+- Agent transfer mechanisms and best practices
+- Real-world implementation strategies
+- Performance optimization techniques
+
+🔧 **Technical Skills Gained:**
+
+- Building multi-agent workflow systems
+- Implementing intelligent routing logic
+- Creating robust error handling
+- Designing scalable architectures
+
+🚀 **Business Value Delivered:**
+
+- Automated complex business processes
+- Improved operational efficiency
+- Enhanced customer experience
+- Reduced manual intervention requirements
+
+**Next Steps:**
+
+- Implement a workflow agent for your specific business process
+- Experiment with different transfer patterns
+- Monitor and optimize performance metrics
+- Scale to handle production workloads
+
+---
+
+## Chapter Summary
+
+Workflow agents represent the evolution from rigid automation to intelligent orchestration. By mastering the concepts of agent transfer, hierarchical routing, and dynamic decision-making, you've gained the ability to build self-managing business processes that adapt and scale.
+
+The key breakthrough is understanding that workflow agents aren't just following scripts—they're making intelligent decisions about how work should flow through your organization. This creates business operations that are not only more efficient but also more resilient and adaptable to changing conditions.
+
+**Your workflow agents are now ready to transform how your business operates.** The magic happens when these agents work together as a coordinated team, each handling their specialty while seamlessly handing off work to the right agent at the right time.
+
+In the next chapter, we'll explore how to build agents that can integrate with external systems and APIs, expanding their capabilities beyond internal processes to interact with the broader digital ecosystem.
+
+---
+
+*Ready to orchestrate your business processes? The next chapter awaits...*
