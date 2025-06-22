@@ -75,31 +75,24 @@ flowchart TD
     style L fill:#fce4ec
 ```
 
-### The Three Pillars of Agent-Driven Software
+### The Three Core Agent Categories in ADK
 
-**1. Autonomy: Agents That Actually Think**
+Based on the official ADK documentation, there are three distinct agent categories that form the foundation of all agent-based applications:
 
-Traditional software follows rigid if-then logic:
-```python
-if customer_type == "premium" and issue_type == "billing":
-    route_to_billing_team()
-```
+**1. LLM Agents (Agent, LlmAgent): The Intelligent Reasoning Layer**
 
-ADK agents reason about situations:
-```python
-# The agent instruction tells it to:
-# "Analyze the customer's history, the nature of their inquiry, 
-# their emotional state, and current business context to determine 
-# the best resolution path."
-```
+LLM Agents utilize Large Language Models as their core engine to understand natural language, reason, plan, generate responses, and dynamically decide how to proceed or which tools to use. These are your go-to agents for flexible, language-centric tasks.
 
-**2. Collaboration: Multi-Agent Orchestration**
+**2. Workflow Agents (SequentialAgent, ParallelAgent, LoopAgent): The Orchestration Layer**
 
-Instead of monolithic applications, ADK enables you to build specialized agent teams. Each agent is an expert in its domain, and they work together seamlessly.
+Workflow agents control the execution flow of other agents in predefined, deterministic patterns without using an LLM for flow control itself. Perfect for structured processes needing predictable execution:
+- `SequentialAgent`: Executes agents in order
+- `ParallelAgent`: Executes agents simultaneously  
+- `LoopAgent`: Repeats agent execution based on conditions
 
-**3. Adaptability: Learning and Evolving Systems**
+**3. Custom Agents: The Specialized Logic Layer**
 
-ADK agents don't just execute predefined workflows - they can adapt their behavior based on outcomes, user feedback, and changing business requirements.
+Created by extending `BaseAgent` directly, these agents allow you to implement unique operational logic, specific control flows, or specialized integrations not covered by the standard types.
 
 ### The ADK Advantage: Why Google Got It Right
 
@@ -301,24 +294,28 @@ Companies building agent-first architectures are creating sustainable competitiv
 By the end of this comprehensive guide, you'll be able to:
 
 **Week 1 Foundations:**
-- Set up a complete ADK development environment
+- Set up a complete ADK development environment (Python v1.0.0 and Java v0.1.0)
 - Build and deploy your first intelligent agent
-- Understand the three types of agents and when to use each
+- Understand the three core agent categories and when to use each
+- Master the ADK evaluation framework for testing and debugging
 
 **Week 2 Core Capabilities:**
-- Create sophisticated tool integrations
+- Create sophisticated tool integrations with 100+ model support
 - Implement multi-agent collaboration patterns
 - Build stateful, context-aware agent interactions
+- Configure model-agnostic agents (Gemini, OpenAI, Claude, local models)
 
 **Week 3 Production Readiness:**
-- Deploy agents to Google Cloud Platform
-- Implement security and monitoring
+- Deploy agents to Vertex AI Agent Engine
+- Implement comprehensive evaluation and monitoring
 - Scale agent systems for enterprise workloads
+- Master security and compliance best practices
 
 **Week 4 Advanced Patterns:**
 - Build custom agents for specialized use cases
-- Implement real-time streaming interactions
+- Implement real-time streaming interactions (voice/video with Gemini Live API)
 - Create comprehensive agent testing strategies
+- Design enterprise-grade multi-agent architectures
 
 **Your 24-Hour Challenge:**
 After reading this chapter, spend 30 minutes brainstorming one business process in your current organization that could benefit from agent automation. Write down:
@@ -326,6 +323,7 @@ After reading this chapter, spend 30 minutes brainstorming one business process 
 2. The decision points where human judgment is required
 3. The data sources that inform those decisions
 4. The potential impact of 10x faster processing
+5. Which ADK agent type would be most appropriate (LLM, Workflow, or Custom)
 
 Keep this use case in mind as we build your ADK expertise - you'll implement it as your final project.
 
@@ -340,16 +338,23 @@ Don't try to automate your entire business on day one. Pick one specific workflo
 The best agent systems enhance human capabilities rather than replacing them. Plan your escalation paths from the beginning.
 
 **💡 Measure Everything**
-ADK provides excellent observability. Use it. Track response times, success rates, user satisfaction, and business impact metrics.
+ADK provides excellent observability through built-in evaluation frameworks. Use the comprehensive testing tools including `adk eval`, `adk web` for interactive debugging, and `pytest` integration. Track response times, success rates, user satisfaction, and business impact metrics.
 
 **💡 Embrace Model Diversity**
-Different models excel at different tasks. Use Gemini for reasoning, GPT for creativity, Claude for analysis. ADK makes this easy.
+Different models excel at different tasks. Use Gemini for reasoning, GPT for creativity, Claude for analysis. ADK makes this easy with support for 100+ models via LiteLLM integration.
 
 ---
 
 ## Chapter Wrap-Up: Your Agent-First Future
 
 The agent revolution isn't coming - it's here. Companies using ADK aren't just building better software; they're reimagining what software can do.
+
+**ADK Status Update (June 2025):**
+
+- **Python ADK v1.0.0** is now production-ready with full stability guarantees
+- **Java ADK v0.1.0** extends agent capabilities to the Java ecosystem  
+- **Vertex AI Agent Engine** provides fully managed production deployment
+- **Built-in evaluation framework** with comprehensive testing tools
 
 In the next chapter, we'll dive deep into ADK's foundational concepts, giving you the mental models you need to architect agent systems that can grow with your business.
 
@@ -359,11 +364,141 @@ Ready to join the agent revolution? Let's build something amazing together.
 
 ---
 
-*Next Chapter Preview: "ADK Foundations: Core Concepts" - Where we'll explore the three types of agents, the tools ecosystem, and the architecture patterns that make ADK agents so powerful.*
+*Next Chapter Preview: "ADK Foundations: Core Concepts" - Where we'll explore the three core agent categories (LLM Agents, Workflow Agents, Custom Agents), the tools ecosystem, and the architecture patterns that make ADK agents so powerful.*
 
 **Quick Quiz:**
+
 1. What are the three pillars of agent-driven software?
 2. Name three scenarios where ADK might NOT be the right choice
 3. What's the key difference between traditional chatbots and ADK agents?
 
+**Answers:**
+
+1. Autonomy, Collaboration, Adaptability
+2. Simple Q&A, Real-time gaming/trading, Pure data processing
+3. Agents can reason, collaborate, and adapt vs. following rigid scripts
+3. What's the key difference between traditional chatbots and ADK agents?
+
 *(Answers: 1. Autonomy, Collaboration, Adaptability 2. Simple Q&A, Real-time gaming/trading, Pure data processing 3. Agents can reason, collaborate, and adapt vs. following rigid scripts)*
+
+---
+
+## The Production Secret: ADK's Built-in Evaluation Framework
+
+One of ADK's most powerful but underappreciated features is its comprehensive evaluation framework. Unlike other AI frameworks that leave testing as an afterthought, ADK treats agent evaluation as a first-class citizen.
+
+### Why Agent Evaluation Matters
+
+Traditional software testing with "pass/fail" assertions doesn't work for AI agents due to the probabilistic nature of LLMs. ADK provides sophisticated evaluation tools that assess both:
+
+1. **Trajectory Evaluation**: The sequence of steps (tool calls, reasoning) the agent takes
+2. **Response Quality Assessment**: The final output using metrics like ROUGE similarity
+
+### Three Ways to Evaluate ADK Agents
+
+**1. Interactive Web UI (`adk web`)**
+- Create test cases by interacting with your agent
+- Visual debugging with detailed trace inspection
+- Side-by-side actual vs. expected comparisons
+- Perfect for development and debugging
+
+**2. Automated Testing (`pytest` integration)**
+```python
+from google.adk.evaluation.agent_evaluator import AgentEvaluator
+import pytest
+
+@pytest.mark.asyncio
+async def test_customer_service_agent():
+    await AgentEvaluator.evaluate(
+        agent_module="customer_service_agent",
+        eval_dataset_file_path_or_dir="tests/customer_service.test.json",
+    )
+```
+
+**3. Command Line Evaluation (`adk eval`)**
+```bash
+adk eval customer_service_agent evaluation_set.json --print_detailed_results
+```
+
+### Production-Ready Metrics
+
+ADK tracks critical production metrics out of the box:
+- **Tool trajectory accuracy**: Did the agent use the right tools in the right order?
+- **Response match score**: How similar is the response to expected output?
+- **Execution time**: Performance monitoring
+- **Error rates**: Failure analysis
+
+This evaluation framework is what separates prototype-level agent experiments from production-ready intelligent systems.
+
+---
+
+## Real-World Deployment: From Development to Production
+
+### Development Setup (Getting Started)
+
+**Installation:**
+```bash
+pip install google-adk
+```
+
+**For Vertex AI Agent Engine deployment:**
+```bash
+pip install google-cloud-aiplatform[adk,agent_engines]
+```
+
+### Production Deployment Options
+
+**1. Vertex AI Agent Engine (Recommended for Production)**
+
+The fully managed approach - Google handles infrastructure, scaling, and session management:
+
+```python
+from vertexai import agent_engines
+from vertexai.preview import reasoning_engines
+
+# Wrap your agent for deployment
+app = reasoning_engines.AdkApp(
+    agent=root_agent,
+    enable_tracing=True,
+)
+
+# Deploy to production
+remote_app = agent_engines.create(
+    agent_engine=root_agent,
+    requirements=["google-cloud-aiplatform[adk,agent_engines]"]
+)
+```
+
+**Key Benefits:**
+- Automatic scaling based on demand
+- Built-in session management
+- Production monitoring and logging
+- Enterprise security and compliance
+- Pay-per-use pricing model
+
+**2. Google Cloud Run (Custom Container)**
+
+For more control over the deployment environment:
+- Containerize your ADK agent
+- Deploy to Cloud Run for serverless scaling
+- Integrate with existing Google Cloud services
+
+**3. Google Kubernetes Engine (GKE)**
+
+For complex, multi-service architectures:
+- Full Kubernetes orchestration
+- Advanced networking and security
+- Multi-region deployments
+
+### Performance Considerations
+
+**Model Selection for Production:**
+- **Gemini 2.0 Flash**: Fast responses, cost-effective for high-volume
+- **Gemini 2.5 Pro**: Maximum reasoning capability for complex tasks
+- **Mix and match**: Use different models for different agent types
+
+**Scaling Patterns:**
+- Start with Agent Engine for simplicity
+- Monitor usage patterns and costs
+- Scale specific components based on bottlenecks
+- Consider regional deployments for global users
