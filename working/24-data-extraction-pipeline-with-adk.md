@@ -1,5 +1,7 @@
 # Structured Data Extraction with Google ADK GenAI for the Impatient: From Novice to Practitioner in Record Time
 
+This guide provides a clear, step-by-step path from basic ADK setup to advanced, production-ready extraction pipelines. It is designed for both beginners and practitioners seeking robust, scalable solutions for unstructured data extraction.
+
 ## Prerequisites and Setup
 
 > **📋 Complete Setup Guide**: For detailed installation and configuration instructions, please see our comprehensive **[ADK Setup Guide](adk-setup-guide.md)**
@@ -230,14 +232,32 @@ async def extract_contacts(text_content):
 
     async for event in runner.run_async(
         user_id="user_001",
-        session_id="session_001",
         new_message=user_content
     ):
         if event.is_final_response() and event.content and event.content.parts:
             if event.content.parts[0].text:
                 return event.content.parts[0].text
-
     return None  # No valid response found
+
+# Improved error handling and logging
+async def extract_contacts(text_content):
+    try:
+        user_content = types.Content(role='user', parts=[types.Part(text=text_content)])
+        async for event in runner.run_async(
+            user_id="user_001",
+            session_id="session_001",
+            new_message=user_content
+        ):
+            if event.is_final_response():
+                if hasattr(event, 'content') and event.content:
+                    if hasattr(event.content, 'parts') and event.content.parts:
+                        for part in event.content.parts:
+                            if hasattr(part, 'text') and part.text:
+                                return part.text
+        raise ExtractionError("No valid response received from ADK agent")
+    except Exception as e:
+        logger.error(f"Contact extraction failed: {e}")
+        raise ExtractionError(f"Failed to extract contacts: {str(e)}")
 ```
 
 This basic extractor demonstrates several key ADK principles :
@@ -276,6 +296,58 @@ flowchart TD
     style F4 fill:#e0f2f1,stroke:#00695c,stroke-width:1px
     style F5 fill:#e0f2f1,stroke:#00695c,stroke-width:1px
 ```
+
+### Example 1.5: Intermediate Contact Extraction with Validation
+
+After mastering the basics, it's important to add validation and error handling before moving to advanced pipelines. This example bridges the gap:
+
+```python
+from pydantic import BaseModel, Field, validator, ValidationError
+import re
+
+class ValidatedContactInfo(BaseModel):
+    name: str = Field(description="Full name of the contact")
+    email: str = Field(description="Valid email address")
+    company: str = Field(description="Company name")
+    phone: str = Field(description="Phone number if available", default="")
+    position: str = Field(description="Job title or position", default="")
+    
+    @validator('email')
+    def validate_email(cls, v):
+        if v and '@' not in v:
+            raise ValueError('Invalid email format')
+        return v
+    
+    @validator('phone')
+    def validate_phone(cls, v):
+        if v and not re.match(r'^[\+]?[1-9][\d\-\(\)\s]+$', v):
+            raise ValueError('Invalid phone format')
+        return v
+
+class ContactExtractionPipeline:
+    def __init__(self):
+        self.extractor = LlmAgent(
+            model="gemini-2.0-flash",
+            name="validated_contact_extractor",
+            instruction="""Extract and validate contact information.\nEnsure email addresses are properly formatted.\nOnly include phone numbers if they appear to be valid.\nIf unsure about any field, leave it empty.""",
+            output_schema=ValidatedContactInfo
+        )
+    
+    async def extract_with_retry(self, text: str, max_retries: int = 2) -> ValidatedContactInfo:
+        for attempt in range(max_retries + 1):
+            try:
+                result = await self.extractor.extract(text)
+                return result
+            except ValidationError as e:
+                if attempt == max_retries:
+                    raise ExtractionError(f"Validation failed after {max_retries} retries: {e}")
+                logger.warning(f"Validation failed, retrying (attempt {attempt + 1}): {e}")
+                await asyncio.sleep(1)  # Brief delay before retry
+```
+
+This intermediate example introduces field validation, error handling, and retry logic, preparing you for more advanced multi-agent pipelines.
+
+---
 
 ### Example 2: Advanced Document Analysis (Intermediate Level)
 
@@ -652,7 +724,7 @@ class MultiAgentExtractionPipeline:
                                 confidence_score=0.5,
                                 accuracy_indicators=[],
                                 missing_fields=[],
-                                quality_issues=["Validation parsing failed"],
+                                quality_issues:["Validation parsing failed"],
                                 recommendation="Manual review recommended"
                             )
         
@@ -661,7 +733,7 @@ class MultiAgentExtractionPipeline:
             confidence_score=0.0,
             accuracy_indicators=[],
             missing_fields=["all"],
-            quality_issues=["No validation response"],
+            quality_issues:["No validation response"],
             recommendation="Retry extraction"
         )
     
@@ -1070,159 +1142,72 @@ class AdaptiveProcessor:
             return await self.complex_extractor.extract(document)
 ```
 
+## Production Deployment Checklist
 
-## Your 24-Hour Challenge: From Learning to Leading
+Before deploying your extraction pipeline to production, ensure you address these critical areas:
 
-**Here's your mission** (choose to accept it): Pick one unstructured data source in your organization and build a production-ready extraction agent within 24 hours.
+### Environment Configuration
 
-### Hour-by-Hour Action Plan
+```python
+import os
 
-#### Hours 1-3: Foundation Setup
-
-- Install ADK and set up your development environment
-- Choose your target data source and define success criteria
-- Create your first basic schema using the contact extraction example as a template
-- Test the basic setup with 2-3 sample documents
-
-#### Hours 4-8: Schema Development and Testing
-
-- Design your production schema based on your specific use case
-- Write comprehensive extraction instructions with examples
-- Implement basic error handling and validation
-- Test with 10-20 diverse documents to identify edge cases
-
-#### Hours 9-16: Advanced Features and Optimization
-
-- Add quality validation and confidence scoring
-- Implement retry logic and fallback strategies
-- Create a simple evaluation framework to measure accuracy
-- Optimize performance for your expected document volume
-
-#### Hours 17-22: Production Readiness
-
-- Add comprehensive logging and monitoring
-- Implement safety filters for sensitive content
-- Create deployment scripts and documentation
-- Conduct final testing with production-like data volumes
-
-#### Hours 23-24: Deployment and Monitoring
-
-- Deploy to your target environment
-- Monitor initial performance and accuracy metrics
-- Document lessons learned and improvement opportunities
-- Plan next iteration based on real-world feedback
-
-### Success Metrics Dashboard
-
-```mermaid
-flowchart LR
-    subgraph Technical["Technical Metrics"]
-        A1[Accuracy Rate<br/>Target: 90%+]
-        A2[Processing Speed<br/>Target: <10s/doc]
-        A3[System Uptime<br/>Target: 99.9%]
-        A4[Error Rate<br/>Target: <2%]
-    end
-
-    subgraph Business["Business Impact"]
-        B1[Time Savings<br/>Target: 4+ hrs/day]
-        B2[Cost Reduction<br/>Target: $50K+/year]
-        B3[Quality Improvement<br/>Target: 95%+ consistency]
-        B4[User Satisfaction<br/>Target: 8+/10]
-    end
-
-    subgraph Growth["Growth Metrics"]
-        C1[Documents Processed<br/>Daily Volume]
-        C2[Use Cases Expanded<br/>Department Adoption]
-        C3[Team Expertise<br/>Skill Development]
-        C4[System Scalability<br/>Performance Under Load]
-    end
-
-    Technical --> Dashboard[Central Metrics Dashboard]
-    Business --> Dashboard
-    Growth --> Dashboard
-
-    style Dashboard fill:#e1f5fe,stroke:#01579b,stroke-width:3px
-    style A1 fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px
-    style A2 fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px
-    style B1 fill:#fff3e0,stroke:#ef6c00,stroke-width:1px
-    style B2 fill:#fff3e0,stroke:#ef6c00,stroke-width:1px
-    style C1 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
-    style C2 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
+class ProductionConfig:
+    def __init__(self):
+        self.api_key = os.getenv('GOOGLE_API_KEY')
+        if not self.api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable required")
+        self.max_concurrent_requests = int(os.getenv('MAX_CONCURRENT_REQUESTS', '5'))
+        self.request_timeout = int(os.getenv('REQUEST_TIMEOUT', '30'))
+        self.retry_attempts = int(os.getenv('RETRY_ATTEMPTS', '3'))
 ```
 
-### Success Metrics for Your 24-Hour Challenge
+### Rate Limiting Implementation
 
-**Technical Achievements**:
+```python
+import asyncio
+from asyncio import Semaphore
 
-- ✅ Extract at least 5 different field types with 90%+ accuracy
-- ✅ Process 100+ documents without system failures
-- ✅ Achieve average processing time under 10 seconds per document
-- ✅ Implement comprehensive error handling that gracefully manages failures
+class RateLimitedExtractor:
+    def __init__(self, max_concurrent: int = 5):
+        self.semaphore = Semaphore(max_concurrent)
+    
+    async def extract_with_limits(self, document: str) -> ExtractionResult:
+        async with self.semaphore:
+            await asyncio.sleep(0.1)  # Prevent API overwhelm
+            return await self.extract_document(document)
+```
 
-**Business Impact**:
+### Monitoring and Alerting
 
-- ✅ Save at least 4 hours of manual work compared to previous methods
-- ✅ Improve data quality with structured, validated outputs
-- ✅ Create reusable extraction pipeline for future documents
-- ✅ Generate actionable insights that drive business decisions
+```python
+import time
 
-**Knowledge and Skills**:
+class ExtractionMonitor:
+    def __init__(self):
+        self.metrics = {
+            'total_requests': 0,
+            'successful_extractions': 0,
+            'failed_extractions': 0,
+            'average_processing_time': 0.0
+        }
+    
+    async def track_extraction(self, start_time: float, success: bool):
+        processing_time = time.time() - start_time
+        self.metrics['total_requests'] += 1
+        if success:
+            self.metrics['successful_extractions'] += 1
+        else:
+            self.metrics['failed_extractions'] += 1
+        self.metrics['average_processing_time'] = (
+            (self.metrics['average_processing_time'] * (self.metrics['total_requests'] - 1) + processing_time)
+            / self.metrics['total_requests']
+        )
+        failure_rate = self.metrics['failed_extractions'] / self.metrics['total_requests']
+        if failure_rate > 0.1:
+            await self.send_alert(f"High failure rate detected: {failure_rate:.2%}")
+```
 
-- ✅ Master ADK's core concepts: agents, schemas, and tools
-- ✅ Understand production considerations: error handling, monitoring, and optimization
-- ✅ Build confidence in tackling more complex extraction challenges
-- ✅ Create foundation for scaling to enterprise-level solutions
-
-### Real-World Success Stories
-
-**Case Study 1: Legal Firm Contract Analysis**
-A mid-size law firm reduced contract review time from 3 hours per document to 15 minutes using ADK structured extraction . They achieved:
-
-- 95% accuracy in extracting key terms and dates
-- 85% reduction in manual review time
-- 100% improvement in consistency across reviewers
-- \$500K annual savings in labor costs
-
-**Case Study 2: Healthcare Claims Processing**
-A regional insurance company automated their claims processing pipeline :
-
-- Processing time reduced from 48 hours to 2 hours
-- Error rate decreased from 12% to 2%
-- Customer satisfaction increased by 40%
-- Operational costs reduced by 60%
-
-**Case Study 3: Financial Services Risk Assessment**
-An investment firm automated their due diligence document analysis :
-
-- Document processing speed increased 10x
-- Risk factor identification improved by 30%
-- Regulatory compliance accuracy reached 99.5%
-- Analysis quality became consistent across all analysts
-
-### Building Your Extraction Center of Excellence
-
-#### Month 1: Foundation
-
-- Establish extraction standards and best practices
-- Train team members on ADK fundamentals
-- Create reusable schema templates for common document types
-- Build quality evaluation frameworks
-
-#### Month 2: Expansion
-
-- Add specialized extractors for different business domains
-- Implement advanced multi-agent workflows
-- Create self-service tools for business users
-- Establish monitoring and alerting systems
-
-#### Month 3: Optimization
-
-- Fine-tune performance based on production data
-- Implement advanced safety and compliance features
-- Build integration with existing business systems
-- Create documentation and training materials
-
-**Remember**: Every expert was once a beginner who refused to give up. Your journey to data extraction mastery starts with that first line of code, but it accelerates exponentially with each successful implementation.
+---
 
 ## Advanced Production Patterns
 
