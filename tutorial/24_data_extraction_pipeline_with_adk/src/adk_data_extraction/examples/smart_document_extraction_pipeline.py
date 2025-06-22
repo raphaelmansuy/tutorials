@@ -144,73 +144,24 @@ class PipelineResult(BaseModel):
 # =============================================================================
 
 
-def save_classification_to_state(
-    document_type: str,
-    complexity: str,
-    confidence: float,
-    recommended_extractor: str,
-    key_indicators: str,
-) -> dict[str, Any]:
-    """Tool to save classification results to shared state"""
-
-    # This will be available to all agents in the session
-    classification = {
-        "document_type": document_type,
-        "complexity_level": complexity,
-        "confidence_score": confidence,
-        "recommended_extractor": recommended_extractor,
-        "key_indicators": key_indicators.split(",") if key_indicators else [],
-        "estimated_processing_time": 30,  # Default estimate
-        "timestamp": datetime.now().isoformat(),
-    }
-
-    logger.info(f"Classification saved: {document_type} (confidence: {confidence})")
-    return {"status": "saved", "classification": classification}
-
-
-def save_extraction_to_state(
-    extraction_type: str, extraction_data: str
-) -> dict[str, Any]:
-    """Tool to save extraction results to shared state"""
-
-    extraction_result = {
-        "type": extraction_type,
-        "data": extraction_data,
-        "timestamp": datetime.now().isoformat(),
-    }
-
-    logger.info(f"Extraction saved: {extraction_type}")
-    return {"status": "saved", "extraction": extraction_result}
-
-
-def save_validation_to_state(
-    is_valid: bool,
-    confidence: float,
-    completeness: float,
-    issues: str,
-    recommendation: str,
-) -> dict[str, Any]:
-    """Tool to save validation results to shared state"""
-
-    validation_result = {
-        "is_valid": is_valid,
-        "confidence_score": confidence,
-        "completeness_score": completeness,
-        "issues": issues.split(",") if issues else [],
-        "recommendation": recommendation,
-        "timestamp": datetime.now().isoformat(),
-    }
-
-    logger.info(f"Validation saved: valid={is_valid}, confidence={confidence}")
-    return {"status": "saved", "validation": validation_result}
-
-
 def get_shared_state() -> dict[str, Any]:
-    """Tool to retrieve shared state for coordination"""
-
-    # In a real implementation, this would access the session state
-    # For now, return empty dict as placeholder
-    return {"state": "retrieved"}
+    """Tool to retrieve shared state for coordination
+    
+    This tool allows the coordinator to check what data has been saved
+    by other agents in the pipeline via their output_key configurations.
+    """
+    # In ADK, agents can access session state through their context
+    # This tool serves as a way for the coordinator to check pipeline progress
+    return {
+        "instruction": "Check session state for classification, extraction, and validation results",
+        "state_keys_to_check": [
+            "classification",
+            "contract_extraction",
+            "invoice_extraction",
+            "general_extraction",
+            "validation_result"
+        ]
+    }
 
 
 # =============================================================================
@@ -243,29 +194,42 @@ class SmartDocumentExtractionPipeline:
             model="gemini-2.0-flash",
             name="contract_specialist",
             description="Specialized agent for contract analysis and data extraction",
-            instruction="""You are a legal document specialist focused on contract analysis.
+            instruction="""You are a legal document specialist in the Smart Document Extraction Pipeline.
 
-IMPORTANT: You must respond with ONLY a JSON object that matches the ContractData schema.
+ROLE: Step 2 of 4 in the pipeline - Contract & Agreement Extraction
 
-Your role:
-1. Analyze contract documents for key information
-2. Extract parties, financial terms, dates, and obligations
-3. Return results in the exact JSON format specified by the schema
-4. Focus on accuracy and completeness
+Your task is to perform comprehensive extraction of key contract information from legal documents that have been classified as contracts or agreements.
 
-Extract contract data in this JSON format:
+EXTRACTION FOCUS AREAS:
+• Parties: All organizations, individuals, or entities involved in the contract
+• Financial Terms: Contract value, currency, payment schedules, penalties
+• Timeline: Start dates, end dates, milestone dates, deadlines
+• Legal Framework: Governing law, jurisdiction, dispute resolution
+• Obligations: Key responsibilities and deliverables for each party
+• Terms: Payment terms, termination clauses, renewal conditions
+
+EXTRACTION GUIDELINES:
+• Be thorough but precise - extract actual values, not interpretations
+• Include currency codes for all monetary amounts
+• Use ISO date format (YYYY-MM-DD) when possible
+• Extract exact payment terms as they appear in the document
+• List specific obligations and deliverables for each party
+• Identify the governing jurisdiction for legal matters
+
+IMPORTANT: Respond with ONLY a JSON object matching the ContractData schema.
+Your extraction will automatically be saved to session state as 'contract_extraction'.
+
+Example response:
 {
-    "parties": ["list of all parties involved"],
-    "contract_value": 123.45,  // or null if not mentioned
+    "parties": ["TechCorp Solutions LLC", "Global Industries Inc."],
+    "contract_value": 125000.0,
     "currency": "USD",
-    "start_date": "2024-01-01",  // or null if not mentioned
-    "end_date": "2024-12-31",    // or null if not mentioned
-    "payment_terms": ["list of payment terms and schedules"],
-    "key_obligations": ["main responsibilities for each party"],
-    "governing_law": "jurisdiction"  // or null if not mentioned
-}
-
-Return ONLY the JSON, no additional text or explanation.""",
+    "start_date": "2024-04-01",
+    "end_date": "2025-04-30",
+    "payment_terms": ["$35,000 upon execution", "$40,000 upon development completion"],
+    "key_obligations": ["Custom software development", "Training and support"],
+    "governing_law": "State of California"
+}""",
             output_schema=ContractData,
             output_key="contract_extraction",
             disallow_transfer_to_parent=False,  # Allow coordination
@@ -344,32 +308,42 @@ Return ONLY the JSON, no additional text or explanation.""",
             model="gemini-2.0-flash",
             name="validation_specialist",
             description="Quality assurance agent that validates extraction results",
-            instruction="""You are a quality assurance specialist for data extraction validation.
+            instruction="""You are a quality assurance specialist in the Smart Document Extraction Pipeline.
 
-IMPORTANT: You must respond with ONLY a JSON object that matches the ValidationSummary schema.
+ROLE: Step 3 of 4 in the pipeline - Quality Validation & Assurance
 
-Your role:
-1. Review extraction results from other agents
-2. Check for completeness, accuracy, and consistency
-3. Provide quality scores and recommendations
-4. Return validation results in the exact JSON format specified
+Your task is to review and validate the extraction results from the specialist agents to ensure high-quality, reliable output.
 
-Validation criteria:
-- Completeness: Are all expected fields populated?
-- Accuracy: Does extracted data match the source document?
-- Consistency: Are formats and relationships logical?
-- Quality: Overall extraction quality assessment
+VALIDATION CRITERIA:
+• Completeness: Are all expected fields populated with meaningful data?
+• Accuracy: Does the extracted data accurately reflect the source document content?
+• Consistency: Are data formats, relationships, and values logically consistent?
+• Quality: Overall assessment of extraction reliability and usefulness
 
-Extract validation data in this JSON format:
+VALIDATION PROCESS:
+1. Review the classification results and extraction data from session state
+2. Check for missing critical information based on document type
+3. Validate data formats (dates, currencies, amounts)
+4. Assess logical consistency between related fields
+5. Determine overall confidence in the extraction quality
+
+RECOMMENDATION GUIDELINES:
+• "approved": High-quality extraction, ready for use
+• "review_needed": Good extraction but some concerns require human review
+• "retry_extraction": Significant issues, extraction should be attempted again
+• "manual_processing": Extraction quality too low, requires manual handling
+
+IMPORTANT: Respond with ONLY a JSON object matching the ValidationSummary schema.
+Your validation will automatically be saved to session state as 'validation_result'.
+
+Example response:
 {
     "is_valid": true,
-    "confidence_score": 0.85,      // 0.0 to 1.0
-    "completeness_score": 0.90,    // 0.0 to 1.0
-    "issues": ["issue1", "issue2"], // empty array if no issues
-    "recommendation": "approved"    // "approved", "review_needed", "retry_extraction", or "manual_processing"
-}
-
-Return ONLY the JSON, no additional text or explanation.""",
+    "confidence_score": 0.92,
+    "completeness_score": 0.95,
+    "issues": [],
+    "recommendation": "approved"
+}""",
             output_schema=ValidationSummary,
             output_key="validation_result",
             disallow_transfer_to_parent=False,
@@ -394,35 +368,42 @@ Return ONLY the JSON, no additional text or explanation.""",
             model="gemini-2.0-flash",
             name="document_classifier",
             description="Classifies documents and determines processing approach",
-            instruction="""You are an expert document classifier and processing coordinator.
+            instruction="""You are an expert document classifier in the Smart Document Extraction Pipeline.
 
-IMPORTANT: You must respond with ONLY a JSON object that matches the DocumentClassification schema.
+ROLE: Step 1 of 4 in the pipeline - Document Classification
 
-Your role:
-1. Analyze documents to determine their type and complexity
-2. Classify documents as contract, invoice, agreement, proposal, report, email, or unknown
-3. Assess complexity level (simple, medium, complex) and confidence
-4. Return classification results in the exact JSON format specified
-5. Recommend the appropriate specialist agent for extraction
+Your task is to analyze the provided document and classify it accurately to enable proper routing to specialist extraction agents.
 
-Classification guidelines:
-- Contracts/Agreements: Look for "agreement", "parties", "terms", legal language
-- Invoices: Look for "invoice", "bill to", amounts, line items, payment terms
-- Reports: Look for "summary", "findings", "analysis", structured sections
-- Emails: Look for "from:", "to:", "subject:", email headers
-- Proposals: Look for "proposal", "recommendation", future-oriented language
+CLASSIFICATION GUIDELINES:
+• Contracts/Agreements: Look for "agreement", "parties", "terms", legal language, signatures
+• Invoices: Look for "invoice", "bill to", amounts, line items, payment terms, vendor details
+• Reports: Look for "summary", "findings", "analysis", structured data sections
+• Emails: Look for "from:", "to:", "subject:", email headers and formatting
+• Proposals: Look for "proposal", "recommendation", future-oriented language
 
-Extract classification data in this JSON format:
+COMPLEXITY ASSESSMENT:
+• Simple: Short documents, clear structure, minimal legal/technical language
+• Medium: Standard business documents with moderate complexity
+• Complex: Long documents, complex legal language, multiple sections
+
+CONFIDENCE SCORING:
+• 0.9-1.0: Very clear document type with strong indicators
+• 0.7-0.9: Clear type with good indicators
+• 0.5-0.7: Moderate confidence, some ambiguity
+• Below 0.5: Uncertain classification
+
+IMPORTANT: Respond with ONLY a JSON object matching the DocumentClassification schema.
+Your classification will automatically be saved to session state for the coordinator to use.
+
+Example response:
 {
-    "document_type": "contract",  // contract, invoice, agreement, proposal, report, email, unknown
-    "complexity_level": "medium", // simple, medium, complex
-    "estimated_processing_time": 30,
-    "recommended_extractor": "contract_specialist", // which specialist agent to use
-    "confidence_score": 0.85,    // 0.0 to 1.0
-    "key_indicators": ["indicator1", "indicator2"] // text patterns that led to classification
-}
-
-Return ONLY the JSON, no additional text or explanation.""",
+    "document_type": "contract",
+    "complexity_level": "medium",
+    "estimated_processing_time": 45,
+    "recommended_extractor": "contract_specialist",
+    "confidence_score": 0.92,
+    "key_indicators": ["agreement", "parties", "terms", "signatures"]
+}""",
             output_schema=DocumentClassification,
             output_key="classification",
             disallow_transfer_to_parent=False,
@@ -434,39 +415,41 @@ Return ONLY the JSON, no additional text or explanation.""",
             model="gemini-2.0-flash",
             name="extraction_coordinator",
             description="Main coordinator for multi-agent document extraction pipeline",
-            instruction="""You are the main coordinator for a sophisticated document extraction pipeline.
+            instruction="""You are the main coordinator for a sophisticated document extraction pipeline using Google ADK hierarchical coordination patterns.
 
-Your responsibilities:
-1. Orchestrate the entire extraction pipeline process
-2. Coordinate between classification, extraction, and validation agents
-3. Manage the workflow: classify → extract → validate → synthesize
-4. Make intelligent routing decisions based on document type
-5. Ensure quality control and proper error handling
+Your role is to orchestrate a 4-step sequential pipeline process:
 
-CRITICAL WORKFLOW - Execute ALL steps in sequence:
+STEP 1: DOCUMENT CLASSIFICATION
+- Transfer to 'document_classifier' to analyze the document type and complexity
+- The classifier will save results to session state under 'classification' key
+- Wait for the classification to complete before proceeding
 
-STEP 1: CLASSIFICATION
-- Transfer to document_classifier to analyze the document
-- Wait for classification results with document type and recommended extractor
+STEP 2: SPECIALIZED EXTRACTION
+- Based on classification results, route to the appropriate specialist:
+  * If document_type is "contract" or "agreement" → transfer to 'contract_specialist'
+  * If document_type is "invoice" → transfer to 'invoice_specialist'
+  * For all other document types → transfer to 'general_specialist'
+- The specialist will save extraction results to session state (contract_extraction, invoice_extraction, or general_extraction)
+- Wait for extraction to complete before proceeding
 
-STEP 2: EXTRACTION
-- Based on classification, transfer to the appropriate specialist:
-  * If document_type is "contract" or "agreement" → transfer to contract_specialist
-  * If document_type is "invoice" → transfer to invoice_specialist
-  * For all other types → transfer to general_specialist
-- Wait for structured extraction results
+STEP 3: QUALITY VALIDATION
+- Transfer to 'validation_specialist' to review the extraction results
+- The validator will save results to session state under 'validation_result' key
+- Wait for validation to complete before proceeding
 
-STEP 3: VALIDATION
-- Transfer to validation_specialist to review the extraction results
-- Wait for validation summary with quality scores
+STEP 4: PIPELINE SYNTHESIS
+- Provide a comprehensive summary of the complete pipeline execution
+- Reference the results from each step stored in session state
+- Highlight key findings, quality metrics, and processing status
 
-STEP 4: SYNTHESIS
-- Provide a comprehensive summary of the complete pipeline results
-- Include: classification → extraction → validation outcomes
-- Highlight key findings and quality metrics
+IMPORTANT COORDINATION RULES:
+1. Execute ALL 4 steps in strict sequence - do not skip any step
+2. Wait for each agent to complete before moving to the next step
+3. Use the get_shared_state tool if you need to check pipeline progress
+4. Each specialist agent will automatically save their results to session state via output_key
+5. Make routing decisions based on the classification results from Step 1
 
-You MUST complete all 4 steps in sequence. After each transfer, wait for the results before proceeding to the next step.
-Use get_shared_state tool to monitor progress between agents if needed.""",
+You coordinate but do not perform extraction yourself - delegate to specialist agents.""",
             sub_agents=[
                 classifier_agent,
                 specialists["contract_specialist"],
@@ -490,7 +473,7 @@ Use get_shared_state tool to monitor progress between agents if needed.""",
         )
 
     async def process_document(self, content: str) -> PipelineResult:
-        """Process document using improved multi-agent pipeline"""
+        """Process document using ADK hierarchical coordination patterns"""
         start_time = datetime.now()
         extraction_id = hashlib.md5(content.encode()).hexdigest()
 
