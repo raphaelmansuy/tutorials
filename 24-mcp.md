@@ -119,6 +119,44 @@ Let's create a practical MCP server that demonstrates the 2025-06-18 features wi
 
 ### Example 1: Customer Analytics Server with Structured Output
 
+This example demonstrates the structured output feature that makes AI responses predictable and type-safe. Instead of parsing unpredictable text responses, your application receives validated data structures with guaranteed schemas.
+
+```mermaid
+flowchart TD
+    A[AI Host Application] --> B[MCP Client]
+    B --> C[Customer Analytics Server]
+    C --> D{Customer Data Query}
+    D --> E[Database Access]
+    E --> F[Structured Output Generation]
+    F --> G[Schema Validation]
+    G --> H[Response with Metadata]
+    H --> I[Type-Safe Results]
+    I --> B
+    B --> A
+    
+    subgraph "Structured Output"
+        J[Customer Data]
+        K[Analysis Results]
+        L[Confidence Scores]
+        M[Audit Trail]
+    end
+    
+    F --> J
+    F --> K
+    F --> L
+    F --> M
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style C fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style G fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style I fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    classDef structuredBox fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    class J,K,L,M structuredBox
+```
+
+**TypeScript Implementation:**
+
 ```typescript
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
@@ -264,6 +302,53 @@ def perform_customer_analysis(customer_id: str, analysis_type: str):
 ```
 
 ### Example 2: Interactive Elicitation for Data Privacy
+
+Interactive elicitation transforms static AI tools into dynamic conversations. This example shows how an AI assistant can intelligently ask for additional permissions, ensuring compliance while maintaining user experience.
+
+```mermaid
+flowchart TD
+    A[User Request: Generate Report] --> B[MCP Server Processing]
+    B --> C{Requires Sensitive Data?}
+    
+    C -->|No| D[Generate Standard Report]
+    C -->|Yes| E[Trigger Elicitation]
+    
+    E --> F[Present Consent Dialog]
+    F --> G{User Response}
+    
+    G -->|Deny| H[Return Access Denied]
+    G -->|Approve| I[Validate Justification]
+    
+    I --> J[Log Access Request]
+    J --> K[Generate Sensitive Report]
+    K --> L[Include Audit Trail]
+    
+    D --> M[Return Results]
+    H --> M
+    L --> M
+    
+    subgraph "Elicitation Dialog"
+        N[Confirm Access Permission]
+        O[Business Justification]
+        P[Data Retention Period]
+        Q[Additional Context]
+    end
+    
+    F --> N
+    F --> O
+    F --> P
+    F --> Q
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style G fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style J fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    
+    classDef elicitationBox fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    class N,O,P,Q elicitationBox
+```
+
+**TypeScript Implementation:**
 
 ```typescript
 server.registerTool(
@@ -429,6 +514,64 @@ async def generate_report(customer_id: str, report_type: str):
 
 ## OAuth 2.1 Security Implementation
 
+Enterprise-grade security is built into MCP through OAuth 2.1 with Resource Indicators. This ensures tokens are only used by their intended recipients, preventing the most common security vulnerabilities in distributed systems.
+
+```mermaid
+flowchart TD
+    A[Client Application] --> B[Authorization Server]
+    B --> C[Access Token with Resource Indicator]
+    C --> D[MCP Client]
+    D --> E[Bearer Token Validation]
+    E --> F{Valid Token?}
+    
+    F -->|No| G[Return 401 Unauthorized]
+    F -->|Yes| H[Extract Claims & Scopes]
+    
+    H --> I{Resource Indicator Valid?}
+    I -->|No| J[Return 403 Forbidden]
+    I -->|Yes| K{Required Scopes Present?}
+    
+    K -->|No| L[Return 403 Insufficient Scope]
+    K -->|Yes| M[Process Request]
+    
+    M --> N{Sensitive Operation?}
+    N -->|Yes| O[Additional Approval Required]
+    N -->|No| P[Execute Tool]
+    
+    O --> Q[Manager Consent Flow]
+    Q --> R{Approved?}
+    R -->|No| S[Access Denied]
+    R -->|Yes| T[Execute with Audit Trail]
+    
+    P --> U[Return Results]
+    S --> U
+    T --> U
+    
+    subgraph "Security Layers"
+        V[JWT Signature Validation]
+        W[Audience Verification]
+        X[Resource Indicator Check]
+        Y[Scope Authorization]
+        Z[Audit Logging]
+    end
+    
+    E --> V
+    E --> W
+    I --> X
+    K --> Y
+    T --> Z
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style E fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style M fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    classDef securityBox fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    class V,W,X,Y,Z securityBox
+```
+
+**TypeScript Implementation:**
+
 ```typescript
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { OAuthResourceServer } from "@modelcontextprotocol/sdk/security/oauth.js";
@@ -561,7 +704,7 @@ from mcp.server.auth.provider import OAuthAuthorizationServerProvider
 from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions
 from mcp.server.auth.middleware.bearer_auth import RequireAuthMiddleware
 from pydantic import BaseModel
-from typing import List, Literal
+from typing import List, Dict, Any
 import jwt
 import logging
 
@@ -570,7 +713,8 @@ logger = logging.getLogger(__name__)
 # Create MCP server with OAuth configuration
 mcp = FastMCP(
     "secure-analytics-server",
-    version="1.0.0"
+    auth_server_provider=CustomOAuthProvider(),
+    auth=auth_settings
 )
 
 class SensitiveAnalyticsRequest(BaseModel):
@@ -614,7 +758,7 @@ class CustomOAuthProvider(OAuthAuthorizationServerProvider):
             
             # Verify required scopes
             required_scopes = ["analytics:read", "customer:sensitive"]
-            token_scopes = decoded.get('scope', '').split()
+            token_scopes = decoded.get('scope', '').split(' ')
             
             if not all(scope in token_scopes for scope in required_scopes):
                 raise ValueError("Insufficient permissions")
@@ -623,13 +767,6 @@ class CustomOAuthProvider(OAuthAuthorizationServerProvider):
             
         except Exception as error:
             raise ValueError(f"Authentication failed: {error}")
-
-# Configure server with OAuth
-mcp = FastMCP(
-    "secure-analytics-server",
-    auth_server_provider=CustomOAuthProvider(),
-    auth=auth_settings
-)
 
 @mcp.tool(
     description="Access sensitive customer analytics with full audit trail",
@@ -710,7 +847,63 @@ async def execute_secure_query(query: str, time_range: str, user_info: dict):
 
 ### Progressive Data Collection with Elicitation
 
-The elicitation feature enables sophisticated user interaction patterns that were impossible with previous versions. Here's a proven pattern for complex data gathering:
+The elicitation feature enables sophisticated user interaction patterns that were impossible with previous versions. This example demonstrates how to build complex workflows that adapt based on user responses, creating intelligent, context-aware interactions.
+
+```mermaid
+flowchart TD
+    A[Start Onboarding] --> B[Basic Information Request]
+    B --> C{User Response}
+    
+    C -->|Cancel| D[End Process]
+    C -->|Complete| E[Analyze Industry Type]
+    
+    E --> F{Industry = Healthcare?}
+    F -->|Yes| G[HIPAA Compliance Dialog]
+    F -->|No| H{Industry = Finance?}
+    
+    H -->|Yes| I[SOX Compliance Dialog]
+    H -->|No| J[Standard Integration Dialog]
+    
+    G --> K[Compliance Requirements Collected]
+    I --> K
+    J --> K
+    
+    K --> L[Risk Assessment Based on Size]
+    L --> M{Company Size > 200?}
+    
+    M -->|Yes| N[Enterprise Setup Dialog]
+    M -->|No| O[SMB Setup Dialog]
+    
+    N --> P[Advanced Configuration Options]
+    O --> Q[Simplified Configuration]
+    
+    P --> R[Generate Complete Profile]
+    Q --> R
+    R --> S[Setup Confirmation]
+    S --> T[Return Onboarding Results]
+    
+    subgraph "Adaptive Flows"
+        U[Healthcare Specific]
+        V[Financial Specific]
+        W[Enterprise Features]
+        X[SMB Optimizations]
+    end
+    
+    G --> U
+    I --> V
+    N --> W
+    O --> X
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style L fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style R fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    classDef adaptiveBox fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    class U,V,W,X adaptiveBox
+```
+
+**TypeScript Implementation:**
 
 ```typescript
 server.registerTool(
@@ -901,197 +1094,67 @@ async def create_onboarding_plan(data: Dict[str, Any]) -> Dict[str, Any]:
     }
 ```
 
-## Security Best Practices: Enterprise-Ready Implementation
-
-### OAuth 2.1 with Resource Indicators
-
-The 2025-06-18 specification mandates RFC 8707 Resource Indicators to prevent token misuse and phishing attacks. This ensures tokens are bound to specific MCP servers:
-
-**Python Equivalent:**
-
-```python
-import httpx
-import jwt
-import secrets
-import hashlib
-import base64
-from typing import List, Dict, Any
-from urllib.parse import urlencode
-
-class SecureMCPClient:
-    """Secure MCP client with OAuth 2.1 and Resource Indicators support"""
-    
-    def __init__(self, client_id: str, redirect_uri: str):
-        self.client_id = client_id
-        self.redirect_uri = redirect_uri
-        self.code_verifier = None
-        self.code_challenge = None
-    
-    def _generate_pkce_challenge(self) -> tuple[str, str]:
-        """Generate PKCE code verifier and challenge"""
-        code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
-        code_challenge = base64.urlsafe_b64encode(
-            hashlib.sha256(code_verifier.encode('utf-8')).digest()
-        ).decode('utf-8').rstrip('=')
-        return code_verifier, code_challenge
-    
-    async def request_token(self, server_url: str, scopes: List[str]) -> Dict[str, Any]:
-        """Request authorization token with Resource Indicators"""
-        self.code_verifier, self.code_challenge = self._generate_pkce_challenge()
-        
-        auth_request = {
-            "response_type": "code",
-            "client_id": self.client_id,
-            "scope": " ".join(scopes),
-            "redirect_uri": self.redirect_uri,
-            # Resource Indicator - binds token to specific server
-            "resource": server_url,
-            # PKCE for additional security
-            "code_challenge": self.code_challenge,
-            "code_challenge_method": "S256"
-        }
-        
-        # In real implementation, this would redirect to auth server
-        # For demo purposes, we simulate the authorization
-        return await self._simulate_authorization(auth_request)
-    
-    async def exchange_code_for_token(self, code: str, server_url: str) -> Dict[str, Any]:
-        """Exchange authorization code for access token"""
-        token_request = {
-            "grant_type": "authorization_code",
-            "code": code,
-            "client_id": self.client_id,
-            "code_verifier": self.code_verifier,
-            # Must include resource parameter in token request too
-            "resource": server_url
-        }
-        
-        async with httpx.AsyncClient() as client:
-            # This would be your actual token endpoint
-            response = await client.post(
-                "https://auth.company.com/token",
-                data=token_request
-            )
-            token = response.json()
-        
-        # Verify token is bound to correct resource
-        decoded = jwt.decode(token["access_token"], verify=False)  # Don't verify signature in demo
-        if decoded.get("resource") != server_url:
-            raise ValueError("Token resource mismatch - possible security attack")
-        
-        return token
-    
-    async def _simulate_authorization(self, auth_request: Dict[str, Any]) -> Dict[str, Any]:
-        """Simulate authorization flow (for demo purposes)"""
-        # In real implementation, this would be handled by the auth server
-        return {"code": "simulated_auth_code"}
-```
-
-### Common Security Pitfalls to Avoid
-
-Based on real-world implementations, these are the most dangerous mistakes:
-
-**1. Token Reuse Across Servers**
-
-**Python Equivalent:**
-
-```python
-import jwt
-import httpx
-
-# DANGEROUS - Never reuse tokens between servers
-class BadClient:
-    async def call_server(self, server_url: str, token: str):
-        """This allows token misuse!"""
-        async with httpx.AsyncClient() as client:
-            return await client.get(
-                server_url,
-                headers={"Authorization": f"Bearer {token}"}
-            )
-
-# SECURE - Verify token is intended for specific server
-class SecureClient:
-    async def call_server(self, server_url: str, token: str):
-        """Verify token is bound to the correct server"""
-        decoded = jwt.decode(token, verify=False)  # In production, verify signature
-        if decoded.get("resource") != server_url:
-            raise ValueError("Token not valid for this server")
-        
-        async with httpx.AsyncClient() as client:
-            return await client.get(
-                server_url,
-                headers={"Authorization": f"Bearer {token}"}
-            )
-```
-
-**2. Insufficient Input Validation**
-
-**Python Equivalent:**
-
-```python
-from mcp.server.fastmcp import FastMCP
-from pydantic import BaseModel, Field, field_validator
-from typing import List, Literal
-import uuid
-
-mcp = FastMCP("secure-server")
-
-# DANGEROUS - Trusting user input
-@mcp.tool()
-async def execute_query_dangerous(sql: str) -> str:
-    """DANGEROUS: Direct SQL execution"""
-    # This allows SQL injection!
-    return await database.execute(sql)
-
-# SECURE - Parameterized queries only
-class CustomerDataRequest(BaseModel):
-    customer_id: str = Field(..., description="UUID of the customer")
-    fields: List[Literal['name', 'email', 'phone', 'address']]
-    
-    @field_validator('customer_id')
-    @classmethod
-    def validate_uuid(cls, v):
-        try:
-            uuid.UUID(v)
-            return v
-        except ValueError:
-            raise ValueError('customer_id must be a valid UUID')
-
-@mcp.tool()
-async def get_customer_data_secure(request: CustomerDataRequest) -> dict:
-    """SECURE: Validated input with parameterized queries"""
-    return await database.get_customer(request.customer_id, request.fields)
-
-# Additional security: Input sanitization and rate limiting
-class SecureQueryRequest(BaseModel):
-    query_type: Literal['customer_lookup', 'order_history', 'analytics']
-    parameters: dict = Field(..., max_length=1000)
-    
-    @field_validator('parameters')
-    @classmethod
-    def sanitize_parameters(cls, v):
-        # Remove potentially dangerous characters
-        dangerous_chars = [';', '--', 'DROP', 'DELETE', 'UPDATE', 'INSERT']
-        str_params = str(v).upper()
-        for char in dangerous_chars:
-            if char in str_params:
-                raise ValueError(f"Dangerous character/keyword detected: {char}")
-        return v
-
-@mcp.tool()
-async def execute_secure_query(request: SecureQueryRequest) -> dict:
-    """Execute pre-defined queries with validated parameters"""
-    if request.query_type == 'customer_lookup':
-        return await database.lookup_customer(**request.parameters)
-    elif request.query_type == 'order_history':
-        return await database.get_order_history(**request.parameters)
-    elif request.query_type == 'analytics':
-        return await database.run_analytics(**request.parameters)
-    else:
-        raise ValueError("Invalid query type")
-```
+## Monitoring and Observability
 
 Implement comprehensive monitoring from day one:
+
+```mermaid
+flowchart TD
+    A[Incoming Request] --> B[Generate Request ID]
+    B --> C[Start Timer]
+    C --> D[Log Request Start]
+    D --> E[Execute Tool Function]
+    
+    E --> F{Success?}
+    F -->|Yes| G[Log Success Metrics]
+    F -->|No| H[Log Error Details]
+    
+    G --> I[Calculate Duration]
+    H --> I
+    I --> J[Add Custom Metrics]
+    J --> K[Structured Logging Output]
+    
+    K --> L[Log Aggregation System]
+    L --> M[Monitoring Dashboard]
+    L --> N[Alert System]
+    
+    subgraph "Monitoring Data"
+        O[Request ID & Timing]
+        P[User Context]
+        Q[Error Stack Traces]
+        R[Performance Metrics]
+        S[Security Events]
+    end
+    
+    D --> O
+    G --> P
+    H --> Q
+    I --> R
+    E --> S
+    
+    subgraph "Outputs"
+        T[JSON Logs]
+        U[File Logs]
+        V[Console Output]
+        W[External Systems]
+    end
+    
+    K --> T
+    K --> U
+    K --> V
+    L --> W
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style M fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style N fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    
+    classDef dataBox fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    class O,P,Q,R,S dataBox
+    
+    classDef outputBox fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    class T,U,V,W outputBox
+```
 
 **Python Equivalent:**
 
@@ -1268,24 +1331,71 @@ The most successful MCP deployments follow a proven pattern:
 
 When designing your MCP implementation, consider these proven patterns:
 
-**Stateless vs. Stateful Servers**
+#### Stateless vs. Stateful Servers
 
 - Use stateless servers for simple API wrappers and horizontally scaled deployments
 - Choose stateful servers when you need session management or complex workflows
 
-**Transport Selection**
+#### Transport Selection
 
 - STDIO transport for command-line tools and local integrations
 - HTTP transport for remote servers and enterprise deployments
 - WebSocket transport for real-time applications requiring bidirectional communication
 
-**Security Model**
+#### Security Model
 
 - OAuth 2.1 with Resource Indicators for enterprise environments
 - API key authentication for trusted internal systems
 - Mutual TLS for high-security scenarios
 
 ## Your 24-Hour MCP Mastery Challenge
+
+```mermaid
+flowchart TD
+    A[Phase 1: Environment Setup] --> B[Choose Integration Target]
+    B --> C[Set Up Development Environment]
+    C --> D[Configure Security Foundation]
+    
+    D --> E[Phase 2: Core Implementation]
+    E --> F[Build First Tool]
+    F --> G[Add Resource Access]
+    G --> H[Implement Elicitation]
+    H --> I[Test Thoroughly]
+    
+    I --> J[Phase 3: Production Readiness]
+    J --> K[Security Audit]
+    K --> L[Add Monitoring]
+    L --> M[Create Documentation]
+    M --> N[Deploy to Staging]
+    
+    N --> O[Phase 4: Integration & Optimization]
+    O --> P[Client Integration]
+    P --> Q[User Testing]
+    Q --> R[Performance Optimization]
+    R --> S[Plan Expansion]
+    
+    subgraph "Success Metrics"
+        T[Protocol Compliance ✅]
+        U[OAuth 2.1 Working ✅]
+        V[Smooth Elicitation ✅]
+        W[Schema Validation ✅]
+        X[Team Adoption ✅]
+    end
+    
+    S --> T
+    S --> U
+    S --> V
+    S --> W
+    S --> X
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style J fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style O fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    classDef metricBox fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    class T,U,V,W,X metricBox
+```
 
 **Ready to transform your AI integration challenges into competitive advantages?** Here's your practical implementation roadmap:
 
@@ -1345,7 +1455,7 @@ Maya, the healthcare developer we met at the beginning, completed her MCP implem
 
 **Your turn.**
 
-The 24-hour challenge isn't just an exercise—it's your entry point to the future of AI integration. The specification is proven, the tools are mature, and the community is ready to help. 
+The 24-hour challenge isn't just an exercise—it's your entry point to the future of AI integration. The specification is proven, the tools are mature, and the community is ready to help.
 
 **What will you build?**
 
