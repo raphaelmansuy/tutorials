@@ -258,6 +258,66 @@ python -c "from google.adk.agents import Agent; print('ADK import successful')"
 
 ---
 
+## ADK Setup Guide
+
+This guide helps you install and configure Google ADK for both prototyping and production.
+
+---
+
+## 1. Environment Setup
+- Python 3.9 or newer
+- Recommended: Create a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+---
+
+## 2. Install Google ADK
+
+```bash
+pip install google-adk
+```
+
+---
+
+## 3. Authentication
+
+### For Google AI Studio (Prototyping)
+- Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Set it as an environment variable:
+
+```bash
+export GOOGLE_API_KEY="your-api-key-here"
+```
+
+### For Vertex AI (Production)
+- Create a Google Cloud project
+- Enable Vertex AI API
+- Create a Service Account and download the JSON key
+- Set the environment variable:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account.json"
+```
+
+---
+
+## 4. Test Your Installation
+
+Run a simple ADK agent (see [Quick Start](24-adk-quick-start.md)) to verify everything works.
+
+---
+
+## 5. Troubleshooting
+- If you see authentication errors, check your API key or credentials
+- If you get import errors, ensure your virtual environment is active and ADK is installed
+- For more help, see the [official ADK docs](https://google.github.io/adk-docs/)
+
+---
+
 ## Next Steps
 
 Once you've completed the setup:
