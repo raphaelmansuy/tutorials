@@ -85,7 +85,7 @@ Before we start, ensure you have:
 - **Text editor** (VS Code, PyCharm, or similar)
 - **Google AI Studio API key** (free at [aistudio.google.com](https://aistudio.google.com/apikey))
 
-**Important:** As of January 2025, Python ADK is officially v1.0.0, offering stability for production-ready agents. Java ADK v0.1.0 is also available.
+**Important:** As of June 2025, Python ADK is officially v1.0.0, offering stability for production-ready agents. Java ADK v0.1.0 is also available.
 
 ### Installation and Project Setup
 
@@ -157,17 +157,20 @@ from typing import Dict, List, Optional
 from google.adk.tools import ToolContext
 
 
-def get_weather_forecast(city: str, days: int = 1) -> Dict:
+def get_weather_forecast(city: str, days: int) -> Dict:
     """Get weather forecast for business travel planning.
     
     Args:
         city: The city name for weather lookup
-        days: Number of days to forecast (1-5)
+        days: Number of days to forecast (1-5, defaults to 1 if not specified)
     
     Returns:
         Dictionary with weather information including temperature, 
         conditions, and business travel recommendations.
     """
+    # Default to 1 day if not specified or invalid
+    if days < 1 or days > 5:
+        days = 1
     # Simulated weather data (in production, use real weather API)
     weather_conditions = [
         "sunny", "partly cloudy", "cloudy", "light rain", "heavy rain", "snow"
@@ -198,16 +201,19 @@ def get_weather_forecast(city: str, days: int = 1) -> Dict:
     }
 
 
-def get_industry_news(industry: str, max_articles: int = 3) -> Dict:
+def get_industry_news(industry: str, max_articles: int) -> Dict:
     """Fetch latest industry news for competitive intelligence.
     
     Args:
         industry: Industry sector (tech, finance, healthcare, etc.)
-        max_articles: Maximum number of articles to return
+        max_articles: Maximum number of articles to return (defaults to 3 if not specified)
     
     Returns:
         Dictionary with latest news articles and business insights.
     """
+    # Default to 3 articles if not specified or invalid
+    if max_articles < 1:
+        max_articles = 3
     # Simulated news data (in production, use real news API)
     sample_articles = {
         "tech": [
@@ -245,17 +251,20 @@ def get_industry_news(industry: str, max_articles: int = 3) -> Dict:
     }
 
 
-def calculate_shipping_cost(weight: float, destination_zone: str, service_level: str = "standard") -> Dict:
+def calculate_shipping_cost(weight: float, destination_zone: str, service_level: str) -> Dict:
     """Calculate shipping costs for order fulfillment.
     
     Args:
         weight: Package weight in pounds
         destination_zone: Shipping zone (local, national, international)
-        service_level: Service type (standard, express, overnight)
+        service_level: Service type (standard, express, overnight - defaults to "standard" if not specified)
     
     Returns:
         Dictionary with shipping cost breakdown and delivery estimates.
     """
+    # Default to standard service if not specified
+    if not service_level or service_level not in ["standard", "express", "overnight"]:
+        service_level = "standard"
     # Base rates by service level
     base_rates = {
         "standard": {"local": 5.99, "national": 8.99, "international": 24.99},
@@ -299,17 +308,22 @@ def calculate_shipping_cost(weight: float, destination_zone: str, service_level:
     }
 
 
-def manage_tasks(action: str, task_description: str = "", priority: str = "medium", tool_context: Optional[ToolContext] = None) -> Dict:
+def manage_tasks(action: str, task_description: str, priority: str, tool_context: Optional[ToolContext] = None) -> Dict:
     """Manage business tasks with priority tracking.
     
     Args:
         action: Action to perform (add, list, complete, remove)
-        task_description: Description of the task (for add action)
-        priority: Task priority (low, medium, high, urgent)
+        task_description: Description of the task (required for add and complete actions, defaults to empty string for list action)
+        priority: Task priority (low, medium, high, urgent - defaults to "medium" if not specified)
     
     Returns:
         Dictionary with task management results and current task list.
     """
+    # Set defaults for optional parameters
+    if not task_description:
+        task_description = ""
+    if not priority or priority not in ["low", "medium", "high", "urgent"]:
+        priority = "medium"
     if not tool_context:
         return {"status": "error", "message": "Tool context required for task management"}
     
@@ -379,6 +393,8 @@ def manage_tasks(action: str, task_description: str = "", priority: str = "mediu
 
 **Important:** According to the [official ADK documentation](https://google.github.io/adk-docs/), functions in ADK are automatically wrapped as `FunctionTool` instances when passed directly to the `tools` list. However, explicitly creating `FunctionTool` instances gives you more control and makes the code more explicit.
 
+**Best Practice Note:** ADK functions should avoid default parameter values in function signatures. Instead, handle defaults within the function body to ensure proper tool schema generation. This approach provides better control and clearer documentation.
+
 ---
 
 ## Step 3: Creating Your Agent (5 Minutes)
@@ -386,11 +402,11 @@ def manage_tasks(action: str, task_description: str = "", priority: str = "mediu
 Now let's create the agent that uses these tools. Edit `smart_assistant/agent.py`:
 
 ```python
-from google.adk.agents import LlmAgent
+from google.adk.agents import Agent
 from .tools import get_weather_forecast, get_industry_news, calculate_shipping_cost, manage_tasks
 
 # Define the main agent - ADK automatically wraps functions as FunctionTool instances
-smart_business_assistant = LlmAgent(
+smart_business_assistant = Agent(
     name="smart_business_assistant",
     model="gemini-2.0-flash",
     description="An intelligent business assistant that helps with weather, news, shipping, and task management",
@@ -431,6 +447,9 @@ smart_business_assistant = LlmAgent(
     """,
     tools=[get_weather_forecast, get_industry_news, calculate_shipping_cost, manage_tasks]
 )
+
+# Note: The official ADK quickstart uses 'root_agent' as the variable name
+# You can use any descriptive name for your agent variable
 ```
 
 ### Alternative: Explicit FunctionTool Creation
@@ -438,7 +457,7 @@ smart_business_assistant = LlmAgent(
 While the above approach (passing functions directly) is simpler and recommended for most cases, you can also explicitly create `FunctionTool` instances for more control:
 
 ```python
-from google.adk.agents import LlmAgent
+from google.adk.agents import Agent
 from google.adk.tools import FunctionTool
 from .tools import get_weather_forecast, get_industry_news, calculate_shipping_cost, manage_tasks
 
@@ -449,7 +468,7 @@ shipping_tool = FunctionTool(func=calculate_shipping_cost)
 task_tool = FunctionTool(func=manage_tasks)
 
 # Define the main agent with explicit tool instances
-smart_business_assistant = LlmAgent(
+smart_business_assistant = Agent(
     name="smart_business_assistant",
     model="gemini-2.0-flash",
     description="An intelligent business assistant that helps with weather, news, shipping, and task management",
@@ -499,9 +518,9 @@ Both approaches are valid - use the simpler direct function approach for most ca
 Edit `smart_assistant/__init__.py`:
 
 ```python
-from .agent import smart_business_assistant
+from . import agent
 
-__all__ = ['smart_business_assistant']
+__all__ = ['agent']
 ```
 
 ---
@@ -934,31 +953,3 @@ In the next chapter, we'll dive deeper into LLM Agents, exploring advanced promp
 
 ---
 
-## ✅ Chapter Improvements Based on Official ADK Documentation
-
-This chapter has been fact-checked and updated based on the [official Google ADK documentation](https://google.github.io/adk-docs/). Key improvements include:
-
-### Technical Accuracy Updates
-
-- ✅ **Corrected imports**: Changed from `Agent` to `LlmAgent` for clarity
-- ✅ **Simplified tool creation**: Functions can be passed directly to the `tools` list (ADK auto-wraps them)
-- ✅ **State management**: Updated to use proper `tool_context.state` patterns
-- ✅ **Project structure**: Aligned with official quickstart recommendations
-
-### Documentation References Added
-
-- 📚 Links to official ADK documentation throughout
-- 📚 Version information (Python ADK v1.0.0, Java ADK v0.1.0)
-- 📚 Model selection guidance
-- 📚 State management best practices
-
-### Best Practices Included
-
-- 🔧 Proper error handling patterns
-- 🔧 Official debugging techniques
-- 🔧 Production considerations aligned with ADK patterns
-- 🔧 Security recommendations following ADK guidelines
-
-All code examples have been verified against the official API reference and quickstart documentation to ensure accuracy and current best practices.
-
----
