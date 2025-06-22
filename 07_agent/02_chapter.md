@@ -81,7 +81,7 @@ LLM Agents are the "knowledge workers" of your agent ecosystem. They understand 
 - **Dynamic problem-solving** where rules can't be predetermined
 - **Creative tasks** like content generation or strategy development
 
-**Example: Customer Service Intelligence**
+#### Example: Customer Service Intelligence
 
 ```python
 from google.adk.agents import LlmAgent
@@ -189,21 +189,47 @@ flowchart TD
 
 For processes that need to repeat until a condition is met, like quality assurance or optimization tasks.
 
-**Real-World Example: Content Optimization Loop**
+```mermaid
+flowchart TD
+    A[Start Process] --> B[Content Analyzer]
+    B --> C[Improvement Generator]
+    C --> D[Content Updater]
+    D --> E[Performance Checker]
+    E --> F{Meets Quality<br/>Threshold?}
+    F -->|No| G{Max Iterations<br/>Reached?}
+    F -->|Yes| H[Process Complete]
+    G -->|No| B
+    G -->|Yes| I[Stop with<br/>Best Result]
+    
+    J[Iteration Counter] --> G
+    B --> J
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#fce4ec
+    style E fill:#e1f5fe
+    style F fill:#ffecb3
+    style G fill:#ffecb3
+    style H fill:#e0f2f1
+    style I fill:#ffcdd2
+    style J fill:#f3e5f5
+```
+
+#### Real-World Example: Content Optimization Loop
 
 ```python
 from google.adk.agents import LoopAgent
 
 content_optimizer = LoopAgent(
     name="content_optimization_loop",
-    agents=[
+    sub_agents=[
         content_analyzer,      # Analyzes current performance
         improvement_generator, # Suggests improvements
         content_updater,      # Applies changes
         performance_checker   # Validates improvements
     ],
-    max_iterations=5,
-    break_condition="performance_score > 0.85"
+    max_iterations=5
 )
 ```
 
@@ -218,7 +244,7 @@ Custom Agents are your "expert contractors" - they handle specialized tasks that
 - **High-performance requirements** needing optimized execution
 - **Unique data processing** patterns
 
-**Example: Financial Compliance Agent**
+#### Example: Financial Compliance Agent
 
 ```python
 from google.adk.agents import BaseAgent
@@ -413,7 +439,7 @@ graph TD
 - `session:*` - Session-specific data (current conversation)
 - `temp:*` - Temporary data (not persisted)
 
-**Practical Example: E-commerce Assistant**
+#### Practical Example: E-commerce Assistant
 
 ```python
 from google.adk.tools import ToolContext, FunctionTool
@@ -503,7 +529,7 @@ Perfect for:
 - Rapid prototyping
 - Learning and experimentation
 
-**Vertex AI Agent Engine**
+#### Vertex AI Agent Engine
 
 Ideal for:
 
@@ -511,7 +537,7 @@ Ideal for:
 - Teams wanting minimal infrastructure management
 - Applications requiring tight Google Cloud integration
 
-**Cloud Run**
+#### Cloud Run
 
 Best for:
 
@@ -519,7 +545,7 @@ Best for:
 - Predictable scaling requirements
 - Cost-conscious deployments
 
-**Google Kubernetes Engine (GKE)**
+#### Google Kubernetes Engine (GKE)
 
 Choose when you need:
 
@@ -533,28 +559,31 @@ Choose when you need:
 
 ### ✅ Effective Agent Patterns
 
-**1. Single Responsibility Agents**
+#### 1. Single Responsibility Agents
 
 ```python
 # Good: Focused, single-purpose agent
-email_classifier = Agent(
+email_classifier = LlmAgent(
     name="email_classifier",
+    model="gemini-2.0-flash",
     instruction="Classify emails as urgent, normal, or low priority based on content and sender."
 )
 
 # Avoid: Kitchen sink agent
-# universal_agent = Agent(
+# universal_agent = LlmAgent(
 #     name="do_everything_agent",
+#     model="gemini-2.0-flash",
 #     instruction="Handle emails, process orders, generate reports, and manage inventory."
 # )
 ```
 
-**2. Hierarchical Agent Organization**
+#### 2. Hierarchical Agent Organization
 
 ```python
 # Coordinator agent that delegates to specialists
-customer_service_coordinator = Agent(
+customer_service_coordinator = LlmAgent(
     name="service_coordinator",
+    model="gemini-2.0-flash",
     instruction="Route customer inquiries to appropriate specialist agents.",
     sub_agents=[
         billing_specialist,
@@ -564,7 +593,7 @@ customer_service_coordinator = Agent(
 )
 ```
 
-**3. Graceful Degradation**
+#### 3. Graceful Degradation
 
 ```python
 def robust_data_fetcher(query: str, tool_context: ToolContext) -> dict:
@@ -588,16 +617,20 @@ def robust_data_fetcher(query: str, tool_context: ToolContext) -> dict:
 
 ### ❌ Anti-Patterns to Avoid
 
-**1. Chatbot Thinking**
+#### 1. Chatbot Thinking
 
 ```python
 # Anti-pattern: Treating agents like chatbots
-bad_agent = Agent(
+bad_agent = LlmAgent(
+    name="bad_agent",
+    model="gemini-2.0-flash",
     instruction="Answer user questions"  # Too generic
 )
 
 # Better: Specific, actionable instructions
-good_agent = Agent(
+good_agent = LlmAgent(
+    name="good_agent",
+    model="gemini-2.0-flash",
     instruction="""
     You are a technical support specialist for cloud infrastructure.
     
@@ -610,7 +643,7 @@ good_agent = Agent(
 )
 ```
 
-**2. Synchronous Blocking**
+#### 2. Synchronous Blocking
 
 ```python
 # Anti-pattern: Blocking operations
@@ -633,7 +666,7 @@ async def efficient_operation(data, tool_context: ToolContext):
     }
 ```
 
-**3. State Pollution**
+#### 3. State Pollution
 
 ```python
 # Anti-pattern: Storing everything in state
@@ -705,19 +738,19 @@ Spend 15 minutes sketching out your approach. We'll implement this system in lat
 
 ## Pro Tips: Foundation Best Practices
 
-**💡 Start with the Data Model**
+💡 **Start with the Data Model**
 
 Before building agents, map out your state structure. What data needs to persist? What's temporary? What's user-specific vs. global?
 
-**💡 Design for Observability**
+💡 **Design for Observability**
 
 ADK provides excellent debugging tools. Use them! Name your agents and tools descriptively, and include meaningful logging.
 
-**💡 Think in Workflows**
+💡 **Think in Workflows**
 
 Even simple tasks often have multiple steps. Consider whether a single LLM Agent or a Workflow Agent with multiple steps would be more maintainable.
 
-**💡 Plan for Failure**
+💡 **Plan for Failure**
 
 Every external API call, every LLM interaction, every tool execution can fail. Build graceful degradation into your agent design from day one.
 
@@ -750,7 +783,11 @@ In the next chapter, we'll put this knowledge into practice by building your fir
 2. What's the difference between session state and user state?
 3. When would you use a Parallel Agent vs. a Sequential Agent?
 
-*(Answers: 1. LLM Agents, Workflow Agents, Custom Agents 2. Session state is conversation-specific, user state persists across all sessions 3. Parallel for concurrent tasks, Sequential for ordered processes)*
+**Answers:**
+
+1. LLM Agents, Workflow Agents, Custom Agents
+2. Session state is conversation-specific, user state persists across all sessions  
+3. Parallel for concurrent tasks, Sequential for ordered processes
 
 ## Recent Updates & Installation
 
@@ -817,31 +854,3 @@ ADK incorporates security and safety patterns:
 - **WebSocket Support**: Full-duplex communication channels
 - **Audio Streaming**: Support for voice-enabled applications
 
----
-
-## Document Updates and Fact-Checking Summary
-
-**Key Corrections Made:**
-
-1. **Installation**: Updated to use correct package name `google-adk` and proper installation steps
-2. **Agent Classes**: Updated import statements to use `LlmAgent` instead of `Agent` where appropriate
-3. **Tool Integration**: Added critical limitations about built-in tools (one per agent, no mixing)
-4. **State Management**: Added important warnings about proper state modification patterns
-5. **MCP Support**: Added comprehensive Model Context Protocol integration information
-6. **Latest Updates**: Included Google I/O 2025 announcements (Java ADK, v1.0.0 stability)
-7. **Advanced Features**: Added evaluation, safety, and streaming capabilities
-8. **Best Practices**: Enhanced tool development guidelines based on official documentation
-
-**Sources Verified:**
-
-- [Official ADK Documentation](https://google.github.io/adk-docs/)
-- [Installation Guide](https://google.github.io/adk-docs/get-started/installation/)
-- [Agent Types](https://google.github.io/adk-docs/agents/)
-- [Tools Documentation](https://google.github.io/adk-docs/tools/)
-- [Sessions and State](https://google.github.io/adk-docs/sessions/)
-- [Deployment Options](https://google.github.io/adk-docs/deploy/)
-- [MCP Integration](https://google.github.io/adk-docs/mcp/)
-
-All technical examples and architectural descriptions have been cross-referenced with the official documentation to ensure accuracy and completeness.
-
----
