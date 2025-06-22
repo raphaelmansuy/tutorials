@@ -178,7 +178,7 @@ async def handle_customer_conversation():
     return final_session.state
 ```
 
-**Business Impact:** TechSupport Inc. reduced customer frustration by 67% and improved first-call resolution from 43% to 78% using working memory.
+**Business Impact:** Organizations implementing ADK memory systems typically see significant improvements, though specific metrics vary by use case and implementation quality.
 
 ### 2. Long-Term Memory: Using MemoryService
 
@@ -191,10 +191,55 @@ from google.adk.agents import LlmAgent
 from google.adk.memory import InMemoryMemoryService  # or VertexAiRagMemoryService for production
 from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+# Import correct modules for memory functionality
+from google.adk.tools import FunctionTool, ToolContext
 
 # Memory service for investment experiences
 memory_service = InMemoryMemoryService()
+
+# Create a custom memory search tool since load_memory doesn't exist
+def search_investment_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant investment experiences and patterns.
+    
+    Args:
+        query: The search query to find relevant past experiences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant past experiences and recommendations
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            relevant_experiences = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            relevant_experiences.append(part.text)
+            
+            return {
+                "status": "success",
+                "relevant_experiences": relevant_experiences,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant past experiences found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the memory search tool
+memory_search_tool = FunctionTool(func=search_investment_memory)
 
 investment_advisor = LlmAgent(
     name="investment_advisor",
@@ -207,10 +252,10 @@ investment_advisor = LlmAgent(
     2. Note the client's reaction and any concerns raised
     3. Learn from patterns in successful and unsuccessful recommendations
     
-    When making new recommendations, use the load_memory tool to reference relevant 
+    When making new recommendations, use the search_investment_memory tool to reference relevant 
     past experiences to improve your advice and build trust with clients.
     """,
-    tools=[analyze_portfolio, research_investments, calculate_risk_metrics, load_memory]
+    tools=[analyze_portfolio, research_investments, calculate_risk_metrics, memory_search_tool]
 )
 
 # Set up runner with memory service
@@ -255,7 +300,8 @@ from google.adk.agents import LlmAgent
 from google.adk.memory import VertexAiRagMemoryService
 from google.adk.sessions import VertexAiSessionService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+# Import correct modules for memory functionality
+from google.adk.tools import FunctionTool, ToolContext
 
 # Production memory service using Vertex AI RAG
 # Requires: pip install google-adk[vertexai]
@@ -265,6 +311,50 @@ memory_service = VertexAiRagMemoryService(
     similarity_top_k=5,
     vector_distance_threshold=0.7
 )
+
+# Create a custom legal memory search tool
+def search_legal_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search legal knowledge base for relevant information.
+    
+    Args:
+        query: The legal research query
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant legal information and precedents
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            legal_information = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            legal_information.append(part.text)
+            
+            return {
+                "status": "success",
+                "legal_information": legal_information,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant legal information found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Legal memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the legal memory search tool
+legal_memory_tool = FunctionTool(func=search_legal_memory)
 
 legal_research_agent = LlmAgent(
     name="legal_research_specialist",
@@ -278,10 +368,10 @@ legal_research_agent = LlmAgent(
     - Standard procedures and best practices
     - Industry-specific compliance requirements
     
-    Always use the load_memory tool to search for relevant legal information
+    Always use the search_legal_memory tool to search for relevant legal information
     and verify legal advice against current knowledge.
     """,
-    tools=[search_case_law, check_regulation_updates, verify_legal_facts, load_memory]
+    tools=[search_case_law, check_regulation_updates, verify_legal_facts, legal_memory_tool]
 )
 
 # Production session service
@@ -344,7 +434,52 @@ from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService
 from google.adk.memory import InMemoryMemoryService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+# Import correct modules for memory functionality
+from google.adk.tools import FunctionTool, ToolContext
+
+# Create a custom project memory search tool
+def search_project_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant past project experiences.
+    
+    Args:
+        query: The search query for project patterns and experiences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant past project experiences
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            project_experiences = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            project_experiences.append(part.text)
+            
+            return {
+                "status": "success",
+                "project_experiences": project_experiences,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant past project experiences found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Project memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the project memory search tool
+project_memory_tool = FunctionTool(func=search_project_memory)
 
 # Project management agent that learns procedures
 project_manager_agent = LlmAgent(
@@ -359,10 +494,10 @@ project_manager_agent = LlmAgent(
     - Apply best practices from similar past projects
     - Manage risks based on historical data
     
-    Always use load_memory to find relevant past project experiences when 
+    Always use search_project_memory to find relevant past project experiences when 
     planning new projects or addressing issues.
     """,
-    tools=[create_project_plan, assign_resources, track_progress, manage_risks, load_memory]
+    tools=[create_project_plan, assign_resources, track_progress, manage_risks, project_memory_tool]
 )
 
 # Set up services for session and memory management
@@ -436,7 +571,52 @@ from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService
 from google.adk.memory import InMemoryMemoryService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+# Import correct modules for memory functionality  
+from google.adk.tools import FunctionTool, ToolContext
+
+# Create a custom assistant memory search tool
+def search_assistant_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant past interactions and user preferences.
+    
+    Args:
+        query: The search query for past interactions and preferences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant past interactions and user preferences
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            past_interactions = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            past_interactions.append(part.text)
+            
+            return {
+                "status": "success",
+                "past_interactions": past_interactions,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant past interactions found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Assistant memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the assistant memory search tool
+assistant_memory_tool = FunctionTool(func=search_assistant_memory)
 
 # Executive assistant with user-specific memory
 executive_assistant = LlmAgent(
@@ -451,9 +631,9 @@ executive_assistant = LlmAgent(
     - How they prefer to receive information and make decisions
     - Their professional relationships and meeting dynamics
     
-    Use load_memory to access past interactions and provide highly personalized support.
+    Use search_assistant_memory to access past interactions and provide highly personalized support.
     """,
-    tools=[manage_calendar, draft_communications, prioritize_tasks, coordinate_meetings, load_memory]
+    tools=[manage_calendar, draft_communications, prioritize_tasks, coordinate_meetings, assistant_memory_tool]
 )
 
 # Set up services
@@ -540,7 +720,6 @@ async def predict_user_needs(user_id, context):
         "predicted_needs": generate_predictions(search_results, user_prefs, context)
     }
 ```
-```
 
 ---
 
@@ -558,7 +737,52 @@ from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService, VertexAiSessionService
 from google.adk.memory import InMemoryMemoryService, VertexAiRagMemoryService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+# Import correct modules for memory functionality
+from google.adk.tools import FunctionTool, ToolContext
+
+# Create a custom business memory search tool
+def search_business_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant business consulting experiences.
+    
+    Args:
+        query: The search query for past consulting experiences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant past consulting experiences
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            consulting_experiences = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            consulting_experiences.append(part.text)
+            
+            return {
+                "status": "success",
+                "consulting_experiences": consulting_experiences,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant past consulting experiences found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Business memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the business memory search tool
+business_memory_tool = FunctionTool(func=search_business_memory)
 
 # Comprehensive agent with both session state and long-term memory
 business_consultant = LlmAgent(
@@ -569,11 +793,11 @@ business_consultant = LlmAgent(
     
     Use your capabilities to:
     - Maintain context during sessions via session state
-    - Access historical knowledge via the load_memory tool
+    - Access historical knowledge via the search_business_memory tool
     - Learn from past consulting experiences
     - Build personalized relationships with each client
     """,
-    tools=[analyze_business_problem, recommend_solutions, track_implementation, load_memory]
+    tools=[analyze_business_problem, recommend_solutions, track_implementation, business_memory_tool]
 )
 
 # Choose appropriate services based on your needs
@@ -645,12 +869,11 @@ async def business_consultation_lifecycle():
         if event.is_final_response():
             print(f"Follow-up Consultation: {event.content.parts[0].text}")
     
-    # The agent automatically uses load_memory to retrieve relevant context
+    # The agent automatically uses memory search to retrieve relevant context
     return await session_service.get_session(app_name=app_name, user_id=user_id, session_id=session2_id)
 
 # Run the lifecycle example
 # consultation_result = asyncio.run(business_consultation_lifecycle())
-```
 ```
 
 ---
@@ -659,7 +882,7 @@ async def business_consultation_lifecycle():
 
 ### Deploying Memory-Enabled Agents to Production
 
-Google ADK integrates seamlessly with Vertex AI Agent Engine for production deployment:
+Google ADK integrates with Vertex AI Agent Engine for production deployment. Here's the correct approach:
 
 ```python
 # Install required dependencies
@@ -672,7 +895,7 @@ from vertexai import agent_engines
 # Initialize Vertex AI
 PROJECT_ID = "your-project-id"
 LOCATION = "us-central1"
-STAGING_BUCKET = "gs://your-staging-bucket"
+STAGING_BUCKET = "gs://your-google-cloud-storage-bucket"
 
 vertexai.init(
     project=PROJECT_ID,
@@ -680,32 +903,37 @@ vertexai.init(
     staging_bucket=STAGING_BUCKET,
 )
 
-# Wrap your agent for deployment
-deployment_app = reasoning_engines.AdkApp(
+# Prepare your agent for Agent Engine
+app = reasoning_engines.AdkApp(
     agent=business_consultant,
     enable_tracing=True,
 )
 
-# Deploy to Agent Engine
+# Deploy your agent to Vertex AI Agent Engine
 remote_app = agent_engines.create(
     agent_engine=business_consultant,
     requirements=[
-        "google-cloud-aiplatform[adk,agent_engines]"
+        "google-cloud-aiplatform[adk,agent_engines]"   
     ]
 )
 
 print(f"Deployed agent: {remote_app.resource_name}")
 
-# Test the deployed agent
-remote_session = remote_app.create_session(user_id="production_user")
-
+# Query the deployed agent
 for event in remote_app.stream_query(
     user_id="production_user",
-    session_id=remote_session["id"],
-    message="Help me analyze market expansion opportunities"
+    session_id="consultation_session_001",
+    message="Help me analyze market expansion opportunities",
 ):
     print(event)
 ```
+
+**Important Notes:**
+
+- The exact deployment API may vary based on ADK version
+- Memory services are automatically configured in production
+- Session management is handled by Vertex AI Agent Engine
+- Monitoring and logging are built-in features
 
 ## Real-World Case Study: LegalFirm's Knowledge Revolution
 
@@ -756,7 +984,51 @@ from google.adk.agents import LlmAgent
 from google.adk.memory import VertexAiRagMemoryService
 from google.adk.sessions import VertexAiSessionService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+from google.adk.tools import FunctionTool, ToolContext
+
+# Create a custom legal research memory search tool
+def search_legal_research_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search legal research knowledge base for relevant cases and research.
+    
+    Args:
+        query: The legal research query
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant legal research and case information
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            legal_research = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            legal_research.append(part.text)
+            
+            return {
+                "status": "success",
+                "legal_research": legal_research,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant legal research found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Legal research search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the legal research memory search tool
+legal_research_memory_tool = FunctionTool(func=search_legal_research_memory)
 
 # Production legal research system
 rag_corpus = "projects/legal-firm/locations/us-central1/ragCorpora/legal-knowledge"
@@ -769,7 +1041,7 @@ legal_research_agent = LlmAgent(
     You are a legal research specialist with access to the firm's collective knowledge.
     
     Before starting research:
-    1. Use load_memory to check for similar cases and research outcomes
+    1. Use search_legal_research_memory to check for similar cases and research outcomes
     2. Review past research strategies that were successful
     3. Check for current legal precedents and regulations
     
@@ -778,7 +1050,7 @@ legal_research_agent = LlmAgent(
     2. Note any improved research methods
     3. Flag changes in legal landscape
     """,
-    tools=[search_case_law, analyze_precedents, research_regulations, load_memory]
+    tools=[search_case_law, analyze_precedents, research_regulations, legal_research_memory_tool]
 )
 
 # Set up production services
@@ -792,53 +1064,126 @@ runner = Runner(
     memory_service=memory_service
 )
 
-# Example: Research session with memory
-def conduct_legal_research(case_details):
-    # Check for similar previous research
-    similar_cases = legal_research_agent.memory.episodic.find_similar(
-        case_type=case_details.case_type,
-        legal_issues=case_details.legal_issues,
-        jurisdiction=case_details.jurisdiction,
-        similarity_threshold=0.8
+# Example: Research session with memory using ADK patterns
+async def conduct_legal_research(case_details):
+    # Create a research session
+    session = await session_service.create_session(
+        app_name=reasoning_engine_id,
+        user_id=case_details.attorney_id,
+        session_id=f"research_{case_details.case_id}",
+        state={
+            "case_type": case_details.case_type,
+            "legal_issues": case_details.legal_issues,
+            "jurisdiction": case_details.jurisdiction
+        }
     )
     
-    if similar_cases:
-        # Build on previous research instead of starting from scratch
-        research_foundation = legal_research_agent.synthesize_previous_research(
-            similar_cases
-        )
-        
-        # Focus on what's new or different
-        research_focus = legal_research_agent.identify_research_gaps(
-            case_details, research_foundation
-        )
+    # Search for similar previous research using memory service
+    search_query = f"{case_details.case_type} {case_details.legal_issues} {case_details.jurisdiction}"
+    similar_research = await memory_service.search_memory(
+        app_name=reasoning_engine_id,
+        user_id=case_details.attorney_id,
+        query=search_query
+    )
+    
+    # Prepare research request with context
+    from google.genai.types import Content, Part
+    if similar_research and similar_research.memories:
+        research_context = f"Previous similar research found: {[mem.content.parts[0].text for mem in similar_research.memories[:3]]}"
     else:
-        # No similar cases, start comprehensive research
-        research_focus = legal_research_agent.create_research_plan(case_details)
+        research_context = "No similar previous research found."
     
-    # Conduct research with memory-informed approach
-    research_results = legal_research_agent.conduct_research(
-        focus_areas=research_focus,
-        leverage_precedents=True,
-        time_budget=case_details.urgency_level
+    research_request = Content(
+        parts=[Part(text=f"""
+        Conduct legal research for this case:
+        
+        Case Type: {case_details.case_type}
+        Legal Issues: {case_details.legal_issues}
+        Jurisdiction: {case_details.jurisdiction}
+        Urgency: {case_details.urgency_level}
+        
+        Context from previous research: {research_context}
+        
+        Please provide comprehensive research findings and identify any gaps that need further investigation.
+        """)],
+        role="user"
     )
     
-    # Store research experience for future use
-    legal_research_agent.memory.store_research_experience(
-        case_details=case_details,
-        research_process=research_focus,
-        results=research_results,
-        effectiveness_score=calculate_research_effectiveness(research_results)
+    # Conduct the research
+    research_results = []
+    async for event in runner.run_async(
+        user_id=case_details.attorney_id,
+        session_id=f"research_{case_details.case_id}",
+        new_message=research_request
+    ):
+        if event.is_final_response():
+            research_results.append(event.content.parts[0].text)
+    
+    # Store the research session in memory for future reference
+    completed_session = await session_service.get_session(
+        app_name=reasoning_engine_id,
+        user_id=case_details.attorney_id,
+        session_id=f"research_{case_details.case_id}"
     )
     
-    return research_results
+    await memory_service.add_session_to_memory(completed_session)
+    
+    return {
+        "research_findings": research_results,
+        "session_state": completed_session.state,
+        "similar_research_found": len(similar_research.memories) > 0 if similar_research else False
+    }
 ```
 
-**Client Relationship Agent with Autobiographical Memory:**
+**Client Relationship Agent with Memory:**
 
 ```python
+# Create a custom client memory search tool
+def search_client_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant client relationship information.
+    
+    Args:
+        query: The search query for client history and preferences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant client relationship information
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            client_information = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            client_information.append(part.text)
+            
+            return {
+                "status": "success",
+                "client_information": client_information,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant client information found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Client memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the client memory search tool
+client_memory_tool = FunctionTool(func=search_client_memory)
+
 # Client service agent that remembers each client
-client_service_agent = Agent(
+client_service_agent = LlmAgent(
     name="client_relationship_manager",
     model="gemini-2.0-flash",
     instruction="""
@@ -846,53 +1191,81 @@ client_service_agent = Agent(
     communication style, and case history.
     
     For each client interaction:
-    - Reference their autobiographical memory for context
-    - Adapt communication style to their preferences
+    - Use search_client_memory to reference their history for context
+    - Adapt communication style to their preferences stored in session state
     - Proactively address concerns based on their history
     - Maintain continuity across different attorneys and cases
     """,
-    memory=comprehensive_legal_memory,
     tools=[review_client_history, schedule_meetings, draft_communications,
-           track_client_satisfaction, coordinate_legal_team]
+           track_client_satisfaction, coordinate_legal_team, client_memory_tool]
 )
 
-def handle_client_interaction(client_id, request):
-    # Retrieve client's interaction history
-    client_profile = client_service_agent.memory.autobiographical.get_profile(
-        client_id
-    )
-    
-    # Adapt communication style
-    communication_style = client_profile.preferred_communication_style
-    detail_level = client_profile.preferred_detail_level
-    
-    # Check for similar past requests
-    similar_requests = client_service_agent.memory.find_similar_requests(
-        client_id, request
-    )
-    
-    # Generate contextual response
-    response = client_service_agent.respond(
-        request=request,
-        client_context=client_profile,
-        similar_precedents=similar_requests,
-        communication_style=communication_style,
-        detail_level=detail_level
-    )
-    
-    # Update client profile based on interaction
-    client_service_agent.memory.update_client_profile(
-        client_id=client_id,
-        interaction_data={
-            "timestamp": datetime.now(),
-            "request_type": request.type,
-            "response_satisfaction": response.satisfaction_score,
-            "communication_effectiveness": response.effectiveness_score,
-            "preferences_observed": response.new_preferences_detected
+async def handle_client_interaction(client_id, request):
+    # Create session for client interaction
+    session = await session_service.create_session(
+        app_name=reasoning_engine_id,
+        user_id=client_id,
+        session_id=f"client_interaction_{request.timestamp}",
+        state={
+            "client:preferred_communication": request.communication_preferences,
+            "client:case_history": request.case_context,
+            "client:detail_level": request.detail_preference
         }
     )
     
-    return response
+    # Search for similar past client interactions
+    search_query = f"client {client_id} {request.type}"
+    similar_interactions = await memory_service.search_memory(
+        app_name=reasoning_engine_id,
+        user_id=client_id,
+        query=search_query
+    )
+    
+    # Prepare contextual request
+    from google.genai.types import Content, Part
+    context_info = ""
+    if similar_interactions and similar_interactions.memories:
+        context_info = f"Previous similar interactions: {[mem.content.parts[0].text for mem in similar_interactions.memories[:2]]}"
+    
+    client_request = Content(
+        parts=[Part(text=f"""
+        Handle this client request with appropriate context:
+        
+        Client ID: {client_id}
+        Request: {request.content}
+        Type: {request.type}
+        
+        {context_info}
+        
+        Please provide personalized service based on this client's history and preferences.
+        """)],
+        role="user"
+    )
+    
+    # Process the client interaction
+    response_content = []
+    async for event in runner.run_async(
+        user_id=client_id,
+        session_id=f"client_interaction_{request.timestamp}",
+        new_message=client_request
+    ):
+        if event.is_final_response():
+            response_content.append(event.content.parts[0].text)
+    
+    # Store the interaction session in memory
+    completed_session = await session_service.get_session(
+        app_name=reasoning_engine_id,
+        user_id=client_id,
+        session_id=f"client_interaction_{request.timestamp}"
+    )
+    
+    await memory_service.add_session_to_memory(completed_session)
+    
+    return {
+        "response": response_content[0] if response_content else "No response generated",
+        "session_state": completed_session.state,
+        "similar_interactions_found": len(similar_interactions.memories) > 0 if similar_interactions else False
+    }
 ```
 
 ### The Transformation Results
@@ -952,97 +1325,9 @@ project_management_memory = {
 }
 ```
 
-### 2. Implement Privacy-Preserving Memory
+### Privacy and Performance Best Practices
 
-```python
-from google.adk.privacy import PrivacyManager, DataClassification
-
-# Privacy-aware memory system
-privacy_manager = PrivacyManager(
-    data_classification_rules={
-        "personal_identifiers": DataClassification.HIGHLY_SENSITIVE,
-        "business_strategies": DataClassification.CONFIDENTIAL,
-        "performance_metrics": DataClassification.INTERNAL,
-        "public_information": DataClassification.PUBLIC
-    },
-    retention_policies={
-        DataClassification.HIGHLY_SENSITIVE: "encrypt_and_limit_access",
-        DataClassification.CONFIDENTIAL: "access_control_required",
-        DataClassification.INTERNAL: "standard_retention",
-        DataClassification.PUBLIC: "long_term_retention"
-    },
-    anonymization_strategies=["differential_privacy", "k_anonymity"]
-)
-
-# Memory system with privacy controls
-privacy_aware_memory = ComprehensiveMemory(
-    privacy_manager=privacy_manager,
-    data_minimization=True,
-    purpose_limitation=True,
-    user_consent_required=True,
-    right_to_be_forgotten=True
-)
-```
-
-### 3. Optimize Memory Performance
-
-```python
-from google.adk.optimization import MemoryOptimizer
-
-# Memory performance optimization
-memory_optimizer = MemoryOptimizer(
-    strategies=[
-        "intelligent_caching",
-        "compression_algorithms",
-        "indexing_optimization",
-        "query_optimization",
-        "garbage_collection"
-    ],
-    performance_targets={
-        "retrieval_latency": "< 100ms",
-        "storage_efficiency": "> 80%",
-        "query_accuracy": "> 95%"
-    }
-)
-
-# Optimized memory system
-optimized_memory = ComprehensiveMemory(
-    optimizer=memory_optimizer,
-    caching_strategy="adaptive_lru",
-    compression_enabled=True,
-    indexing_strategy="multi_modal"
-)
-```
-
-### 4. Monitor Memory Health
-
-```python
-from google.adk.monitoring import MemoryHealthMonitor
-
-# Memory system health monitoring
-memory_monitor = MemoryHealthMonitor(
-    metrics=[
-        "memory_utilization",
-        "retrieval_accuracy",
-        "update_frequency",
-        "consolidation_effectiveness",
-        "user_satisfaction_correlation"
-    ],
-    alerts=[
-        "memory_capacity_threshold_exceeded",
-        "retrieval_accuracy_degraded",
-        "consolidation_backlog_high",
-        "privacy_violation_detected"
-    ]
-)
-
-# Apply monitoring to memory system
-monitored_memory = ComprehensiveMemory(
-    monitor=memory_monitor,
-    health_checks_enabled=True,
-    auto_optimization=True
-)
-```
+When implementing memory systems, consider these architectural patterns based on ADK's documented capabilities:
 
 ---
 
@@ -1068,7 +1353,51 @@ from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService
 from google.adk.memory import InMemoryMemoryService
 from google.adk.runners import Runner
-from google.adk.tools import load_memory
+from google.adk.tools import FunctionTool, ToolContext
+
+# Create a custom business memory search tool for the challenge
+def search_business_memory(query: str, tool_context: ToolContext) -> dict:
+    """Search memory for relevant business consulting experiences.
+    
+    Args:
+        query: The search query for past consulting experiences
+        tool_context: ADK tool context providing access to memory service
+    
+    Returns:
+        Dictionary containing relevant past consulting experiences
+    """
+    try:
+        # Use ToolContext to search memory
+        memory_results = tool_context.search_memory(query)
+        
+        if memory_results and memory_results.memories:
+            consulting_experiences = []
+            for memory in memory_results.memories:
+                if memory.content and memory.content.parts:
+                    for part in memory.content.parts:
+                        if part.text:
+                            consulting_experiences.append(part.text)
+            
+            return {
+                "status": "success",
+                "consulting_experiences": consulting_experiences,
+                "query": query
+            }
+        else:
+            return {
+                "status": "no_results",
+                "message": "No relevant past consulting experiences found",
+                "query": query
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Business memory search failed: {str(e)}",
+            "query": query
+        }
+
+# Create the business memory search tool
+business_memory_tool = FunctionTool(func=search_business_memory)
 
 # Step 2: Create your memory-enabled agent
 business_advisor = LlmAgent(
@@ -1079,13 +1408,13 @@ business_advisor = LlmAgent(
     
     Use your capabilities to:
     - Track ongoing strategic discussions using session state
-    - Learn from past advice and outcomes using load_memory tool
+    - Learn from past advice and outcomes using search_business_memory tool
     - Apply business frameworks and knowledge from memory
     - Personalize advice based on user state (use user: prefix)
     
     Always reference relevant past interactions and learnings when available.
     """,
-    tools=[analyze_market_data, create_strategic_plan, assess_risks, load_memory],
+    tools=[analyze_market_data, create_strategic_plan, assess_risks, business_memory_tool],
     output_key="advisor_response"  # Save responses to session state
 )
 
@@ -1205,7 +1534,7 @@ Memory transforms agents from reactive tools into proactive partners. With Googl
 **Key Takeaways:**
 
 - **Session State** provides short-term memory within conversations using ADK's built-in state management
-- **MemoryService** enables long-term knowledge storage across sessions with simple `load_memory` tool integration
+- **MemoryService** enables long-term knowledge storage across sessions accessible via `ToolContext.search_memory()`
 - **State Scoping** (user:, app:, temp:) allows for different memory persistence levels
 - **Production Deployment** via Vertex AI Agent Engine scales memory-enabled agents reliably
 - **Vertex AI RAG** integration provides enterprise-grade semantic search capabilities
