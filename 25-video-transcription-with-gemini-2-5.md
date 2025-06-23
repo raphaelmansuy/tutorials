@@ -38,6 +38,16 @@ Now, picture having a tool that not only captures every word with near-human acc
 
 Think of Gemini 2.5 as your AI-powered transcriptionist—always on, never tired, and capable of handling everything from crisp podcasts to chaotic roundtable debates.
 
+```mermaid
+flowchart LR
+    A[Audio & Video Support]:::block --> B[Speaker Diarization]:::block
+    A --> C[Timecodes]:::block
+    A --> D[Scalable]:::block
+    A --> E[Customizable Output]:::block
+    classDef block fill:#e6f0fa,stroke:#7fa7d6,color:#3b4a5a;
+%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#7fa7d6', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#3b4a5a' }}}%%
+```
+
 ### Key Features
 
 - **Supports Video \& Audio:** Feed it almost any common format.
@@ -54,6 +64,18 @@ Think of Gemini 2.5 as your AI-powered transcriptionist—always on, never tired
 ## 3. Setting Up: The Fast Lane
 
 Let’s get you up and running—no detours.
+
+```mermaid
+flowchart LR
+    A[Install Python 3.8+]:::pastel --> B[Enable Vertex AI API]:::pastel
+    B --> C[Install Gemini 2.5 SDK]:::pastel
+    C --> D["Authenticate gcloud or API key"]:::pastel
+    D --> E[Create Cloud Storage Bucket]:::pastel
+    E --> F[Upload Audio/Video Files]:::pastel
+    F --> G[Ready for Transcription]:::pastel
+    classDef pastel fill:#e6f0fa,stroke:#7fa7d6,color:#3b4a5a;
+%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#7fa7d6', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#3b4a5a' }}}%%
+```
 
 ### Minimum Requirements
 
