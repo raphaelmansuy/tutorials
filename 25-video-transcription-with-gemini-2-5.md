@@ -56,6 +56,10 @@ flowchart LR
 - **Scalable:** Handles everything from short clips to marathon interviews.
 - **Customizable Output:** Format transcripts to suit your workflow.
 
+> **What is Speaker Diarization?**
+>
+> Speaker diarization is the process of automatically determining "who spoke when" in an audio or video recording. It segments the transcript by speaker, labeling each section (e.g., Speaker A, Speaker B), which is essential for multi-speaker interviews, meetings, or podcasts.
+
 > **Metaphor:**
 > If traditional transcription is like chiseling words into stone, Gemini 2.5 is a 3D printer—fast, precise, and adaptable.
 
@@ -492,11 +496,7 @@ Congratulations! You’ve gone from zero to Gemini 2.5 transcription hero.
 
 **Ready to turn every meeting, interview, and podcast into actionable insights? Fire up Gemini 2.5 and start transcribing—your future self will thank you.**
 
----
 
-**Continue to the next session for advanced troubleshooting, custom integrations, and real-world case studies.**
-
----
 
 If you’d like to see more complex examples or have questions about a specific use case, let me know!
 
