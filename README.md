@@ -323,6 +323,7 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 | [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md)                             | Advanced | 6-8 hours  | English  | Complete machine learning pipeline using Google Cloud Vertex AI                |
 | [📖 Google Agent Development Kit (ADK) for the Impatient](./07_agent/index.md) | Advanced | 40-60 hours | English  | Comprehensive 12-chapter tutorial series to master Google's Agent Development Kit (ADK) quickly and effectively |
 | [📖 Vertex AI Agent Engine for the Impatient](./22_google_vertex_agent_engine.md) | Advanced | 12-24 hours | English | Master enterprise-grade AI agent development and deployment with Vertex AI Agent Engine, featuring multi-agent systems, production-ready orchestration, and comprehensive business impact analysis |
+| [📖 Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide](./25-video-transcription-with-gemini-2-5.md) | Beginner to Advanced | 3-5 hours | English | Master AI-powered transcription using Gemini 2.5 with timestamps, speaker identification, batch processing, and production-ready workflows for both Vertex AI and Gemini API |
 
 **What you'll learn:**
 
@@ -344,6 +345,12 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Framework flexibility** (LangChain, LangGraph, ADK, AG2, LlamaIndex, CrewAI)
 - **Business impact analysis** and ROI measurement
 - **Competitive market strategies** in the $47B AI agents market
+- **Audio/video transcription** with Gemini 2.5 Flash and Pro models
+- **Speaker diarization** and timestamp generation for multi-speaker content
+- **Batch processing optimization** for large-scale transcription workflows
+- **Production-ready error handling** and quality assurance for AI transcription
+- **Multi-language transcription** support (40+ languages)
+- **Cloud Storage integration** for enterprise file management
 
 **Key Features:**
 
@@ -354,25 +361,17 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - Intelligent agent development and deployment
 - Enterprise-grade multi-agent systems
 - Production-ready AI agent orchestration
+- **AI-powered transcription** with near-human accuracy and speed
+- **Automated speaker identification** and timestamp precision
+- **Enterprise file management** with Google Cloud Storage integration
+- **Cost-effective processing** for audio/video content at scale
+- **Multi-modal AI capabilities** supporting both audio and video transcription
+- **Production deployment patterns** for transcription services
 - **24-hour challenge** for comprehensive hands-on experience
 - **Business impact focus** with measurable ROI and competitive analysis
 - **Multi-framework support** for maximum flexibility and adoption
 - **VPC-SC compliance** and enterprise security features
 - **Three comprehensive examples**: Hello World, Calculator, and Travel Planning agents
-
-**Prerequisites:**
-
-- Google Cloud Platform account with billing enabled
-- Python programming experience (intermediate level)
-- Basic understanding of machine learning concepts
-- Familiarity with cloud computing principles
-
-**Business Impact:**
-
-- **30% reduction** in call handling time
-- **25% increase** in customer satisfaction
-- **40% reduction** in call volumes through proactive AI engagement
-- Enterprise-ready for scaling from prototype to production
 
 ---
 
