@@ -70,6 +70,7 @@ jupyter = [
 [project.scripts]
 adk-extract-contacts = "adk_data_extraction.examples.basic_contact_extraction:main"
 adk-analyze-legal = "adk_data_extraction.examples.legal_document_analysis:main"
+adk-sequential-contract = "adk_data_extraction.examples.sequential_contract_pipeline:main_cli"
 
 [project.urls]
 Homepage = "https://github.com/your-org/adk-data-extraction"

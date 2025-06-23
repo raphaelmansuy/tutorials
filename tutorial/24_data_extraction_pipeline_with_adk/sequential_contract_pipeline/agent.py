@@ -3,10 +3,60 @@ Service Contract Processing Pipeline - Sequential Pattern Example
 
 This educational example demonstrates Google ADK's Sequential Pipeline Pattern
 following the official documentation and samples.
+
+Usage:
+1. Run: adk run sequential_contract_pipeline
+2. Type 'sample' to use the built-in sample contract
+3. Or paste your own service contract document
 """
 
 from google.adk.agents import LlmAgent, SequentialAgent
 from pydantic import BaseModel, Field
+
+# Sample service contract for testing
+SAMPLE_CONTRACT = """
+PROFESSIONAL SERVICES AGREEMENT
+
+This Professional Services Agreement is effective March 1, 2024, between:
+
+SERVICE PROVIDER: CloudTech Solutions Inc.
+Principal Office: 789 Tech Plaza, Austin, TX 78701
+
+CLIENT: Innovation Corp LLC
+Business Address: 456 Business Center, Dallas, TX 75201
+
+SERVICES: Cloud infrastructure consulting and migration services including:
+• Current infrastructure assessment and analysis
+• AWS cloud migration strategy and planning
+• Cloud infrastructure implementation
+• Data migration and system integration
+• Staff training and knowledge transfer
+• 3 months post-migration support
+
+FINANCIAL TERMS:
+Total Contract Value: $85,000 USD
+
+Payment Schedule:
+• $25,000 upon contract execution (March 1, 2024)
+• $35,000 upon migration planning completion (May 1, 2024)
+• $25,000 upon successful cloud deployment (July 15, 2024)
+
+PROJECT TIMELINE:
+Start Date: March 15, 2024
+Planning Phase: March 15 - May 1, 2024
+Migration Phase: May 1 - July 15, 2024
+Support Period: July 16 - October 15, 2024
+Contract End Date: October 15, 2024
+
+LEGAL TERMS:
+Governing Law: State of Texas
+Termination Notice: 15 days written notice
+Liability Cap: Total contract value ($85,000)
+
+Signatures:
+CloudTech Solutions Inc.: _________________ Date: _______
+Innovation Corp LLC: _________________ Date: _______
+"""
 
 
 class ServiceContractData(BaseModel):
@@ -45,14 +95,56 @@ class ContractSummary(BaseModel):
     next_actions: list[str] = Field(description="Recommended follow-up actions")
 
 
-# Step 1: Service Contract Data Extractor
+# Step 1: Service Contract Data Extractor with built-in sample
 service_data_extractor = LlmAgent(
     model="gemini-2.0-flash",
     name="ServiceDataExtractor",
     description="Extracts structured data from service contracts",
     instruction="""You are a Service Contract Data Extraction specialist.
 
-Your task is to extract key information from the service contract provided by the user.
+WELCOME & SAMPLE CONTRACT:
+If the user types 'sample', use this sample contract for processing:
+
+PROFESSIONAL SERVICES AGREEMENT
+
+This Professional Services Agreement is effective March 1, 2024, between:
+
+SERVICE PROVIDER: CloudTech Solutions Inc.
+Principal Office: 789 Tech Plaza, Austin, TX 78701
+
+CLIENT: Innovation Corp LLC
+Business Address: 456 Business Center, Dallas, TX 75201
+
+SERVICES: Cloud infrastructure consulting and migration services including:
+• Current infrastructure assessment and analysis
+• AWS cloud migration strategy and planning
+• Cloud infrastructure implementation
+• Data migration and system integration
+• Staff training and knowledge transfer
+• 3 months post-migration support
+
+FINANCIAL TERMS:
+Total Contract Value: $85,000 USD
+
+Payment Schedule:
+• $25,000 upon contract execution (March 1, 2024)
+• $35,000 upon migration planning completion (May 1, 2024)
+• $25,000 upon successful cloud deployment (July 15, 2024)
+
+PROJECT TIMELINE:
+Start Date: March 15, 2024
+Planning Phase: March 15 - May 1, 2024
+Migration Phase: May 1 - July 15, 2024
+Support Period: July 16 - October 15, 2024
+Contract End Date: October 15, 2024
+
+LEGAL TERMS:
+Governing Law: State of Texas
+Termination Notice: 15 days written notice
+Liability Cap: Total contract value ($85,000)
+
+EXTRACTION INSTRUCTIONS:
+Your task is to extract key information from the service contract (sample or user-provided).
 
 EXTRACTION FOCUS:
 • Service Provider and Client company names
@@ -86,6 +178,15 @@ PAYMENT INFORMATION:
 LEGAL FRAMEWORK:
 - Governing Law: [Jurisdiction]
 - Termination Notice: [Notice period required]
+
+If the user provides no document and doesn't type 'sample', respond with:
+"Welcome to the Service Contract Processing Pipeline!
+
+Please either:
+1. Type 'sample' to process our sample contract
+2. Paste your service contract document for processing
+
+I will extract key contract data, validate it, and generate a comprehensive summary report through our 3-step sequential pipeline."
 
 Provide a clear, structured extraction of all contract data."""
 )
@@ -196,12 +297,13 @@ service_contract_pipeline = SequentialAgent(
     description=(
         "Sequential pipeline for processing service contracts. "
         "Extracts contract data, validates the extraction quality, "
-        "and generates a comprehensive summary report."
+        "and generates a comprehensive summary report. "
+        "Type 'sample' to use the built-in sample contract."
     ),
     sub_agents=[
-        service_data_extractor,  # Step 1: Extract → state['contract_data']
-        quality_validator,       # Step 2: Validate → state['validation_report']
-        summary_reporter         # Step 3: Report → state['final_report']
+        service_data_extractor,  # Step 1: Extract contract data
+        quality_validator,       # Step 2: Validate data quality
+        summary_reporter         # Step 3: Generate summary report
     ]
 )
 

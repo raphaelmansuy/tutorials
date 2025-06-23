@@ -63,4 +63,4 @@ cli_legal: install
 	. .venv/bin/activate && adk-analyze-legal
 
 cli_sequential_contract: install
-	. .venv/bin/activate && adk run sequential_contract_pipeline
+	. .venv/bin/activate && adk-sequential-contract

@@ -57,6 +57,51 @@ import asyncio
 from google.adk.agents import LlmAgent, SequentialAgent
 from pydantic import BaseModel, Field
 
+# Sample service contract for both demo and CLI use
+SAMPLE_SERVICE_CONTRACT = """
+    CLOUD MIGRATION SERVICES AGREEMENT
+
+    This Professional Services Agreement is effective March 1, 2024, between:
+
+    SERVICE PROVIDER: CloudTech Solutions Inc.
+    Principal Office: 789 Tech Plaza, Austin, TX 78701
+
+    CLIENT: Innovation Corp LLC
+    Business Address: 456 Business Center, Dallas, TX 75201
+
+    SERVICES: Cloud infrastructure consulting and migration services including:
+    • Current infrastructure assessment and analysis
+    • AWS cloud migration strategy and planning
+    • Cloud infrastructure implementation
+    • Data migration and system integration
+    • Staff training and knowledge transfer
+    • 3 months post-migration support
+
+    FINANCIAL TERMS:
+    Total Contract Value: $85,000 USD
+
+    Payment Schedule:
+    • $25,000 upon contract execution (March 1, 2024)
+    • $35,000 upon migration planning completion (May 1, 2024)
+    • $25,000 upon successful cloud deployment (July 15, 2024)
+
+    PROJECT TIMELINE:
+    Start Date: March 15, 2024
+    Planning Phase: March 15 - May 1, 2024
+    Migration Phase: May 1 - July 15, 2024
+    Support Period: July 16 - October 15, 2024
+    Contract End Date: October 15, 2024
+
+    LEGAL TERMS:
+    Governing Law: State of Texas
+    Termination Notice: 15 days written notice
+    Liability Cap: Total contract value ($85,000)
+
+    Signatures:
+    CloudTech Solutions Inc.: _________________ Date: _______
+    Innovation Corp LLC: _________________ Date: _______
+    """
+
 # =============================================================================
 # SCHEMAS FOR SERVICE CONTRACT DATA
 # =============================================================================
@@ -302,49 +347,7 @@ async def demonstrate_sequential_pipeline():
     print("=" * 80)
 
     # Sample service contract for demonstration
-    sample_contract = """
-    CLOUD MIGRATION SERVICES AGREEMENT
-
-    This Professional Services Agreement is effective March 1, 2024, between:
-
-    SERVICE PROVIDER: CloudTech Solutions Inc.
-    Principal Office: 789 Tech Plaza, Austin, TX 78701
-
-    CLIENT: Innovation Corp LLC
-    Business Address: 456 Business Center, Dallas, TX 75201
-
-    SERVICES: Cloud infrastructure consulting and migration services including:
-    • Current infrastructure assessment and analysis
-    • AWS cloud migration strategy and planning
-    • Cloud infrastructure implementation
-    • Data migration and system integration
-    • Staff training and knowledge transfer
-    • 3 months post-migration support
-
-    FINANCIAL TERMS:
-    Total Contract Value: $85,000 USD
-
-    Payment Schedule:
-    • $25,000 upon contract execution (March 1, 2024)
-    • $35,000 upon migration planning completion (May 1, 2024)
-    • $25,000 upon successful cloud deployment (July 15, 2024)
-
-    PROJECT TIMELINE:
-    Start Date: March 15, 2024
-    Planning Phase: March 15 - May 1, 2024
-    Migration Phase: May 1 - July 15, 2024
-    Support Period: July 16 - October 15, 2024
-    Contract End Date: October 15, 2024
-
-    LEGAL TERMS:
-    Governing Law: State of Texas
-    Termination Notice: 15 days written notice
-    Liability Cap: Total contract value ($85,000)
-
-    Signatures:
-    CloudTech Solutions Inc.: _________________ Date: _______
-    Innovation Corp LLC: _________________ Date: _______
-    """
+    sample_contract = SAMPLE_SERVICE_CONTRACT
 
     print("📋 SEQUENTIAL PIPELINE PATTERN CHARACTERISTICS:")
     print("✅ SequentialAgent as root_agent (main orchestrator)")
@@ -428,6 +431,104 @@ async def demonstrate_sequential_pipeline():
 
     except Exception as e:
         print(f"❌ Pipeline failed: {e}")
+
+
+def main_cli():
+    """CLI wrapper function - synchronous entry point"""
+    asyncio.run(main_cli_async())
+
+
+async def main_cli_async():
+    """CLI wrapper function for interactive use with sample contract support"""
+    try:
+        # Import dependencies dynamically to avoid import errors
+        from google.adk import Runner
+        from google.adk.sessions import InMemorySessionService
+        from google.genai import types
+    except ImportError as e:
+        print(f"❌ Import error: {e}")
+        print("Please install required dependencies: pip install google-adk google-genai")
+        return
+
+    print("🚀 SERVICE CONTRACT PROCESSING PIPELINE - INTERACTIVE CLI")
+    print("=" * 60)
+    print("This is the interactive CLI version of the Sequential Pipeline.")
+    print("The pipeline will process contracts through 3 sequential steps:")
+    print("1. ServiceDataExtractor → Extract contract data")
+    print("2. QualityValidator → Validate extraction quality")
+    print("3. SummaryReporter → Generate comprehensive report")
+    print()
+    print("💡 USAGE:")
+    print("• Type 'sample' to use the built-in sample contract")
+    print("• Or paste your own service contract document")
+    print("• Type 'exit' to quit")
+    print()
+
+    # Create session service and runner
+    session_service = InMemorySessionService()
+    runner = Runner(
+        agent=root_agent,  # Use the SequentialAgent directly as root_agent
+        app_name="service_contract_pipeline_cli",
+        session_service=session_service,
+    )
+
+    try:
+        # Create session
+        session_id = "cli_session"
+        await session_service.create_session(
+            app_name="service_contract_pipeline_cli",
+            user_id="cli_user",
+            session_id=session_id,
+        )
+
+        print("📋 Please provide your service contract:")
+        user_input = input("> ").strip()
+        
+        if user_input.lower() == 'exit':
+            print("👋 Goodbye!")
+            return
+        
+        if user_input.lower() == 'sample':
+            print("✅ Using built-in sample contract...")
+            contract_text = f"Please process this service contract:\n\n{SAMPLE_SERVICE_CONTRACT}"
+        else:
+            contract_text = f"Please process this service contract:\n\n{user_input}"
+
+        # Create user message with contract content
+        user_content = types.Content(
+            role="user",
+            parts=[types.Part.from_text(text=contract_text)]
+        )
+
+        # Run the sequential pipeline
+        print("\n🔄 Processing through Sequential Pipeline...")
+        step_count = 0
+        
+        async for event in runner.run_async(
+            user_id="cli_user",
+            session_id=session_id,
+            new_message=user_content,
+        ):
+            if event.author and event.author != "user":
+                step_count += 1
+                print(f"\n📍 STEP {step_count}: {event.author.upper()}")
+                print("-" * 50)
+                
+                if event.content and event.content.parts:
+                    for part in event.content.parts:
+                        if part.text:
+                            print(part.text)
+
+        print(f"\n✅ Pipeline completed successfully! ({step_count} steps executed)")
+        print("\n🎯 CLI Sequential Pipeline Pattern Benefits:")
+        print("• Interactive user experience")
+        print("• Built-in sample contract for testing")
+        print("• Real-time step-by-step processing")
+        print("• Complete 3-step sequential workflow")
+
+    except Exception as e:
+        print(f"❌ CLI Pipeline failed: {e}")
+        print("Please check your Google API key configuration.")
 
 
 def main():
