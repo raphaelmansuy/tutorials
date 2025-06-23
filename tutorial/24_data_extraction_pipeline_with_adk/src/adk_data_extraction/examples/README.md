@@ -1,22 +1,115 @@
-# Sequential vs Hierarchical Document Processing Pipelines
+# ADK Data Extraction Examples - Restructured
 
-This directory contains educational examples comparing two different Google ADK agent coordination patterns for document processing:
+This directory contains educational examples comparing different Google ADK agent coordination patterns for document processing. Each example has been restructured to follow ADK best practices with proper separation of concerns.
 
-## Files Overview
+## Quick Start with ADK Commands
 
-### 1. `smart_document_extraction_pipeline.py`
-**Hierarchical Coordination Pattern**
-- Main coordinator agent with specialized sub-agents
-- Dynamic routing based on document classification
-- Complex coordination logic with conditional branching
-- Supports multiple document types (contracts, invoices, reports)
+All examples are designed to work with ADK commands. To run any example:
 
-### 2. `sequential_contract_pipeline.py` 
-**Sequential Agent Pattern**
-- Fixed execution order: Classify → Extract → Validate → Report
-- Deterministic workflow with no branching
-- State-based communication using `output_key`
-- Focused on contract processing only
+### Setup
+1. Navigate to the examples directory
+2. Copy the example's `.env.example` to `.env` and add your API key
+3. Run with ADK commands
+
+### Running Examples
+
+#### Web UI (Recommended for testing)
+```bash
+cd /path/to/examples
+adk web
+```
+Then select your desired example from the dropdown.
+
+#### Command Line
+```bash
+cd /path/to/examples
+adk run basic_contact_extraction "Your input text here"
+adk run sequential_contract_pipeline "Contract text here"
+adk run hierarchical_document_pipeline "Document text here"
+adk run legal_document_analysis "Legal document text here"
+```
+
+### Available Examples
+- `basic_contact_extraction` - Simple contact extraction
+- `sequential_contract_pipeline` - Sequential contract processing
+- `hierarchical_document_pipeline` - Hierarchical document processing
+- `legal_document_analysis` - Legal document analysis
+
+## Directory Structure
+
+```
+examples/
+├── basic_contact_extraction/          # ✅ Single-Agent Pattern (Beginner)
+│   ├── agent.py                      # Main entry point
+│   ├── agents/                       # Agent definitions
+│   ├── schemas/                      # Data models
+│   └── README.md                     # Example documentation
+├── sequential_contract_pipeline/      # ✅ Sequential Pattern (Intermediate)
+│   ├── agent.py                      # Sequential coordinator
+│   ├── sub_agents/                   # Sequential processing agents
+│   ├── schemas/                      # Contract data models
+│   ├── data/                         # Sample contract data
+│   └── README.md                     # Sequential pattern docs
+├── hierarchical_document_pipeline/    # ✅ Hierarchical Pattern (Advanced)
+│   ├── agent.py                      # Main coordinator agent
+│   ├── sub_agents/                   # Specialized sub-agents
+│   ├── tools/                        # Coordination tools
+│   ├── schemas/                      # Document schemas
+│   └── README.md                     # Hierarchical pattern docs
+├── legal_document_analysis/           # ✅ Specialized Analysis (Intermediate)
+│   ├── agent.py                      # Legal analysis coordinator
+│   ├── agents/                       # Specialized legal agents
+│   ├── schemas/                      # Legal document schemas
+│   └── README.md                     # Legal analysis docs
+└── README.md                         # This file
+```
+
+## ADK Patterns Demonstrated
+
+### 🎯 1. Single-Agent Pattern (`basic_contact_extraction/`)
+**Best For:** Simple, focused extraction tasks
+
+- **Pattern**: Single `LlmAgent` with output schema
+- **Complexity**: Beginner
+- **Use Case**: Contact information extraction
+- **Key Features**: 
+  - Single-purpose agent
+  - Structured output with Pydantic schema
+  - Simple session management
+
+### 🔄 2. Sequential Pattern (`sequential_contract_pipeline/`)
+**Best For:** Fixed workflow processes
+
+- **Pattern**: `SequentialAgent` with ordered sub-agents
+- **Complexity**: Intermediate
+- **Use Case**: Contract processing pipeline
+- **Key Features**:
+  - Deterministic execution order
+  - Conversation flow communication
+  - Extract → Validate → Report workflow
+
+### 🏗️ 3. Hierarchical Pattern (`hierarchical_document_pipeline/`)
+**Best For:** Complex coordination with intelligent routing
+
+- **Pattern**: Parent `LlmAgent` with specialized sub-agents
+- **Complexity**: Advanced
+- **Use Case**: Multi-document type processing
+- **Key Features**:
+  - Intelligent document classification
+  - Dynamic routing to specialists
+  - Shared session state coordination
+  - Tool-based coordination
+
+### ⚖️ 4. Specialized Analysis (`legal_document_analysis/`)
+**Best For:** Domain-specific analysis
+
+- **Pattern**: Specialized `LlmAgent` for legal documents
+- **Complexity**: Intermediate
+- **Use Case**: Legal document analysis
+- **Key Features**:
+  - Domain-specific schemas
+  - Specialized instructions
+  - Financial term extraction
 
 ## Comparison Analysis
 
