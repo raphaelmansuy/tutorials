@@ -391,139 +391,36 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 
 ---
 
-### 🏗️ **Data Engineering & Platforms**
+### 🧪 **API Testing & Automation**
 
-Modern data platform development and management solutions.
+Master modern API testing, automation, and CI/CD integration with open-source tools.
 
-| Tutorial                                                       | Level        | Duration  | Language | Description                                                                            |
-| -------------------------------------------------------------- | ------------ | --------- | -------- | -------------------------------------------------------------------------------------- |
-| [📖 Tower.dev: From Novice to Practitioner](./08_tower_dev.md) | Intermediate | 4-6 hours | English  | Master modern data platform development with Tower.dev for simplified data engineering |
+| Tutorial                                                                                 | Level                | Duration  | Language | Description                                                                                 |
+| ---------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | ------------------------------------------------------------------------------------------- |
+| [📖 Bruno for API for the Impatient: From Novice to Practitioner in Record Time](./26-bruno.md) | Beginner to Advanced | 2-4 hours | English  | End-to-end guide to API testing, scripting, automation, and CI/CD integration using Bruno    |
 
 **What you'll learn:**
 
-- **Tower.dev platform** architecture and capabilities
-- **Data pipeline development** with simplified workflows
-- **Environment consistency** and deployment automation
-- **Kubernetes-based** data platform management
-- **Cost optimization** for data infrastructure
-- **Production-ready** data engineering practices
-- **Team collaboration** and development workflows
+- Bruno installation (GUI & CLI) and setup for all platforms
+- Creating, organizing, and versioning API collections with plain text `.bru` files
+- Using environment variables for flexible, secure API testing
+- Writing pre-request and post-response scripts for dynamic workflows
+- Automated assertions and advanced test scripting
+- CLI automation for local and CI/CD pipelines
+- Generating test reports (JSON, JUnit, HTML) for dashboards and stakeholders
+- Real-world e-commerce API workflow: registration, product search, cart, order, and payment
+- Security best practices for secrets and test data
+- Advanced integration: webhooks, GraphQL, and error handling
+- 24-hour challenge: Build a production-ready API suite for GitHub
 
 **Key Features:**
 
-- Simplified data platform management
-- Infrastructure-as-code for data engineering
-- Real-world data pipeline examples
-- Performance optimization techniques
-
----
-
-### 🌐 **API Management & Integration**
-
-Enterprise-grade API management, security, and authentication solutions.
-
-| Tutorial                                                                 | Level                    | Duration  | Language | Description                                                                                                             |
-| ------------------------------------------------------------------------ | ------------------------ | --------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [📖 Google Cloud Apigee: API Management Mastery](./10_apigee.md)         | Intermediate             | 5-7 hours | English  | Complete guide to API management, security, and analytics with Google Cloud Apigee                                      |
-| [📖 OAuth2: From Novice to Practitioner](./11_oauth2.md)                 | Intermediate             | 4-6 hours | English  | Master OAuth2 authentication and authorization with real-world examples and security best practices                     |
-| [📖 OpenID Connect: Complete Authentication Guide](./12_oidc_connect.md) | Intermediate to Advanced | 6-8 hours | English  | Comprehensive OpenID Connect tutorial covering identity authentication, token management, and production implementation |
-
-**What you'll learn:**
-
-- **Apigee architecture** and API gateway fundamentals
-- **OAuth2 flows** and authentication patterns (Authorization Code, Client Credentials, PKCE)
-- **OpenID Connect (OIDC)** identity layer and authentication protocols
-- **API security** and authentication strategies
-- **Token lifecycle** management and security best practices
-- **ID tokens, access tokens**, and refresh token handling
-- **Traffic management** and rate limiting
-- **Analytics and monitoring** for API performance
-- **Developer portal** setup and management
-- **API monetization** and policy enforcement
-- **Integration patterns** with GCP services
-- **Production deployment** and scaling strategies
-- **OIDC debugging** and troubleshooting techniques
-- **Enterprise identity** integration patterns
-
-**Key Features:**
-
-- Enterprise API management patterns
-- Security best practices and compliance
-- Performance optimization and analytics
-- Real-world integration scenarios
-- Hands-on OAuth2 and OIDC implementation examples
-- Production-ready authentication solutions
-
----
-
-### ☁️ **Cloud Migration & Infrastructure**
-
-Strategic migration guides and infrastructure transformation patterns.
-
-| Tutorial                                                                                              | Level    | Duration   | Language | Description                                                                                                  |
-| ----------------------------------------------------------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------ |
-| [📖 HAProxy to AWS Migration: Complete Guide](./13_migration_from_haproxy_to_aws_managed_services.md) | Advanced | 8-10 hours | English  | Comprehensive migration from HAProxy to AWS managed services including ALB, NLB, API Gateway, and CloudFront |
-
-**What you'll learn:**
-
-- **Migration assessment** and planning frameworks
-- **AWS Application Load Balancer (ALB)** implementation and configuration
-- **Network Load Balancer (NLB)** for high-performance scenarios
-- **API Gateway** for microservices and API management
-- **CloudFront CDN** for global content delivery
-- **AWS WAF** for web application security
-- **Cost optimization** strategies and techniques
-- **Performance tuning** and monitoring setup
-- **Infrastructure as Code** with AWS CDK and TypeScript
-- **Blue-green deployment** strategies
-- **Traffic splitting** and canary deployments
-- **Troubleshooting** common migration issues
-
-**Key Features:**
-
-- Real-world migration scenarios and case studies
-- Step-by-step implementation guides
-- Cost comparison and optimization techniques
-- Performance benchmarking and testing
-- Production-ready Infrastructure as Code examples
-
----
-
-### 🔐 **Identity & Access Management (IAM)**
-
-Master Google Cloud IAM concepts, policies, and real-world access control scenarios.
-
-| Tutorial                                                                 | Level                | Duration  | Language | Description                                                                                         |
-| ------------------------------------------------------------------------ | -------------------- | --------- | -------- | --------------------------------------------------------------------------------------------------- |
-| [📖 Google Cloud IAM: From Novice to Practitioner](./20_google_iam.md)   | Beginner to Advanced | 2-4 hours | English  | Comprehensive guide to Google Cloud IAM: identities, roles, policies, mindmaps, and practical labs   |
-
-**What you'll learn:**
-
-- Google Cloud identity types (users, service accounts, groups, workload identities)
-- IAM roles, policies, and permissions
-- Policy evaluation and access decision flow
-- Hands-on mindmaps and sequence diagrams for IAM
-- Real-world access control scenarios and troubleshooting
-- Best practices for secure cloud access management
-
----
-
-### ☁️ Application Hosting & Serverless
-
-Master serverless deployment and modern application hosting with Google Cloud Run.
-
-| Tutorial                                                                                      | Level                | Duration  | Language | Description                                                                                                 |
-| --------------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | ----------------------------------------------------------------------------------------------------------- |
-| [📖 Google Cloud Run for the Impatient: From Novice to Practitioner](./21_google_cloud_run.md) | Beginner to Advanced | 3-5 hours | English  | Fast-track guide to deploying, scaling, and managing containerized applications with Google Cloud Run        |
-
-**What you'll learn:**
-
-- Cloud Run fundamentals: services, jobs, and serverless architecture
-- Deploying stateless containers with zero infrastructure management
-- Building REST APIs, web apps, and background jobs
-- Autoscaling, concurrency, and performance tuning
-- Security, authentication, and cost optimization
-- Real-world deployment patterns and troubleshooting
+- Local-first, Git-friendly API collections (no cloud lock-in)
+- Human-readable `.bru` syntax for maintainable tests
+- Seamless integration with GitHub Actions and other CI/CD tools
+- Performance and security testing patterns
+- Real-world examples and troubleshooting tips
+- Bonus: Advanced scripting, dynamic data, and reporting
 
 ---
 
