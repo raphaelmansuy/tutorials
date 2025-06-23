@@ -1208,7 +1208,7 @@ graph TD
 
 Every API you test with Bruno, every script you write, every collection you create – it all compounds. In six months, you'll look back at this moment as the turning point when you stopped fighting your tools and started making them work for you.
 
-Remember the \$50,000 startup story from the beginning? That could have been prevented with 30 minutes of Bruno setup. Your future self is counting on you to make better choices.
+Remember the $50,000 startup story from the beginning? That could have been prevented with 30 minutes of Bruno setup. Your future self is counting on you to make better choices.
 
 **The most successful developers aren't those who know every tool – they're the ones who master the right tools deeply.**
 
@@ -1227,20 +1227,11 @@ _"The best time to plant a tree was 20 years ago. The second best time is now."_
 Explore more about Bruno, the Bru language, and API testing best practices:
 
 - [Bruno Official Website](https://www.usebruno.com)
-- [Bruno Documentation](https://docs.usebruno.com)
-  - [Bru Language Overview](https://docs.usebruno.com/bru-lang/overview)
-  - [Bru Language Samples](https://docs.usebruno.com/bru-lang/samples)
-  - [Tag Reference](https://docs.usebruno.com/bru-lang/tag-reference)
-  - [Assertions & Testing](https://docs.usebruno.com/testing/tests/assertions)
-  - [Environment Variables](https://docs.usebruno.com/variables/environment-variables)
-  - [CLI Overview](https://docs.usebruno.com/bru-cli/overview)
-  - [CLI Command Options](https://docs.usebruno.com/bru-cli/commandOptions)
-- [Bru Language GitHub](https://github.com/brulang/bru-lang)
 - [Bruno GitHub Repository](https://github.com/usebruno/bruno)
+- [Bruno CLI Documentation](https://github.com/usebruno/bruno/tree/main/packages/bruno-cli)
+- [Bru Language Specification](https://github.com/usebruno/bruno/blob/main/docs/bru-lang.md)
 - [Bruno CLI Blog](https://blog.usebruno.com/bruno-cli)
-- [Bruno CLI GitHub Readme](https://github.com/usebruno/bruno/blob/main/packages/bruno-cli/readme.md)
 - [Bruno API Test Starter (Sample Project)](https://github.com/Automation-Test-Starter/Bruno-API-Test-Starter/blob/main/README.md)
-- [Bruno Leanpub Book](https://leanpub.com/bruno-api)
 
 ### Tutorials, Comparisons, and Community Articles
 
@@ -1269,9 +1260,9 @@ Explore more about Bruno, the Bru language, and API testing best practices:
 
 ### Community & Issues
 
-- [Bruno GitHub Issues](https://github.com/usebruno/bruno/issues/1771)
-- [Bruno Feature Requests & Discussions](https://github.com/usebruno/bruno/issues/4535)
+- [Bruno GitHub Issues](https://github.com/usebruno/bruno/issues)
+- [Bruno Discussions](https://github.com/usebruno/bruno/discussions)
 
 ---
 
-For the latest updates, best practices, and community support, visit the [Bruno Documentation](https://docs.usebruno.com) and join the [Bruno GitHub community](https://github.com/usebruno/bruno).
+For the latest updates, best practices, and community support, visit the [Bruno Official Website](https://www.usebruno.com) and join the [Bruno GitHub community](https://github.com/usebruno/bruno).
