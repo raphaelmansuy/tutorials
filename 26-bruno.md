@@ -1028,7 +1028,7 @@ Bruno handles GraphQL beautifully:
 ```bru
 meta {
   name: GraphQL User Query
-  type: graphql
+  type: http
   seq: 1
 }
 
@@ -1114,7 +1114,8 @@ auth:bearer {
 }
 
 headers {
-  Accept: application/vnd.github.v3+json
+  Accept: application/vnd.github+json
+  X-GitHub-Api-Version: 2022-11-28
   User-Agent: Bruno-API-Explorer
 }
 
@@ -1208,7 +1209,7 @@ graph TD
 
 Every API you test with Bruno, every script you write, every collection you create – it all compounds. In six months, you'll look back at this moment as the turning point when you stopped fighting your tools and started making them work for you.
 
-Remember the $50,000 startup story from the beginning? That could have been prevented with 30 minutes of Bruno setup. Your future self is counting on you to make better choices.
+Remember the startup story from the beginning where poor API management led to a critical failure during a funding pitch? That could have been prevented with 30 minutes of Bruno setup. Your future self is counting on you to make better choices.
 
 **The most successful developers aren't those who know every tool – they're the ones who master the right tools deeply.**
 
