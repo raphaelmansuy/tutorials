@@ -1,5 +1,34 @@
 # Collection of Prompts to generate diagrams
 
+## Image Generation Models
+
+### ImageGen4
+
+**Model:** `ImageGen4`
+
+DeepMind's May 2025 text-to-image model with exceptional prompt adherence, capable of generating images with great detail, rich lighting, and few distracting artifacts.
+
+- **Aspect Ratio:** To adjust the aspect ratio, add `--aspect_ratio` (options: 1:1, 16:9, 9:16, 4:3, 3:4).
+- **Language:** Non-English input will be translated first.
+- **Model Served:** `imagen-4.0-ultra-generate-05-20` (Google Vertex)
+- **Token Limit:** Maximum input of 480 tokens.
+
+---
+
+### OpenAI (ChatGPT Image Generation)
+
+**Model:** `OpenAI Image Generation GPT-Image-1`
+
+OpenAI's model powers image generation in ChatGPT, offering exceptional prompt adherence, level of detail, and quality. It supports editing, restyling, and combining images attached to the latest user query.
+
+**Optional parameters:**
+
+- `--aspect` (options: 1:1, 3:2, 2:3): Aspect ratio of the output image
+- `--quality` (options: high, medium, low): Image resolution
+- `--use-mask`: Indicates that the last attached image is a mask for inpainting (editing specific regions). The mask must match the dimensions of the base image, with transparent (zero-alpha) areas showing which parts to edit.
+
+---
+
 ## Quadrant Diagram
 
 > **When to use a quadrant diagram:**
@@ -62,6 +91,16 @@ Format:
 - Use aspect ratio 1:1
 - Flat design
 ```
+
+### Examples
+
+#### ImageGen4 Example
+
+![Clean Modern Quadrant Diagram Image-gen4](./assets/clean_modern_quadrant_diagram_imagegen4.jpeg)
+
+### OpenAI Example
+
+![Clean Modern Quadrant Diagram OpenAI](./assets/clean_modern_quadrant_diagram_openai.jpeg)
 
 ## 2. Funnel Diagram
 
