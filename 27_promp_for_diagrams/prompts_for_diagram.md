@@ -1,5 +1,8 @@
 # Collection of Prompts to generate diagrams
 
+> **When to use a quadrant diagram:**
+> Use a quadrant diagram to visually compare items, strategies, or concepts across two axes or dimensions. It is ideal for highlighting relationships, trade-offs, or positioning in a clear, easy-to-understand 2x2 grid.
+
 ## Prompts for Diagrams
 
 ```text
