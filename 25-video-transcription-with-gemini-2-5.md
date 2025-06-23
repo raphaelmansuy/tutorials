@@ -95,9 +95,41 @@ pip install google-generativeai
 - [ ] Google Cloud project created
 - [ ] Vertex AI API enabled
 - [ ] Service account with necessary permissions
+- [ ] Cloud Storage bucket created for audio files (see [setup guide](./tutorial/cloud-storage-setup.md))
 
 > **Pro Tip:**
 > Use a dedicated service account for automation—never your personal credentials.
+
+#### Quick Setup: Creating Your Storage Bucket
+
+For Vertex AI, your audio files need to be in Google Cloud Storage. Here's the fastest way:
+
+**Via Google Cloud Console:**
+
+1. Go to [Google Cloud Storage](https://console.cloud.google.com/storage)
+2. Click "Create Bucket"
+3. Choose a unique name (e.g., `your-project-transcription-bucket`)
+4. Select "Region" closest to you (e.g., `us-central1`)
+5. Use "Standard" storage class for active transcription work
+
+**Via Command Line:**
+
+```bash
+# Create bucket
+gsutil mb gs://your-project-transcription-bucket
+
+# Upload your audio file
+gsutil cp /path/to/your/interview.m4a gs://your-project-transcription-bucket/
+
+# Verify upload
+gsutil ls gs://your-project-transcription-bucket/
+```
+
+**Quick Upload Tips:**
+
+- Drag & drop files directly in the Cloud Console
+- Use `gsutil -m cp` for faster parallel uploads of multiple files
+- Keep file names simple (no spaces or special characters)
 
 #### Common Pitfall
 
@@ -111,6 +143,8 @@ pip install google-generativeai
 Let’s dive in with a simple, real-world example.
 
 ### Understanding the Two Approaches
+
+**Need detailed Cloud Storage setup?** → [Complete Cloud Storage Setup Guide](./tutorial/cloud-storage-setup.md)
 
 | Feature                 | Vertex AI                      | Gemini API                              |
 | ----------------------- | ------------------------------ | --------------------------------------- |
