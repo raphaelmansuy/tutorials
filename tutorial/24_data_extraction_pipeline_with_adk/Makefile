@@ -1,4 +1,4 @@
-.PHONY: help venv install test lint format clean run_basic_example run_legal_example run_multi_agent_example test_multi_agent demo_multi_agent cli_contacts cli_legal
+.PHONY: help venv install test lint format clean run_basic_example run_legal_example run_multi_agent_example run_sequential_contract_pipeline test_multi_agent demo_multi_agent cli_contacts cli_legal cli_sequential_contract
 
 help:
 	@echo "ADK Data Extraction Tutorial Makefile"
@@ -12,10 +12,12 @@ help:
 	@echo "  run_basic_example - Run basic_contact_extraction.py example"
 	@echo "  run_legal_example - Run legal_document_analysis.py example"
 	@echo "  run_multi_agent_example - Run multi_agent_pipeline.py example"
+	@echo "  run_sequential_contract_pipeline - Run sequential_contract_pipeline.py example"
 	@echo "  test_multi_agent - Run multi-agent pipeline test suite"
 	@echo "  demo_multi_agent - Run simple multi-agent demo"
 	@echo "  cli_contacts      - Run contact extraction via CLI"
 	@echo "  cli_legal         - Run legal analysis via CLI"
+	@echo "  cli_sequential_contract - Run sequential contract pipeline via CLI"
 
 venv:
 	uv venv .venv
@@ -45,6 +47,9 @@ run_legal_example: install
 run_multi_agent_example: install
 	. .venv/bin/activate && python -m adk_data_extraction.examples.multi_agent_pipeline
 
+run_sequential_contract_pipeline: install
+	. .venv/bin/activate && python -m adk_data_extraction.examples.sequential_contract_pipeline
+
 test_multi_agent: install
 	. .venv/bin/activate && python test_multi_agent_pipeline.py
 
@@ -56,3 +61,6 @@ cli_contacts: install
 
 cli_legal: install
 	. .venv/bin/activate && adk-analyze-legal
+
+cli_sequential_contract: install
+	. .venv/bin/activate && adk run sequential_contract_pipeline
