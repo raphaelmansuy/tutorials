@@ -1,4 +1,19 @@
-# Transcribing a Video using Gemini 2.5 for the Impatient: From Novice to Practitioner in Record Time
+# Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide
+
+## **📚 Learning Objectives**
+
+By the end of this tutorial, you will be able to:
+
+- ✅ Set up and authenticate with both Vertex AI and Gemini API
+- ✅ Transcribe audio and video files with timestamps and speaker identification
+- ✅ Choose the appropriate model (Flash vs. Flash-Lite vs. Pro) for your use case
+- ✅ Implement production-ready error handling and quality assurance
+- ✅ Optimize performance for batch processing and cost management
+- ✅ Integrate transcription into your existing workflows
+
+**Time Investment:** 45-60 minutes for basic setup, 2-3 hours for advanced features
+
+**Prerequisites:** Basic Python knowledge, Google Cloud account
 
 ---
 
@@ -97,14 +112,14 @@ Let’s dive in with a simple, real-world example.
 
 ### Understanding the Two Approaches
 
-| Feature | Vertex AI | Gemini API |
-|---------|-----------|------------|
-| **Use Case** | Production/Enterprise | Development/Prototyping |
-| **Authentication** | Google Cloud IAM | API Keys |
-| **File Handling** | Direct Cloud Storage URIs | Upload files via Files API |
-| **Regional Deployment** | Yes (us-central1, etc.) | Global endpoints |
-| **Enterprise Features** | Advanced safety, custom tuning | Basic features |
-| **Pricing** | Enterprise SLAs | More cost-effective for small workloads |
+| Feature                 | Vertex AI                      | Gemini API                              |
+| ----------------------- | ------------------------------ | --------------------------------------- |
+| **Use Case**            | Production/Enterprise          | Development/Prototyping                 |
+| **Authentication**      | Google Cloud IAM               | API Keys                                |
+| **File Handling**       | Direct Cloud Storage URIs      | Upload files via Files API              |
+| **Regional Deployment** | Yes (us-central1, etc.)        | Global endpoints                        |
+| **Enterprise Features** | Advanced safety, custom tuning | Basic features                          |
+| **Pricing**             | Enterprise SLAs                | More cost-effective for small workloads |
 
 #### Key Differences Explained
 
@@ -223,23 +238,23 @@ def transcribe_audio_vertexai(project_id: str, location: str, audio_uri: str):
     """Complete function to transcribe audio using Vertex AI"""
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
-    
+
     # Create the model
     model = GenerativeModel("gemini-2.5-flash")  # Recommended for transcription
-    
+
     # Create parts
     audio_part = Part.from_uri(
         uri=audio_uri,
         mime_type="audio/mp4"  # Adjust based on your file type
     )
-    
+
     prompt = """Transcribe this audio file with the following requirements:
     1. Include timestamps in [HH:MM:SS] format
     2. Identify speakers as Speaker A, Speaker B, etc.
     3. Format as: [timestamp] Speaker X: dialogue
     4. If audio is unclear, mark as [inaudible]
     """
-    
+
     # Generate content with proper configuration
     response = model.generate_content(
         [audio_part, prompt],
@@ -255,7 +270,7 @@ def transcribe_audio_vertexai(project_id: str, location: str, audio_uri: str):
             {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
         ]
     )
-    
+
     return response.text
 
 # Usage
@@ -443,6 +458,7 @@ safety_settings=[
 ```
 
 **Why This Matters:**
+
 - **News Transcripts:** Political debates or news content might be flagged
 - **Interview Content:** Sensitive topics discussed in interviews
 - **Legal/Medical:** Professional recordings containing sensitive terminology
@@ -456,6 +472,7 @@ safety_settings=[
 For accurate timestamp generation in audio transcription, you need to enable the `audioTimestamp` parameter:
 
 **For Vertex AI:**
+
 ```python
 generation_config=GenerationConfig(
     temperature=0,
@@ -465,6 +482,7 @@ generation_config=GenerationConfig(
 ```
 
 **For Gemini API:**
+
 ```python
 generation_config=genai.GenerationConfig(
     temperature=0,
@@ -478,11 +496,13 @@ generation_config=genai.GenerationConfig(
 ### Technical Details Update
 
 **Token Representation:**
+
 - Each second of audio = 32 tokens (according to official documentation)
 - 1 minute of audio = 1,920 tokens
 - Maximum audio length: 9.5 hours per prompt (updated from 8.4 hours)
 
 **Audio Processing:**
+
 - Audio is downsampled to 16 Kbps resolution
 - Multi-channel audio is combined into a single channel
 - Gemini can understand non-speech sounds (birdsong, sirens, etc.)
@@ -490,11 +510,13 @@ generation_config=genai.GenerationConfig(
 ### Pricing Information (As of June 2025)
 
 **Gemini 2.5 Flash (Recommended for transcription):**
+
 - Free tier available in Google AI Studio
 - Paid tier: $0.30/1M tokens (text/image/video), $1.00/1M tokens (audio input)
 - Output: $2.50/1M tokens
 
 **Gemini 2.5 Pro:**
+
 - Paid tier only: $1.25-$2.50/1M tokens (input), $10.00-$15.00/1M tokens (output)
 
 > **Cost Estimation:** A 1-hour audio file ≈ 115,200 tokens, costing ~$0.12 for input processing with Gemini 2.5 Flash.
@@ -506,16 +528,18 @@ generation_config=genai.GenerationConfig(
 **Speaker Diarization is NOT automatic.** You must request it in your prompt:
 
 ```python
-prompt = """Transcribe this audio and identify different speakers as Speaker A, Speaker B, etc. 
+prompt = """Transcribe this audio and identify different speakers as Speaker A, Speaker B, etc.
 Include timestamps in [HH:MM:SS] format for each speaker's utterances."""
 ```
 
 **What Gemini Does:**
+
 - Attempts to differentiate speakers based on voice characteristics
 - Labels them as "Speaker A," "Speaker B," etc. when prompted
 - Quality depends on audio clarity and speaker distinctiveness
 
 **What Gemini Does NOT Do:**
+
 - Automatic speaker identification without prompting
 - Named speaker identification (e.g., "John Smith said...")
 - Perfect speaker separation in noisy environments
@@ -525,6 +549,7 @@ Include timestamps in [HH:MM:SS] format for each speaker's utterances."""
 ### 🎯 **Model Recommendation Update (June 2025)**
 
 **For Transcription Tasks, Use:**
+
 1. **Gemini 2.5 Flash** - Best price-performance ratio for most transcription needs
 2. **Gemini 2.5 Flash-Lite** - Most cost-effective for high-volume, batch processing
 3. **Gemini 2.5 Pro** - Only for complex reasoning combined with transcription
@@ -548,6 +573,7 @@ response = model.generate_content([audio_part, prompt])
 ```
 
 **To control thinking behavior:**
+
 ```python
 generation_config=GenerationConfig(
     temperature=0,
@@ -566,12 +592,14 @@ generation_config=GenerationConfig(
 Gemini 2.5 supports transcription in 40+ languages:
 
 **Major Languages Supported:**
+
 - English, Spanish, French, German, Italian, Portuguese
 - Chinese (Simplified/Traditional), Japanese, Korean
 - Arabic, Hindi, Russian, Dutch, Polish
 - And 30+ more languages
 
 **Example: Spanish Transcription**
+
 ```python
 prompt = """Transcribe this Spanish audio with the following requirements:
 1. Include timestamps in [HH:MM:SS] format
@@ -581,6 +609,7 @@ prompt = """Transcribe this Spanish audio with the following requirements:
 ```
 
 **Best Practices for Non-English Audio:**
+
 - Specify the language in your prompt for better accuracy
 - Use native speaker labels (e.g., "Sprecherin A" for German)
 - Consider regional dialects and accents in your quality expectations
@@ -593,15 +622,16 @@ The tutorial title mentions video, but there are important video-specific consid
 
 **Video vs Audio-Only Transcription:**
 
-| Feature | Audio-Only | Video |
-|---------|------------|--------|
-| **Input Format** | Audio files only | Video files (MP4, MOV, AVI, etc.) |
-| **Context Clues** | Audio signals only | Visual cues + audio |
-| **Speaker ID** | Voice-based only | Visual + voice-based |
-| **Processing** | Audio tokens only | Video + audio tokens |
-| **Cost** | Lower | Higher (due to video processing) |
+| Feature           | Audio-Only         | Video                             |
+| ----------------- | ------------------ | --------------------------------- |
+| **Input Format**  | Audio files only   | Video files (MP4, MOV, AVI, etc.) |
+| **Context Clues** | Audio signals only | Visual cues + audio               |
+| **Speaker ID**    | Voice-based only   | Visual + voice-based              |
+| **Processing**    | Audio tokens only  | Video + audio tokens              |
+| **Cost**          | Lower              | Higher (due to video processing)  |
 
 **Video-Specific Example:**
+
 ```python
 # For video files
 video_part = Part.from_uri(
@@ -617,6 +647,7 @@ prompt = """Transcribe this video meeting with the following requirements:
 ```
 
 **Video Limitations:**
+
 - Larger file sizes increase processing time
 - Visual processing adds to token consumption
 - Not all video formats supported equally
@@ -636,26 +667,26 @@ from vertexai.generative_models import GenerativeModel, Part, GenerationConfig
 from google.api_core import exceptions as gcp_exceptions
 
 def robust_transcribe_audio(
-    project_id: str, 
-    location: str, 
+    project_id: str,
+    location: str,
     audio_uri: str,
     max_retries: int = 3
 ) -> Optional[str]:
     """Production-ready transcription with error handling"""
-    
+
     for attempt in range(max_retries):
         try:
             vertexai.init(project=project_id, location=location)
             model = GenerativeModel("gemini-2.5-flash")
-            
+
             audio_part = Part.from_uri(
                 uri=audio_uri,
                 mime_type="audio/mp4"
             )
-            
+
             prompt = """Transcribe this audio with timestamps and speaker identification.
             Format: [HH:MM:SS] Speaker X: dialogue"""
-            
+
             response = model.generate_content(
                 [audio_part, prompt],
                 generation_config=GenerationConfig(
@@ -670,27 +701,27 @@ def robust_transcribe_audio(
                     {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
                 ]
             )
-            
+
             return response.text
-            
+
         except gcp_exceptions.ResourceExhausted as e:
             logging.warning(f"Rate limit hit, attempt {attempt + 1}/{max_retries}")
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)  # Exponential backoff
             else:
                 raise
-                
+
         except gcp_exceptions.InvalidArgument as e:
             logging.error(f"Invalid audio format or file: {e}")
             raise
-            
+
         except Exception as e:
             logging.error(f"Unexpected error on attempt {attempt + 1}: {e}")
             if attempt < max_retries - 1:
                 time.sleep(1)
             else:
                 raise
-    
+
     return None
 
 # Usage with error handling
@@ -705,12 +736,13 @@ try:
         print(transcript)
     else:
         print("Transcription failed after all retries")
-        
+
 except Exception as e:
     logging.error(f"Transcription failed: {e}")
 ```
 
 **Common Error Scenarios:**
+
 - Rate limiting (429 errors)
 - Invalid audio formats
 - Files too large
@@ -721,9 +753,8 @@ except Exception as e:
 
 ### ⚡ **Performance Optimization for Large-Scale Transcription**
 
-Missing from the tutorial - critical for production deployments:
-
 **Batch Processing Optimization:**
+
 ```python
 import asyncio
 import concurrent.futures
@@ -734,9 +765,9 @@ async def batch_transcribe_optimized(
     max_concurrent: int = 5
 ) -> List[Tuple[str, str]]:
     """Optimized batch transcription with concurrency control"""
-    
+
     semaphore = asyncio.Semaphore(max_concurrent)
-    
+
     async def transcribe_single(audio_uri: str) -> Tuple[str, str]:
         async with semaphore:
             try:
@@ -745,7 +776,7 @@ async def batch_transcribe_optimized(
                 return audio_uri, result
             except Exception as e:
                 return audio_uri, f"ERROR: {str(e)}"
-    
+
     tasks = [transcribe_single(uri) for uri in audio_files]
     results = await asyncio.gather(*tasks)
     return results
@@ -753,7 +784,7 @@ async def batch_transcribe_optimized(
 # Model selection for different use cases
 MODEL_RECOMMENDATIONS = {
     "high_volume_batch": "gemini-2.5-flash-lite",
-    "standard_quality": "gemini-2.5-flash", 
+    "standard_quality": "gemini-2.5-flash",
     "complex_reasoning": "gemini-2.5-pro",
     "real_time": "gemini-2.0-flash-live"  # For live transcription
 }
@@ -761,9 +792,8 @@ MODEL_RECOMMENDATIONS = {
 
 ### 📊 **Quality Assurance and Accuracy Measurement**
 
-Missing from the tutorial - critical for production deployments:
-
 **Transcript Quality Metrics:**
+
 ```python
 import difflib
 from typing import Dict, List
@@ -771,53 +801,53 @@ import re
 
 class TranscriptionQualityAnalyzer:
     """Analyze transcription quality and accuracy"""
-    
+
     def __init__(self):
         self.metrics = {}
-    
+
     def calculate_word_error_rate(self, reference: str, hypothesis: str) -> float:
         """Calculate Word Error Rate (WER) - industry standard metric"""
         ref_words = reference.lower().split()
         hyp_words = hypothesis.lower().split()
-        
+
         # Use edit distance
         d = [[0] * (len(hyp_words) + 1) for _ in range(len(ref_words) + 1)]
-        
+
         for i in range(len(ref_words) + 1):
             d[i][0] = i
         for j in range(len(hyp_words) + 1):
             d[0][j] = j
-            
+
         for i in range(1, len(ref_words) + 1):
             for j in range(1, len(hyp_words) + 1):
                 if ref_words[i-1] == hyp_words[j-1]:
                     d[i][j] = d[i-1][j-1]
                 else:
                     d[i][j] = min(d[i-1][j], d[i][j-1], d[i-1][j-1]) + 1
-        
+
         return d[len(ref_words)][len(hyp_words)] / len(ref_words)
-    
+
     def analyze_speaker_accuracy(self, transcript: str) -> Dict:
         """Analyze speaker diarization accuracy"""
         speaker_pattern = r'\[(\d{2}:\d{2}:\d{2})\]\s*(Speaker [A-Z]|Hablante [A-Z]):'
         matches = re.findall(speaker_pattern, transcript)
-        
+
         return {
             'total_utterances': len(matches),
             'unique_speakers': len(set(match[1] for match in matches)),
             'avg_utterance_length': self._calculate_avg_utterance_length(transcript),
             'timeline_consistency': self._check_timeline_consistency(matches)
         }
-    
+
     def _calculate_avg_utterance_length(self, transcript: str) -> float:
         """Calculate average utterance length"""
         utterances = re.split(r'\[\d{2}:\d{2}:\d{2}\].*?:', transcript)[1:]
         if not utterances:
             return 0
-        
+
         lengths = [len(utterance.strip().split()) for utterance in utterances]
         return sum(lengths) / len(lengths)
-    
+
     def _check_timeline_consistency(self, matches: List) -> bool:
         """Check if timestamps are in chronological order"""
         timestamps = [match[0] for match in matches]
@@ -840,10 +870,42 @@ print(f"Speaker Analysis: {speaker_analysis}")
 ```
 
 **Quality Improvement Strategies:**
+
 1. **Audio preprocessing**: Noise reduction, normalization
 2. **Prompt optimization**: A/B testing different prompt formats
 3. **Model selection**: Choose appropriate model for content type
 4. **Post-processing**: Spell checking, grammar correction
 5. **Human review**: Quality sampling for continuous improvement
 
+---
 
+## **🔧 Troubleshooting Guide**
+
+### **Common Issues and Solutions**
+
+| Problem                        | Symptoms                                   | Solution                                          |
+| ------------------------------ | ------------------------------------------ | ------------------------------------------------- |
+| **Authentication Errors**      | "Permission denied", "Invalid credentials" | Check service account permissions, verify API key |
+| **File Format Issues**         | "Unsupported format", "Invalid MIME type"  | Convert to supported format (MP3, WAV, M4A)       |
+| **Rate Limiting**              | "Quota exceeded", "Too many requests"      | Implement exponential backoff, reduce concurrency |
+| **Poor Transcription Quality** | Missing words, incorrect timestamps        | Improve audio quality, adjust prompts             |
+| **Memory/Timeout Errors**      | "Request timeout", "Memory exceeded"       | Split large files, optimize batch size            |
+
+### **Quality Issues Checklist**
+
+- [ ] Audio quality is clear (minimal background noise)
+- [ ] File format is supported and optimal
+- [ ] Speakers are clearly distinguishable
+- [ ] Prompt is specific and well-formatted
+- [ ] Appropriate model selected for use case
+- [ ] Safety settings configured correctly
+
+### **Performance Optimization Checklist**
+
+- [ ] Using appropriate model (Flash for most cases)
+- [ ] Implementing proper error handling
+- [ ] Batching requests efficiently
+- [ ] Monitoring costs and usage
+- [ ] Caching results when appropriate
+
+---
