@@ -146,7 +146,7 @@ class PipelineResult(BaseModel):
 
 def get_shared_state() -> dict[str, Any]:
     """Tool to retrieve shared state for coordination
-    
+
     This tool allows the coordinator to check what data has been saved
     by other agents in the pipeline via their output_key configurations.
     """
@@ -159,8 +159,8 @@ def get_shared_state() -> dict[str, Any]:
             "contract_extraction",
             "invoice_extraction",
             "general_extraction",
-            "validation_result"
-        ]
+            "validation_result",
+        ],
     }
 
 

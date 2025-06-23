@@ -53,8 +53,6 @@ run_sequential_contract_pipeline: install
 test_multi_agent: install
 	. .venv/bin/activate && python test_multi_agent_pipeline.py
 
-demo_multi_agent: install
-	. .venv/bin/activate && python demo_multi_agent.py
 
 cli_contacts: install
 	. .venv/bin/activate && adk-extract-contacts
