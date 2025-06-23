@@ -17,6 +17,22 @@ This project offers a curated collection of **production-ready training tutorial
 - **Cloud Migration & Infrastructure**: Strategic HAProxy-to-AWS migrations and infrastructure transformation
 - **Infrastructure as Code**: Advanced Terraform, CDK TypeScript, and scalable architecture patterns
 
+```mermaid
+mindmap
+  root((Cloud & DevOps Training Hub))
+    GCP
+    AWS
+    Kubernetes & Containerization
+    Machine Learning & AI Agents
+    Cloud Storage & Data Management
+    DevOps & CI/CD
+    AI-Powered Development
+    Authentication & Security
+    Cloud Migration & Infrastructure
+    Infrastructure as Code
+%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#6b7280', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#22223b' }}}%%
+```
+
 Each tutorial features:
 
 - **Step-by-step, production-ready instructions** with enterprise best practices
@@ -64,6 +80,7 @@ For experienced professionals seeking enterprise-grade AI solutions:
 2. [Enterprise AI Agent Development](#-artificial-intelligence--machine-learning)
 3. [Multi-Agent System Orchestration](#-artificial-intelligence--machine-learning)
 4. [Business Impact & ROI Analysis](#-artificial-intelligence--machine-learning)
+
 
 ---
 
