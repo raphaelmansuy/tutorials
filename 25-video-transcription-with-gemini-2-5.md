@@ -19,7 +19,7 @@ By the end of this tutorial, you will be able to:
 
 ## 1. Why Transcribe with Gemini 2.5?
 
-Imagine this: You’re in a high-stakes meeting. The CEO drops a game-changing insight, but nobody’s taking notes. Later, you’re tasked with summarizing the meeting, but the golden nugget i---If you'd like to see more complex examples or have questions about a specific use case, let me know!ou'd like to see more complex examples or have questions about a specific use case, let me know!ou'd like to see more complex examples or have questions about a specific use case, let me know!in a sea of “ums” and background chatter. Sound familiar?
+Imagine this: You’re in a high-stakes meeting. The CEO drops a game-changing insight, but nobody’s taking notes. Later, you’re tasked with summarizing the meeting, but the golden nugget is buried in a sea of “ums” and background chatter. Sound familiar?
 
 Now, picture having a tool that not only captures every word with near-human accuracy but also timestamps and labels each speaker—automatically. That’s the power of Gemini 2.5.
 
