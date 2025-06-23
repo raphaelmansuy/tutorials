@@ -161,7 +161,13 @@ response = model.generate_content(
     generation_config=GenerationConfig(
         temperature=0,
         max_output_tokens=8192,
-    )
+    ),
+    safety_settings=[
+        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+    ]
 )
 
 print(response.text)
@@ -196,6 +202,11 @@ while uploaded_file.state.name == "PROCESSING":
 response = model.generate_content([
     uploaded_file,
     "Transcribe the interview, in the format of timecode, speaker, caption. Use speaker A, speaker B, etc. to identify speakers."
+], safety_settings=[
+    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
 ])
 
 print(response.text)
@@ -234,7 +245,13 @@ def transcribe_audio_vertexai(project_id: str, location: str, audio_uri: str):
         generation_config=GenerationConfig(
             temperature=0,
             max_output_tokens=8192,
-        )
+        ),
+        safety_settings=[
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+        ]
     )
     
     return response.text
@@ -409,5 +426,27 @@ Congratulations! You’ve gone from zero to Gemini 2.5 transcription hero.
 ---
 
 If you’d like to see more complex examples or have questions about a specific use case, let me know!
+
+### Important: Safety Settings for Transcription
+
+When transcribing audio/video content, you might encounter content that triggers Gemini's safety filters. For accurate transcription, you may need to adjust safety settings:
+
+```python
+safety_settings=[
+    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+]
+```
+
+**Why This Matters:**
+- **News Transcripts:** Political debates or news content might be flagged
+- **Interview Content:** Sensitive topics discussed in interviews
+- **Legal/Medical:** Professional recordings containing sensitive terminology
+- **Historical Audio:** Archival content with outdated language
+
+> **Important Note:**
+> Only disable safety filters when necessary and ensure you have proper content review processes in place. Consider your use case and compliance requirements.
 
 
