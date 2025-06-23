@@ -115,7 +115,6 @@ Master cloud storage solutions and data handling strategies.
 | ---------------------------------------------------------------------- | -------- | --------- | -------- | ----------------------------------------------------- |
 | [📖 Google Cloud SQL for Postgres for the Impatient](./19_google_cloud_sql.md) | Beginner to Intermediate | 3-5 hours | English  | Fast-track guide to Google Cloud SQL for PostgreSQL: setup, security, performance, and best practices |
 | [📖 Create GCP Storage Bucket (English)](./02_create_gcp_bucket_en.md) | Beginner | 1-2 hours | English  | Set up Google Cloud Storage for conversational agents |
-| [📖 Créer un Bucket GCP (Français)](./02_create_gcp_bucket.md)         | Beginner | 1-2 hours | French   | Configuration d'un bucket Google Cloud Storage        |
 
 **What you'll learn:**
 
