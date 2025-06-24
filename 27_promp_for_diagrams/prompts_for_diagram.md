@@ -53,13 +53,17 @@ Use soft, readable sans-serif fonts. Keep the style minimalist, professional, an
 
 Format:
 
-- Use aspect ratio 1:1
+- Use aspect ratio 1:1 --aspect_ratio 1:1
 - Flat design
 ```
 
 Example:
 
+**OpenAI Example:**
+
 ![Clean Modern Cadran OpenAI](./assets/clean_modern_quadrant_graph_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
 
 ![Clean Modern Cadran Imagegen4](./assets/clean_modern_quadrant_graph_diagram_imagegen4.jpeg)
 
@@ -88,19 +92,18 @@ Below the diagram, add a legend in a grey outlined box:
 Use soft, readable sans-serif fonts. Keep the style minimalist, professional, and easy to read. Avoid clutter.
 
 Format:
-- Use aspect ratio 1:1
+- Use aspect 1:1
+- Ensure margins at the top, left, right and bottom
 - Flat design
 ```
+
+Example:
 
 ### Examples
 
 #### ImageGen4 Example
 
 ![Clean Modern Quadrant Diagram Image-gen4](./assets/clean_modern_quadrant_diagram_imagegen4.jpeg)
-
-### OpenAI Example
-
-![Clean Modern Quadrant Diagram OpenAI](./assets/clean_modern_quadrant_diagram_openai.jpeg)
 
 ## 2. Funnel Diagram
 
@@ -125,8 +128,16 @@ Use soft, readable sans-serif fonts. Keep the style minimalist and professional.
 
 Format:
 - Use aspect ratio 3:4
-- Flat design with subtle gradients
+- Flat design
+- Ensure margins at the top, left, right and bottom
+
 ```
+
+Example:
+
+**ImageGen4 Example:**
+
+![Clean Modern Funnel Diagram Imagegen4](./assets/clean_modern_funnel_diagram_imagegen4.jpeg)
 
 ## 3. Pyramid Diagram
 
@@ -153,38 +164,11 @@ Format:
 - Flat design
 ```
 
-## 4. Flow Chart Diagram
+Example:
 
-> **When to use a flow chart diagram:**
-> Use a flow chart diagram to map out processes, decision points, and workflows, particularly useful for documenting algorithms, user journeys, or business process automation in software systems.
+**ImageGen4 Example:**
 
-### Prompt for a Flow Chart Diagram
-
-```text
-Create a clean, modern flow chart diagram on a white background. Design a vertical flow with decision diamonds, process rectangles, and connecting arrows.
-
-Start with a green oval "User Login Request"
-↓
-Blue rectangle "Validate Credentials"
-↓
-Yellow diamond "Valid?" with Yes/No paths
-No path → Red rectangle "Show Error Message" → loops back to start
-Yes path ↓
-Blue rectangle "Check User Permissions"
-↓
-Yellow diamond "Authorized?" with Yes/No paths
-No path → Orange rectangle "Access Denied"
-Yes path → Green oval "Grant System Access"
-
-Use consistent colors: green for start/end, blue for processes, yellow for decisions, red/orange for errors.
-Add clear directional arrows between all elements.
-
-Use soft, readable sans-serif fonts. Keep the style minimalist and professional.
-
-Format:
-- Use aspect ratio 3:4
-- Flat design
-```
+![Clean Modern Pyramid Diagram Imagegen4](./assets/clean_modern_pyramid_diagram_imagegen4.jpeg)
 
 ## 5. Matrix Diagram
 
@@ -194,25 +178,47 @@ Format:
 ### Prompt for a Matrix Diagram
 
 ```text
-Create a clean, modern matrix diagram on a white background. Design a 4x4 grid with headers.
+Create a clean, modern matrix diagram on a white background. Design a 4x4 grid with clear headers.
 
-Column headers (top): "Microservices", "Monolith", "Serverless", "Container-based"
-Row headers (left): "Scalability", "Development Speed", "Operational Complexity", "Cost Efficiency"
+- **Column headers (top):** "Microservices", "Monolith", "Serverless", "Container-based"
+- **Row headers (left):** "Scalability", "Development Speed", "Operational Complexity", "Cost Efficiency"
 
-Fill cells with colored circles:
-- Green circle: High/Excellent fit
-- Yellow circle: Medium/Good fit
-- Red circle: Low/Poor fit
+**Fill in the cells with colored circles representing fit:**
 
-Add a legend below showing the color meanings.
-Include title above: "Architecture Pattern Evaluation Matrix"
+                Microservices   Monolith   Serverless   Container-based
+Scalability           🟢           🟡           🟢              🟢
+Development Speed     🟡           🟢           🟢              🟡
+Operational Complexity🟡           🟢           🟡              🟡
+Cost Efficiency       🟡           🟢           🟡              🟡
 
-Use soft, readable sans-serif fonts with clear grid lines in light grey.
+**Legend:**
+- 🟢 = High/Excellent fit
+- 🟡 = Medium/Good fit
+- 🔴 = Low/Poor fit
 
-Format:
-- Use aspect ratio 4:3
-- Flat design
+You excactly need to fill the cells with colored circles representing fit described above.
+
+Add a legend below the diagram explaining the color meanings.
+Include a title above: "Architecture Pattern Evaluation Matrix".
+
+Use soft, readable sans-serif fonts and light grey grid lines for clarity.
+
+**Format:**
+- Aspect ratio 4:3
+- Flat, minimalist design
+
+
 ```
+
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Matrix Diagram OpenAI](./assets/clean_modern_matrix_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+Don't work well with ImageGen4, so use OpenAI.
 
 ## 6. Venn Diagram
 
@@ -243,6 +249,16 @@ Format:
 - Flat design with transparency
 ```
 
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Venn Diagram OpenAI](./assets/clean_modern_venn_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+![Clean Modern Venn Diagram Imagegen4](./assets/clean_modern_venn_diagram_imagegen4.jpeg)
+
 ## 7. Timeline Diagram
 
 > **When to use a timeline diagram:**
@@ -270,6 +286,16 @@ Format:
 - Use aspect ratio 5:2
 - Flat design
 ```
+
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Timeline Diagram OpenAI](./assets/clean_modern_timeline_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+![Clean Modern Timeline Diagram Imagegen4](./assets/clean_modern_timeline_diagram_imagegen4.jpeg)
 
 ## 8. Hierarchy Tree Diagram
 
@@ -304,6 +330,16 @@ Format:
 - Flat design
 ```
 
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Hierarchy Tree Diagram OpenAI](./assets/clean_modern_hierarchy_tree_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+![Clean Modern Hierarchy Tree Diagram Imagegen4](./assets/clean_modern_hierarchy_tree_diagram_imagegen4.jpeg)
+
 ## 9. Circular Process Diagram
 
 > **When to use a circular process diagram:**
@@ -333,6 +369,16 @@ Format:
 - Flat design
 ```
 
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Circular Process Diagram OpenAI](./assets/clean_modern_circular_process_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+![Clean Modern Circular Process Diagram Imagegen4](./assets/clean_modern_circular_process_diagram_imagegen4.jpeg)
+
 ## 10. Scatter Plot Diagram
 
 > **When to use a scatter plot diagram:**
@@ -361,5 +407,15 @@ Format:
 - Use aspect ratio 4:3
 - Flat design
 ```
+
+Example:
+
+**OpenAI Example:**
+
+![Clean Modern Scatter Plot Diagram OpenAI](./assets/clean_modern_scatter_plot_diagram_openai.jpeg)
+
+**ImageGen4 Example:**
+
+![Clean Modern Scatter Plot Diagram Imagegen4](./assets/clean_modern_scatter_plot_diagram_imagegen4.jpeg)
 
 This represents 10 of the most strategically valuable diagram types for conveying software engineering concepts. Each serves a specific purpose in communicating complex technical relationships, processes, and decisions in a visually compelling and easily understood format. The prompts are designed to generate professional, consultant-quality diagrams that would be suitable for technical presentations, documentation, or stakeholder communications.
