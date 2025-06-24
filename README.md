@@ -340,6 +340,7 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 | [📖 Google Agent Development Kit (ADK) for the Impatient](./07_agent/index.md) | Advanced | 40-60 hours | English  | Comprehensive 12-chapter tutorial series to master Google's Agent Development Kit (ADK) quickly and effectively |
 | [📖 Vertex AI Agent Engine for the Impatient](./22_google_vertex_agent_engine.md) | Advanced | 12-24 hours | English | Master enterprise-grade AI agent development and deployment with Vertex AI Agent Engine, featuring multi-agent systems, production-ready orchestration, and comprehensive business impact analysis |
 | [📖 Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide](./25-video-transcription-with-gemini-2-5.md) | Beginner to Advanced | 3-5 hours | English | Master AI-powered transcription using Gemini 2.5 with timestamps, speaker identification, batch processing, and production-ready workflows for both Vertex AI and Gemini API |
+| [📖 A2A Protocol for the Impatient: From Novice to Practitioner in Record Time](./28-a2a.md) | Beginner to Advanced | 8-12 hours | English | Master the Agent-to-Agent Protocol (A2A) - the Linux Foundation standard for AI agent communication, featuring multi-agent workflows, enterprise integration, and production-ready implementation |
 
 **What you'll learn:**
 
@@ -367,6 +368,16 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Production-ready error handling** and quality assurance for AI transcription
 - **Multi-language transcription** support (40+ languages)
 - **Cloud Storage integration** for enterprise file management
+- **A2A Protocol fundamentals** and Linux Foundation governance
+- **Agent-to-agent communication** with natural language interfaces
+- **Multi-agent workflow orchestration** and coordination patterns
+- **Enterprise-grade security** with OAuth 2.0 and Bearer token authentication
+- **Production deployment** of A2A agents with monitoring and observability
+- **Cross-platform SDK usage** (Python, JavaScript, Java, Go, .NET)
+- **Real-time streaming** with Server-Sent Events (SSE) for live updates
+- **Agent discovery and registration** with standardized Agent Cards
+- **Task lifecycle management** and state tracking
+- **Integration with Google ADK** and other enterprise AI frameworks
 
 **Key Features:**
 
@@ -388,6 +399,13 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Multi-framework support** for maximum flexibility and adoption
 - **VPC-SC compliance** and enterprise security features
 - **Three comprehensive examples**: Hello World, Calculator, and Travel Planning agents
+- **Linux Foundation governance** ensuring vendor-neutral, community-driven development
+- **Industry-standard protocol** with backing from Google, Amazon, Microsoft, Cisco, Salesforce, SAP, and ServiceNow
+- **Real-world multi-agent systems** including translation coordination and task processing
+- **Production-ready patterns** for security, error handling, and scalability
+- **Comprehensive testing frameworks** and best practices for A2A agent development
+- **Enterprise integration** with existing AI agent frameworks and cloud services
+- **24-hour challenge** to build complete agent-to-agent communication systems
 
 ---
 
