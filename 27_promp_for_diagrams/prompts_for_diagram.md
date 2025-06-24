@@ -107,6 +107,38 @@ This combination provides:
    - Consider cultural color associations for global audiences
    - Use transparency (50-70%) for overlapping elements in Venn diagrams
 
+6. **Strategic Icon Usage for Technical Diagrams**:
+   - **Consistency is Key**: Use icons from a single icon family (e.g., Feather, Lucide, Heroicons) to maintain visual cohesion
+   - **Semantic Mapping**: Choose icons that intuitively represent concepts - gear/cog for configuration, database cylinder for data storage, cloud for cloud services, lock for security, graph/chart for analytics
+   - **Size Hierarchy**: Use 16px icons for labels, 24px for section headers, 32px for primary focal points, and 48px+ for central diagram elements
+   - **Positioning Strategy**: Place icons consistently - either left-aligned with text, centered above labels, or as background elements with 30% opacity
+   - **Technical Icon Library**: Maintain a standard set for software engineering - server (🖥️), API (🔌), database (🗄️), security (🔒), monitoring (📊), code (💻), deployment (🚀), testing (🧪), documentation (📖), user interface (📱)
+   - **Color Coordination**: Match icon colors to your established palette or use neutral colors (gray/black) for consistency
+   - **Accessibility**: Ensure icons supplement, not replace, text labels for screen readers and international audiences
+   - **Quality Standards**: Use vector-based icons (SVG format) that scale cleanly at any size and maintain crispness in high-DPI displays
+
+**Popular Icon Families for Technical Diagrams:**
+
+| Icon Family | Description | Count | Features | License | Link |
+|-------------|-------------|-------|----------|---------|------|
+| **Lucide** | Beautiful & consistent icons, fork of Feather Icons | 1,608+ | Lightweight SVG, customizable stroke width, tree-shakable, multiple framework support | ISC | [lucide.dev](https://lucide.dev/) |
+| **Heroicons** | Hand-crafted SVG icons by Tailwind CSS makers | 316 | Outline & solid variants, React & Vue libraries, premium quality | MIT | [heroicons.com](https://heroicons.com/) |
+| **Tabler Icons** | Pixel-perfect icons for web design | 5,944+ | 24x24 grid, 2px stroke, outline & filled styles, Figma plugin | MIT | [tabler-icons.io](https://tabler-icons.io/) |
+| **Feather** | Simply beautiful open source icons | 287 | Minimal, consistent stroke, highly customizable | MIT | [feathericons.com](https://feathericons.com/) |
+| **Phosphor Icons** | Flexible icon family with multiple weights | 1,248+ | 6 weights (thin, light, regular, bold, fill, duotone), extensive platform support | MIT | [phosphoricons.com](https://phosphoricons.com/) |
+| **Material Design Icons** | Google's Material Design icon system | 2,000+ | Consistent with Material Design principles, multiple variants | Apache 2.0 | [fonts.google.com/icons](https://fonts.google.com/icons) |
+| **Bootstrap Icons** | Official icon library for Bootstrap | 2,716+ | SVG & icon font, designed for Bootstrap but works anywhere | MIT | [icons.getbootstrap.com](https://icons.getbootstrap.com/) |
+| **Font Awesome** | Industry standard icon toolkit | 2,000+ | Free & Pro versions, web fonts & SVG, extensive coverage | Font Awesome Free License | [fontawesome.com](https://fontawesome.com/) |
+| **Iconify** | Universal icon framework | 200,000+ | Unified API for all icon sets, on-demand loading, framework agnostic | Various (per icon set) | [iconify.design](https://iconify.design/) |
+| **React Icons** | Popular icons as React components | 40+ sets | ES6 imports, tree-shakable, includes most popular icon libraries | MIT | [react-icons.github.io](https://react-icons.github.io/react-icons/) |
+
+**Recommended Combinations for Software Engineering:**
+
+- **Primary Choice**: Lucide or Heroicons for UI elements and general purposes
+- **Technical Icons**: Tabler Icons for comprehensive coverage of technical concepts
+- **Specialty Icons**: Phosphor Icons when you need multiple weights/styles
+- **Fallback**: Iconify for accessing any icon set through a single API
+
 **Quick Color Selection Guide:**
 
 - **Quadrant Diagrams**: Use the proven Blue-Teal-Orange-Purple combination for optimal semantic clarity
