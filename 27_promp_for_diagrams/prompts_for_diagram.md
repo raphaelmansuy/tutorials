@@ -1,4 +1,4 @@
-# Collection of Prompts to generate diagrams
+# How to create professional diagrams prompt for software engineering concepts with OpenAI and ImageGen4 
 
 ## Image Generation Models
 
@@ -67,14 +67,7 @@ Example:
 
 ![Clean Modern Cadran Imagegen4](./assets/clean_modern_quadrant_graph_diagram_imagegen4.jpeg)
 
-# Strategic Diagram Types for Software Engineering Concepts
-
-## 1. Quadrant Diagram
-
-> **When to use a quadrant diagram:**
-> Use a quadrant diagram to visually compare items, strategies, or concepts across two axes or dimensions. It is ideal for highlighting relationships, trade-offs, or positioning in a clear, easy-to-understand 2x2 grid.
-
-### Prompt for a Quadrant Diagram
+## Other examples of Quadrant Diagrams
 
 ```text
 Create a clean, modern 2x2 quadrant diagram on a white background. In the center, place a stylized gear icon inside a dashed circle. Draw two bold axes intersecting at the center: a vertical line labeled "High Complexity" at the top and "Low Complexity" at the bottom, and a horizontal line labeled "High Risk" on the right and "Low Risk" on the left.
@@ -291,7 +284,7 @@ Example:
 
 **OpenAI Example:**
 
-![Clean Modern Timeline Diagram OpenAI](./assets/clean_modern_timeline_diagram_openai.jpeg)
+![Clean Modern Timeline Diagram OpenAI](./assets/clean_modern_timeline_diagram_openai.png)
 
 **ImageGen4 Example:**
 
@@ -334,11 +327,11 @@ Example:
 
 **OpenAI Example:**
 
-![Clean Modern Hierarchy Tree Diagram OpenAI](./assets/clean_modern_hierarchy_tree_diagram_openai.jpeg)
+![Clean Modern Hierarchy Tree Diagram OpenAI](./assets/clean_modern_hierarchy_tree_diagram_openai.png)
 
 **ImageGen4 Example:**
 
-![Clean Modern Hierarchy Tree Diagram Imagegen4](./assets/clean_modern_hierarchy_tree_diagram_imagegen4.jpeg)
+Doesn't work well with ImageGen4, so use OpenAI.
 
 ## 9. Circular Process Diagram
 
@@ -373,7 +366,7 @@ Example:
 
 **OpenAI Example:**
 
-![Clean Modern Circular Process Diagram OpenAI](./assets/clean_modern_circular_process_diagram_openai.jpeg)
+![Clean Modern Circular Process Diagram OpenAI](./assets/clean_modern_circular_process_diagram_openai.png)
 
 **ImageGen4 Example:**
 
@@ -412,10 +405,10 @@ Example:
 
 **OpenAI Example:**
 
-![Clean Modern Scatter Plot Diagram OpenAI](./assets/clean_modern_scatter_plot_diagram_openai.jpeg)
+![Clean Modern Scatter Plot Diagram OpenAI](./assets/clean_modern_scatter_plot_diagram_openai.png)
 
 **ImageGen4 Example:**
 
 ![Clean Modern Scatter Plot Diagram Imagegen4](./assets/clean_modern_scatter_plot_diagram_imagegen4.jpeg)
 
-This represents 10 of the most strategically valuable diagram types for conveying software engineering concepts. Each serves a specific purpose in communicating complex technical relationships, processes, and decisions in a visually compelling and easily understood format. The prompts are designed to generate professional, consultant-quality diagrams that would be suitable for technical presentations, documentation, or stakeholder communications.
+This represents the most strategically valuable diagram types for conveying software engineering concepts. Each serves a specific purpose in communicating complex technical relationships, processes, and decisions in a visually compelling and easily understood format. The prompts are designed to generate professional, consultant-quality diagrams that would be suitable for technical presentations, documentation, or stakeholder communications.
