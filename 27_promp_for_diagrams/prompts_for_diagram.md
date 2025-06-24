@@ -29,6 +29,94 @@ OpenAI's model powers image generation in ChatGPT, offering exceptional prompt a
 
 ---
 
+## Color Theory for Professional Diagrams
+
+### Essential Color Principles for Technical Diagrams
+
+**Color Psychology in Business Context:**
+
+- **Blue (#2563EB)**: Trust, reliability, professionalism - ideal for primary concepts, foundational elements
+- **Teal/Green (#059669)**: Success, growth, positive outcomes - perfect for "good" states, completed phases, optimized solutions
+- **Orange (#EA580C)**: Caution, medium priority, attention-grabbing - excellent for warnings, intermediate states, transitional phases
+- **Purple (#7C3AED)**: Innovation, creativity, premium features - great for advanced concepts, cutting-edge technology, premium offerings
+- **Gray (#6B7280)**: Neutral, secondary information, supporting elements - use for backgrounds, labels, legends, supporting text
+
+**Proven Color Combinations for Technical Diagrams:**
+
+The **Blue-Teal-Orange-Purple** palette creates optimal visual hierarchy and semantic meaning:
+
+- **Blue (#2563EB)** as anchor/foundation (bottom-left positioning)
+- **Teal (#059669)** for positive/successful outcomes (top-right positioning)  
+- **Orange (#EA580C)** for transitional/warning states (bottom-right positioning)
+- **Purple (#7C3AED)** for advanced/innovative concepts (top-left positioning)
+
+This combination provides:
+
+- Excellent contrast ratios (WCAG AA compliant)
+- Colorblind-friendly differentiation
+- Intuitive semantic mapping (cool colors = stable, warm colors = dynamic)
+- Professional appearance across all business contexts
+
+**Actionable Color Strategies:**
+
+1. **Use the 60-30-10 Rule**:
+   - 60% neutral/background colors (whites, light grays)
+   - 30% primary brand/theme color (blues, teals)
+   - 10% accent colors for highlights (oranges, reds)
+
+2. **Ensure Accessibility (WCAG AA Compliance)**:
+   - Minimum contrast ratio of 4.5:1 for normal text
+   - Use tools like WebAIM contrast checker
+   - Avoid red-green combinations (colorblind-friendly)
+   - Include patterns or shapes alongside colors for differentiation
+
+3. **Semantic Color Mapping**:
+   - **Status Indicators**: Green (success), Yellow (warning), Red (error), Blue (info)
+   - **Process Flow**: Use gradient progression (Dark Blue → Light Blue → Teal)
+   - **Hierarchy**: Darker colors for higher importance, lighter for secondary elements
+   - **Temperature Mapping**: Cool colors (blues, greens) for calm/stable, warm colors (reds, oranges) for active/urgent
+
+4. **Professional Color Palettes**:
+
+   ```css
+   Quadrant Analysis Palette (Recommended):
+   Primary: #2563EB (Professional Blue) - Trust, reliability, primary concepts
+   Secondary: #059669 (Teal/Green) - Success, growth, positive outcomes  
+   Accent: #EA580C (Orange) - Caution, intermediate priority
+   Highlight: #7C3AED (Purple) - Innovation, advanced features
+   Neutral: #6B7280 (Gray) - Supporting elements, legends
+   Background: #FFFFFF (White) - Clean, professional base
+   
+   Corporate Blue Palette:
+   Primary: #1E40AF (Deep Blue)
+   Secondary: #3B82F6 (Medium Blue)  
+   Accent: #93C5FD (Light Blue)
+   Neutral: #F1F5F9 (Light Gray)
+   
+   Modern Tech Palette:
+   Primary: #0F172A (Dark Slate)
+   Secondary: #6366F1 (Indigo)
+   Accent: #10B981 (Emerald)
+   Warning: #F59E0B (Amber)
+   ```
+
+5. **Implementation Tips**:
+   - Test colors in both light and dark themes
+   - Use color temperature consistently (all warm or all cool within a diagram)
+   - Limit palette to 5-7 colors maximum per diagram
+   - Consider cultural color associations for global audiences
+   - Use transparency (50-70%) for overlapping elements in Venn diagrams
+
+**Quick Color Selection Guide:**
+
+- **Quadrant Diagrams**: Use the proven Blue-Teal-Orange-Purple combination for optimal semantic clarity
+- **Process Flows**: Sequential colors or single-hue gradients (Dark Blue → Medium Blue → Light Teal)
+- **Hierarchies**: Darker to lighter progression within the same color family
+- **Comparisons**: High contrast complementary colors (Blue vs Orange, Teal vs Purple)
+- **Time-based**: Cool to warm progression (Blue → Teal → Orange → Purple)
+
+---
+
 ## Quadrant Diagram
 
 > **When to use a quadrant diagram:**
