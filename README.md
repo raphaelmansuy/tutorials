@@ -424,6 +424,24 @@ Master modern API testing, automation, and CI/CD integration with open-source to
 
 ---
 
+### 🖼️ **Prompt Engineering for Diagrams**
+
+Master the art of generating clean, modern diagrams using prompt engineering techniques for AI tools.
+
+| Tutorial                                                                                 | Level                | Duration  | Language | Description                                                                                 |
+| ---------------------------------------------------------------------------------------- | -------------------- | --------- | -------- | ------------------------------------------------------------------------------------------- |
+| [📖 Prompts for Diagram Generation](./27_promp_for_diagrams/prompts_for_diagram.md)      | Beginner to Advanced | 1-2 hours | English  | Practical guide to crafting effective prompts for generating diagrams with AI tools          |
+
+**What you'll learn:**
+
+- How to write clear, effective prompts for diagram generation
+- Best practices for different diagram types (flowcharts, mindmaps, process diagrams, etc.)
+- Examples of prompts and resulting diagrams
+- Tips for achieving clean, modern visual styles
+- Troubleshooting common issues with AI diagram tools
+
+---
+
 ## 🎯 Learning Paths
 
 ### Path 1: Cloud Beginner to Professional
