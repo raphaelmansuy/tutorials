@@ -67,6 +67,10 @@ This tutorial is divided into two main paths, allowing you to choose the level o
     - [3. Test the Deployed Agent](#3-test-the-deployed-agent)
     - [✅ Checkpoint 4: View Agent Engine Observability](#-checkpoint-4-view-agent-engine-observability)
     - [Key Benefits of Agent Engine Observability](#key-benefits-of-agent-engine-observability)
+- [🏢 Production Path (2-4 Hours)](#-production-path-2-4-hours)
+  - [Custom Dashboards and Alerts](#custom-dashboards-and-alerts)
+  - [Security and Compliance](#security-and-compliance)
+  - [Cost Optimization](#cost-optimization)
 - [Advanced Observability with OpenTelemetry and Datadog](#advanced-observability-with-opentelemetry-and-datadog)
   - [OpenTelemetry Architecture with Google Cloud](#opentelemetry-architecture-with-google-cloud)
   - [Multi-Platform Observability with Datadog](#multi-platform-observability-with-datadog)
@@ -838,6 +842,83 @@ response = reasoning_engine.query(
 - **Integrated Dashboard:** Pre-built dashboards available in Google Cloud Console
 - **Automatic Resource Attribution:** All logs and metrics are properly tagged with agent information
 - **Enterprise Security:** VPC-SC support and enterprise-grade security features
+
+---
+
+## 🏢 Production Path (2-4 Hours)
+
+The Production Path provides a comprehensive, enterprise-ready observability solution for your Vertex AI applications. This section covers custom dashboards, alerting, security, and cost optimization.
+
+> **🎯 Success Criteria:** By the end of this section, you'll have a complete observability solution in place, including custom metrics, alerts, and production-grade security.
+
+### Custom Dashboards and Alerts
+
+Custom dashboards and alerts are crucial for proactive monitoring and quick incident response in production environments.
+
+#### 1. Custom Dashboards in Google Cloud Console
+
+Google Cloud Console provides powerful dashboarding capabilities to visualize your observability data.
+
+**Creating a Custom Dashboard:**
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Navigate to **Monitoring** > **Dashboards**.
+3. Click on **Create Dashboard**.
+4. Add widgets to visualize metrics like request count, latency, and error rates.
+
+**Example: Request Latency Dashboard**
+
+- **Line Chart:** `aiplatform.googleapis.com/reasoning_engine/request_latencies`
+- **Filter:** `resource.type="aiplatform.googleapis.com/ReasoningEngine"`
+- **Group By:** `resource.labels.reasoning_engine_id`
+
+#### 2. Setting Up Alerts
+
+Alerts notify you of potential issues before they impact your users. You can create alerting policies based on any metric or log-based condition.
+
+**Creating an Alerting Policy:**
+
+1. In the Google Cloud Console, go to **Monitoring** > **Alerting**.
+2. Click on **Create Policy**.
+3. Add a condition based on a metric or log query.
+4. Configure notifications (email, SMS, etc.).
+
+**Example: High Latency Alert**
+
+- **Condition Type:** Metric
+- **Resource Type:** Vertex AI Reasoning Engine
+- **Metric:** `aiplatform.googleapis.com/reasoning_engine/request_latencies`
+- **Threshold:** P95 latency > 500ms for 5 minutes
+
+### Security and Compliance
+
+Security and compliance are critical in production. This section covers best practices for securing your observability data and ensuring compliance with regulations.
+
+#### 1. Securing Access to Observability Data
+
+- **IAM Roles:** Assign least privilege IAM roles to users and service accounts.
+- **VPC Service Controls:** Use VPC Service Controls to define a security perimeter around your Google Cloud resources.
+- **Private Google Access:** Enable Private Google Access for your VPC to allow private communication with Google services.
+
+#### 2. Compliance Considerations
+
+- **Data Retention:** Configure log retention policies to meet your organization's compliance requirements.
+- **Audit Logs:** Enable audit logs for all admin activities and access to sensitive data.
+- **Regular Security Reviews:** Conduct regular reviews of your IAM policies, network settings, and audit logs.
+
+### Cost Optimization
+
+Cost optimization ensures that your observability solution remains within budget while still providing comprehensive coverage.
+
+#### 1. Monitoring and Controlling Costs
+
+- **Budgets and Alerts:** Set up budgets and alerts in Google Cloud Billing to monitor your spending.
+- **Cost Breakdown:** Use the Google Cloud Console to analyze your costs by service, project, and resource.
+
+#### 2. Optimizing Resource Usage
+
+- **Right-Sizing:** Regularly review and right-size your resources (e.g., VM instances, GPUs) based on usage.
+- **Preemptible VMs:** Consider using preemptible VMs for cost-effective, short-term compute capacity.
 
 ---
 
