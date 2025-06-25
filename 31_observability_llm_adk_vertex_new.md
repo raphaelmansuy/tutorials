@@ -55,6 +55,16 @@ For the **Production Path**, you will also need these roles:
 - `roles/logging.admin`: Allows you to configure log-based metrics.
 - `roles/iam.serviceAccountAdmin`: Allows you to manage service accounts.
 
+### Cost Considerations
+
+While many services used in this tutorial have a generous free tier, be aware of potential costs as you scale:
+
+- **Vertex AI:** Pricing is based on token usage. See the [official pricing page](https://cloud.google.com/vertex-ai/pricing) for details.
+- **Cloud Run:** You are charged for CPU and memory consumed by your container instances.
+- **Cloud Logging/Monitoring/Tracing:** These services have free monthly allotments. Costs are incurred for data ingested or stored beyond the free tier.
+
+> **💡 Recommendation:** Always set up budget alerts in your Google Cloud project to avoid unexpected charges.
+
 ### Dependency Installation
 
 Install the required Python libraries by running the following command:
@@ -66,6 +76,7 @@ pip install google-cloud-monitoring>=2.15.1 \
             opentelemetry-api>=1.20.0 \
             opentelemetry-sdk>=1.20.0 \
             opentelemetry-exporter-otlp>=1.20.0 \
+            google-generativeai>=0.5.4 \
             adk "flask[async]" gunicorn
 ```
 
@@ -81,7 +92,106 @@ python --version
 
 > **⚠️ Important:** If you do not have the required permissions, please work with your GCP administrator to have them granted. Alternatively, you can use a dedicated project for this tutorial where you have full access.
 
----
+--- 
+
+## 🧪 Quick Environment Test (2 minutes)
+
+Before diving into the full tutorial, let's verify your environment is ready with a simple test.
+
+### Step 1: Test Your Google Cloud Setup
+
+Create a file named `test_setup.py` and run it to ensure your local environment can authenticate and connect to Google Cloud observability services.
+
+```python
+# test_setup.py
+import google.cloud.logging
+import google.cloud.monitoring_v3
+import google.cloud.trace_v1
+import sys
+
+def test_gcp_setup():
+    """Verify that GCP clients can be initialized."""
+    try:
+        google.cloud.logging.Client()
+        print("✅ Cloud Logging client created successfully")
+        google.cloud.monitoring_v3.MetricServiceClient()
+        print("✅ Cloud Monitoring client created successfully")
+        google.cloud.trace_v1.TraceServiceClient()
+        print("✅ Cloud Trace client created successfully")
+        print("\n🎉 Your environment is ready for the tutorial!")
+        return True
+    except Exception as e:
+        print(f"❌ GCP setup test failed: {e}")
+        return False
+
+if __name__ == "__main__":
+    success = test_gcp_setup()
+    sys.exit(0 if success else 1)
+```
+
+```bash
+python test_setup.py
+```
+
+### Step 2: Test Vertex AI Access
+
+Next, create a file named `test_vertex_ai.py` to confirm you can access the Vertex AI Gemini API.
+
+```python
+# test_vertex_ai.py
+from google import generativeai as genai
+import sys
+
+def test_vertex_ai():
+    """Verify access to the Vertex AI Gemini API."""
+    try:
+        client = genai.Client()
+        print("✅ Vertex AI Generative AI client created successfully")
+        response = client.generate_content("Hello!")
+        print("✅ Gemini API call successful")
+        print(f"✅ Response received: {response.text[:40]}...")
+        print(f"✅ Token usage: {response.usage_metadata.total_token_count} tokens")
+        print("\n🎉 Vertex AI access is working!")
+        return True
+    except Exception as e:
+        print(f"❌ Vertex AI test failed: {e}")
+        return False
+
+if __name__ == "__main__":
+    success = test_vertex_ai()
+    sys.exit(0 if success else 1)
+```
+
+```bash
+python test_vertex_ai.py
+```
+
+### Expected Output
+
+If everything is configured correctly, you should see output similar to this:
+
+```text
+✅ Cloud Logging client created successfully
+✅ Cloud Monitoring client created successfully
+✅ Cloud Trace client created successfully
+
+🎉 Your environment is ready for the tutorial!
+
+✅ Vertex AI Generative AI client created successfully
+✅ Gemini API call successful
+✅ Response received: Hello! I am a large language model, trained by Google....
+✅ Token usage: 12 tokens
+
+🎉 Vertex AI access is working!
+```
+
+### ⚠️ If You See Errors
+
+-   **Authentication Issues:** If you see authentication errors, run `gcloud auth application-default login`.
+-   **Permission Issues:** Ensure your account has the required IAM roles listed in the prerequisites.
+-   **API Not Enabled:** If you see errors about APIs being disabled, run `gcloud services enable aiplatform.googleapis.com monitoring.googleapis.com logging.googleapis.com cloudtrace.googleapis.com`.
+
+--- 
 
 ## 🧠 Understanding Observability: Metrics, Logs, and Traces
 
