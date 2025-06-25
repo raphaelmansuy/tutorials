@@ -100,9 +100,9 @@ Observability is essential for running production-grade AI applications built wi
 
 ## Observability Architecture: OpenTelemetry and Google Cloud
 
-When implementing observability for Vertex AI Generative AI applications, understanding the relationship between OpenTelemetry, direct API calls, and Google Cloud services is essential for effective instrumentation. Modern architectures also support exporting observability data to third-party platforms like Datadog using the OpenTelemetry Protocol (OTLP).
+When implementing observability for Vertex AI Generative AI applications, it's important to understand how OpenTelemetry, direct API calls, and Google Cloud services interact. For clarity, here are two distinct architecture diagrams:
 
-### Core Architecture Overview
+### 1. Core Observability Architecture
 
 ```mermaid
 flowchart TB
@@ -149,20 +149,59 @@ flowchart TB
 
 ### Multi-Platform Observability with Datadog Integration
 
-For organizations using multiple observability platforms or seeking advanced analytics, OpenTelemetry enables seamless export to external systems like Datadog. This architecture provides flexibility while maintaining Google Cloud's native observability benefits:
+For organizations using multiple observability platforms or seeking advanced analytics, OpenTelemetry enables seamless export to external systems like Datadog. This architecture provides flexibility while maintaining Google Cloud's native observability benefits.
+
+#### Architecture Diagram 1: Core Data Flow
+
+This diagram shows the fundamental data flow from applications to observability platforms:
+
+```mermaid
+flowchart LR
+    subgraph "Applications"
+        APP[Direct Gemini API Calls]
+        ADK[ADK Agent Applications]
+    end
+
+    subgraph "Vertex AI"
+        GENAI[Generative AI API]
+        MODEL[Gemini Models]
+    end
+
+    subgraph "OpenTelemetry Processing"
+        OTEL[OpenTelemetry SDK]
+        OTLP[OTLP Protocol]
+    end
+
+    %% Core application flow
+    APP --> GENAI
+    ADK --> GENAI
+    GENAI --> MODEL
+
+    %% Telemetry collection
+    APP --> OTEL
+    ADK --> OTEL
+    OTEL --> OTLP
+
+    %% Native metrics
+    GENAI -->|Usage Metrics| OTLP
+    MODEL -->|Safety Ratings| OTLP
+
+    style OTEL fill:#f5f5ff,stroke:#9999ff
+    style OTLP fill:#e6f3ff,stroke:#4d94ff
+    style GENAI fill:#fff2cc,stroke:#d6b656
+    style MODEL fill:#f8cecc,stroke:#b85450
+```
+
+#### Architecture Diagram 2: Dual Export Strategy
+
+This diagram illustrates how telemetry data can be exported to both Google Cloud and Datadog platforms:
 
 ```mermaid
 flowchart TB
-    subgraph "Applications & Services"
-        APP[Direct Gemini API Calls]
-        ADK[ADK Agent Applications]
-        OTEL[OpenTelemetry SDK]
-    end
-
-    subgraph "OpenTelemetry Data Processing"
+    subgraph "Data Processing"
         OTLP[OTLP Protocol]
         COLLECTOR[OpenTelemetry Collector]
-        DDAGENT[Datadog Agent with OTLP]
+        DDAGENT[Datadog Agent]
     end
 
     subgraph "Google Cloud Observability"
@@ -178,22 +217,7 @@ flowchart TB
         DDD[Datadog Dashboards]
     end
 
-    subgraph "Vertex AI Services"
-        GENAI[Generative AI API]
-        MODEL[Gemini Models]
-    end
-
-    %% Application flows
-    APP --> GENAI
-    ADK --> GENAI
-    GENAI --> MODEL
-
-    %% OpenTelemetry instrumentation
-    APP --> OTEL
-    ADK --> OTEL
-    OTEL --> OTLP
-
-    %% Dual export paths
+    %% Direct Google Cloud export
     OTLP --> GCM
     OTLP --> GCT
     OTLP --> GCL
@@ -201,25 +225,22 @@ flowchart TB
     %% Datadog export options
     OTLP --> COLLECTOR
     OTLP --> DDAGENT
+
+    %% Collector to Datadog
     COLLECTOR -->|Datadog Exporter| DDM
     COLLECTOR -->|Datadog Exporter| DDT
     COLLECTOR -->|Datadog Exporter| DDL
 
+    %% Agent to Datadog
     DDAGENT -->|OTLP Ingestion| DDM
     DDAGENT -->|OTLP Ingestion| DDT
     DDAGENT -->|OTLP Ingestion| DDL
 
-    %% Native Google Cloud metadata
-    GENAI -->|Usage Metrics| GCM
-    MODEL -->|Safety Ratings| GCL
-
-    %% Visualization and analysis
+    %% Datadog visualization
     DDM --> DDD
     DDT --> DDD
     DDL --> DDD
 
-    style OTEL fill:#f5f5ff,stroke:#9999ff
-    style OTLP fill:#e6f3ff,stroke:#4d94ff
     style COLLECTOR fill:#fff2e6,stroke:#ff8800
     style DDAGENT fill:#632ca6,stroke:#632ca6,color:#fff
     style GCM fill:#e6f4ea,stroke:#5bb974
