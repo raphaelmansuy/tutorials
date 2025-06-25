@@ -98,18 +98,281 @@ Observability is essential for running production-grade AI applications built wi
 
 > **💡 Recommendation:** Start with Quick Wins Path for immediate value, then implement Generative AI Model Observability for AI-specific monitoring, and gradually adopt Production Path features based on your specific needs.
 
+## Understanding Observability: Metrics, Logs, and Traces
+
+Before diving into implementation, let's understand the three pillars of observability and how they work together for AI agents.
+
+### The Three Pillars of Observability
+
+```mermaid
+flowchart TB
+    subgraph "🔍 Observability Pillars"
+        METRICS[📊 Metrics<br/>Numbers over time]
+        LOGS[📋 Logs<br/>Event records]
+        TRACES[🔗 Traces<br/>Request flows]
+    end
+
+    subgraph "🤖 AI Agent Example"
+        REQUEST[User Query:<br/>What are your hours?]
+        AGENT[ADK Agent Processing]
+        TOOLS[Tool Execution]
+        LLM[LLM Generation]
+        RESPONSE[Agent Response]
+    end
+
+    subgraph "📈 What Each Pillar Shows"
+        M_DATA[• Request count: 1,250/hour<br/>• Latency P95: 850ms<br/>• Token usage: 2,500<br/>• Error rate: 2.1%]
+        L_DATA[• Query started: ID req_123<br/>• Tool get_hours executed<br/>• LLM response: 145 tokens<br/>• Query completed successfully]
+        T_DATA[• Request span: 850ms<br/>• Tool span: 200ms<br/>• LLM span: 600ms<br/>• Response span: 50ms]
+    end
+
+    REQUEST --> AGENT
+    AGENT --> TOOLS
+    TOOLS --> LLM
+    LLM --> RESPONSE
+
+    AGENT -.->|Count, Rate, Duration| METRICS
+    TOOLS -.->|Events, Errors, Details| LOGS
+    REQUEST -.->|End-to-end Flow| TRACES
+
+    METRICS --> M_DATA
+    LOGS --> L_DATA
+    TRACES --> T_DATA
+
+    style METRICS fill:#e6f4ea,stroke:#5bb974
+    style LOGS fill:#e8f0fe,stroke:#4285f4
+    style TRACES fill:#fef7e0,stroke:#fbbc04
+    style M_DATA fill:#e6f4ea,stroke:#5bb974
+    style L_DATA fill:#e8f0fe,stroke:#4285f4
+    style T_DATA fill:#fef7e0,stroke:#fbbc04
+```
+
+### Direct LLM Generation Call Observability
+
+For direct Vertex AI Gemini API calls, here's how the three pillars work together in practice:
+
+```mermaid
+flowchart LR
+    subgraph "🚀 Direct LLM Call Flow"
+        USER[User Request]
+        API[Gemini API Call]
+        MODEL[Gemini Model]
+        RESP[Response]
+    end
+
+    subgraph "📊 Metrics Captured"
+        M1[Request Rate:<br/>15 calls/min]
+        M2[Latency P95:<br/>1.2 seconds]
+        M3[Token Usage:<br/>2,847 tokens]
+        M4[Cost Per Request:<br/>$0.0021]
+    end
+
+    subgraph "📋 Logs Generated"
+        L1["Request started:<br/>model=gemini-2.5-flash<br/>prompt_length=156"]
+        L2["Generation completed:<br/>tokens=2847<br/>duration=1180ms"]
+        L3["Safety check passed:<br/>no_blocked_content"]
+        L4["Response delivered:<br/>status=success"]
+    end
+
+    subgraph "🔗 Trace Spans"
+        T1[Total Request: 1.18s]
+        T2[API Authentication: 45ms]
+        T3[Model Processing: 980ms]
+        T4[Response Assembly: 155ms]
+    end
+
+    USER --> API
+    API --> MODEL
+    MODEL --> RESP
+
+    API -.->|Count & Rate| M1
+    API -.->|Duration| M2
+    MODEL -.->|Token Count| M3
+    RESP -.->|Cost Calc| M4
+
+    API -.->|Start Event| L1
+    MODEL -.->|Completion| L2
+    MODEL -.->|Safety Info| L3
+    RESP -.->|Final Status| L4
+
+    USER -.->|Request Span| T1
+    API -.->|Auth Span| T2
+    MODEL -.->|Processing Span| T3
+    RESP -.->|Response Span| T4
+
+    style USER fill:#e3f2fd,stroke:#1976d2
+    style API fill:#fff2cc,stroke:#d6b656
+    style MODEL fill:#f8cecc,stroke:#b85450
+    style RESP fill:#e8f5e8,stroke:#4caf50
+    
+    style M1 fill:#e6f4ea,stroke:#5bb974
+    style M2 fill:#e6f4ea,stroke:#5bb974
+    style M3 fill:#e6f4ea,stroke:#5bb974
+    style M4 fill:#e6f4ea,stroke:#5bb974
+    
+    style L1 fill:#e8f0fe,stroke:#4285f4
+    style L2 fill:#e8f0fe,stroke:#4285f4
+    style L3 fill:#e8f0fe,stroke:#4285f4
+    style L4 fill:#e8f0fe,stroke:#4285f4
+    
+    style T1 fill:#fef7e0,stroke:#fbbc04
+    style T2 fill:#fef7e0,stroke:#fbbc04
+    style T3 fill:#fef7e0,stroke:#fbbc04
+    style T4 fill:#fef7e0,stroke:#fbbc04
+```
+
+**Key Observability Points for Direct LLM Calls:**
+
+- **📊 Metrics**: Request rates, latency percentiles, token consumption, cost per request
+- **📋 Logs**: Structured events for debugging and audit trails with safety information
+- **🔗 Traces**: End-to-end timing breakdown showing exactly where time is spent
+
+### Direct LLM Generation Call - Detailed Observability
+
+For direct LLM generation calls, here's how the three pillars of observability capture different aspects of the interaction:
+
+```mermaid
+flowchart TD
+    subgraph "LLM Call Flow"
+        A[Application Request] --> B[LLM Generation Call]
+        B --> C[LLM Response]
+        C --> D[Application Processing]
+    end
+    
+    subgraph "📊 Metrics Layer"
+        M1[Request Rate<br/>calls/second]
+        M2[Response Time<br/>p95, p99 latencies]
+        M3[Error Rate<br/>4xx, 5xx errors]
+        M4[Token Usage<br/>input/output tokens]
+        M5[Cost Tracking<br/>$/request]
+    end
+    
+    subgraph "📋 Logs Layer"
+        L1[Request Payload<br/>prompt, parameters]
+        L2[Response Content<br/>generated text]
+        L3[Error Details<br/>failure reasons]
+        L4[Model Metadata<br/>version, config]
+        L5[Business Context<br/>user_id, session]
+    end
+    
+    subgraph "🔗 Traces Layer"
+        T1[Request Span<br/>end-to-end timing]
+        T2[LLM Call Span<br/>model processing time]
+        T3[Preprocessing Span<br/>prompt preparation]
+        T4[Postprocessing Span<br/>response handling]
+        T5[Error Spans<br/>retry attempts]
+    end
+    
+    %% Connect flow to observability layers
+    A -.->|Captures| M1
+    B -.->|Measures| M2
+    B -.->|Records| L1
+    B -.->|Tracks| T1
+    
+    C -.->|Counts| M4
+    C -.->|Stores| L2
+    C -.->|Times| T2
+    
+    D -.->|Calculates| M5
+    D -.->|Enriches| L5
+    D -.->|Completes| T4
+    
+    %% Error paths
+    B -.->|Monitors| M3
+    B -.->|Logs| L3
+    B -.->|Traces| T5
+    
+    %% Style the layers
+    classDef metricsStyle fill:#e6f4ea,stroke:#5bb974,stroke-width:2px
+    classDef logsStyle fill:#e8f0fe,stroke:#4285f4,stroke-width:2px
+    classDef tracesStyle fill:#fef7e0,stroke:#fbbc04,stroke-width:2px
+    classDef flowStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class M1,M2,M3,M4,M5 metricsStyle
+    class L1,L2,L3,L4,L5 logsStyle
+    class T1,T2,T3,T4,T5 tracesStyle
+    class A,B,C,D flowStyle
+```
+
+**Practical Examples:**
+
+- **Metrics**: "Average response time is 2.3s, 95th percentile is 4.1s, processing 45 requests/minute"
+- **Logs**: "User abc123 requested text generation with model gemini-1.5-pro at 2024-01-15T10:30:00Z"
+- **Traces**: "Total request took 2.1s: 0.1s preprocessing + 1.8s model call + 0.2s postprocessing"
+
+### **Metrics**
+
+**What they are:** Numerical measurements of system behavior over time  
+**When to use:**
+
+- Performance monitoring
+- Resource utilization
+- Business KPIs
+- Alerting thresholds
+
+**ADK Examples:**
+
+- Request count
+- Latency percentiles
+- Token usage
+- Error rates
+
+### **Logs**
+
+**What they are:** Time-stamped records of discrete events  
+**When to use:**
+
+- Debugging
+- Audit trails
+- Error investigation
+- Security monitoring
+
+**ADK Examples:**
+
+- Tool execution details
+- LLM prompt/response
+- Authentication events
+- Error messages
+
+### **Traces**
+
+**What they are:** End-to-end request flows across components  
+**When to use:**
+
+- Performance bottlenecks
+- Component dependencies
+- Request path analysis
+
+**ADK Examples:**
+
+- Full agent query flow
+- Tool call sequences
+- LLM invocation timing
+- Cross-service calls
+
+> **🔑 Quick Tip:** Think of observability like a detective story: **Metrics** tell you something happened (system is slow), **Logs** provide clues and context (error in tool X), and **Traces** show the complete timeline and connections between events (exactly how the request flowed through your system).
+
+Using all three together provides a complete picture of your ADK agent's behavior, enabling both proactive monitoring and effective troubleshooting.
+
+---
+
 ## Observability Architecture: OpenTelemetry and Google Cloud
 
 When implementing observability for Vertex AI Generative AI applications, it's important to understand how OpenTelemetry, direct API calls, and Google Cloud services interact. For clarity, here are two distinct architecture diagrams:
 
 ### 1. Core Observability Architecture
 
+The observability architecture is best understood through three focused views:
+
+#### A. Application Data Flow
+
+This diagram shows how your applications interact with Vertex AI services:
+
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph "Your Applications"
         APP[Direct Gemini API Calls]
         ADK[ADK Agent Code]
-        OTEL[OpenTelemetry SDK]
     end
 
     subgraph "Vertex AI Services"
@@ -118,33 +381,74 @@ flowchart TB
         MODEL[Gemini Models]
     end
 
+    %% Application flows
+    APP --> GENAI
+    ADK --> ENGINE
+    
+    %% Service interactions
+    GENAI --> MODEL
+    ENGINE --> MODEL
+
+    style GENAI fill:#fff2cc,stroke:#d6b656
+    style ENGINE fill:#fff2cc,stroke:#d6b656
+    style MODEL fill:#f8cecc,stroke:#b85450
+```
+
+#### B. Telemetry Collection
+
+This diagram shows how observability data is collected from your applications:
+
+```mermaid
+flowchart TB
+    subgraph "Your Applications"
+        APP[Direct Gemini API Calls]
+        ADK[ADK Agent Code]
+    end
+
+    subgraph "Telemetry Layer"
+        OTEL[OpenTelemetry SDK]
+    end
+
+    %% Instrumentation
+    APP --> OTEL
+    ADK --> OTEL
+
+    style OTEL fill:#f5f5ff,stroke:#9999ff
+    style APP fill:#e1f5fe,stroke:#0277bd
+    style ADK fill:#e1f5fe,stroke:#0277bd
+```
+
+#### C. Observability Data Export
+
+This diagram shows how telemetry data flows to Google Cloud observability services:
+
+```mermaid
+flowchart TB
+    subgraph "Data Sources"
+        OTEL[OpenTelemetry SDK]
+        VERTEX[Vertex AI Services]
+    end
+
     subgraph "Google Cloud Observability"
         CM[Cloud Monitoring]
         CT[Cloud Trace]
         CL[Cloud Logging]
     end
 
-    APP --> GENAI
-    ADK --> ENGINE
-    GENAI --> MODEL
-    ENGINE --> MODEL
-
-    APP --> OTEL
-    ADK --> OTEL
+    %% OpenTelemetry exports
     OTEL -->|Metrics| CM
     OTEL -->|Traces| CT
     OTEL -->|Logs| CL
 
-    GENAI -->|Usage Metadata| CM
-    ENGINE -->|Built-in Metrics| CM
-    MODEL -->|Safety Ratings| CL
+    %% Native Vertex AI telemetry
+    VERTEX -->|Usage Metadata| CM
+    VERTEX -->|Safety Ratings| CL
 
     style OTEL fill:#f5f5ff,stroke:#9999ff
+    style VERTEX fill:#fff2cc,stroke:#d6b656
     style CM fill:#e6f4ea,stroke:#5bb974
     style CT fill:#fef7e0,stroke:#fbbc04
     style CL fill:#e8f0fe,stroke:#4285f4
-    style GENAI fill:#fff2cc,stroke:#d6b656
-    style MODEL fill:#f8cecc,stroke:#b85450
 ```
 
 ### Multi-Platform Observability with Datadog Integration
@@ -373,64 +677,6 @@ The updated architecture provides comprehensive observability options for Vertex
 **✅ Enterprise-Ready:** Supports compliance requirements, advanced analytics, and multi-cloud architectures
 
 This approach enables organizations to start with Google Cloud's native observability while maintaining the flexibility to expand to enterprise observability platforms as needed.
-
-## Understanding Observability: Metrics, Logs, and Traces
-
-Before diving into implementation, let's understand the three pillars of observability and how they work together for AI agents:
-
-### **Metrics**
-
-**What they are:** Numerical measurements of system behavior over time  
-**When to use:**
-
-- Performance monitoring
-- Resource utilization
-- Business KPIs
-- Alerting thresholds
-
-**ADK Examples:**
-
-- Request count
-- Latency percentiles
-- Token usage
-- Error rates
-
-### **Logs**
-
-**What they are:** Time-stamped records of discrete events  
-**When to use:**
-
-- Debugging
-- Audit trails
-- Error investigation
-- Security monitoring
-
-**ADK Examples:**
-
-- Tool execution details
-- LLM prompt/response
-- Authentication events
-- Error messages
-
-### **Traces**
-
-**What they are:** End-to-end request flows across components  
-**When to use:**
-
-- Performance bottlenecks
-- Component dependencies
-- Request path analysis
-
-**ADK Examples:**
-
-- Full agent query flow
-- Tool call sequences
-- LLM invocation timing
-- Cross-service calls
-
-> **🔑 Quick Tip:** Think of observability like a detective story: **Metrics** tell you something happened (system is slow), **Logs** provide clues and context (error in tool X), and **Traces** show the complete timeline and connections between events (exactly how the request flowed through your system).
-
-Using all three together provides a complete picture of your ADK agent's behavior, enabling both proactive monitoring and effective troubleshooting.
 
 ---
 
