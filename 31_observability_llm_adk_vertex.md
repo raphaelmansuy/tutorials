@@ -4,6 +4,12 @@
 
 - [Prerequisites](#prerequisites)
 - [Overview](#overview)
+- [Observability Architecture: OpenTelemetry and Google Cloud](#observability-architecture-opentelemetry-and-google-cloud)
+  - [Core Architecture Overview](#core-architecture-overview)
+  - [Multi-Platform Observability with Datadog Integration](#multi-platform-observability-with-datadog-integration)
+  - [Exporting to Datadog: Two Primary Approaches](#exporting-to-datadog-two-primary-approaches)
+  - [Implementation Recommendations](#implementation-recommendations)
+  - [Summary: Enhanced Observability Options](#summary-enhanced-observability-options)
 - [Understanding Observability: Metrics, Logs, and Traces](#understanding-observability-metrics-logs-and-traces)
 - [⚡ Quick Wins Path (5 Minutes)](#-quick-wins-path-5-minutes)
 - [🏢 Production Path](#-production-path)
@@ -67,20 +73,20 @@ python --version  # Should be 3.9+
 Observability is essential for running production-grade AI applications built with Vertex AI Generative AI. This comprehensive guide covers observability for both direct Generative AI API usage and ADK-based agents. With Google's Vertex AI platform, you get robust, cloud-native monitoring, logging, and distributed tracing capabilities. This guide offers two paths plus specialized coverage:
 
 - **Quick Wins Path (5 minutes)**: Get immediate visibility with built-in tools
-- **Production Path**: Enterprise-grade observability with security and best practices  
+- **Production Path**: Enterprise-grade observability with security and best practices
 - **Generative AI Model Observability**: Specialized monitoring for LLM applications, token usage, safety, and multi-modal requests
 
 ### Executive Summary
 
-| Feature              | Quick Wins Path                  | Production Path                   | Generative AI Focus              |
-| -------------------- | -------------------------------- | --------------------------------- | -------------------------------- |
-| **Setup Time**       | 5 minutes                        | 2-4 hours                         | 1-2 hours                        |
-| **Monitoring**       | Built-in metrics                 | Custom metrics + alerting         | Token usage + model performance  |
-| **Tracing**          | Basic distributed tracing        | Advanced OpenTelemetry            | Multi-modal request flows        |
-| **Security**         | Default permissions              | Least privilege + audit logs      | Safety filter monitoring         |
-| **Cost Management**  | Basic usage tracking             | Advanced cost optimization        | Token-based cost control         |
-| **AI-Specific**      | Basic error monitoring           | Custom business metrics           | Safety, hallucination detection  |
-| **Best For**         | Development, proof-of-concepts   | Production, enterprise            | AI-first applications            |
+| Feature             | Quick Wins Path                | Production Path              | Generative AI Focus             |
+| ------------------- | ------------------------------ | ---------------------------- | ------------------------------- |
+| **Setup Time**      | 5 minutes                      | 2-4 hours                    | 1-2 hours                       |
+| **Monitoring**      | Built-in metrics               | Custom metrics + alerting    | Token usage + model performance |
+| **Tracing**         | Basic distributed tracing      | Advanced OpenTelemetry       | Multi-modal request flows       |
+| **Security**        | Default permissions            | Least privilege + audit logs | Safety filter monitoring        |
+| **Cost Management** | Basic usage tracking           | Advanced cost optimization   | Token-based cost control        |
+| **AI-Specific**     | Basic error monitoring         | Custom business metrics      | Safety, hallucination detection |
+| **Best For**        | Development, proof-of-concepts | Production, enterprise       | AI-first applications           |
 
 ### Cost Considerations
 
@@ -108,7 +114,7 @@ flowchart TB
 
     subgraph "Vertex AI Services"
         GENAI[Generative AI API]
-        ENGINE[Agent Engine] 
+        ENGINE[Agent Engine]
         MODEL[Gemini Models]
     end
 
@@ -122,7 +128,7 @@ flowchart TB
     ADK --> ENGINE
     GENAI --> MODEL
     ENGINE --> MODEL
-    
+
     APP --> OTEL
     ADK --> OTEL
     OTEL -->|Metrics| CM
@@ -161,7 +167,7 @@ flowchart TB
 
     subgraph "Google Cloud Observability"
         GCM[Cloud Monitoring]
-        GCT[Cloud Trace] 
+        GCT[Cloud Trace]
         GCL[Cloud Logging]
     end
 
@@ -181,7 +187,7 @@ flowchart TB
     APP --> GENAI
     ADK --> GENAI
     GENAI --> MODEL
-    
+
     %% OpenTelemetry instrumentation
     APP --> OTEL
     ADK --> OTEL
@@ -198,7 +204,7 @@ flowchart TB
     COLLECTOR -->|Datadog Exporter| DDM
     COLLECTOR -->|Datadog Exporter| DDT
     COLLECTOR -->|Datadog Exporter| DDL
-    
+
     DDAGENT -->|OTLP Ingestion| DDM
     DDAGENT -->|OTLP Ingestion| DDT
     DDAGENT -->|OTLP Ingestion| DDL
@@ -446,11 +452,11 @@ def generate_content(prompt: str):
             model="gemini-2.5-flash",
             contents=prompt
         )
-        
+
         # This log will automatically appear in Cloud Logging
         logger.info(f"Generated response with {response.usage_metadata.total_token_count} tokens")
         return response.text
-        
+
     except Exception as e:
         logger.error(f"Generation failed: {e}")
         raise
@@ -487,7 +493,7 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
     """Generate content with comprehensive logging."""
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
-    
+
     # Log the request start
     logger.info("Gemini request started", extra={
         "request_id": request_id,
@@ -495,14 +501,14 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
         "prompt_length": len(prompt),
         "event_type": "request_start"
     })
-    
+
     try:
         client = genai.Client()
         response = client.models.generate_content(model=model, contents=prompt)
-        
+
         duration_ms = (time.time() - start_time) * 1000
         usage = response.usage_metadata
-        
+
         # Log successful completion with structured data
         logger.info("Gemini request completed", extra={
             "request_id": request_id,
@@ -514,7 +520,7 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
             "cost_estimate_usd": (usage.total_token_count / 1_000_000) * 0.075,  # Flash pricing
             "event_type": "request_success"
         })
-        
+
         return {
             "text": response.text,
             "usage": {
@@ -524,10 +530,10 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
             },
             "request_id": request_id
         }
-        
+
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.error("Gemini request failed", extra={
             "request_id": request_id,
             "model": model,
@@ -585,22 +591,22 @@ def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
     with tracer.start_as_current_span("gemini_generation") as span:
         span.set_attribute("model", model)
         span.set_attribute("prompt_length", len(prompt))
-        
+
         request_id = f"req_{int(time.time() * 1000)}"
         start_time = time.time()
-        
+
         try:
             client = genai.Client()
             response = client.models.generate_content(model=model, contents=prompt)
-            
+
             duration_ms = (time.time() - start_time) * 1000
             usage = response.usage_metadata
-            
+
             # Add span attributes
             span.set_attribute("total_tokens", usage.total_token_count)
             span.set_attribute("duration_ms", duration_ms)
             span.set_attribute("success", True)
-            
+
             # Log with trace correlation
             logger.info("Traced Gemini request completed", extra={
                 "request_id": request_id,
@@ -608,9 +614,9 @@ def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
                 "duration_ms": duration_ms,
                 "trace_id": format(span.get_span_context().trace_id, '032x')
             })
-            
+
             return response.text
-            
+
         except Exception as e:
             span.set_attribute("error", str(e))
             span.set_attribute("success", False)
@@ -644,36 +650,36 @@ import time
 
 def create_logged_agent():
     """Create ADK agent with instant logging."""
-    
+
     # All print statements automatically go to Cloud Logging
     print("🚀 Starting ADK Agent initialization")
-    
+
     agent = Agent(
         model="gemini-2.5-flash",
         name="customer_service_agent",
         instructions="You are a helpful customer service agent."
     )
-    
+
     # This will appear in Cloud Logging
     print(f"✅ Agent '{agent.name}' created successfully")
-    
+
     return agent
 
 def logged_agent_query(agent, query: str):
     """Process query with automatic logging."""
     request_id = f"req_{int(time.time() * 1000)}"
-    
+
     # Simple text logging (appears in Cloud Logging immediately)
     print(f"🔄 Processing query: {query[:50]}... [ID: {request_id}]")
-    
+
     start_time = time.time()
     try:
         response = agent.query(query)
         duration_ms = (time.time() - start_time) * 1000
-        
+
         print(f"✅ Query completed in {duration_ms:.0f}ms [ID: {request_id}]")
         return response
-        
+
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
         print(f"❌ Query failed after {duration_ms:.0f}ms: {e} [ID: {request_id}]")
@@ -702,7 +708,7 @@ from google.adk.agents import Agent
 
 def structured_logged_agent():
     """ADK agent with structured JSON logging."""
-    
+
     def log_json(event_type: str, **kwargs):
         """Log structured JSON to stdout (automatically captured by Cloud Run)."""
         log_entry = {
@@ -713,52 +719,52 @@ def structured_logged_agent():
         }
         # Print JSON to stdout - Cloud Run automatically captures this
         print(json.dumps(log_entry))
-    
+
     # Initialize agent with structured logging
     log_json("agent_init_start", message="Initializing ADK Agent")
-    
+
     agent = Agent(
         model="gemini-2.5-flash",
         name="structured_agent",
         instructions="You are a helpful assistant with structured logging."
     )
-    
-    log_json("agent_init_complete", 
-             agent_name=agent.name, 
+
+    log_json("agent_init_complete",
+             agent_name=agent.name,
              model=agent.model,
              status="success")
-    
+
     def query_with_structured_logs(query: str):
         request_id = f"req_{int(time.time() * 1000)}"
         start_time = time.time()
-        
-        log_json("query_start", 
+
+        log_json("query_start",
                  request_id=request_id,
                  query_length=len(query),
                  query_preview=query[:100])
-        
+
         try:
             response = agent.query(query)
             duration_ms = (time.time() - start_time) * 1000
-            
+
             log_json("query_success",
                      request_id=request_id,
                      duration_ms=duration_ms,
                      response_length=len(str(response)),
                      status="completed")
-            
+
             return response
-            
+
         except Exception as e:
             duration_ms = (time.time() - start_time) * 1000
-            
+
             log_json("query_error",
                      request_id=request_id,
                      duration_ms=duration_ms,
                      error=str(e),
                      status="failed")
             raise
-    
+
     return query_with_structured_logs
 
 # Test structured logging
@@ -793,7 +799,7 @@ logger = logging.getLogger(__name__)
 
 def create_traced_agent():
     """Create ADK agent with full observability for App Engine."""
-    
+
     def get_trace_id():
         """Extract trace ID from App Engine request headers."""
         trace_header = os.environ.get('HTTP_X_CLOUD_TRACE_CONTEXT', '')
@@ -801,7 +807,7 @@ def create_traced_agent():
             trace_id = trace_header.split('/')[0]
             return f"projects/{client.project}/traces/{trace_id}"
         return None
-    
+
     def correlated_log(message: str, **kwargs):
         """Log with trace correlation for App Engine."""
         trace_id = get_trace_id()
@@ -809,54 +815,54 @@ def create_traced_agent():
             "event_type": "adk_agent",
             **kwargs
         }
-        
+
         if trace_id:
             extra_data["logging.googleapis.com/trace"] = trace_id
-        
+
         logger.info(message, extra=extra_data)
-    
+
     # Initialize with correlated logging
     correlated_log("ADK Agent initialization started")
-    
+
     agent = Agent(
         model="gemini-2.5-flash",
         name="traced_agent",
         instructions="You are an agent with full observability."
     )
-    
-    correlated_log("ADK Agent ready", 
+
+    correlated_log("ADK Agent ready",
                    agent_name=agent.name,
                    model=agent.model)
-    
+
     def traced_query(query: str):
         request_id = f"req_{int(time.time() * 1000)}"
         start_time = time.time()
-        
+
         correlated_log("Query processing started",
                        request_id=request_id,
                        query_length=len(query))
-        
+
         try:
             response = agent.query(query)
             duration_ms = (time.time() - start_time) * 1000
-            
+
             correlated_log("Query completed successfully",
                            request_id=request_id,
                            duration_ms=duration_ms,
                            response_length=len(str(response)))
-            
+
             return response
-            
+
         except Exception as e:
             duration_ms = (time.time() - start_time) * 1000
-            
+
             correlated_log("Query failed",
                            request_id=request_id,
                            duration_ms=duration_ms,
                            error=str(e),
                            level="ERROR")
             raise
-    
+
     return traced_query
 
 # For App Engine deployment
@@ -885,12 +891,12 @@ def handle_query():
 
 ### What You've Accomplished
 
-| Feature | Direct Gemini | ADK on Cloud Run | ADK on App Engine |
-|---------|---------------|------------------|-------------------|
-| **Basic Logging** | ✅ 30 seconds | ✅ Instant (built-in) | ✅ Automatic |
-| **Structured Logs** | ✅ JSON with tokens | ✅ JSON to stdout | ✅ With trace correlation |
-| **Tracing** | ✅ OpenTelemetry | ✅ Built-in traces | ✅ Automatic correlation |
-| **Metrics** | ✅ Custom metrics | ✅ Built-in metrics | ✅ Built-in metrics |
+| Feature             | Direct Gemini       | ADK on Cloud Run      | ADK on App Engine         |
+| ------------------- | ------------------- | --------------------- | ------------------------- |
+| **Basic Logging**   | ✅ 30 seconds       | ✅ Instant (built-in) | ✅ Automatic              |
+| **Structured Logs** | ✅ JSON with tokens | ✅ JSON to stdout     | ✅ With trace correlation |
+| **Tracing**         | ✅ OpenTelemetry    | ✅ Built-in traces    | ✅ Automatic correlation  |
+| **Metrics**         | ✅ Custom metrics   | ✅ Built-in metrics   | ✅ Built-in metrics       |
 
 ### Immediate Next Steps
 
@@ -1134,17 +1140,17 @@ class TokenUsageMonitor:
         self.project_id = project_id
         self.monitoring_client = monitoring_v3.MetricServiceClient()
         self.project_name = self.monitoring_client.common_project_path(project_id)
-        
-    def log_token_usage(self, 
-                       model: str, 
-                       prompt_tokens: int, 
-                       candidate_tokens: int, 
+
+    def log_token_usage(self,
+                       model: str,
+                       prompt_tokens: int,
+                       candidate_tokens: int,
                        total_tokens: int,
                        request_id: str,
                        user_id: Optional[str] = None,
                        application: str = "default") -> None:
         """Log token usage with structured fields for analysis."""
-        
+
         # Structured logging for token usage
         logger.info(
             "Generative AI token usage recorded",
@@ -1161,10 +1167,10 @@ class TokenUsageMonitor:
                 "cost_estimate": self._estimate_cost(model, total_tokens)
             }
         )
-        
+
         # Create custom metric for token usage
         self._create_token_usage_metric(model, total_tokens, application)
-        
+
         # Alert on high usage
         if total_tokens > 50000:  # Configurable threshold
             logger.warning(
@@ -1177,32 +1183,32 @@ class TokenUsageMonitor:
                     "threshold_exceeded": True
                 }
             )
-    
+
     def _create_token_usage_metric(self, model: str, tokens: int, application: str) -> None:
         """Create custom metric for token usage."""
         series = monitoring_v3.TimeSeries()
         series.metric.type = "custom.googleapis.com/genai/token_usage"
         series.resource.type = "global"
-        
+
         # Add metric labels for analysis dimensions
         series.metric.labels["model"] = model
         series.metric.labels["application"] = application
-        
+
         # Add the data point
         point = series.points.add()
         point.value.int64_value = tokens
         now = time.time()
         point.interval.end_time.seconds = int(now)
         point.interval.end_time.nanos = int((now - int(now)) * 10**9)
-        
+
         try:
             self.monitoring_client.create_time_series(
-                name=self.project_name, 
+                name=self.project_name,
                 time_series=[series]
             )
         except Exception as e:
             logger.error(f"Failed to create token usage metric: {e}")
-    
+
     def _estimate_cost(self, model: str, tokens: int) -> float:
         """Estimate cost based on model and token count."""
         # Cost per 1M tokens (approximate, check current pricing)
@@ -1213,40 +1219,40 @@ class TokenUsageMonitor:
             "gemini-1.5-flash": 0.075,
             "gemini-1.5-pro": 1.25
         }
-        
+
         rate = cost_per_million.get(model, 0.075)  # Default to Flash pricing
         return (tokens / 1_000_000) * rate
 
 # Usage monitoring with Gemini API
-def monitored_generate_content(prompt: str, 
+def monitored_generate_content(prompt: str,
                              model: str = "gemini-2.5-flash",
                              application: str = "default",
                              user_id: Optional[str] = None) -> Dict[str, Any]:
     """Generate content with comprehensive monitoring."""
-    
+
     monitor = TokenUsageMonitor(PROJECT_ID)
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
-    
+
     try:
         client = genai.Client()
-        
+
         # Generate content
         response = client.models.generate_content(
             model=model,
             contents=prompt
         )
-        
+
         # Extract usage metadata
         usage = response.usage_metadata
         prompt_tokens = usage.prompt_token_count
-        candidate_tokens = usage.candidates_token_count  
+        candidate_tokens = usage.candidates_token_count
         total_tokens = usage.total_token_count
-        
+
         # Calculate performance metrics
         duration_ms = (time.time() - start_time) * 1000
         tokens_per_second = total_tokens / (duration_ms / 1000) if duration_ms > 0 else 0
-        
+
         # Log token usage
         monitor.log_token_usage(
             model=model,
@@ -1257,7 +1263,7 @@ def monitored_generate_content(prompt: str,
             user_id=user_id,
             application=application
         )
-        
+
         # Log performance metrics
         logger.info(
             "Generative AI request completed",
@@ -1272,7 +1278,7 @@ def monitored_generate_content(prompt: str,
                 "finish_reason": response.candidates[0].finish_reason if response.candidates else None
             }
         )
-        
+
         return {
             "text": response.text,
             "usage": {
@@ -1286,10 +1292,10 @@ def monitored_generate_content(prompt: str,
             },
             "request_id": request_id
         }
-        
+
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.error(
             "Generative AI request failed",
             extra={
@@ -1311,7 +1317,7 @@ Monitor safety attributes, content filtering, and responsible AI compliance:
 ```python
 def monitor_safety_attributes(response, request_id: str, model: str) -> None:
     """Monitor safety ratings and content filtering."""
-    
+
     if not response.candidates:
         logger.warning(
             "No candidates in response - potential safety filtering",
@@ -1322,9 +1328,9 @@ def monitor_safety_attributes(response, request_id: str, model: str) -> None:
             }
         )
         return
-    
+
     candidate = response.candidates[0]
-    
+
     # Log finish reason
     finish_reason = candidate.finish_reason
     if finish_reason in ["SAFETY", "RECITATION", "PROHIBITED_CONTENT", "SPII"]:
@@ -1338,7 +1344,7 @@ def monitor_safety_attributes(response, request_id: str, model: str) -> None:
                 "safety_concern": True
             }
         )
-    
+
     # Monitor safety ratings
     if hasattr(candidate, 'safety_ratings') and candidate.safety_ratings:
         for rating in candidate.safety_ratings:
@@ -1354,7 +1360,7 @@ def monitor_safety_attributes(response, request_id: str, model: str) -> None:
                         "blocked": rating.blocked
                     }
                 )
-    
+
     # Monitor citations for attribution
     if hasattr(candidate, 'citation_metadata') and candidate.citation_metadata:
         logger.info(
@@ -1368,30 +1374,30 @@ def monitor_safety_attributes(response, request_id: str, model: str) -> None:
         )
 
 # Enhanced monitored generation with safety
-def safe_monitored_generate_content(prompt: str, 
+def safe_monitored_generate_content(prompt: str,
                                   model: str = "gemini-2.5-flash",
                                   safety_settings: Optional[list] = None) -> Dict[str, Any]:
     """Generate content with safety monitoring."""
-    
+
     request_id = f"req_{int(time.time() * 1000)}"
-    
+
     try:
         client = genai.Client()
-        
+
         # Configure safety settings if provided
         generate_config = {
             "model": model,
             "contents": prompt
         }
-        
+
         if safety_settings:
             generate_config["safety_settings"] = safety_settings
-        
+
         response = client.models.generate_content(**generate_config)
-        
+
         # Monitor safety attributes
         monitor_safety_attributes(response, request_id, model)
-        
+
         # Extract and monitor usage
         monitor = TokenUsageMonitor(PROJECT_ID)
         usage = response.usage_metadata
@@ -1402,7 +1408,7 @@ def safe_monitored_generate_content(prompt: str,
             total_tokens=usage.total_token_count,
             request_id=request_id
         )
-        
+
         return {
             "text": response.text,
             "safety_ratings": [
@@ -1416,7 +1422,7 @@ def safe_monitored_generate_content(prompt: str,
             "finish_reason": response.candidates[0].finish_reason if response.candidates else None,
             "request_id": request_id
         }
-        
+
     except Exception as e:
         logger.error(
             "Safe generation failed",
@@ -1434,16 +1440,16 @@ def safe_monitored_generate_content(prompt: str,
 Monitor requests that include text, images, video, and audio:
 
 ```python
-def monitor_multimodal_request(request_parts: list, 
-                              response, 
-                              request_id: str, 
+def monitor_multimodal_request(request_parts: list,
+                              response,
+                              request_id: str,
                               model: str) -> None:
     """Monitor multi-modal request characteristics."""
-    
+
     # Analyze input modalities
     modalities = []
     total_size = 0
-    
+
     for part in request_parts:
         if hasattr(part, 'text') and part.text:
             modalities.append("text")
@@ -1454,9 +1460,9 @@ def monitor_multimodal_request(request_parts: list,
                 total_size += len(part.inline_data.data) * 3 / 4  # Base64 to bytes
         elif hasattr(part, 'file_data') and part.file_data:
             modalities.append(part.file_data.mime_type.split('/')[0])
-    
+
     unique_modalities = list(set(modalities))
-    
+
     logger.info(
         "Multi-modal request processed",
         extra={
@@ -1470,7 +1476,7 @@ def monitor_multimodal_request(request_parts: list,
             "is_multimodal": len(unique_modalities) > 1
         }
     )
-    
+
     # Monitor for large requests
     if total_size > 10 * 1024 * 1024:  # 10MB threshold
         logger.warning(
@@ -1483,27 +1489,27 @@ def monitor_multimodal_request(request_parts: list,
             }
         )
 
-def monitored_multimodal_generate(parts: list, 
+def monitored_multimodal_generate(parts: list,
                                 model: str = "gemini-2.5-flash") -> Dict[str, Any]:
     """Generate content from multi-modal input with monitoring."""
-    
+
     request_id = f"mm_req_{int(time.time() * 1000)}"
     start_time = time.time()
-    
+
     try:
         client = genai.Client()
-        
+
         response = client.models.generate_content(
             model=model,
             contents=parts
         )
-        
+
         # Monitor the multi-modal request
         monitor_multimodal_request(parts, response, request_id, model)
-        
+
         # Standard monitoring
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.info(
             "Multi-modal generation completed",
             extra={
@@ -1514,16 +1520,16 @@ def monitored_multimodal_generate(parts: list,
                 "response_length": len(response.text) if response.text else 0
             }
         )
-        
+
         return {
             "text": response.text,
             "request_id": request_id,
             "duration_ms": duration_ms
         }
-        
+
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.error(
             "Multi-modal generation failed",
             extra={
@@ -1550,20 +1556,20 @@ class DSQMonitor:
     def __init__(self, project_id: str):
         self.project_id = project_id
         self.credentials, _ = default()
-        
+
     def monitor_quota_usage(self, model: str, request_count: int = 1) -> None:
         """Monitor quota usage for DSQ-enabled models."""
-        
+
         # List of DSQ-enabled models (as of 2025)
         dsq_models = [
             "gemini-2.5-flash",
-            "gemini-2.5-pro", 
+            "gemini-2.5-pro",
             "gemini-2.0-flash",
             "gemini-2.0-flash-lite",
             "gemini-1.5-pro",
             "gemini-1.5-flash"
         ]
-        
+
         if model in dsq_models:
             logger.info(
                 "DSQ model usage tracked",
@@ -1579,20 +1585,20 @@ class DSQMonitor:
             logger.info(
                 "Standard quota model usage tracked",
                 extra={
-                    "event_type": "standard_quota_usage", 
+                    "event_type": "standard_quota_usage",
                     "model": model,
                     "request_count": request_count,
                     "quota_type": "standard",
                     "timestamp": time.time()
                 }
             )
-    
+
     def get_quota_status(self) -> Dict[str, Any]:
         """Get current quota status (requires appropriate permissions)."""
         try:
             # Refresh credentials
             self.credentials.refresh(Request())
-            
+
             # This is a simplified example - actual implementation would use
             # the appropriate Vertex AI APIs to check quota status
             return {
@@ -1612,12 +1618,12 @@ Monitor function calling and tool usage patterns:
 ```python
 def monitor_function_calling(response, request_id: str, model: str, functions_declared: list) -> None:
     """Monitor function calling behavior."""
-    
+
     if not response.candidates:
         return
-        
+
     candidate = response.candidates[0]
-    
+
     # Check for function calls in the response
     function_calls = []
     if hasattr(candidate, 'content') and candidate.content.parts:
@@ -1627,7 +1633,7 @@ def monitor_function_calling(response, request_id: str, model: str, functions_de
                     "name": part.function_call.name,
                     "args_count": len(part.function_call.args) if part.function_call.args else 0
                 })
-    
+
     logger.info(
         "Function calling analysis",
         extra={
@@ -1640,7 +1646,7 @@ def monitor_function_calling(response, request_id: str, model: str, functions_de
             "function_usage_rate": len(function_calls) / len(functions_declared) if functions_declared else 0
         }
     )
-    
+
     # Alert on unexpected function usage patterns
     if len(function_calls) > 5:
         logger.warning(
@@ -1656,21 +1662,21 @@ def monitored_function_calling_generate(prompt: str,
                                       functions: list,
                                       model: str = "gemini-2.5-flash") -> Dict[str, Any]:
     """Generate content with function calling monitoring."""
-    
+
     request_id = f"fc_req_{int(time.time() * 1000)}"
-    
+
     try:
         client = genai.Client()
-        
+
         response = client.models.generate_content(
             model=model,
             contents=prompt,
             tools=[{"function_declarations": functions}]
         )
-        
+
         # Monitor function calling
         monitor_function_calling(response, request_id, model, functions)
-        
+
         # Standard monitoring
         monitor = TokenUsageMonitor(PROJECT_ID)
         usage = response.usage_metadata
@@ -1682,12 +1688,12 @@ def monitored_function_calling_generate(prompt: str,
             request_id=request_id,
             application="function_calling"
         )
-        
+
         return {
             "response": response,
             "request_id": request_id
         }
-        
+
     except Exception as e:
         logger.error(
             "Function calling generation failed",
@@ -1721,7 +1727,7 @@ Labels: model, application
 **High Token Usage Alerts:**
 
 ```yaml
-Filter: jsonPayload.event_type="high_token_usage" 
+Filter: jsonPayload.event_type="high_token_usage"
 Metric Type: Counter
 Labels: model, threshold_exceeded
 ```
@@ -1730,7 +1736,7 @@ Labels: model, threshold_exceeded
 
 ```yaml
 Filter: jsonPayload.event_type="content_blocked"
-Metric Type: Counter  
+Metric Type: Counter
 Labels: model, finish_reason, safety_concern
 ```
 
@@ -1762,14 +1768,14 @@ class CostOptimizer:
             "hourly": 10.0,    # Hourly budget in USD
             "per_request": 0.50 # Max cost per request
         }
-    
+
     def check_cost_optimization(self, tokens: int, model: str) -> Dict[str, Any]:
         """Check if request fits within cost constraints."""
-        
+
         estimated_cost = self._estimate_cost(model, tokens)
-        
+
         recommendations = []
-        
+
         # Check if we should suggest a cheaper model
         if estimated_cost > self.cost_thresholds["per_request"]:
             if model.startswith("gemini-2.5-pro"):
@@ -1778,7 +1784,7 @@ class CostOptimizer:
                     "suggestion": "Consider using gemini-2.5-flash for this request",
                     "potential_savings": estimated_cost * 0.9  # Flash is ~90% cheaper
                 })
-        
+
         # Check token optimization
         if tokens > 100000:
             recommendations.append({
@@ -1787,13 +1793,13 @@ class CostOptimizer:
                 "current_tokens": tokens,
                 "recommended_max": 50000
             })
-        
+
         return {
             "current_cost": estimated_cost,
             "within_budget": estimated_cost <= self.cost_thresholds["per_request"],
             "recommendations": recommendations
         }
-    
+
     def _estimate_cost(self, model: str, tokens: int) -> float:
         """Estimate cost based on current pricing."""
         # Update these based on current Vertex AI pricing
@@ -1803,7 +1809,7 @@ class CostOptimizer:
             "gemini-2.0-flash": 0.075,
             "gemini-2.0-flash-lite": 0.075
         }
-        
+
         rate = rates.get(model, 0.075)
         return (tokens / 1_000_000) * rate
 ```
@@ -1825,7 +1831,7 @@ genai_requests_total = Counter(
 )
 
 genai_tokens_total = Counter(
-    'genai_tokens_total', 
+    'genai_tokens_total',
     'Total tokens used',
     ['model', 'token_type']  # prompt, candidate, total
 )
@@ -1842,28 +1848,28 @@ genai_cost_total = Counter(
     ['model', 'application']
 )
 
-def export_to_prometheus(model: str, 
+def export_to_prometheus(model: str,
                         duration: float,
                         prompt_tokens: int,
-                        candidate_tokens: int, 
+                        candidate_tokens: int,
                         total_tokens: int,
                         estimated_cost: float,
                         application: str = "default",
                         status: str = "success") -> None:
     """Export metrics to Prometheus."""
-    
+
     genai_requests_total.labels(
-        model=model, 
-        application=application, 
+        model=model,
+        application=application,
         status=status
     ).inc()
-    
+
     genai_tokens_total.labels(model=model, token_type="prompt").inc(prompt_tokens)
     genai_tokens_total.labels(model=model, token_type="candidate").inc(candidate_tokens)
     genai_tokens_total.labels(model=model, token_type="total").inc(total_tokens)
-    
+
     genai_request_duration.labels(model=model).observe(duration)
-    
+
     genai_cost_total.labels(model=model, application=application).inc(estimated_cost)
 ```
 
@@ -2282,12 +2288,6 @@ def structured_log(message, severity="INFO", **kwargs):
 ```
 
 #### 6. **OpenTelemetry Integration Problems**
-
-**Symptoms:**
-
-- Custom spans not appearing
-- OpenTelemetry errors in logs
-
 **Solutions:**
 
 ```python
