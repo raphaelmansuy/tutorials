@@ -1041,6 +1041,145 @@ These logs are invaluable for security investigations and meeting compliance req
 
 ---
 
+## Advanced Observability with OpenTelemetry and Datadog
+
+For organizations that require multi-platform observability or want to standardize on a vendor-neutral solution, **OpenTelemetry** is the industry standard. It provides a unified way to collect metrics, logs, and traces from your applications and export them to various backends, including Google Cloud, Datadog, and others.
+
+### OpenTelemetry Architecture with Google Cloud
+
+When you use OpenTelemetry, your application code is instrumented with the OpenTelemetry SDK. This SDK collects telemetry data and exports it. For Google Cloud, you can use an OTLP (OpenTelemetry Protocol) exporter that sends data directly to Cloud Monitoring, Cloud Trace, and Cloud Logging.
+
+```mermaid
+flowchart TB
+    subgraph "Your Application"
+        ADK[ADK Agent Code]
+        OTEL_SDK[OpenTelemetry SDK]
+    end
+
+    subgraph "Google Cloud Observability"
+        CL[Cloud Logging]
+        CM[Cloud Monitoring]
+        CT[Cloud Trace]
+    end
+
+    ADK --> OTEL_SDK
+    OTEL_SDK --> CL
+    OTEL_SDK --> CM
+    OTEL_SDK --> CT
+
+    style ADK fill:#e1f5fe,stroke:#0277bd
+    style OTEL_SDK fill:#d5e8d4,stroke:#82b366
+    style CL fill:#e8f0fe,stroke:#4285f4
+    style CM fill:#e6f4ea,stroke:#5bb974
+    style CT fill:#fef7e0,stroke:#fbbc04
+```
+
+### Multi-Platform Observability with Datadog
+
+OpenTelemetry's real power comes from its flexibility. You can configure it to send telemetry data to multiple destinations simultaneously. This is ideal for organizations that use Datadog for their primary observability platform but still want to leverage Google Cloud's native integration.
+
+A common pattern is to use the **OpenTelemetry Collector**, a standalone service that receives telemetry data, processes it, and exports it to one or more backends.
+
+```mermaid
+flowchart TB
+    subgraph "Your Application"
+        ADK[ADK Agent Code]
+        OTEL_SDK[OpenTelemetry SDK]
+    end
+
+    subgraph "Data Processing"
+        OTEL_COLLECTOR[OpenTelemetry Collector]
+    end
+
+    subgraph "Observability Backends"
+        GCP[Google Cloud Observability]
+        DATADOG[Datadog]
+    end
+
+    ADK --> OTEL_SDK
+    OTEL_SDK --> OTEL_COLLECTOR
+    OTEL_COLLECTOR --> GCP
+    OTEL_COLLECTOR --> DATADOG
+
+    style ADK fill:#e1f5fe,stroke:#0277bd
+    style OTEL_SDK fill:#d5e8d4,stroke:#82b366
+    style OTEL_COLLECTOR fill:#dae8fc,stroke:#6c8ebf
+    style GCP fill:#e8f0fe,stroke:#4285f4
+    style DATADOG fill:#632ca6,stroke:#632ca6,color:#fff
+```
+
+### Exporting to Datadog: Two Primary Approaches
+
+#### Approach 1: OpenTelemetry Collector with Datadog Exporter
+
+This approach uses the standard OpenTelemetry Collector with Datadog's exporter component.
+
+**Benefits:**
+
+- Complete vendor neutrality and flexibility.
+- Centralized processing, batching, and sampling.
+- Works without needing to install the Datadog Agent on every host.
+
+**Conceptual Configuration (`collector.yaml`):**
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  datadog:
+    api:
+      key: ${DD_API_KEY}
+  googlecloud:
+    project: ${GCP_PROJECT_ID}
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [datadog, googlecloud]
+    metrics:
+      receivers: [otlp]
+      exporters: [datadog, googlecloud]
+```
+
+#### Approach 2: Datadog Agent with OTLP Ingestion
+
+This approach leverages the Datadog Agent's built-in OTLP support. Your application sends OTLP data to the Datadog Agent, which then forwards it to Datadog and potentially other backends.
+
+**Benefits:**
+
+- Access to all of Datadog's features, including 850+ integrations.
+- Unified agent for metrics, logs, traces, and application security.
+- Simplified fleet management through Datadog.
+
+**Conceptual Configuration (`datadog.yaml`):**
+
+```yaml
+otlp_config:
+  receiver:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
+
+logs_enabled: true
+```
+
+### Recommendations
+
+- **For Google Cloud-first teams:** Start with the direct Google Cloud exporters. Add the OpenTelemetry Collector and Datadog exporter if you need to integrate with Datadog for specific use cases.
+- **For Datadog-centric teams:** Use the OpenTelemetry Collector with dual exporters to get the best of both worlds. This gives you a unified view in Datadog while retaining deep integration with Google Cloud services.
+- **For simplicity:** If you are already using the Datadog Agent for other monitoring, using its OTLP ingestion capabilities is often the easiest path.
+
+By leveraging OpenTelemetry, you can build a flexible and future-proof observability strategy for your Vertex AI and ADK applications.
+
+---
+
 ## 📚 References and Additional Resources
 
 ### Google Cloud Documentation
