@@ -27,6 +27,7 @@ Before diving in, ensure you have:
 **Estimated Prerequisites Setup Time:** 15 minutes
 
 **Verify your Python version:**
+
 ```bash
 python --version  # Should show 3.11.x or higher
 ```
@@ -149,7 +150,7 @@ pip install google-adk
 # Available commands after installation:
 adk web           # Launch interactive development UI
 adk run           # Run agents from command line
-adk api_server    # Start REST API server for agents  
+adk api_server    # Start REST API server for agents
 adk eval          # Evaluate agent performance with test sets
 ```
 
@@ -158,6 +159,7 @@ adk eval          # Evaluate agent performance with test sets
 **ADK Web** is a game-changing browser-based development UI that comes built-in with ADK. Think of it as your agent development command center.
 
 **Key Features:**
+
 - 🎯 **Interactive Chat Interface** - Test your agents in real-time
 - 🔍 **Event Tracing** - See exactly what your agent is thinking and doing
 - 📊 **Function Call Inspector** - Debug tool calls with detailed logs
@@ -179,6 +181,7 @@ adk web
 ```
 
 **Why ADK Web is Revolutionary:**
+
 - **Zero Configuration** - Works out of the box with any ADK project
 - **Real-time Debugging** - See function calls, model responses, and traces live
 - **Production Preview** - Test how your agent will behave in real scenarios
@@ -199,7 +202,7 @@ Google's latest Gemini 2.5 family offers three models optimized for different us
 ### **gemini-2.5-flash** - Balanced Performance (Recommended)
 
 - **Best for:** Most applications, balanced price-performance
-- **Features:** Adaptive thinking, cost efficiency, well-rounded capabilities  
+- **Features:** Adaptive thinking, cost efficiency, well-rounded capabilities
 - **Use cases:** General agent development, recommended for tutorials and production
 
 ### **gemini-2.5-flash-lite-preview** - Speed & Cost Optimization
@@ -210,12 +213,12 @@ Google's latest Gemini 2.5 family offers three models optimized for different us
 
 **Model Selection Guide:**
 
-| Use Case | Recommended Model | Why |
-|----------|------------------|-----|
-| Learning & Tutorials | `gemini-2.5-flash` | Best balance of capability and cost |
-| Production Apps | `gemini-2.5-flash` | Reliable performance for most scenarios |
-| Complex Reasoning | `gemini-2.5-pro` | Maximum intelligence for difficult tasks |
-| High-Volume/Real-time | `gemini-2.5-flash-lite-preview` | Optimized for speed and cost |
+| Use Case              | Recommended Model               | Why                                      |
+| --------------------- | ------------------------------- | ---------------------------------------- |
+| Learning & Tutorials  | `gemini-2.5-flash`              | Best balance of capability and cost      |
+| Production Apps       | `gemini-2.5-flash`              | Reliable performance for most scenarios  |
+| Complex Reasoning     | `gemini-2.5-pro`                | Maximum intelligence for difficult tasks |
+| High-Volume/Real-time | `gemini-2.5-flash-lite-preview` | Optimized for speed and cost             |
 
 **Note:** All Gemini 2.5 models include built-in thinking capabilities and support multimodal inputs (text, images, audio, video).
 
@@ -306,10 +309,10 @@ load_dotenv()
 
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
-    
+
     Args:
         city (str): The name of the city for which to retrieve the weather report.
-        
+
     Returns:
         dict: status and result or error msg.
     """
@@ -320,7 +323,7 @@ def get_weather(city: str) -> dict:
         "tokyo": "Rainy, 18°C (64°F) with high humidity",
         "new york": "Partly cloudy, 20°C (68°F) with gentle breeze"
     }
-    
+
     if city.lower() in weather_data:
         return {
             "status": "success",
@@ -334,10 +337,10 @@ def get_weather(city: str) -> dict:
 
 def calculate(expression: str) -> dict:
     """Safe calculator for basic math expressions.
-    
+
     Args:
         expression (str): Mathematical expression to evaluate
-        
+
     Returns:
         dict: status and result or error message
     """
@@ -427,7 +430,7 @@ adk web
 **ADK Web Advantages:**
 
 - Visual debugging with event tracing
-- Real-time function call inspection  
+- Real-time function call inspection
 - Performance metrics and latency tracking
 - Easy switching between different agents
 - Built-in voice support (with compatible models)
@@ -445,7 +448,7 @@ adk run simple_agent:weather_assistant
 Try these examples in either interface:
 
 - "What's the weather in Paris?"
-- "Calculate 25 * 4 + 10"
+- "Calculate 25 \* 4 + 10"
 - "What's 15% of 200?"
 - "Show me the weather in Tokyo and calculate 100 / 5"
 
@@ -588,7 +591,7 @@ vertex_agent = Agent(
 if __name__ == "__main__":
     print("🧪 Testing ADK with Vertex AI...")
     print("If this works, your Vertex AI setup is ready for production!")
-    
+
     try:
         response = vertex_agent.run("What's the weather in Paris? Also confirm you're using Vertex AI.")
         print(f"✅ Success! Agent response: {response}")
@@ -643,7 +646,6 @@ Once this test succeeds, you know your Vertex AI configuration is correct and yo
 
 ---
 
-
 ### Production Setup: Modern Python Development
 
 #### Step 1: uv Project Setup (10 minutes)
@@ -661,7 +663,7 @@ uv init --name intelligent-task-assistant --python "3.11"
 # Add dependencies (Google ADK 1.4.2)
 uv add google-adk python-dotenv
 
-# Add development dependencies  
+# Add development dependencies
 uv add --dev pytest black ruff mypy
 
 # Activate environment (uv automatically manages virtual environments)
@@ -699,7 +701,7 @@ intelligent-task-assistant/
 # Create the directory structure
 mkdir -p src/task_assistant/{agents,tools} tests
 touch src/task_assistant/__init__.py
-touch src/task_assistant/agents/__init__.py  
+touch src/task_assistant/agents/__init__.py
 touch src/task_assistant/tools/__init__.py
 touch tests/__init__.py
 ```
@@ -1050,7 +1052,7 @@ cat > eval_set.json << EOF
       "expected_outputs": ["high", "quarterly reports", "Friday"]
     },
     {
-      "input": "Show me all pending tasks sorted by priority", 
+      "input": "Show me all pending tasks sorted by priority",
       "expected_outputs": ["pending", "priority", "sorted"]
     }
   ]
@@ -1064,7 +1066,7 @@ adk eval src.task_assistant.agents.coordinator:task_coordinator eval_set.json
 Try these advanced examples in any method:
 
 - "Create a high-priority task to review quarterly reports by Friday"
-- "Show me all pending tasks sorted by priority"  
+- "Show me all pending tasks sorted by priority"
 - "Update task 1 status to completed"
 - "What's my current workload distribution?"
 - "Create three related tasks for a product launch campaign"
@@ -1210,20 +1212,20 @@ gcloud run deploy task-assistant \
 
 ## Comparison: Quick Start vs Production
 
-| Feature              | Quick Start           | Production Path              |
-| -------------------- | --------------------- | ---------------------------- |
-| **Time Investment**  | 30 minutes            | 2-3 hours                    |
-| **Python Version**   | 3.11+ (recommended)   | 3.11+ (recommended)          |
-| **ADK Version**      | 1.4.2                 | 1.4.2                        |
-| **Code Quality**     | Demo-ready            | Production-ready             |
-| **Scalability**      | Single file           | Modular architecture         |
-| **Testing**          | Manual + ADK Web      | Automated + `adk eval`       |
-| **Deployment**       | Local only            | Multi-platform deployment    |
-| **Maintenance**      | Prototype             | Long-term maintainable       |
-| **Team Development** | Individual            | Team-friendly                |
-| **Error Handling**   | Basic                 | Comprehensive                |
-| **Debug Tools**      | ADK Web UI            | ADK Web + CLI + evaluation   |
-| **Command Tools**    | `adk web`, `adk run`  | Full `adk` suite             |
+| Feature              | Quick Start          | Production Path            |
+| -------------------- | -------------------- | -------------------------- |
+| **Time Investment**  | 30 minutes           | 2-3 hours                  |
+| **Python Version**   | 3.11+ (recommended)  | 3.11+ (recommended)        |
+| **ADK Version**      | 1.4.2                | 1.4.2                      |
+| **Code Quality**     | Demo-ready           | Production-ready           |
+| **Scalability**      | Single file          | Modular architecture       |
+| **Testing**          | Manual + ADK Web     | Automated + `adk eval`     |
+| **Deployment**       | Local only           | Multi-platform deployment  |
+| **Maintenance**      | Prototype            | Long-term maintainable     |
+| **Team Development** | Individual           | Team-friendly              |
+| **Error Handling**   | Basic                | Comprehensive              |
+| **Debug Tools**      | ADK Web UI           | ADK Web + CLI + evaluation |
+| **Command Tools**    | `adk web`, `adk run` | Full `adk` suite           |
 
 ---
 
@@ -1259,7 +1261,7 @@ By following either path, you now have:
 ### Next Steps
 
 1. **Experiment**: Modify the examples to solve your specific problems
-2. **Integrate**: Connect your agents with real APIs and data sources  
+2. **Integrate**: Connect your agents with real APIs and data sources
 3. **Scale**: Use the production patterns to build larger, more complex systems
 4. **Deploy**: Take your agents to production using the deployment strategies provided
 5. **Evaluate**: Use `adk eval` to systematically test and improve your agents
