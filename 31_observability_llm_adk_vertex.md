@@ -211,6 +211,18 @@ def test_gcp_setup():
     except Exception as e:
         print(f"❌ GCP setup test failed: {e}")
         return False
+    try:
+        google.cloud.logging.Client()
+        print("✅ Cloud Logging client created successfully")
+        google.cloud.monitoring_v3.MetricServiceClient()
+        print("✅ Cloud Monitoring client created successfully")
+        google.cloud.trace_v1.TraceServiceClient()
+        print("✅ Cloud Trace client created successfully")
+        print("\n🎉 Your environment is ready for the tutorial!")
+        return True
+    except Exception as e:
+        print(f"❌ GCP setup test failed: {e}")
+        return False
 
 if __name__ == "__main__":
     success = test_gcp_setup()
@@ -1087,7 +1099,14 @@ alertStrategy:
   autoClose: 86400s # 24 hours
 documentation:
   content: "This alert monitors Vertex AI performance and cost metrics"
-  mimeType: "text/markdown"
+  mimeType: "text/markdown"type="logging.googleapis.com/user/token_usage_metric"'
+      comparison: COMPARISON_GT
+      thresholdValue: 800000 # 80% of 1M token daily budget
+      duration: 60s
+      aggregations:
+        - alignmentPeriod: 3600s # 1 hour
+          perSeriesAligner: ALIGN_SUM
+          crossSeriesReducer: REDUCE_SUM
 ```
 
 **Create Alerts via CLI:**
@@ -1716,172 +1735,6 @@ import pandas as pd
 
 class ModelOptimizer:
     def __init__(self, project_id, location):
-        self.project_id = project_id
-        self.location = location
-        aiplatform.init(project=project_id, location=location)
-
-    def analyze_model_performance_cost(self):
-        """Analyze cost-performance trade-offs for different models."""
-        models_performance = {
-            'gemini-2.0-flash-001': {
-                'cost_per_1k_tokens': 0.00025,
-                'avg_latency_ms': 800,
-                'quality_score': 0.92
-            },
-            'gemini-1.5-pro': {
-                'cost_per_1k_tokens': 0.0035,
-                'avg_latency_ms': 1200,
-                'quality_score': 0.96
-            },
-            'gemini-1.5-flash': {
-                'cost_per_1k_tokens': 0.000075,
-                'avg_latency_ms': 600,
-                'quality_score': 0.88
-            }
-        }
-
-        # Calculate cost-effectiveness score
-        for model, metrics in models_performance.items():
-            cost_effectiveness = (
-                metrics['quality_score'] / metrics['cost_per_1k_tokens']
-            )
-            latency_factor = 1000 / metrics['avg_latency_ms']  # Preference for lower latency
-
-            metrics['cost_effectiveness_score'] = cost_effectiveness * latency_factor
-
-        # Sort by cost-effectiveness
-        sorted_models = sorted(
-            models_performance.items(),
-            key=lambda x: x[1]['cost_effectiveness_score'],
-            reverse=True
-        )
-
-        return sorted_models
-
-    def recommend_model_selection(self, use_case_requirements):
-        """Recommend model based on specific use case requirements."""
-        models = self.analyze_model_performance_cost()
-
-        recommendations = []
-
-        for model_name, metrics in models:
-            score = 0
-            reasons = []
-
-            # Evaluate against requirements
-            if use_case_requirements.get('budget_sensitive', False):
-                if metrics['cost_per_1k_tokens'] <= 0.0005:
-                    score += 3
-                    reasons.append("Cost-effective for budget-sensitive applications")
-
-            if use_case_requirements.get('low_latency', False):
-                if metrics['avg_latency_ms'] <= 800:
-                    score += 2
-                    reasons.append("Meets low-latency requirements")
-
-            if use_case_requirements.get('high_quality', False):
-                if metrics['quality_score'] >= 0.94:
-                    score += 3
-                    reasons.append("High quality output")
-
-            recommendations.append({
-                'model': model_name,
-                'score': score,
-                'reasons': reasons,
-                'metrics': metrics
-            })
-
-        return sorted(recommendations, key=lambda x: x['score'], reverse=True)
-```
-
-#### 3. Automated Cost Optimization Alerts
-
-**Cost Anomaly Detection:**
-
-```yaml
-# cost-anomaly-alert.yaml
-displayName: "Cost Anomaly Detection"
-conditions:
-  - displayName: "Unusual spending spike"
-    conditionThreshold:
-      filter: 'resource.type="billing_account" AND metric.type="billing.googleapis.com/billing/total_cost"'
-      comparison: COMPARISON_GT
-      thresholdValue: 1500 # 50% above normal daily spend
-      duration: 3600s # 1 hour
-      aggregations:
-        - alignmentPeriod: 3600s
-          perSeriesAligner: ALIGN_SUM
-          crossSeriesReducer: REDUCE_SUM
-alertStrategy:
-  autoClose: 86400s
-notificationChannels:
-  - "projects/your-project/notificationChannels/finance-team"
-```
-
-**Budget Threshold Alerts:**
-
-```bash
-# Create progressive budget alerts
-gcloud billing budgets create \
-    --billing-account=BILLING_ACCOUNT_ID \
-    --display-name="Vertex AI Progressive Alerts" \
-    --budget-amount=5000 \
-    --threshold-rule=percent=0.5,basis=CURRENT_SPEND,spend-basis=FORECASTED_SPEND \
-    --threshold-rule=percent=0.8,basis=CURRENT_SPEND \
-    --threshold-rule=percent=0.9,basis=CURRENT_SPEND \
-    --threshold-rule=percent=1.0,basis=CURRENT_SPEND \
-    --all-updates-rule-monitoring-notification-channels=projects/your-project-id/notificationChannels/your-channel-id
-```
-
-#### 4. Resource Right-Sizing and Efficiency
-
-**Automated Resource Recommendations:**
-
-```python
-# resource_advisor.py
-from google.cloud import recommender_v1
-from google.cloud import compute_v1
-
-class ResourceAdvisor:
-    def __init__(self, project_id):
-        self.project_id = project_id
-        self.recommender_client = recommender_v1.RecommenderClient()
-        self.compute_client = compute_v1.InstancesClient()
-
-    def get_vertex_ai_recommendations(self):
-        """Get cost optimization recommendations for Vertex AI resources."""
-        parent = f"projects/{self.project_id}/locations/global/recommenders/google.compute.instance.MachineTypeRecommender"
-
-        request = recommender_v1.ListRecommendationsRequest({
-            "parent": parent,
-            "filter": "recommenderSubtype:RIGHTSIZING"
-        })
-
-        recommendations = []
-        for recommendation in self.recommender_client.list_recommendations(request=request):
-            if 'vertex-ai' in recommendation.description.lower():
-                recommendations.append({
-                    'resource': recommendation.name,
-                    'description': recommendation.description,
-                    'impact': recommendation.primary_impact,
-                    'savings': self.calculate_potential_savings(recommendation)
-                })
-
-        return recommendations
-
-    def calculate_potential_savings(self, recommendation):
-        """Calculate potential cost savings from a recommendation."""
-        if recommendation.primary_impact.category == recommender_v1.Impact.Category.COST:
-            monthly_savings = abs(recommendation.primary_impact.cost_projection.cost.units)
-            return {
-                'monthly_usd': monthly_savings,
-                'annual_usd': monthly_savings * 12,
-                'percentage': recommendation.primary_impact.cost_projection.cost.units / recommendation.primary_impact.cost_projection.cost.units * 100
-            }
-        return None
-```
-
-This comprehensive cost optimization section provides enterprise-level strategies for monitoring, controlling, and optimizing costs while maintaining performance and reliability.
         self.project_id = project_id
         self.location = location
         aiplatform.init(project=project_id, location=location)
