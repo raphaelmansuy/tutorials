@@ -337,6 +337,7 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 | Tutorial                                                                                          | Level    | Duration   | Language | Description                                                                    |
 | ------------------------------------------------------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------------------ |
 | [📖 Vertex AI Crash Course: Zero to ML Production](./05_vertex_ai.md)                             | Advanced | 6-8 hours  | English  | Complete machine learning pipeline using Google Cloud Vertex AI                |
+| [📖 Vertex AI & Agent Engine Observability: A Practical Guide](./31_observability_llm_adk_vertex.md) | Intermediate to Advanced | 2-4 hours | English | Master comprehensive observability for Vertex AI applications with real-time monitoring, cost tracking, and production-grade alerting |
 | [📖 Google Agent Development Kit (ADK) for the Impatient](./07_agent/index.md) | Advanced | 40-60 hours | English  | Comprehensive 12-chapter tutorial series to master Google's Agent Development Kit (ADK) quickly and effectively |
 | [📖 Vertex AI Agent Engine for the Impatient](./22_google_vertex_agent_engine.md) | Advanced | 12-24 hours | English | Master enterprise-grade AI agent development and deployment with Vertex AI Agent Engine, featuring multi-agent systems, production-ready orchestration, and comprehensive business impact analysis |
 | [📖 Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide](./25-video-transcription-with-gemini-2-5.md) | Beginner to Advanced | 3-5 hours | English | Master AI-powered transcription using Gemini 2.5 with timestamps, speaker identification, batch processing, and production-ready workflows for both Vertex AI and Gemini API |
@@ -352,6 +353,9 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Generative AI** and Model Garden
 - **AI Agent development** with Google ADK
 - **Gemini 2.5 model integration** and optimization
+- **Production observability** for Vertex AI applications with logs, metrics, and traces
+- **Real-time monitoring** and cost tracking for AI workloads
+- **Custom dashboards** and alerting for production AI systems
 - **Vertex AI Agent Engine** enterprise-grade development and deployment
 - **Multi-agent systems** and advanced orchestration patterns
 - **Production monitoring** and management

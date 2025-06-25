@@ -142,7 +142,8 @@ Never miss a tutorial! Subscribe to our newsletter for weekly updates on new con
 ### For Advanced Practitioners
 1. [Migration from HAProxy to AWS](./13_migration_from_haproxy_to_aws_managed_services.md) - Infrastructure modernization
 2. [SaaS Development with AWS ECS Fargate](./14_developing_a_saas_using_aws_and_ecs_fargate.md) - Scalable application architecture
-3. [Developing AI Agents with Google ADK](./07_develop_ai_agent_with_google_adk.md) - Advanced AI development
+3. [Vertex AI & Agent Engine Observability](./31_observability_llm_adk_vertex.md) - Production-grade AI monitoring and alerting
+4. [Developing AI Agents with Google ADK](./07_develop_ai_agent_with_google_adk.md) - Advanced AI development
 
 ---
 
