@@ -250,7 +250,7 @@ def test_vertex_ai():
     if not project_id:
         print("❌ PROJECT_ID environment variable not set. Please run: export PROJECT_ID='your-actual-project-id'")
         return False
-    
+
     try:
         # Create client for Vertex AI
         client = genai.Client(
@@ -476,7 +476,7 @@ def generate_content(prompt: str):
     project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
     if not project_id:
         raise ValueError("PROJECT_ID environment variable not set")
-    
+
     try:
         # Create client for Vertex AI using the new Google Gen AI SDK
         client = genai.Client(
@@ -546,7 +546,7 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.0-flash-001")
     project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
     if not project_id:
         raise ValueError("PROJECT_ID environment variable not set")
-    
+
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
 
@@ -676,7 +676,7 @@ def traced_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
     project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
     if not project_id:
         raise ValueError("PROJECT_ID environment variable not set")
-    
+
     with tracer.start_as_current_span("gemini_generation") as span:
         span.set_attribute("model", model)
         span.set_attribute("prompt", prompt)
@@ -2062,7 +2062,6 @@ By leveraging OpenTelemetry, you can build a flexible and future-proof observabi
   - [Cloud Trace Documentation](https://cloud.google.com/trace/docs)
 - **Compute:**
   - [Cloud Run Documentation](https://cloud.google.com/run/docs)
-  - [AI Agent Engine](https://cloud.google.com/vertex-ai/docs/agent-engine/overview) (Note: Link is conceptual as Agent Engine may be in private preview)
 
 ### OpenTelemetry
 
