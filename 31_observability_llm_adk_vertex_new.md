@@ -669,6 +669,7 @@ def run_agent():
         logger.info("ADK Agent request completed", extra={
             "json_fields": {
                 "request_id": request_id,
+                "query": query,
                 "result": result,
                 "event_type": "agent_request_success",
                 "trace_id": trace_id,
@@ -781,12 +782,11 @@ Now, deploy your agent as a containerized service on Cloud Run.
    - Click on the `adk-observability-agent` service.
    - Go to the **Logs** tab.
    - Filter for `jsonPayload.event_type="agent_request_success"`. You will see the structured logs from your agent.
+   - **Expand a log entry** to view the `jsonPayload`. You will find the original `query` sent to the agent and the `result` it produced, giving you a clear input/output view.
 
-4. **View Traces in Trace Explorer:**
-   - Go to the **[Trace Explorer](https://console.cloud.google.com/traces/list)**.
-   - You should now see traces for your `adk-observability-agent`. Each trace will have a root span for the incoming `/run` request and a child span named `adk_tool_call`.
+4. **View Traces:** In the **[Trace Explorer](https://console.cloud.google.com/traces/list)**, traces will similarly appear, showing the breakdown of time spent in the LLM, tool execution, and the agent framework.
 
-#### 3. Alternative: Deploy to AI Agent Engine (Preview) 🤖
+### Option B: AI Agent Engine (Preview) 🤖
 
 For a more integrated and managed experience, you can deploy your ADK agent to the **AI Agent Engine**, a serverless runtime designed specifically for hosting and scaling AI agents.
 
@@ -876,6 +876,7 @@ Here is the relevant logging snippet from the `run_agent` function for reference
         logger.info("ADK Agent request completed", extra={
             "json_fields": {
                 "request_id": request_id,
+                "query": query,
                 "result": result,
                 "event_type": "agent_request_success",
                 "trace_id": trace_id,
@@ -917,7 +918,7 @@ If you had an older version deployed, redeploy the agent to ensure the new log f
 1. Wait a few minutes for the metrics to be processed.
 2. Go to the **[Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)** in the Google Cloud Console.
 3. In the "Select a metric" field, start typing `llm/token_count`. Select the metric.
-4. You should see a chart displaying the distribution of token counts from your agent.
+4. Under "Aggregation", choose `Sum` to see the total tokens used over time.
 5. Repeat the process for `llm/generation_latency_ms`.
 
 ### 2. Creating a Monitoring Dashboard (15 minutes) 🖼️
@@ -957,7 +958,21 @@ Now, let's create a centralized dashboard to visualize all our key observability
 
     - Title it "Live Agent Logs".
 
-Save your dashboard. You now have a single view for monitoring your agent's health and performance.
+8. **Add a Link to Filtered Traces:**
+    - Click **Add Widget** and choose **Text**.
+    - In the content field, add a Markdown link that opens Cloud Trace with a specific filter. For example, to see all traces for your agent, you can create a link like this:
+
+      ```markdown
+      [View All Agent Traces](https://console.cloud.google.com/traces/list?project=YOUR_PROJECT_ID&filter=root:"adk-observability-agent")
+      ```
+    - Replace `YOUR_PROJECT_ID` with your actual Google Cloud project ID.
+    - You can create more specific links. For example, to see only traces that include a call to your `SimpleTool`:
+      ```markdown
+      [View SimpleTool Traces](https://console.cloud.google.com/traces/list?project=YOUR_PROJECT_ID&filter=span:adk_tool_call)
+      ```
+    - Title the widget "Quick Trace Links".
+
+Save your dashboard. You now have a single view for monitoring your agent's health and performance, with direct links to the most relevant traces.
 
 ### 3. Setting Up Automated Alerts (10 minutes) 🔔
 
