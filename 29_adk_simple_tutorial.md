@@ -12,13 +12,13 @@ _"The best time to plant a tree was 20 years ago. The second best time is now."_
 
 ## Path Selection Guide
 
-| Aspect | ⚡ Quick Start | 🏗️ Production Path |
-|--------|---------------|-------------------|
-| **Goal** | Working agent demo | Production-ready system |
-| **Time** | 30 minutes | 2-3 hours |
-| **Setup** | Minimal (single file) | Comprehensive (proper structure) |
-| **Authentication** | Google AI Studio (API key) | Vertex AI (GCP project) |
-| **Best for** | Learning, prototyping | Real applications, teams |
+| Aspect             | ⚡ Quick Start             | 🏗️ Production Path               |
+| ------------------ | -------------------------- | -------------------------------- |
+| **Goal**           | Working agent demo         | Production-ready system          |
+| **Time**           | 30 minutes                 | 2-3 hours                        |
+| **Setup**          | Minimal (single file)      | Comprehensive (proper structure) |
+| **Authentication** | Google AI Studio (API key) | Vertex AI (GCP project)          |
+| **Best for**       | Learning, prototyping      | Real applications, teams         |
 
 ---
 
@@ -33,7 +33,16 @@ _Get a working AI agent with minimal friction - prove to yourself that ADK works
 mkdir my-first-agent && cd my-first-agent
 touch simple_agent.py
 
-# Install ADK (using pip for simplicity)
+# Install uv (the modern Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install ADK using uv
+uv add google-adk python-dotenv
+```
+
+**Alternative (traditional method):**
+```bash
+# If you prefer the traditional approach
 pip install google-adk python-dotenv
 ```
 
@@ -64,7 +73,7 @@ def get_weather(location: str) -> str:
     """Mock weather function - replace with real API in production"""
     weather_data = {
         "paris": "Sunny, 22°C",
-        "london": "Cloudy, 15°C", 
+        "london": "Cloudy, 15°C",
         "tokyo": "Rainy, 18°C",
         "new york": "Partly cloudy, 20°C"
     }
@@ -90,15 +99,15 @@ weather_assistant = Agent(
     description="A helpful assistant that can check weather and do calculations",
     instruction="""
     You are a helpful assistant with access to weather information and basic calculations.
-    
+
     When users ask about weather:
     - Use the get_weather function for the specified location
     - Be friendly and conversational
-    
+
     When users ask for calculations:
     - Use the calculate function for math problems
     - Explain the result clearly
-    
+
     Always be helpful, concise, and engaging in your responses.
     """,
     tools=[get_weather, calculate]
@@ -109,13 +118,13 @@ if __name__ == "__main__":
     print("🤖 Your AI Agent is ready! Ask me about weather or math problems.")
     print("Examples: 'What's the weather in Paris?' or 'What's 15 * 24?'")
     print("Type 'quit' to exit.\n")
-    
+
     while True:
         user_input = input("You: ").strip()
         if user_input.lower() in ['quit', 'exit', 'q']:
             print("Goodbye! 👋")
             break
-        
+
         if user_input:
             try:
                 response = weather_assistant.run(user_input)
@@ -134,7 +143,7 @@ python simple_agent.py
 Try these examples:
 
 - "What's the weather in Paris?"
-- "Calculate 25 * 4 + 10"
+- "Calculate 25 \* 4 + 10"
 - "What's 15% of 200?"
 
 ### Step 5: Quick Improvements (5 minutes)
@@ -171,8 +180,6 @@ You now have a working AI agent! In just 30 minutes, you've:
 
 ## 🏗️ PRODUCTION PATH
 
-## 🏗️ PRODUCTION PATH
-
 Build production-ready, scalable agent systems with modern development practices
 
 Picture this: It's 2019, and a small startup called OpenAI releases something called GPT-2. Most developers shrugged it off as "another AI experiment." Fast forward to today, and those who dismissed the AI revolution are scrambling to catch up while early adopters are building million-dollar businesses with AI agents.
@@ -190,31 +197,35 @@ Google's Agent Development Kit isn't just another AI framework – it's what hap
 
 ### Production Setup: Modern Python Development
 
-#### Step 1: Poetry Project Setup (10 minutes)
+#### Step 1: uv Project Setup (10 minutes)
 
 ```bash
-# Install Poetry (the modern way)
-curl -sSL https://install.python-poetry.org | python3 -
+# Install uv (the modern Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Create project directory
 mkdir intelligent-task-assistant && cd intelligent-task-assistant
 
-# Initialize Poetry project
-poetry init --name intelligent-task-assistant --python "^3.9"
+# Initialize uv project
+uv init --name intelligent-task-assistant --python "3.9"
 
 # Add dependencies
-poetry add google-adk python-dotenv
-poetry add --group dev pytest black ruff mypy
+uv add google-adk python-dotenv
 
-# Activate environment
-poetry shell
+# Add development dependencies  
+uv add --dev pytest black ruff mypy
+
+# Activate environment (uv automatically manages virtual environments)
+source .venv/bin/activate
 ```
 
 #### Step 2: Production Project Structure
 
 ```text
 intelligent-task-assistant/
-├── pyproject.toml          # Poetry configuration
+├── pyproject.toml          # uv configuration
+├── .python-version         # Python version specification
+├── uv.lock                 # Lock file for reproducible builds
 ├── README.md
 ├── .env                    # Environment variables
 ├── src/
@@ -272,15 +283,15 @@ load_dotenv()
 
 class Config:
     """Centralized configuration management"""
-    
+
     # Authentication
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     USE_VERTEX_AI = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE"
-    
+
     # Vertex AI Configuration
     GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
     GOOGLE_CLOUD_LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
-    
+
     @classmethod
     def validate(cls):
         """Validate required configuration"""
@@ -317,7 +328,7 @@ class Task:
     priority: str = "medium"  # low, medium, high, urgent
     status: str = "pending"  # pending, in_progress, completed
     created_at: str = ""
-    
+
     def __post_init__(self):
         if not self.created_at:
             self.created_at = datetime.now().isoformat()
@@ -329,29 +340,29 @@ TASK_ID_COUNTER = 1
 def create_task(title: str, description: str = "", priority: str = "medium") -> Dict[str, Any]:
     """Create a new task with comprehensive metadata"""
     global TASK_ID_COUNTER
-    
+
     if not title.strip():
         return {"status": "error", "message": "Task title cannot be empty"}
-    
+
     valid_priorities = ["low", "medium", "high", "urgent"]
     if priority not in valid_priorities:
         return {
-            "status": "error", 
+            "status": "error",
             "message": f"Priority must be one of: {', '.join(valid_priorities)}"
         }
-    
+
     task = Task(
         id=TASK_ID_COUNTER,
         title=title.strip(),
         description=description.strip(),
         priority=priority
     )
-    
+
     TASKS.append(task)
     TASK_ID_COUNTER += 1
-    
+
     logger.info(f"Created task: {task.title} (ID: {task.id})")
-    
+
     return {
         "status": "success",
         "message": f"Task '{task.title}' created successfully",
@@ -368,20 +379,20 @@ def create_task(title: str, description: str = "", priority: str = "medium") -> 
 def list_tasks(status: str = "all", priority: str = "all") -> Dict[str, Any]:
     """List tasks with filtering"""
     filtered_tasks = TASKS.copy()
-    
+
     if status != "all":
         filtered_tasks = [t for t in filtered_tasks if t.status == status]
-    
+
     if priority != "all":
         filtered_tasks = [t for t in filtered_tasks if t.priority == priority]
-    
+
     # Sort by priority and creation date
     priority_order = {"urgent": 4, "high": 3, "medium": 2, "low": 1}
     filtered_tasks.sort(
         key=lambda t: (priority_order.get(t.priority, 0), t.created_at),
         reverse=True
     )
-    
+
     task_dicts = [
         {
             "id": task.id,
@@ -393,7 +404,7 @@ def list_tasks(status: str = "all", priority: str = "all") -> Dict[str, Any]:
         }
         for task in filtered_tasks
     ]
-    
+
     return {
         "status": "success",
         "tasks": task_dicts,
@@ -404,20 +415,20 @@ def list_tasks(status: str = "all", priority: str = "all") -> Dict[str, Any]:
 def update_task_status(task_id: int, new_status: str) -> Dict[str, Any]:
     """Update task status with validation"""
     valid_statuses = ["pending", "in_progress", "completed", "cancelled"]
-    
+
     if new_status not in valid_statuses:
         return {
             "status": "error",
             "message": f"Status must be one of: {', '.join(valid_statuses)}"
         }
-    
+
     for task in TASKS:
         if task.id == task_id:
             old_status = task.status
             task.status = new_status
-            
+
             logger.info(f"Updated task {task_id} status: {old_status} -> {new_status}")
-            
+
             return {
                 "status": "success",
                 "message": f"Task '{task.title}' status updated to '{new_status}'",
@@ -428,7 +439,7 @@ def update_task_status(task_id: int, new_status: str) -> Dict[str, Any]:
                     "new_status": new_status
                 }
             }
-    
+
     return {"status": "error", "message": f"Task with ID {task_id} not found"}
 ```
 
@@ -447,18 +458,18 @@ task_coordinator = Agent(
     description="Advanced AI coordinator for comprehensive task and productivity management",
     instruction="""
     You are an intelligent task management coordinator with expertise in productivity optimization.
-    
+
     CORE CAPABILITIES:
     1. Task Creation & Management
        - Create tasks with appropriate priorities and metadata
        - Update task statuses and track progress
        - Organize tasks by categories
-       
+
     2. Strategic Planning
        - Analyze task workload and suggest optimizations
        - Identify bottlenecks and overdue items
        - Recommend task prioritization strategies
-       
+
     3. Productivity Insights
        - Provide workload distribution analysis
        - Suggest time management improvements
@@ -469,7 +480,7 @@ task_coordinator = Agent(
     - Medium: Regular tasks, flexible timeline
     - Low: Nice to have, can be deferred
 
-    Always confirm actions taken with clear summaries and look for opportunities 
+    Always confirm actions taken with clear summaries and look for opportunities
     to help users be more productive.
     """,
     tools=[create_task, list_tasks, update_task_status]
@@ -494,17 +505,17 @@ def main():
     try:
         Config.validate()
         logger.info("Configuration validated successfully")
-        
+
         print("🚀 Intelligent Task Assistant (Production Version)")
         print("Features: Advanced task management, priority optimization, productivity insights")
         print("Type 'quit' to exit.\n")
-        
+
         while True:
             user_input = input("You: ").strip()
             if user_input.lower() in ['quit', 'exit', 'q']:
                 print("Goodbye! 🎯")
                 break
-            
+
             if user_input:
                 try:
                     response = task_coordinator.run(user_input)
@@ -512,7 +523,7 @@ def main():
                 except Exception as e:
                     logger.error(f"Agent execution error: {e}")
                     print(f"Error: {e}\n")
-                    
+
     except Exception as e:
         logger.error(f"Application startup error: {e}")
         print(f"Configuration error: {e}")
@@ -526,10 +537,10 @@ if __name__ == "__main__":
 
 ```bash
 # Run the application
-poetry run python -m src.task_assistant.main
+uv run python -m src.task_assistant.main
 
 # Or with proper module execution
-cd src && python -m task_assistant.main
+cd src && uv run python -m task_assistant.main
 ```
 
 Try these advanced examples:
@@ -553,33 +564,33 @@ class TestTaskManagement:
         global TASKS, TASK_ID_COUNTER
         TASKS.clear()
         TASK_ID_COUNTER = 1
-    
+
     def test_task_creation(self):
         """Test task creation with validation"""
         result = create_task("Test Task", "Test Description", "high")
-        
+
         assert result["status"] == "success"
         assert "Test Task" in result["message"]
         assert result["task"]["priority"] == "high"
-    
+
     def test_invalid_priority(self):
         """Test error handling for invalid priority"""
         result = create_task("Test", priority="invalid")
         assert result["status"] == "error"
         assert "Priority must be one of" in result["message"]
-    
+
     def test_task_listing(self):
         """Test task listing with filters"""
         create_task("Urgent Task", priority="urgent")
         create_task("Normal Task", priority="medium")
-        
+
         result = list_tasks(priority="urgent")
         assert result["status"] == "success"
         assert result["count"] == 1
         assert result["tasks"][0]["priority"] == "urgent"
 
 # Run tests
-# poetry run pytest tests/ -v
+# uv run pytest tests/ -v
 ```
 
 ### Production Deployment Options
@@ -593,18 +604,17 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install Poetry
-RUN pip install poetry
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Configure Poetry
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VENV_IN_PROJECT=1
+# Configure uv
+ENV UV_SYSTEM_PYTHON=1
 
 # Copy dependency files
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml uv.lock ./
 
 # Install dependencies
-RUN poetry install --without dev
+RUN uv sync --frozen --no-dev
 
 # Copy application code
 COPY src/ ./src/
@@ -618,7 +628,7 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD python -c "import src.task_assistant.config; print('healthy')" || exit 1
 
 # Run application
-CMD ["poetry", "run", "python", "-m", "src.task_assistant.main"]
+CMD ["uv", "run", "python", "-m", "src.task_assistant.main"]
 ```
 
 #### Cloud Deployment
@@ -648,7 +658,7 @@ gcloud run deploy task-assistant \
 
 ✅ **Scalable Architecture**: Proper separation of concerns with dedicated modules
 
-✅ **Modern Development**: Poetry, proper testing, type hints, logging
+✅ **Modern Development**: uv, proper testing, type hints, logging
 
 ✅ **Production-Ready Configuration**: Environment-based config, validation
 
@@ -673,22 +683,24 @@ gcloud run deploy task-assistant \
 
 ## Comparison: Quick Start vs Production
 
-| Feature | Quick Start | Production Path |
-|---------|-------------|-----------------|
-| **Time Investment** | 30 minutes | 2-3 hours |
-| **Code Quality** | Demo-ready | Production-ready |
-| **Scalability** | Single file | Modular architecture |
-| **Testing** | Manual testing | Automated test suite |
-| **Deployment** | Local only | Multi-platform deployment |
-| **Maintenance** | Prototype | Long-term maintainable |
-| **Team Development** | Individual | Team-friendly |
-| **Error Handling** | Basic | Comprehensive |
+| Feature              | Quick Start    | Production Path           |
+| -------------------- | -------------- | ------------------------- |
+| **Time Investment**  | 30 minutes     | 2-3 hours                 |
+| **Code Quality**     | Demo-ready     | Production-ready          |
+| **Scalability**      | Single file    | Modular architecture      |
+| **Testing**          | Manual testing | Automated test suite      |
+| **Deployment**       | Local only     | Multi-platform deployment |
+| **Maintenance**      | Prototype      | Long-term maintainable    |
+| **Team Development** | Individual     | Team-friendly             |
+| **Error Handling**   | Basic          | Comprehensive             |
 
 ---
 
 ## Author
 
-Picture this: It's 2019, and a small startup called OpenAI releases something called GPT-2 . Most developers shrugged it off as "another AI experiment." Fast forward to today, and those who dismissed the AI revolution are scrambling to catch up while early adopters are building million-dollar businesses with AI agents.
+Picture this: It's 2019, and a small startup called OpenAI releases something called GPT-2. Most developers shrugged it off as "another AI experiment." Fast forward to today, and those who dismissed the AI revolution are scrambling to catch up while early adopters are building million-dollar businesses with AI agents.
+
+In 2024, Astral-sh released `uv` - a Python package manager that's 10-100x faster than pip and Poetry, written in Rust. Just like with GPT-2, early adopters are gaining massive productivity advantages while others are still using slower, outdated tools.
 
 ```mermaid
 flowchart TD
@@ -794,25 +806,35 @@ flowchart TB
 
 Here's where most tutorials lose you with outdated practices . We're doing this right – modern Python development that your future self will thank you for .
 
-### The Poetry Advantage
+### The uv Advantage
 
-Forget `pip install` and `requirements.txt` – we're using Poetry, the tool that makes Python dependency management actually enjoyable .
+Forget `pip install` and `requirements.txt` – we're using uv, the Astral tool that makes Python dependency management blazingly fast and reliable.
 
 ```bash
-# Install Poetry (the modern way)
-curl -sSL https://install.python-poetry.org | python3 -
+# Install uv (the modern way)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Verify installation
-poetry --version
+uv --version
 ```
 
-Poetry employs deterministic dependency resolution to identify compatible package versions across all dependency chains, preventing version conflicts that commonly occur when manually managing requirements.txt files . The `poetry.lock` file records exact package versions and hashes for reproducible installations .
+**Why uv for AI Agent Development?**
+
+- **Lightning Fast**: 10-100x faster than pip/Poetry - crucial when iterating on AI agents
+- **Rust-Powered**: Built in Rust for maximum performance and reliability  
+- **Zero Configuration**: Works out of the box with intelligent defaults
+- **Universal**: Single tool for Python version management, virtual environments, and package installation
+- **Lock Files**: Reproducible builds with `uv.lock` for consistent deployments
+
+uv employs deterministic dependency resolution written in Rust for incredibly fast package installation and resolution. The `uv.lock` file records exact package versions and hashes for reproducible installations across all platforms.
 
 ### Project Structure That Scales
 
 ```
 intelligent-assistant/
-├── pyproject.toml          # Poetry configuration
+├── pyproject.toml          # uv configuration
+├── .python-version         # Python version specification  
+├── uv.lock                 # Lock file for reproducible builds
 ├── README.md
 ├── .env                    # Environment variables
 ├── .gitignore
@@ -837,22 +859,22 @@ intelligent-assistant/
 # Create project directory
 mkdir intelligent-assistant && cd intelligent-assistant
 
-# Initialize Poetry project
-poetry init --name intelligent-assistant --python "^3.9"
+# Initialize uv project
+uv init --name intelligent-assistant --python "3.9"
 
 # Add ADK dependency
-poetry add google-adk
+uv add google-adk
 
 # Add development dependencies
-poetry add --group dev pytest black ruff mypy
+uv add --dev pytest black ruff mypy
 
-# Create virtual environment and activate
-poetry shell
+# Activate environment (uv automatically manages virtual environments)
+source .venv/bin/activate
 ```
 
-Poetry automatically creates and isolates project-specific virtual environments, eliminating manual activation/deactivation . It detects existing Python installations and manages environment paths through the `poetry env` command family .
+uv automatically creates and isolates project-specific virtual environments with lightning-fast performance thanks to its Rust implementation. It detects existing Python installations and manages environment paths seamlessly through the `uv run` command family.
 
-**Pro Tip**: Poetry automatically creates isolated virtual environments . No more "it works on my machine" problems or accidentally installing packages globally .
+**Pro Tip**: uv automatically creates isolated virtual environments and is 10-100x faster than traditional tools. No more "it works on my machine" problems or accidentally installing packages globally.
 
 ## Authentication: Your Keys to the AI Kingdom
 
