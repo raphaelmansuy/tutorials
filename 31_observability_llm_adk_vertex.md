@@ -201,197 +201,501 @@ Using all three together provides a complete picture of your ADK agent's behavio
 
 ## ⚡ Quick Wins Path (5 Minutes)
 
-This path provides immediate visibility into your ADK agents with minimal configuration.
+Get immediate observability for your AI applications with minimal configuration. This section covers both **direct Vertex AI Gemini API usage** and **ADK agents** on Cloud Run/App Engine.
 
-> **🎯 Success Criteria:** By the end of this section, you'll have basic monitoring, tracing, and logging working for your ADK agent.
+> **🎯 Success Criteria:** By the end of this section, you'll have logs, traces, and metrics working for your Generative AI applications in under 5 minutes.
 
 ### Progress Checklist
 
-- [ ] Built-in monitoring enabled and verified
-- [ ] Distributed tracing configured and tested
-- [ ] Structured logging implemented and validated
+- [ ] **30-second logging** setup and verified
+- [ ] **2-minute structured logging** with trace correlation
+- [ ] **5-minute metrics and tracing** configured and tested
 
-### 1. Built-in Monitoring with Cloud Monitoring (2 minutes)
+---
 
-Vertex AI Agent Engine automatically exports key operational metrics to Cloud Monitoring with no additional configuration required:
+## Option A: Direct Vertex AI Gemini Applications
 
-```python
-# No additional code needed - metrics are collected automatically
-```
+### 1. Instant Logging (30 seconds) ⚡
 
-**Metrics available out-of-the-box:**
-
-- **Request count**
-- **Request latencies (p50, p95, p99)**
-- **CPU and memory allocation**
-
-**How to view metrics (2 minutes):**
-
-1. Go to [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)
-2. Select your project
-3. Search for `Vertex AI Reasoning Engine`
-4. Choose metrics like `request_count` or `request_latencies`
-
-**✅ Validation:**
-
-```bash
-# Verify metrics are being collected
-gcloud monitoring metrics list --filter="metric.type:aiplatform.googleapis.com/reasoning_engine*" --limit=5
-
-# Expected output: List of available reasoning engine metrics
-```
-
-**❌ If no metrics appear:**
-
-- Wait 2-3 minutes after your first agent request
-- Check that your agent is actually receiving and processing requests
-- Verify you're looking in the correct GCP project
-
-### 2. Enable Distributed Tracing (1 minute)
-
-Distributed tracing lets you analyze the end-to-end flow of agent queries, tool calls, and LLM invocations:
+**Just add 3 lines to your existing Gemini code:**
 
 ```python
-from vertexai.preview.reasoning_engines import AdkApp
-from google.adk.agents import Agent
+# Add these 3 lines at the top of your script
+import google.cloud.logging
+client = google.cloud.logging.Client()
+client.setup_logging()
+
+# Your existing Gemini code works unchanged
+from google import genai
 import logging
 
-# Configure logging for better observability
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-try:
-    agent = Agent(
-        model="gemini-2.5-flash",
-        name="my_agent",
-        # Agent configuration...
-    )
-
-    app = AdkApp(
-        agent=agent,
-        enable_tracing=True,  # <--- Just add this one line!
-    )
-
-    logger.info("ADK Agent with tracing enabled successfully")
-
-except Exception as e:
-    logger.error(f"Failed to initialize ADK Agent with tracing: {e}")
-    raise
-```
-
-**How to view traces (2 minutes):**
-
-1. Go to [Trace Explorer](https://console.cloud.google.com/traces/list)
-2. Select your project
-3. Filter by `Vertex AI Reasoning Engine` resource
-4. Inspect traces and spans for each agent query
-
-**✅ Validation:**
-
-```bash
-# Check if tracing is working
-gcloud logging read "resource.type=aiplatform.googleapis.com/ReasoningEngine" --limit=5
-
-# Look for trace IDs in the log entries
-# Example log entry should contain: "trace": "projects/PROJECT_ID/traces/TRACE_ID"
-```
-
-**❌ If no traces appear:**
-
-- Ensure `enable_tracing=True` is set in your AdkApp configuration
-- Make at least one request to your agent after enabling tracing
-- Check service account has `roles/cloudtrace.agent` permission
-
-### 3. Basic Logging (Already Working!)
-
-All your `print()` statements and Python logging are automatically captured:
-
-```python
-import logging
-import time
-from typing import Dict, Any
-
-# Configure structured logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-# Standard Python print statements work automatically
-def process_request(request_id: str) -> None:
-    print(f"Processing request: {request_id}")
-
-# Better: Use structured logging with extra fields
-def process_request_structured(request_id: str, user_query: str) -> Dict[str, Any]:
-    start_time = time.time()
-
+def generate_content(prompt: str):
     try:
-        # Your ADK agent processing logic here
-        result = {"response": "Agent response", "tokens_used": 150}
-
-        duration_ms = (time.time() - start_time) * 1000
-
-        logger.info(
-            "Request processed successfully",
-            extra={
-                "request_id": request_id,
-                "duration_ms": duration_ms,
-                "tokens_used": result.get("tokens_used", 0),
-                "query_length": len(user_query)
-            }
+        client = genai.Client()
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
         )
-
-        return result
-
+        
+        # This log will automatically appear in Cloud Logging
+        logger.info(f"Generated response with {response.usage_metadata.total_token_count} tokens")
+        return response.text
+        
     except Exception as e:
-        duration_ms = (time.time() - start_time) * 1000
-
-        logger.error(
-            "Request processing failed",
-            extra={
-                "request_id": request_id,
-                "duration_ms": duration_ms,
-                "error": str(e),
-                "query_length": len(user_query)
-            }
-        )
+        logger.error(f"Generation failed: {e}")
         raise
+
+# Test it
+result = generate_content("Write a short poem about observability")
+print(result)
 ```
 
-**View logs:**
+**✅ View logs immediately:**
 
 1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
-2. Filter by `Vertex AI Reasoning Engine` resource
+2. Your logs appear under "Global" resource type
+3. Filter by `severity>=INFO` to see your messages
 
-**✅ Validation:**
+### 2. Structured Logging with Token Tracking (2 minutes) 📊
 
-```bash
-# Test that your logs are being captured
-gcloud logging read "resource.type=aiplatform.googleapis.com/ReasoningEngine" --limit=10
+**Enhanced logging with JSON structure and token monitoring:**
 
-# You should see your print statements and logging calls in the output
+```python
+import google.cloud.logging
+import json
+import time
+from google import genai
+
+# Setup Cloud Logging
+client = google.cloud.logging.Client()
+client.setup_logging()
+
+import logging
+logger = logging.getLogger(__name__)
+
+def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
+    """Generate content with comprehensive logging."""
+    request_id = f"req_{int(time.time() * 1000)}"
+    start_time = time.time()
+    
+    # Log the request start
+    logger.info("Gemini request started", extra={
+        "request_id": request_id,
+        "model": model,
+        "prompt_length": len(prompt),
+        "event_type": "request_start"
+    })
+    
+    try:
+        client = genai.Client()
+        response = client.models.generate_content(model=model, contents=prompt)
+        
+        duration_ms = (time.time() - start_time) * 1000
+        usage = response.usage_metadata
+        
+        # Log successful completion with structured data
+        logger.info("Gemini request completed", extra={
+            "request_id": request_id,
+            "model": model,
+            "duration_ms": duration_ms,
+            "prompt_tokens": usage.prompt_token_count,
+            "candidate_tokens": usage.candidates_token_count,
+            "total_tokens": usage.total_token_count,
+            "cost_estimate_usd": (usage.total_token_count / 1_000_000) * 0.075,  # Flash pricing
+            "event_type": "request_success"
+        })
+        
+        return {
+            "text": response.text,
+            "usage": {
+                "prompt_tokens": usage.prompt_token_count,
+                "candidate_tokens": usage.candidates_token_count,
+                "total_tokens": usage.total_token_count
+            },
+            "request_id": request_id
+        }
+        
+    except Exception as e:
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.error("Gemini request failed", extra={
+            "request_id": request_id,
+            "model": model,
+            "duration_ms": duration_ms,
+            "error": str(e),
+            "event_type": "request_error"
+        })
+        raise
+
+# Test with structured logging
+result = monitored_generate_content("Explain machine learning in simple terms")
+print(f"Generated {result['usage']['total_tokens']} tokens")
 ```
 
-**❌ If no logs appear:**
+**✅ View structured logs:**
 
-- Check that you're filtering by the correct resource type
-- Ensure your agent is running and processing requests
-- Verify logging is not disabled in your environment
+1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
+2. Switch to "Advanced filter" mode
+3. Use filter: `jsonPayload.event_type="request_success"`
+4. Click on log entries to see JSON structure with token counts
 
-### 🎉 Quick Wins Path Complete
+### 3. Add Tracing (3 minutes) 🔍
 
-**Congratulations!** You now have basic observability for your ADK agents. Here's what you've accomplished:
+**Add OpenTelemetry tracing to track request flows:**
 
-- ✅ **Monitoring**: View request counts, latencies, and resource usage
-- ✅ **Tracing**: Analyze end-to-end request flows
-- ✅ **Logging**: Capture application events and debug information
+```bash
+# Install OpenTelemetry dependencies
+pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp
+```
 
-**Next Steps:**
+```python
+import google.cloud.logging
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from google import genai
+import logging
+import time
 
-- Test your observability setup by making several requests to your agent
-- Create a simple dashboard in Cloud Monitoring
-- Consider proceeding to the Production Path for advanced features
+# Setup logging and tracing
+logging_client = google.cloud.logging.Client()
+logging_client.setup_logging()
+
+# Configure OpenTelemetry
+trace.set_tracer_provider(TracerProvider())
+span_processor = BatchSpanProcessor(OTLPSpanExporter())
+trace.get_tracer_provider().add_span_processor(span_processor)
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
+    """Generate content with tracing and logging."""
+    with tracer.start_as_current_span("gemini_generation") as span:
+        span.set_attribute("model", model)
+        span.set_attribute("prompt_length", len(prompt))
+        
+        request_id = f"req_{int(time.time() * 1000)}"
+        start_time = time.time()
+        
+        try:
+            client = genai.Client()
+            response = client.models.generate_content(model=model, contents=prompt)
+            
+            duration_ms = (time.time() - start_time) * 1000
+            usage = response.usage_metadata
+            
+            # Add span attributes
+            span.set_attribute("total_tokens", usage.total_token_count)
+            span.set_attribute("duration_ms", duration_ms)
+            span.set_attribute("success", True)
+            
+            # Log with trace correlation
+            logger.info("Traced Gemini request completed", extra={
+                "request_id": request_id,
+                "total_tokens": usage.total_token_count,
+                "duration_ms": duration_ms,
+                "trace_id": format(span.get_span_context().trace_id, '032x')
+            })
+            
+            return response.text
+            
+        except Exception as e:
+            span.set_attribute("error", str(e))
+            span.set_attribute("success", False)
+            logger.error(f"Traced request failed: {e}")
+            raise
+
+# Test with tracing
+result = traced_generate_content("What is observability?")
+print(result)
+```
+
+**✅ View traces:**
+
+1. Go to [Trace Explorer](https://console.cloud.google.com/traces/list)
+2. Find traces with span name "gemini_generation"
+3. Click on traces to see timing and attributes
+
+---
+
+## Option B: ADK Agents (Cloud Run/App Engine)
+
+### 1. Instant Logging (Cloud Run) ⚡
+
+**Cloud Run automatically captures all stdout/stderr - no setup needed!**
+
+```python
+from google.adk.agents import Agent
+from vertexai.preview.reasoning_engines import AdkApp
+import json
+import time
+
+def create_logged_agent():
+    """Create ADK agent with instant logging."""
+    
+    # All print statements automatically go to Cloud Logging
+    print("🚀 Starting ADK Agent initialization")
+    
+    agent = Agent(
+        model="gemini-2.5-flash",
+        name="customer_service_agent",
+        instructions="You are a helpful customer service agent."
+    )
+    
+    # This will appear in Cloud Logging
+    print(f"✅ Agent '{agent.name}' created successfully")
+    
+    return agent
+
+def logged_agent_query(agent, query: str):
+    """Process query with automatic logging."""
+    request_id = f"req_{int(time.time() * 1000)}"
+    
+    # Simple text logging (appears in Cloud Logging immediately)
+    print(f"🔄 Processing query: {query[:50]}... [ID: {request_id}]")
+    
+    start_time = time.time()
+    try:
+        response = agent.query(query)
+        duration_ms = (time.time() - start_time) * 1000
+        
+        print(f"✅ Query completed in {duration_ms:.0f}ms [ID: {request_id}]")
+        return response
+        
+    except Exception as e:
+        duration_ms = (time.time() - start_time) * 1000
+        print(f"❌ Query failed after {duration_ms:.0f}ms: {e} [ID: {request_id}]")
+        raise
+
+# Test instant logging
+agent = create_logged_agent()
+result = logged_agent_query(agent, "What are your business hours?")
+print(f"Response: {result}")
+```
+
+**✅ View logs immediately:**
+
+1. Go to [Cloud Run Console](https://console.cloud.google.com/run)
+2. Click your service → **LOGS** tab
+3. See all print statements in real-time
+
+### 2. Structured JSON Logging (Cloud Run) 📊
+
+**Enhanced logging with JSON structure for better filtering:**
+
+```python
+import json
+import time
+from google.adk.agents import Agent
+
+def structured_logged_agent():
+    """ADK agent with structured JSON logging."""
+    
+    def log_json(event_type: str, **kwargs):
+        """Log structured JSON to stdout (automatically captured by Cloud Run)."""
+        log_entry = {
+            "timestamp": time.time(),
+            "event_type": event_type,
+            "service": "adk_agent",
+            **kwargs
+        }
+        # Print JSON to stdout - Cloud Run automatically captures this
+        print(json.dumps(log_entry))
+    
+    # Initialize agent with structured logging
+    log_json("agent_init_start", message="Initializing ADK Agent")
+    
+    agent = Agent(
+        model="gemini-2.5-flash",
+        name="structured_agent",
+        instructions="You are a helpful assistant with structured logging."
+    )
+    
+    log_json("agent_init_complete", 
+             agent_name=agent.name, 
+             model=agent.model,
+             status="success")
+    
+    def query_with_structured_logs(query: str):
+        request_id = f"req_{int(time.time() * 1000)}"
+        start_time = time.time()
+        
+        log_json("query_start", 
+                 request_id=request_id,
+                 query_length=len(query),
+                 query_preview=query[:100])
+        
+        try:
+            response = agent.query(query)
+            duration_ms = (time.time() - start_time) * 1000
+            
+            log_json("query_success",
+                     request_id=request_id,
+                     duration_ms=duration_ms,
+                     response_length=len(str(response)),
+                     status="completed")
+            
+            return response
+            
+        except Exception as e:
+            duration_ms = (time.time() - start_time) * 1000
+            
+            log_json("query_error",
+                     request_id=request_id,
+                     duration_ms=duration_ms,
+                     error=str(e),
+                     status="failed")
+            raise
+    
+    return query_with_structured_logs
+
+# Test structured logging
+query_func = structured_logged_agent()
+result = query_func("How can I track my order?")
+```
+
+**✅ View structured logs:**
+
+1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
+2. Filter by `resource.type="cloud_run_revision"`
+3. Use advanced filter: `jsonPayload.event_type="query_success"`
+4. See structured data with timing and metadata
+
+### 3. Complete Observability (App Engine) 🔍
+
+**App Engine has built-in trace correlation and automatic request logging:**
+
+```python
+import google.cloud.logging
+from google.adk.agents import Agent
+import logging
+import json
+import time
+import os
+
+# App Engine automatically integrates with Cloud Logging
+client = google.cloud.logging.Client()
+client.setup_logging()
+
+logger = logging.getLogger(__name__)
+
+def create_traced_agent():
+    """Create ADK agent with full observability for App Engine."""
+    
+    def get_trace_id():
+        """Extract trace ID from App Engine request headers."""
+        trace_header = os.environ.get('HTTP_X_CLOUD_TRACE_CONTEXT', '')
+        if trace_header:
+            trace_id = trace_header.split('/')[0]
+            return f"projects/{client.project}/traces/{trace_id}"
+        return None
+    
+    def correlated_log(message: str, **kwargs):
+        """Log with trace correlation for App Engine."""
+        trace_id = get_trace_id()
+        extra_data = {
+            "event_type": "adk_agent",
+            **kwargs
+        }
+        
+        if trace_id:
+            extra_data["logging.googleapis.com/trace"] = trace_id
+        
+        logger.info(message, extra=extra_data)
+    
+    # Initialize with correlated logging
+    correlated_log("ADK Agent initialization started")
+    
+    agent = Agent(
+        model="gemini-2.5-flash",
+        name="traced_agent",
+        instructions="You are an agent with full observability."
+    )
+    
+    correlated_log("ADK Agent ready", 
+                   agent_name=agent.name,
+                   model=agent.model)
+    
+    def traced_query(query: str):
+        request_id = f"req_{int(time.time() * 1000)}"
+        start_time = time.time()
+        
+        correlated_log("Query processing started",
+                       request_id=request_id,
+                       query_length=len(query))
+        
+        try:
+            response = agent.query(query)
+            duration_ms = (time.time() - start_time) * 1000
+            
+            correlated_log("Query completed successfully",
+                           request_id=request_id,
+                           duration_ms=duration_ms,
+                           response_length=len(str(response)))
+            
+            return response
+            
+        except Exception as e:
+            duration_ms = (time.time() - start_time) * 1000
+            
+            correlated_log("Query failed",
+                           request_id=request_id,
+                           duration_ms=duration_ms,
+                           error=str(e),
+                           level="ERROR")
+            raise
+    
+    return traced_query
+
+# For App Engine deployment
+app = Flask(__name__)
+
+@app.route('/query', methods=['POST'])
+def handle_query():
+    query_func = create_traced_agent()
+    data = request.get_json()
+    result = query_func(data['query'])
+    return jsonify({"response": str(result)})
+```
+
+**✅ View correlated logs:**
+
+1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
+2. Filter by `resource.type="gae_application"`
+3. Click on request logs to see nested app logs
+4. Traces automatically correlated with request logs
+
+---
+
+## Quick Wins Complete
+
+**Congratulations!** You now have immediate observability for your Generative AI applications:
+
+### What You've Accomplished
+
+| Feature | Direct Gemini | ADK on Cloud Run | ADK on App Engine |
+|---------|---------------|------------------|-------------------|
+| **Basic Logging** | ✅ 30 seconds | ✅ Instant (built-in) | ✅ Automatic |
+| **Structured Logs** | ✅ JSON with tokens | ✅ JSON to stdout | ✅ With trace correlation |
+| **Tracing** | ✅ OpenTelemetry | ✅ Built-in traces | ✅ Automatic correlation |
+| **Metrics** | ✅ Custom metrics | ✅ Built-in metrics | ✅ Built-in metrics |
+
+### Immediate Next Steps
+
+1. **Test your setup** - Make several requests and verify logs appear
+2. **Create a dashboard** - Use Cloud Monitoring to visualize your data
+3. **Set up alerts** - Get notified of errors or high usage
+4. **Explore the data** - Use Logs Explorer filters to analyze patterns
+
+### Where to Go Next
+
+- **Need more advanced features?** → Go to **Production Path**
+- **Want AI-specific monitoring?** → Check out **Generative AI Model Observability**
+- **Building for production?** → Review **Best Practices for All Deployments**
 
 ---
 
