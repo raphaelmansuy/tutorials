@@ -4,6 +4,9 @@ _"The best time to plant a tree was 20 years ago. The second best time is now."_
 
 ## Prerequisites
 
+<details>
+<summary>Expand for prerequisites</summary>
+
 Before diving in, ensure you have:
 
 **Required:**
@@ -21,18 +24,29 @@ Before diving in, ensure you have:
 
 **Estimated Prerequisites Setup Time:** 15 minutes
 
+</details>
+
 ## Table of Contents
 
+<details>
+<summary>Expand for full outline</summary>
+
+- [Prerequisites](#prerequisites)
+- [Why Google ADK?](#why-google-adk)
+  - [What Makes Google ADK the Swiss Army Knife of Agent Development](#what-makes-google-adk-the-swiss-army-knife-of-agent-development)
+  - [Core ADK Architecture](#core-adk-architecture)
+  - [Why ADK Wins the Developer Experience Battle](#why-adk-wins-the-developer-experience-battle)
 - [Choose Your Path 🚀](#choose-your-path-)
-- [Path Selection Guide](#path-selection-guide)
-- [⚡ QUICK START PATH (30 Minutes)](#-quick-start-path-30-minutes)
+  - [Path Selection Guide](#path-selection-guide)
+- [⚡ Quick Start Path (30 Minutes)](#quick-start-path-30-minutes)
   - [Step 1: Minimal Setup (5 minutes)](#step-1-minimal-setup-5-minutes)
   - [Step 2: Get API Key (5 minutes)](#step-2-get-api-key-5-minutes)
   - [Step 3: Your First Working Agent (10 minutes)](#step-3-your-first-working-agent-10-minutes)
   - [Step 4: Test Your Agent (5 minutes)](#step-4-test-your-agent-5-minutes)
   - [Step 5: Quick Improvements (5 minutes)](#step-5-quick-improvements-5-minutes)
-- [🏗️ PRODUCTION PATH](#️-production-path)
-  - [What Makes Google ADK the Swiss Army Knife of Agent Development](#what-makes-google-adk-the-swiss-army-knife-of-agent-development)
+  - [Quick Troubleshooting](#quick-troubleshooting)
+  - [Congratulations](#congratulations)
+- [🏗️ Production Path](#production-path)
   - [Production Setup: Modern Python Development](#production-setup-modern-python-development)
     - [Step 1: uv Project Setup (10 minutes)](#step-1-uv-project-setup-10-minutes)
     - [Step 2: Production Project Structure](#step-2-production-project-structure)
@@ -54,6 +68,7 @@ Before diving in, ensure you have:
   - [What You've Accomplished](#what-youve-accomplished)
   - [Next Steps](#next-steps)
 
+</details>
 
 ## Why Google ADK?
 
@@ -265,6 +280,14 @@ def get_joke() -> str:
 tools=[get_weather, calculate, get_joke]
 ```
 
+### Quick Troubleshooting
+
+**Common Issues:**
+
+- **"API key error"**: Double-check your `.env` file and ensure the key starts with `AIza`
+- **"Module not found"**: Run `uv add google-adk python-dotenv` again
+- **"Connection error"**: Check your internet connection and API quota
+
 ### 🎉 Congratulations
 
 You now have a working AI agent! In just 30 minutes, you've:
@@ -274,21 +297,27 @@ You now have a working AI agent! In just 30 minutes, you've:
 - ✅ Created an interactive experience
 - ✅ Proved ADK works for you
 
-### 🔧 Quick Troubleshooting
-
-**Common Issues:**
-
-- **"API key error"**: Double-check your `.env` file and ensure the key starts with `AIza`
-- **"Module not found"**: Run `uv add google-adk python-dotenv` again
-- **"Connection error"**: Check your internet connection and API quota
-
-**Ready for more?** Jump to the **🏗️ Production Path** below to build scalable, professional-grade agents.
-
 ---
 
 ## 🏗️ PRODUCTION PATH
 
-**Progress:** 🔳 → 🔳 → 🔳 → 🔳 → 🔳 → 🔳 → 🔳 → 🔳 → ✅
+<details>
+<summary>Production Path Progress</summary>
+
+**Progress through production steps:**
+
+- [ ] Step 1: uv Project Setup
+- [ ] Step 2: Production Project Structure
+- [ ] Step 3: Authentication Setup
+- [ ] Step 4: Configuration Management
+- [ ] Step 5: Advanced Tool Implementation
+- [ ] Step 6: Production Agent Architecture
+- [ ] Step 7: Main Application
+- [ ] Step 8: Testing Your Production Agent
+- [ ] Step 9: Testing and Quality Assurance
+- [x] Complete!
+
+</details>
 
 Build production-ready, scalable agent systems with modern development practices
 
