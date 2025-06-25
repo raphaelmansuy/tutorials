@@ -1,11 +1,93 @@
 # ADK Observability: Monitoring, Tracing, and Security for Production Agents
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Overview](#overview)
+- [Understanding Observability: Metrics, Logs, and Traces](#understanding-observability-metrics-logs-and-traces)
+- [⚡ Quick Wins Path (5 Minutes)](#-quick-wins-path-5-minutes)
+- [🏢 Production Path](#-production-path)
+- [Observability for ADK Agents on Cloud Run](#observability-for-adk-agents-on-cloud-run)
+- [Best Practices for All Deployments](#best-practices-for-all-deployments)
+- [Quotas, Limits, and Retention](#quotas-limits-and-retention)
+- [Troubleshooting Guide](#troubleshooting-guide)
+- [References and Additional Resources](#references-and-additional-resources)
+
+## Prerequisites
+
+Before starting with this guide, ensure you have:
+
+### Required Setup
+
+- [ ] **Google Cloud Project** with billing enabled
+- [ ] **Python 3.9+** installed locally
+- [ ] **Google Cloud CLI** (`gcloud`) installed and configured
+- [ ] **Project Editor or Owner** permissions (or specific IAM roles listed below)
+
+### Required IAM Permissions
+
+For Quick Wins Path:
+
+- `roles/monitoring.viewer` - View monitoring dashboards
+- `roles/cloudtrace.user` - View trace data
+
+For Production Path:
+
+- `roles/monitoring.admin` - Configure custom metrics and alerts
+- `roles/cloudtrace.admin` - Configure trace settings
+- `roles/logging.admin` - Configure log-based metrics
+- `roles/iam.serviceAccountAdmin` - Manage service accounts
+
+### Dependencies Installation
+
+```bash
+# Core dependencies for ADK observability
+pip install google-cloud-monitoring>=2.15.1
+pip install google-cloud-trace>=1.13.0
+pip install google-cloud-logging>=3.8.0
+pip install opentelemetry-api>=1.20.0
+pip install opentelemetry-sdk>=1.20.0
+pip install opentelemetry-exporter-otlp>=1.20.0
+```
+
+### Verification
+
+```bash
+# Verify your setup
+gcloud auth list
+gcloud config get-value project
+python --version  # Should be 3.9+
+```
+
+> **⚠️ Important:** If you don't have the required permissions, work with your GCP administrator to grant them or use a dedicated observability project.
+
 ## Overview
 
 Observability is essential for running production-grade AI agents. With Google ADK and Vertex AI Agent Engine, you get robust, cloud-native monitoring, logging, and distributed tracing out of the box. This guide offers two paths:
 
 - **Quick Wins Path (5 minutes)**: Get immediate visibility with built-in tools
 - **Production Path**: Enterprise-grade observability with security and best practices
+
+### Executive Summary
+
+| Feature | Quick Wins Path | Production Path |
+|---------|-----------------|-----------------|
+| **Setup Time** | 5 minutes | 2-4 hours |
+| **Monitoring** | Built-in metrics | Custom metrics + alerting |
+| **Tracing** | Basic distributed tracing | Advanced OpenTelemetry |
+| **Security** | Default permissions | Least privilege + audit logs |
+| **Maintenance** | Minimal | Requires monitoring team |
+| **Cost** | Low (built-in features) | Medium (custom metrics) |
+| **Best For** | Development, proof-of-concepts | Production, enterprise |
+
+### Cost Considerations
+
+- **Quick Wins Path**: Primarily uses built-in monitoring at no additional cost
+- **Production Path**: Custom metrics pricing ~$0.30 per million data points
+- **Tracing**: Free tier of 2 million spans/month, then $0.20 per million spans
+- **Logging**: First 50GB/month free, then $0.50 per GB
+
+> **💡 Recommendation:** Start with Quick Wins Path for immediate value, then gradually implement Production Path features based on your specific needs.
 
 ```mermaid
 flowchart TB
@@ -112,6 +194,14 @@ Using all three together provides a complete picture of your ADK agent's behavio
 
 This path provides immediate visibility into your ADK agents with minimal configuration.
 
+> **🎯 Success Criteria:** By the end of this section, you'll have basic monitoring, tracing, and logging working for your ADK agent.
+
+### Progress Checklist
+
+- [ ] Built-in monitoring enabled and verified
+- [ ] Distributed tracing configured and tested
+- [ ] Structured logging implemented and validated
+
 ### 1. Built-in Monitoring with Cloud Monitoring (2 minutes)
 
 Vertex AI Agent Engine automatically exports key operational metrics to Cloud Monitoring with no additional configuration required:
@@ -133,6 +223,21 @@ Vertex AI Agent Engine automatically exports key operational metrics to Cloud Mo
 3. Search for `Vertex AI Reasoning Engine`
 4. Choose metrics like `request_count` or `request_latencies`
 
+**✅ Validation:**
+
+```bash
+# Verify metrics are being collected
+gcloud monitoring metrics list --filter="metric.type:aiplatform.googleapis.com/reasoning_engine*" --limit=5
+
+# Expected output: List of available reasoning engine metrics
+```
+
+**❌ If no metrics appear:**
+
+- Wait 2-3 minutes after your first agent request
+- Check that your agent is actually receiving and processing requests
+- Verify you're looking in the correct GCP project
+
 ### 2. Enable Distributed Tracing (1 minute)
 
 Distributed tracing lets you analyze the end-to-end flow of agent queries, tool calls, and LLM invocations:
@@ -140,17 +245,29 @@ Distributed tracing lets you analyze the end-to-end flow of agent queries, tool 
 ```python
 from vertexai.preview.reasoning_engines import AdkApp
 from google.adk.agents import Agent
+import logging
 
-agent = Agent(
-    model="gemini-2.5-flash",
-    name="my_agent",
-    # Agent configuration...
-)
+# Configure logging for better observability
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = AdkApp(
-    agent=agent,
-    enable_tracing=True,  # <--- Just add this one line!
-)
+try:
+    agent = Agent(
+        model="gemini-2.5-flash",
+        name="my_agent",
+        # Agent configuration...
+    )
+
+    app = AdkApp(
+        agent=agent,
+        enable_tracing=True,  # <--- Just add this one line!
+    )
+    
+    logger.info("ADK Agent with tracing enabled successfully")
+    
+except Exception as e:
+    logger.error(f"Failed to initialize ADK Agent with tracing: {e}")
+    raise
 ```
 
 **How to view traces (2 minutes):**
@@ -160,18 +277,77 @@ app = AdkApp(
 3. Filter by `Vertex AI Reasoning Engine` resource
 4. Inspect traces and spans for each agent query
 
+**✅ Validation:**
+
+```bash
+# Check if tracing is working
+gcloud logging read "resource.type=aiplatform.googleapis.com/ReasoningEngine" --limit=5
+
+# Look for trace IDs in the log entries
+# Example log entry should contain: "trace": "projects/PROJECT_ID/traces/TRACE_ID"
+```
+
+**❌ If no traces appear:**
+
+- Ensure `enable_tracing=True` is set in your AdkApp configuration
+- Make at least one request to your agent after enabling tracing
+- Check service account has `roles/cloudtrace.agent` permission
+
 ### 3. Basic Logging (Already Working!)
 
 All your `print()` statements and Python logging are automatically captured:
 
 ```python
-# Standard Python print statements work automatically
-print(f"Processing request: {request_id}")
-
-# Or use Python's logging module for structured logs
 import logging
+import time
+from typing import Dict, Any
+
+# Configure structured logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
-logger.info("Tool execution complete", extra={"tool": "search", "duration_ms": 350})
+
+# Standard Python print statements work automatically
+def process_request(request_id: str) -> None:
+    print(f"Processing request: {request_id}")
+
+# Better: Use structured logging with extra fields
+def process_request_structured(request_id: str, user_query: str) -> Dict[str, Any]:
+    start_time = time.time()
+    
+    try:
+        # Your ADK agent processing logic here
+        result = {"response": "Agent response", "tokens_used": 150}
+        
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.info(
+            "Request processed successfully", 
+            extra={
+                "request_id": request_id,
+                "duration_ms": duration_ms,
+                "tokens_used": result.get("tokens_used", 0),
+                "query_length": len(user_query)
+            }
+        )
+        
+        return result
+        
+    except Exception as e:
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.error(
+            "Request processing failed", 
+            extra={
+                "request_id": request_id,
+                "duration_ms": duration_ms,
+                "error": str(e),
+                "query_length": len(user_query)
+            }
+        )
+        raise
 ```
 
 **View logs:**
@@ -179,11 +355,59 @@ logger.info("Tool execution complete", extra={"tool": "search", "duration_ms": 3
 1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
 2. Filter by `Vertex AI Reasoning Engine` resource
 
+**✅ Validation:**
+
+```bash
+# Test that your logs are being captured
+gcloud logging read "resource.type=aiplatform.googleapis.com/ReasoningEngine" --limit=10
+
+# You should see your print statements and logging calls in the output
+```
+
+**❌ If no logs appear:**
+
+- Check that you're filtering by the correct resource type
+- Ensure your agent is running and processing requests
+- Verify logging is not disabled in your environment
+
+### 🎉 Quick Wins Path Complete
+
+**Congratulations!** You now have basic observability for your ADK agents. Here's what you've accomplished:
+
+- ✅ **Monitoring**: View request counts, latencies, and resource usage
+- ✅ **Tracing**: Analyze end-to-end request flows
+- ✅ **Logging**: Capture application events and debug information
+
+**Next Steps:**
+
+- Test your observability setup by making several requests to your agent
+- Create a simple dashboard in Cloud Monitoring
+- Consider proceeding to the Production Path for advanced features
+
 ---
 
 ## 🏢 Production Path
 
 For enterprise deployments requiring robust monitoring, security, and advanced observability.
+
+> **🎯 Success Criteria:** By the end of this section, you'll have enterprise-grade observability with custom metrics, advanced security, and comprehensive alerting.
+
+### Implementation Order (Recommended)
+
+1. **Security & IAM Configuration** (Foundation)
+2. **Advanced Monitoring** (Core metrics and alerts)
+3. **OpenTelemetry Integration** (Custom instrumentation)
+4. **Audit Logging** (Security monitoring)
+5. **CI/CD Integration** (Automated validation)
+
+### Production Path Checklist
+
+- [ ] Enhanced security and IAM configured
+- [ ] Custom metrics and log-based metrics implemented
+- [ ] Comprehensive alerting policies created
+- [ ] OpenTelemetry custom instrumentation added
+- [ ] Audit logging and security monitoring enabled
+- [ ] CI/CD observability testing integrated
 
 ### 1. Enhanced Security & IAM Configuration
 
@@ -356,14 +580,285 @@ Integrate observability testing into your CI/CD pipeline:
 
 ## Best Practices for All Deployments
 
-- **Enable tracing in production** for all agents
-- **Set up alerts** for error rates and high latency
-- **Instrument custom tools** with proper logging and tracing
-- **Correlate logs and traces** using trace IDs
-- **Review dashboards regularly** to catch regressions early
-- **Implement proper security boundaries** between agents
-- **Use structured logging** for machine-parseable logs
-- **Monitor token usage** to control costs
+### Monitoring Best Practices
+
+#### 1. **Enable tracing in production** for all agents
+
+```python
+# Always enable tracing for production deployments
+app = AdkApp(
+    agent=agent,
+    enable_tracing=True,  # Essential for debugging and performance analysis
+)
+```
+
+#### 2. **Set up alerts** for error rates and high latency
+
+```yaml
+# Example alerting policy configuration
+- name: "High Error Rate"
+  conditions:
+    - displayName: "Error rate > 5%"
+      conditionThreshold:
+        filter: 'resource.type="aiplatform.googleapis.com/ReasoningEngine"'
+        comparison: COMPARISON_GREATER_THAN
+        thresholdValue: 0.05
+  notificationChannels:
+    - "projects/PROJECT_ID/notificationChannels/CHANNEL_ID"
+```
+
+#### 3. **Instrument custom tools** with proper logging and tracing
+
+```python
+import time
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+def custom_tool_with_observability(input_data):
+    with tracer.start_as_current_span("custom_tool") as span:
+        start_time = time.time()
+        
+        span.set_attribute("tool.name", "custom_tool")
+        span.set_attribute("input.size", len(str(input_data)))
+        
+        try:
+            result = process_tool_logic(input_data)
+            
+            span.set_attribute("tool.success", True)
+            span.set_attribute("output.size", len(str(result)))
+            
+            duration = time.time() - start_time
+            logger.info(
+                "Tool execution completed",
+                extra={
+                    "tool_name": "custom_tool",
+                    "duration_ms": duration * 1000,
+                    "success": True
+                }
+            )
+            
+            return result
+            
+        except Exception as e:
+            span.set_attribute("tool.success", False)
+            span.set_attribute("error.message", str(e))
+            
+            duration = time.time() - start_time
+            logger.error(
+                "Tool execution failed",
+                extra={
+                    "tool_name": "custom_tool",
+                    "duration_ms": duration * 1000,
+                    "error": str(e)
+                }
+            )
+            raise
+```
+
+#### 4. **Correlate logs and traces** using trace IDs
+
+```python
+import logging
+from opentelemetry import trace
+
+class TraceContextFormatter(logging.Formatter):
+    def format(self, record):
+        # Add trace context to log records
+        span = trace.get_current_span()
+        if span:
+            trace_id = span.get_span_context().trace_id
+            span_id = span.get_span_context().span_id
+            record.trace_id = f"{trace_id:032x}"
+            record.span_id = f"{span_id:016x}"
+        
+        return super().format(record)
+
+# Configure logging with trace context
+formatter = TraceContextFormatter(
+    '%(asctime)s - %(name)s - %(levelname)s - [trace_id=%(trace_id)s] - %(message)s'
+)
+```
+
+#### 5. **Review dashboards regularly** to catch regressions early
+
+**Weekly Review Checklist:**
+
+- [ ] Check for error rate increases
+- [ ] Monitor latency trends (P95, P99)
+- [ ] Review token usage patterns for cost optimization
+- [ ] Validate that all tools are functioning correctly
+- [ ] Check for any new error patterns in logs
+
+#### 6. **Implement proper security boundaries** between agents
+
+```bash
+# Create separate service accounts for different agent types
+gcloud iam service-accounts create customer-service-agent-sa
+gcloud iam service-accounts create internal-tools-agent-sa
+
+# Grant minimal required permissions
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:customer-service-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
+```
+
+#### 7. **Use structured logging** for machine-parseable logs
+
+```python
+import json
+import logging
+from typing import Dict, Any
+
+def structured_log(level: str, message: str, **kwargs: Any) -> None:
+    log_entry = {
+        "timestamp": time.time(),
+        "level": level,
+        "message": message,
+        "service": "adk-agent",
+        **kwargs
+    }
+    print(json.dumps(log_entry))
+
+# Usage
+structured_log(
+    "INFO",
+    "Request processed",
+    request_id="req-123",
+    duration_ms=1500,
+    tokens_used=200
+)
+```
+
+#### 8. **Monitor token usage** to control costs
+
+```python
+def log_token_usage(model: str, prompt_tokens: int, completion_tokens: int, request_id: str):
+    total_tokens = prompt_tokens + completion_tokens
+    
+    # Log for analysis
+    logger.info(
+        "Token usage recorded",
+        extra={
+            "request_id": request_id,
+            "model": model,
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens
+        }
+    )
+    
+    # Create custom metric
+    create_token_usage_metric(model, total_tokens)
+    
+    # Alert if usage is high
+    if total_tokens > 10000:
+        logger.warning(
+            "High token usage detected",
+            extra={"request_id": request_id, "total_tokens": total_tokens}
+        )
+```
+
+### Observability Security Best Practices
+
+#### Identity and Access Management
+
+1. **Use dedicated service accounts** for each agent type
+2. **Apply principle of least privilege** - grant only necessary permissions
+3. **Rotate service account keys** regularly (or use Workload Identity)
+4. **Monitor service account usage** for unusual patterns
+
+#### Data Protection
+
+1. **Redact sensitive information** from logs and traces
+2. **Use Secret Manager** for API keys and credentials
+3. **Enable audit logging** for all security-related events
+4. **Implement data retention policies** for compliance
+
+#### Network Security
+
+1. **Use VPC Service Controls** for sensitive workloads
+2. **Implement IP allowlisting** where appropriate
+3. **Enable Private Google Access** for internal communications
+4. **Monitor network traffic** for anomalies
+
+### Performance Optimization
+
+#### Monitoring Performance
+
+```python
+# Monitor key performance indicators
+def track_performance_metrics(request_id: str, start_time: float):
+    duration = time.time() - start_time
+    
+    # Log performance data
+    logger.info(
+        "Performance metrics",
+        extra={
+            "request_id": request_id,
+            "total_duration_ms": duration * 1000,
+            "performance_grade": get_performance_grade(duration)
+        }
+    )
+
+def get_performance_grade(duration: float) -> str:
+    if duration < 1.0:
+        return "excellent"
+    elif duration < 3.0:
+        return "good"
+    elif duration < 10.0:
+        return "acceptable"
+    else:
+        return "needs_improvement"
+```
+
+#### Optimization Strategies
+
+1. **Cache frequently used data** to reduce latency
+2. **Optimize tool execution order** based on success rates
+3. **Implement request batching** where appropriate
+4. **Use connection pooling** for external API calls
+5. **Monitor and optimize memory usage** to prevent garbage collection pauses
+
+### Operational Excellence
+
+#### Monitoring Maturity Levels
+
+##### Level 1 - Basic (Quick Wins Path)
+
+- Built-in metrics collection
+- Basic tracing enabled
+- Standard logging configured
+- Manual dashboard reviews
+
+##### Level 2 - Intermediate
+
+- Custom metrics for business KPIs
+- Automated alerting policies
+- Log-based metrics configured
+- Weekly performance reviews
+
+##### Level 3 - Advanced (Production Path)
+
+- Full OpenTelemetry instrumentation
+- Comprehensive security monitoring
+- Automated anomaly detection
+- Continuous observability testing
+
+##### Level 4 - Expert
+
+- Predictive monitoring and alerting
+- Advanced correlation analysis
+- Custom observability tools
+- Cross-team observability standards
+
+#### Continuous Improvement
+
+1. **Regular observability reviews** (monthly)
+2. **Alert tuning** to reduce false positives
+3. **Dashboard optimization** based on user feedback
+4. **Tool performance benchmarking**
+5. **Cost optimization** for observability infrastructure
 
 ## Observability for ADK Agents on Cloud Run
 
@@ -670,7 +1165,273 @@ For production systems, consider:
 - Implementing sampling strategies for high-volume systems
 - Requesting quota increases for critical workloads
 
-## References
+## Troubleshooting Guide
+
+### Common Issues and Solutions
+
+#### 1. **No Metrics Showing in Cloud Monitoring**
+
+**Symptoms:**
+
+- Metrics Explorer shows no data for your ADK agent
+- Dashboards are empty
+
+**Solutions:**
+
+```bash
+# Check if your agent is running and receiving requests
+gcloud logging read "resource.type=aiplatform.googleapis.com/ReasoningEngine" --limit=10
+
+# Verify service account permissions
+gcloud projects get-iam-policy $PROJECT_ID --format="table(bindings.role,bindings.members)"
+
+# Check quota usage
+gcloud logging metrics list --filter="name:*adk*"
+```
+
+**Most Common Causes:**
+
+- Service account missing `roles/monitoring.metricWriter` permission
+- Agent not receiving any requests (no activity to monitor)
+- Wrong resource type filter in Metrics Explorer
+
+#### 2. **Traces Not Appearing in Cloud Trace**
+
+**Symptoms:**
+
+- Trace Explorer shows no traces
+- `enable_tracing=True` not working
+
+**Solutions:**
+
+```python
+# Verify tracing is properly enabled
+import os
+print(f"Tracing enabled: {os.environ.get('ENABLE_TRACING', 'not set')}")
+
+# Check service account permissions
+# gcloud projects add-iam-policy-binding $PROJECT_ID \
+#     --member="serviceAccount:your-service-account@project.iam.gserviceaccount.com" \
+#     --role="roles/cloudtrace.agent"
+```
+
+**Most Common Causes:**
+
+- Service account missing `roles/cloudtrace.agent` permission
+- Tracing not enabled in the ADK app configuration
+- Low traffic volume (traces are sampled)
+
+#### 3. **Permission Denied Errors**
+
+**Symptoms:**
+
+- `403 Forbidden` errors in logs
+- "Permission denied" when accessing monitoring APIs
+
+**Solutions:**
+
+```bash
+# Check current authenticated user
+gcloud auth list
+
+# Verify project configuration
+gcloud config get-value project
+
+# Check service account key (if using one)
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
+
+# Test API access
+gcloud monitoring metrics list --limit=1
+```
+
+**Most Common Causes:**
+
+- Wrong Google Cloud project selected
+- Service account key not configured
+- Insufficient IAM permissions
+
+#### 4. **High Latency or Performance Issues**
+
+**Symptoms:**
+
+- Agent responses are slow
+- High P95/P99 latencies in monitoring
+
+**Debugging Steps:**
+
+```python
+# Add performance logging to your agent
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+
+def timed_agent_call(query):
+    start_time = time.time()
+    
+    try:
+        result = your_agent.process(query)
+        duration = time.time() - start_time
+        
+        logger.info(f"Agent call completed", extra={
+            "duration_ms": duration * 1000,
+            "query_length": len(query),
+            "response_length": len(result.text) if result else 0
+        })
+        
+        return result
+    except Exception as e:
+        duration = time.time() - start_time
+        logger.error(f"Agent call failed", extra={
+            "duration_ms": duration * 1000,
+            "error": str(e)
+        })
+        raise
+```
+
+**Investigation Areas:**
+
+- Tool execution times
+- LLM model response times
+- Network latency to external APIs
+- Resource allocation (CPU/memory)
+
+#### 5. **Missing Log Entries**
+
+**Symptoms:**
+
+- Expected log entries not appearing in Cloud Logging
+- Structured logging not working
+
+**Solutions:**
+
+```python
+# Verify logging configuration
+import logging
+import sys
+
+# Check log level
+print(f"Root logger level: {logging.getLogger().level}")
+print(f"Handlers: {logging.getLogger().handlers}")
+
+# Test logging with different levels
+logging.debug("Debug message - should not appear by default")
+logging.info("Info message - should appear")
+logging.warning("Warning message - should appear")
+logging.error("Error message - should appear")
+
+# For Cloud Run, ensure JSON logging
+import json
+import os
+
+def structured_log(message, severity="INFO", **kwargs):
+    log_entry = {
+        "message": message,
+        "severity": severity,
+        "timestamp": time.time(),
+        "service": os.environ.get("K_SERVICE", "adk-agent"),
+        **kwargs
+    }
+    print(json.dumps(log_entry))
+```
+
+#### 6. **OpenTelemetry Integration Problems**
+
+**Symptoms:**
+
+- Custom spans not appearing
+- OpenTelemetry errors in logs
+
+**Solutions:**
+
+```python
+# Verify OpenTelemetry configuration
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+
+# Check if tracer provider is configured
+tracer_provider = trace.get_tracer_provider()
+print(f"Tracer provider: {type(tracer_provider)}")
+
+# Test span creation
+tracer = trace.get_tracer(__name__)
+with tracer.start_as_current_span("test_span") as span:
+    span.set_attribute("test", "value")
+    print("Test span created successfully")
+```
+
+### Diagnostic Commands Reference
+
+#### Quick Health Check
+
+```bash
+# Check service status
+gcloud run services list --filter="name:your-agent"
+
+# Check recent logs
+gcloud logging read "resource.type=cloud_run_revision" --limit=20
+
+# Check metrics availability
+gcloud monitoring metrics list --filter="metric.type:run.googleapis.com"
+```
+
+#### Performance Investigation
+
+```bash
+# Check latency metrics
+gcloud monitoring metrics list --filter="metric.type:run.googleapis.com/request_latencies"
+
+# Check error rates
+gcloud monitoring metrics list --filter="metric.type:run.googleapis.com/request_count"
+
+# Check resource utilization
+gcloud monitoring metrics list --filter="metric.type:run.googleapis.com/container/cpu/utilizations"
+```
+
+#### Security Audit
+
+```bash
+# Check service account permissions
+gcloud projects get-iam-policy $PROJECT_ID --format="table(bindings.role,bindings.members)" \
+  | grep your-service-account
+
+# Check audit logs
+gcloud logging read "protoPayload.authenticationInfo.principalEmail:your-service-account@" --limit=10
+
+# Check for security violations
+gcloud logging read "severity>=WARNING" --limit=20
+```
+
+### When to Contact Support
+
+Contact Google Cloud Support if you encounter:
+
+1. **Persistent quota exceeded errors** despite normal usage
+2. **Data loss or corruption** in monitoring systems
+3. **Severe performance degradation** without obvious cause
+4. **Billing discrepancies** related to observability services
+5. **Service outages** affecting monitoring infrastructure
+
+**Information to Include in Support Requests:**
+
+- Project ID and region
+- Timestamp of the issue
+- Relevant log entries and error messages
+- Steps to reproduce the problem
+- Configuration details (sanitized)
+
+### Additional Resources
+
+- [Cloud Monitoring Troubleshooting](https://cloud.google.com/monitoring/support/troubleshooting)
+- [Cloud Trace Troubleshooting](https://cloud.google.com/trace/docs/troubleshooting)
+- [Cloud Logging Troubleshooting](https://cloud.google.com/logging/docs/troubleshooting)
+- [OpenTelemetry Troubleshooting](https://opentelemetry.io/docs/reference/specification/troubleshooting/)
+
+---
+
+## References and Additional Resources
+
+### Official Google Cloud Documentation
 
 - [Vertex AI Agent Engine Monitoring](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/monitoring)
 - [Vertex AI Agent Engine Tracing](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/tracing)
@@ -685,9 +1446,27 @@ For production systems, consider:
 - [Cloud Run Service Identity](https://cloud.google.com/run/docs/securing/service-identity)
 - [OpenTelemetry Semantic Conventions for GenAI](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
 
-## Last updated
+### Community Resources
+
+- [OpenTelemetry Community](https://opentelemetry.io/community/)
+- [Google Cloud Community](https://cloud.google.com/community)
+- [Stack Overflow - Google Cloud](https://stackoverflow.com/questions/tagged/google-cloud-platform)
+
+### Training and Certification
+
+- [Google Cloud Observability Certification](https://cloud.google.com/learn/certification)
+- [Coursera - Site Reliability Engineering](https://www.coursera.org/learn/site-reliability-engineering-slos)
+- [OpenTelemetry Bootcamp](https://opentelemetry.io/docs/getting-started/)
+
+---
+
+## Last Updated
 
 June 2025
+
+## Contributors
+
+This guide was created with input from Google Cloud engineers and the ADK community. For questions or suggestions, please open an issue in the repository.
 
 ## Observability Architecture: OpenTelemetry and Google Cloud
 

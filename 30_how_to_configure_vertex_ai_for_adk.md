@@ -59,24 +59,6 @@ echo "GOOGLE_GENAI_USE_VERTEXAI=TRUE" >> .env
 
 **✅ You're ready to use ADK with Vertex AI!**
 
-```mermaid
-flowchart LR
-    A[Set Environment<br/>Variables] --> B[Grant IAM<br/>Roles]
-    B --> C[Enable<br/>APIs]
-    C --> D[Setup<br/>Authentication]
-    D --> E[Create Storage<br/>Bucket]
-    E --> F[Configure<br/>Environment]
-    F --> G[✅ Ready to Use<br/>ADK with Vertex AI]
-
-    style A fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
-    style B fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
-    style C fill:#fff8e1,stroke:#f57c00,stroke-width:2px
-    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style F fill:#e0f2f1,stroke:#00695c,stroke-width:2px
-    style G fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
-```
-
 For production deployments, continue to the [🏢 Advanced Configuration](#-advanced-configuration) section.
 
 ---
