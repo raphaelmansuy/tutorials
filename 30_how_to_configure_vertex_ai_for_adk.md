@@ -59,6 +59,24 @@ echo "GOOGLE_GENAI_USE_VERTEXAI=TRUE" >> .env
 
 **✅ You're ready to use ADK with Vertex AI!**
 
+```mermaid
+flowchart LR
+    A[Set Environment<br/>Variables] --> B[Grant IAM<br/>Roles]
+    B --> C[Enable<br/>APIs]
+    C --> D[Setup<br/>Authentication]
+    D --> E[Create Storage<br/>Bucket]
+    E --> F[Configure<br/>Environment]
+    F --> G[✅ Ready to Use<br/>ADK with Vertex AI]
+    
+    style A fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    style B fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    style C fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style F fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    style G fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+```
+
 For production deployments, continue to the [🏢 Advanced Configuration](#-advanced-configuration) section.
 
 ---
@@ -82,6 +100,26 @@ To run ADK with Vertex AI, you need these **minimum IAM roles** on your Google C
 | **Vertex AI User** | `roles/aiplatform.user` | Provides access to all Vertex AI resources including models, endpoints, training jobs, and batch prediction jobs. Allows creating, reading, updating, and deleting Vertex AI resources. | Essential for running agents, accessing Gemini models, creating reasoning engines, and deploying to Vertex AI Agent Engine. |
 | **Storage Admin** | `roles/storage.admin` | Full control over Cloud Storage buckets and objects. Includes permissions to create, delete, and manage buckets and their contents. | Required for storing agent artifacts, model files, conversation logs, and deployment packages. ADK agents need to read/write data during execution. |
 | **Service Usage Admin** | `roles/serviceusage.serviceUsageAdmin` | Ability to enable and disable Google Cloud services and APIs on projects. Can view service usage and quotas. | Needed to enable required APIs (Vertex AI, Cloud Storage, Logging, etc.) for the ADK setup process. |
+
+```mermaid
+flowchart TD
+    A[ADK User] --> B{Required Permissions}
+    B --> C[Vertex AI User<br/>roles/aiplatform.user]
+    B --> D[Storage Admin<br/>roles/storage.admin]
+    B --> E[Service Usage Admin<br/>roles/serviceusage.serviceUsageAdmin]
+    
+    C --> F[🤖 Access Gemini Models<br/>Deploy Agents<br/>Create Reasoning Engines]
+    D --> G[📦 Store Agent Artifacts<br/>Manage Buckets<br/>Read/Write Data]
+    E --> H[⚙️ Enable APIs<br/>View Service Usage<br/>Manage Quotas]
+    
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style C fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    style E fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style F fill:#f3e5f5,stroke:#4a148c,stroke-width:1px
+    style G fill:#e8f5e8,stroke:#1b5e20,stroke-width:1px
+    style H fill:#fff3e0,stroke:#e65100,stroke-width:1px
+```
 
 ### Additional Optional Roles for Advanced Features
 
@@ -127,6 +165,25 @@ gcloud services enable \
     --project=$PROJECT_ID
 ```
 
+```mermaid
+flowchart TD
+    A[ADK Application] --> B[Vertex AI API<br/>aiplatform.googleapis.com]
+    A --> C[Cloud Storage API<br/>storage.googleapis.com]
+    A --> D[Cloud Logging API<br/>logging.googleapis.com]
+    A --> E[Cloud Monitoring API<br/>monitoring.googleapis.com]
+    
+    B --> F[🤖 Gemini Models<br/>Agent Deployment<br/>Reasoning Engine]
+    C --> G[📦 Artifact Storage<br/>Configuration Files<br/>Model Assets]
+    D --> H[📋 Execution Logs<br/>Error Tracking<br/>Audit Trail]
+    E --> I[📊 Performance Metrics<br/>Resource Usage<br/>Health Monitoring]
+    
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style E fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+```
+
 ### Step 3: Set Up Authentication
 
 ```bash
@@ -138,6 +195,27 @@ gcloud config set project $PROJECT_ID
 
 # Verify authentication
 gcloud auth list
+```
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant G as gcloud CLI
+    participant GC as Google Cloud
+    participant ADK as ADK Application
+    
+    U->>G: gcloud auth application-default login
+    G->>GC: Request authentication
+    GC-->>U: Open browser for OAuth
+    U->>GC: Complete OAuth flow
+    GC-->>G: Return credentials
+    G->>G: Store Application Default Credentials
+    U->>G: gcloud config set project PROJECT_ID
+    G->>G: Set default project
+    ADK->>G: Request access token
+    G-->>ADK: Provide token
+    ADK->>GC: Make API calls with token
+    GC-->>ADK: Return API responses
 ```
 
 ### Step 4: Create Service Agent (For Vertex AI Agent Engine)
@@ -300,6 +378,45 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --role="roles/aiplatform.viewer"
 ```
 
+```mermaid
+flowchart TD
+    subgraph DEV [Development Environment]
+        D1[adk-dev-sa<br/>Service Account]
+        D2[Development<br/>Resources]
+        D3[Relaxed<br/>Permissions]
+    end
+    
+    subgraph PROD [Production Environment]
+        P1[adk-prod-sa<br/>Service Account]
+        P2[Production<br/>Resources]
+        P3[Restricted<br/>Permissions]
+        P4[Time-Limited<br/>Access]
+    end
+    
+    subgraph SHARED [Shared Resources]
+        S1[IAM Policies]
+        S2[Audit Logging]
+        S3[Monitoring]
+    end
+    
+    D1 --> D2
+    D1 --> D3
+    P1 --> P2
+    P1 --> P3
+    P1 --> P4
+    
+    S1 --> DEV
+    S1 --> PROD
+    S2 --> DEV
+    S2 --> PROD
+    S3 --> DEV
+    S3 --> PROD
+    
+    style DEV fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style PROD fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style SHARED fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+```
+
 ### 🔍 Security Monitoring & Auditing
 
 ```bash
@@ -360,6 +477,31 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ---
 
 ## Troubleshooting
+
+```mermaid
+flowchart TD
+    A[ADK Error Encountered] --> B{Error Type?}
+    
+    B -->|Permission Denied| C[Check IAM Roles<br/>& Authentication]
+    B -->|API Not Enabled| D[Enable Required<br/>APIs]
+    B -->|Authentication Failed| E[Reset Application<br/>Default Credentials]
+    B -->|Bucket Access Denied| F[Verify Storage<br/>Permissions]
+    B -->|Deployment Failed| G[Check Agent Engine<br/>Service Account]
+    
+    C --> C1[✓ Verify gcloud auth<br/>✓ Check IAM bindings<br/>✓ Re-authenticate]
+    D --> D1[✓ gcloud services enable<br/>✓ Verify APIs list<br/>✓ Check quotas]
+    E --> E1[✓ gcloud auth login<br/>✓ Check project setting<br/>✓ Test token]
+    F --> F1[✓ Check bucket IAM<br/>✓ Grant storage roles<br/>✓ Test access]
+    G --> G1[✓ Create service agent<br/>✓ Check deployment logs<br/>✓ Monitor status]
+    
+    style A fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style B fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style C fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style E fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style F fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style G fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+```
 
 ### Common Issues & Solutions
 
