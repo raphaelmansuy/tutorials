@@ -31,6 +31,59 @@ This tutorial is divided into two main paths, allowing you to choose the level o
 
 ---
 
+## 📖 Table of Contents
+
+<details>
+<summary>Click to expand/collapse Table of Contents</summary>
+
+- [🎯 What You'll Build](#-what-youll-build)
+- [🚀 Key Outcomes](#-key-outcomes)
+- [📖 Tutorial Structure](#-tutorial-structure)
+- [✅ Prerequisites](#-prerequisites)
+  - [Required Tools and Accounts](#required-tools-and-accounts)
+  - [Required IAM Permissions](#required-iam-permissions)
+  - [Cost Considerations](#cost-considerations)
+  - [Dependency Installation](#dependency-installation)
+  - [Verify Your Setup](#verify-your-setup)
+- [🧪 Quick Environment Test (2 minutes)](#-quick-environment-test-2-minutes)
+  - [Step 1: Test Your Google Cloud Setup](#step-1-test-your-google-cloud-setup)
+  - [Step 2: Test Vertex AI Access](#step-2-test-vertex-ai-access)
+  - [Expected Output](#expected-output)
+  - [⚠️ If You See Errors](#️-if-you-see-errors)
+- [🧠 Understanding Observability: Metrics, Logs, and Traces](#-understanding-observability-metrics-logs-and-traces)
+  - [The Three Pillars of Observability](#the-three-pillars-of-observability)
+  - [Direct LLM Generation Call Observability](#direct-llm-generation-call-observability)
+- [⚡ Quick Wins Path (5 Minutes)](#-quick-wins-path-5-minutes)
+  - [Option A: Direct Vertex AI Gemini Applications](#option-a-direct-vertex-ai-gemini-applications)
+    - [1. Instant Logging (30 seconds) ⚡](#1-instant-logging-30-seconds-)
+    - [✅ Checkpoint 1: Verify Basic Logging](#-checkpoint-1-verify-basic-logging)
+    - [2. Structured Logging with Token Tracking (2 minutes) 📊](#2-structured-logging-with-token-tracking-2-minutes-)
+    - [✅ Checkpoint 2: View Structured Logs](#-checkpoint-2-view-structured-logs)
+    - [3. Add Tracing (3 minutes) 🔍](#3-add-tracing-3-minutes-)
+    - [✅ Checkpoint 3: View Traces](#-checkpoint-3-view-traces)
+  - [Option B: Agent Engine Applications](#option-b-agent-engine-applications)
+    - [1. Create a Simple Agent Engine Application (10 minutes) 🛠️](#1-create-a-simple-agent-engine-application-10-minutes-️)
+    - [2. Deploy to Agent Engine (5 minutes) 🚀](#2-deploy-to-agent-engine-5-minutes-)
+    - [3. Test the Deployed Agent](#3-test-the-deployed-agent)
+    - [✅ Checkpoint 4: View Agent Engine Observability](#-checkpoint-4-view-agent-engine-observability)
+    - [Key Benefits of Agent Engine Observability](#key-benefits-of-agent-engine-observability)
+- [Advanced Observability with OpenTelemetry and Datadog](#advanced-observability-with-opentelemetry-and-datadog)
+  - [OpenTelemetry Architecture with Google Cloud](#opentelemetry-architecture-with-google-cloud)
+  - [Multi-Platform Observability with Datadog](#multi-platform-observability-with-datadog)
+  - [Exporting to Datadog: Two Primary Approaches](#exporting-to-datadog-two-primary-approaches)
+    - [Approach 1: OpenTelemetry Collector with Datadog Exporter](#approach-1-opentelemetry-collector-with-datadog-exporter)
+    - [Approach 2: Datadog Agent with OTLP Ingestion](#approach-2-datadog-agent-with-otlp-ingestion)
+  - [Recommendations](#recommendations)
+- [📚 References and Additional Resources](#-references-and-additional-resources)
+  - [Google Cloud Documentation](#google-cloud-documentation)
+  - [OpenTelemetry](#opentelemetry)
+  - [Third-Party Integrations](#third-party-integrations)
+  - [Code and Libraries](#code-and-libraries)
+
+</details>
+
+---
+
 ## ✅ Prerequisites
 
 Before you begin, ensure you have the following set up:
