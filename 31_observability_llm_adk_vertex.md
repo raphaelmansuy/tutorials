@@ -1,4 +1,4 @@
-# ADK Observability: Monitoring, Tracing, and Security for Production Agents
+# Vertex AI Generative AI & ADK Observability: Complete Monitoring, Tracing, and Security Guide
 
 ## Table of Contents
 
@@ -7,7 +7,8 @@
 - [Understanding Observability: Metrics, Logs, and Traces](#understanding-observability-metrics-logs-and-traces)
 - [⚡ Quick Wins Path (5 Minutes)](#-quick-wins-path-5-minutes)
 - [🏢 Production Path](#-production-path)
-- [Observability for ADK Agents on Cloud Run](#observability-for-adk-agents-on-cloud-run)
+- [🤖 Generative AI Model Observability](#-generative-ai-model-observability)
+- [Cloud Run](#cloud-run)
 - [Best Practices for All Deployments](#best-practices-for-all-deployments)
 - [Quotas, Limits, and Retention](#quotas-limits-and-retention)
 - [Troubleshooting Guide](#troubleshooting-guide)
@@ -63,41 +64,50 @@ python --version  # Should be 3.9+
 
 ## Overview
 
-Observability is essential for running production-grade AI agents. With Google ADK and Vertex AI Agent Engine, you get robust, cloud-native monitoring, logging, and distributed tracing out of the box. This guide offers two paths:
+Observability is essential for running production-grade AI applications built with Vertex AI Generative AI. This comprehensive guide covers observability for both direct Generative AI API usage and ADK-based agents. With Google's Vertex AI platform, you get robust, cloud-native monitoring, logging, and distributed tracing capabilities. This guide offers two paths plus specialized coverage:
 
 - **Quick Wins Path (5 minutes)**: Get immediate visibility with built-in tools
-- **Production Path**: Enterprise-grade observability with security and best practices
+- **Production Path**: Enterprise-grade observability with security and best practices  
+- **Generative AI Model Observability**: Specialized monitoring for LLM applications, token usage, safety, and multi-modal requests
 
 ### Executive Summary
 
-| Feature         | Quick Wins Path                | Production Path              |
-| --------------- | ------------------------------ | ---------------------------- |
-| **Setup Time**  | 5 minutes                      | 2-4 hours                    |
-| **Monitoring**  | Built-in metrics               | Custom metrics + alerting    |
-| **Tracing**     | Basic distributed tracing      | Advanced OpenTelemetry       |
-| **Security**    | Default permissions            | Least privilege + audit logs |
-| **Maintenance** | Minimal                        | Requires monitoring team     |
-| **Cost**        | Low (built-in features)        | Medium (custom metrics)      |
-| **Best For**    | Development, proof-of-concepts | Production, enterprise       |
+| Feature              | Quick Wins Path                  | Production Path                   | Generative AI Focus              |
+| -------------------- | -------------------------------- | --------------------------------- | -------------------------------- |
+| **Setup Time**       | 5 minutes                        | 2-4 hours                         | 1-2 hours                        |
+| **Monitoring**       | Built-in metrics                 | Custom metrics + alerting         | Token usage + model performance  |
+| **Tracing**          | Basic distributed tracing        | Advanced OpenTelemetry            | Multi-modal request flows        |
+| **Security**         | Default permissions              | Least privilege + audit logs      | Safety filter monitoring         |
+| **Cost Management**  | Basic usage tracking             | Advanced cost optimization        | Token-based cost control         |
+| **AI-Specific**      | Basic error monitoring           | Custom business metrics           | Safety, hallucination detection  |
+| **Best For**         | Development, proof-of-concepts   | Production, enterprise            | AI-first applications            |
 
 ### Cost Considerations
 
 - **Quick Wins Path**: Primarily uses built-in monitoring at no additional cost
 - **Production Path**: Custom metrics pricing ~$0.30 per million data points
+- **Generative AI Monitoring**: Token usage tracking and quota management with Dynamic Shared Quota (DSQ)
 - **Tracing**: Free tier of 2 million spans/month, then $0.20 per million spans
 - **Logging**: First 50GB/month free, then $0.50 per GB
 
-> **💡 Recommendation:** Start with Quick Wins Path for immediate value, then gradually implement Production Path features based on your specific needs.
+> **💡 Recommendation:** Start with Quick Wins Path for immediate value, then implement Generative AI Model Observability for AI-specific monitoring, and gradually adopt Production Path features based on your specific needs.
 
 ## Observability Architecture: OpenTelemetry and Google Cloud
 
-When implementing observability for ADK agents, understanding the relationship between OpenTelemetry and Google Cloud services is essential for effective instrumentation:
+When implementing observability for Vertex AI Generative AI applications, understanding the relationship between OpenTelemetry, direct API calls, and Google Cloud services is essential for effective instrumentation:
 
 ```mermaid
 flowchart LR
-    subgraph "Your ADK Application"
-        APP[ADK Agent Code]
+    subgraph "Your Applications"
+        APP[Direct Gemini API Calls]
+        ADK[ADK Agent Code]
         OTEL[OpenTelemetry SDK]
+    end
+
+    subgraph "Vertex AI Services"
+        GENAI[Generative AI API]
+        ENGINE[Agent Engine]
+        MODEL[Gemini Models]
     end
 
     subgraph "Google Cloud Observability"
@@ -106,15 +116,27 @@ flowchart LR
         CL[Cloud Logging]
     end
 
+    APP --> GENAI
+    ADK --> ENGINE
+    GENAI --> MODEL
+    ENGINE --> MODEL
+    
     APP --> OTEL
+    ADK --> OTEL
     OTEL -->|Metrics| CM
     OTEL -->|Traces| CT
     OTEL -->|Logs| CL
+
+    GENAI -->|Usage Metadata| CM
+    ENGINE -->|Built-in Metrics| CM
+    MODEL -->|Safety Ratings| CL
 
     style OTEL fill:#f5f5ff,stroke:#9999ff
     style CM fill:#e6f4ea,stroke:#5bb974
     style CT fill:#fef7e0,stroke:#fbbc04
     style CL fill:#e8f0fe,stroke:#4285f4
+    style GENAI fill:#fff2cc,stroke:#d6b656
+    style MODEL fill:#f8cecc,stroke:#b85450
 ```
 
 ## Understanding Observability: Metrics, Logs, and Traces
@@ -565,554 +587,977 @@ Integrate observability testing into your CI/CD pipeline:
 
 ---
 
-## Best Practices for All Deployments
+## 🤖 Generative AI Model Observability
 
-### Monitoring Best Practices
+This section focuses specifically on monitoring direct Vertex AI Generative AI API usage, including Gemini models for text generation, multi-modal requests, function calling, and other generative AI workloads.
 
-#### 1. **Enable tracing in production** for all agents
+> **🎯 Success Criteria:** By the end of this section, you'll have comprehensive monitoring for token usage, model performance, safety attributes, and cost optimization for your Generative AI applications.
 
-```python
-# Always enable tracing for production deployments
-app = AdkApp(
-    agent=agent,
-    enable_tracing=True,  # Essential for debugging and performance analysis
-)
-```
+### Generative AI Observability Checklist
 
-#### 2. **Set up alerts** for error rates and high latency
+- [ ] Token usage monitoring and alerting configured
+- [ ] Model performance metrics (latency, throughput, error rates) tracked
+- [ ] Safety and responsible AI monitoring implemented
+- [ ] Cost optimization dashboards created
+- [ ] Multi-modal request monitoring (text, image, video, audio) configured
+- [ ] Dynamic Shared Quota (DSQ) monitoring setup
 
-```yaml
-# Example alerting policy configuration
-- name: "High Error Rate"
-  conditions:
-    - displayName: "Error rate > 5%"
-      conditionThreshold:
-        filter: 'resource.type="aiplatform.googleapis.com/ReasoningEngine"'
-        comparison: COMPARISON_GREATER_THAN
-        thresholdValue: 0.05
-  notificationChannels:
-    - "projects/PROJECT_ID/notificationChannels/CHANNEL_ID"
-```
+### 1. Token Usage Monitoring and Cost Optimization
 
-#### 3. **Instrument custom tools** with proper logging and tracing
+Token usage is the primary cost driver for Generative AI applications. Implement comprehensive token monitoring:
 
 ```python
+from google import genai
+from google.cloud import monitoring_v3
 import time
-from opentelemetry import trace
+import logging
+from typing import Dict, Any, Optional
 
-tracer = trace.get_tracer(__name__)
+# Configure structured logging for token tracking
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def custom_tool_with_observability(input_data):
-    with tracer.start_as_current_span("custom_tool") as span:
-        start_time = time.time()
-
-        span.set_attribute("tool.name", "custom_tool")
-        span.set_attribute("input.size", len(str(input_data)))
-
+class TokenUsageMonitor:
+    def __init__(self, project_id: str):
+        self.project_id = project_id
+        self.monitoring_client = monitoring_v3.MetricServiceClient()
+        self.project_name = self.monitoring_client.common_project_path(project_id)
+        
+    def log_token_usage(self, 
+                       model: str, 
+                       prompt_tokens: int, 
+                       candidate_tokens: int, 
+                       total_tokens: int,
+                       request_id: str,
+                       user_id: Optional[str] = None,
+                       application: str = "default") -> None:
+        """Log token usage with structured fields for analysis."""
+        
+        # Structured logging for token usage
+        logger.info(
+            "Generative AI token usage recorded",
+            extra={
+                "event_type": "token_usage",
+                "model": model,
+                "prompt_tokens": prompt_tokens,
+                "candidate_tokens": candidate_tokens,
+                "total_tokens": total_tokens,
+                "request_id": request_id,
+                "user_id": user_id,
+                "application": application,
+                "timestamp": time.time(),
+                "cost_estimate": self._estimate_cost(model, total_tokens)
+            }
+        )
+        
+        # Create custom metric for token usage
+        self._create_token_usage_metric(model, total_tokens, application)
+        
+        # Alert on high usage
+        if total_tokens > 50000:  # Configurable threshold
+            logger.warning(
+                "High token usage detected",
+                extra={
+                    "event_type": "high_token_usage",
+                    "request_id": request_id,
+                    "total_tokens": total_tokens,
+                    "model": model,
+                    "threshold_exceeded": True
+                }
+            )
+    
+    def _create_token_usage_metric(self, model: str, tokens: int, application: str) -> None:
+        """Create custom metric for token usage."""
+        series = monitoring_v3.TimeSeries()
+        series.metric.type = "custom.googleapis.com/genai/token_usage"
+        series.resource.type = "global"
+        
+        # Add metric labels for analysis dimensions
+        series.metric.labels["model"] = model
+        series.metric.labels["application"] = application
+        
+        # Add the data point
+        point = series.points.add()
+        point.value.int64_value = tokens
+        now = time.time()
+        point.interval.end_time.seconds = int(now)
+        point.interval.end_time.nanos = int((now - int(now)) * 10**9)
+        
         try:
-            result = process_tool_logic(input_data)
-
-            span.set_attribute("tool.success", True)
-            span.set_attribute("output.size", len(str(result)))
-
-            duration = time.time() - start_time
-            logger.info(
-                "Tool execution completed",
-                extra={
-                    "tool_name": "custom_tool",
-                    "duration_ms": duration * 1000,
-                    "success": True
-                }
+            self.monitoring_client.create_time_series(
+                name=self.project_name, 
+                time_series=[series]
             )
-
-            return result
-
         except Exception as e:
-            span.set_attribute("tool.success", False)
-            span.set_attribute("error.message", str(e))
+            logger.error(f"Failed to create token usage metric: {e}")
+    
+    def _estimate_cost(self, model: str, tokens: int) -> float:
+        """Estimate cost based on model and token count."""
+        # Cost per 1M tokens (approximate, check current pricing)
+        cost_per_million = {
+            "gemini-2.5-flash": 0.075,  # Input: $0.075, Output: $0.30
+            "gemini-2.5-pro": 1.25,     # Input: $1.25, Output: $5.00
+            "gemini-2.0-flash": 0.075,
+            "gemini-1.5-flash": 0.075,
+            "gemini-1.5-pro": 1.25
+        }
+        
+        rate = cost_per_million.get(model, 0.075)  # Default to Flash pricing
+        return (tokens / 1_000_000) * rate
 
-            duration = time.time() - start_time
-            logger.error(
-                "Tool execution failed",
-                extra={
-                    "tool_name": "custom_tool",
-                    "duration_ms": duration * 1000,
-                    "error": str(e)
+# Usage monitoring with Gemini API
+def monitored_generate_content(prompt: str, 
+                             model: str = "gemini-2.5-flash",
+                             application: str = "default",
+                             user_id: Optional[str] = None) -> Dict[str, Any]:
+    """Generate content with comprehensive monitoring."""
+    
+    monitor = TokenUsageMonitor(PROJECT_ID)
+    request_id = f"req_{int(time.time() * 1000)}"
+    start_time = time.time()
+    
+    try:
+        client = genai.Client()
+        
+        # Generate content
+        response = client.models.generate_content(
+            model=model,
+            contents=prompt
+        )
+        
+        # Extract usage metadata
+        usage = response.usage_metadata
+        prompt_tokens = usage.prompt_token_count
+        candidate_tokens = usage.candidates_token_count  
+        total_tokens = usage.total_token_count
+        
+        # Calculate performance metrics
+        duration_ms = (time.time() - start_time) * 1000
+        tokens_per_second = total_tokens / (duration_ms / 1000) if duration_ms > 0 else 0
+        
+        # Log token usage
+        monitor.log_token_usage(
+            model=model,
+            prompt_tokens=prompt_tokens,
+            candidate_tokens=candidate_tokens,
+            total_tokens=total_tokens,
+            request_id=request_id,
+            user_id=user_id,
+            application=application
+        )
+        
+        # Log performance metrics
+        logger.info(
+            "Generative AI request completed",
+            extra={
+                "event_type": "request_performance",
+                "request_id": request_id,
+                "model": model,
+                "duration_ms": duration_ms,
+                "tokens_per_second": tokens_per_second,
+                "prompt_length": len(prompt),
+                "response_length": len(response.text),
+                "finish_reason": response.candidates[0].finish_reason if response.candidates else None
+            }
+        )
+        
+        return {
+            "text": response.text,
+            "usage": {
+                "prompt_tokens": prompt_tokens,
+                "candidate_tokens": candidate_tokens,
+                "total_tokens": total_tokens
+            },
+            "performance": {
+                "duration_ms": duration_ms,
+                "tokens_per_second": tokens_per_second
+            },
+            "request_id": request_id
+        }
+        
+    except Exception as e:
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.error(
+            "Generative AI request failed",
+            extra={
+                "event_type": "request_error",
+                "request_id": request_id,
+                "model": model,
+                "duration_ms": duration_ms,
+                "error": str(e),
+                "prompt_length": len(prompt)
+            }
+        )
+        raise
+```
+
+### 2. Safety and Responsible AI Monitoring
+
+Monitor safety attributes, content filtering, and responsible AI compliance:
+
+```python
+def monitor_safety_attributes(response, request_id: str, model: str) -> None:
+    """Monitor safety ratings and content filtering."""
+    
+    if not response.candidates:
+        logger.warning(
+            "No candidates in response - potential safety filtering",
+            extra={
+                "event_type": "safety_no_candidates",
+                "request_id": request_id,
+                "model": model
+            }
+        )
+        return
+    
+    candidate = response.candidates[0]
+    
+    # Log finish reason
+    finish_reason = candidate.finish_reason
+    if finish_reason in ["SAFETY", "RECITATION", "PROHIBITED_CONTENT", "SPII"]:
+        logger.warning(
+            "Content blocked by safety filters",
+            extra={
+                "event_type": "content_blocked",
+                "request_id": request_id,
+                "model": model,
+                "finish_reason": finish_reason,
+                "safety_concern": True
+            }
+        )
+    
+    # Monitor safety ratings
+    if hasattr(candidate, 'safety_ratings') and candidate.safety_ratings:
+        for rating in candidate.safety_ratings:
+            if rating.probability in ["MEDIUM", "HIGH"]:
+                logger.warning(
+                    "High safety concern detected",
+                    extra={
+                        "event_type": "safety_rating_concern",
+                        "request_id": request_id,
+                        "model": model,
+                        "category": rating.category,
+                        "probability": rating.probability,
+                        "blocked": rating.blocked
+                    }
+                )
+    
+    # Monitor citations for attribution
+    if hasattr(candidate, 'citation_metadata') and candidate.citation_metadata:
+        logger.info(
+            "Citations detected in response",
+            extra={
+                "event_type": "citations_found",
+                "request_id": request_id,
+                "model": model,
+                "citation_count": len(candidate.citation_metadata.citations)
+            }
+        )
+
+# Enhanced monitored generation with safety
+def safe_monitored_generate_content(prompt: str, 
+                                  model: str = "gemini-2.5-flash",
+                                  safety_settings: Optional[list] = None) -> Dict[str, Any]:
+    """Generate content with safety monitoring."""
+    
+    request_id = f"req_{int(time.time() * 1000)}"
+    
+    try:
+        client = genai.Client()
+        
+        # Configure safety settings if provided
+        generate_config = {
+            "model": model,
+            "contents": prompt
+        }
+        
+        if safety_settings:
+            generate_config["safety_settings"] = safety_settings
+        
+        response = client.models.generate_content(**generate_config)
+        
+        # Monitor safety attributes
+        monitor_safety_attributes(response, request_id, model)
+        
+        # Extract and monitor usage
+        monitor = TokenUsageMonitor(PROJECT_ID)
+        usage = response.usage_metadata
+        monitor.log_token_usage(
+            model=model,
+            prompt_tokens=usage.prompt_token_count,
+            candidate_tokens=usage.candidates_token_count,
+            total_tokens=usage.total_token_count,
+            request_id=request_id
+        )
+        
+        return {
+            "text": response.text,
+            "safety_ratings": [
+                {
+                    "category": rating.category,
+                    "probability": rating.probability,
+                    "blocked": rating.blocked
                 }
-            )
-            raise
+                for rating in (response.candidates[0].safety_ratings if response.candidates else [])
+            ],
+            "finish_reason": response.candidates[0].finish_reason if response.candidates else None,
+            "request_id": request_id
+        }
+        
+    except Exception as e:
+        logger.error(
+            "Safe generation failed",
+            extra={
+                "event_type": "safe_generation_error",
+                "request_id": request_id,
+                "error": str(e)
+            }
+        )
+        raise
 ```
 
-#### 4. **Correlate logs and traces** using trace IDs
+### 3. Multi-Modal Request Monitoring
+
+Monitor requests that include text, images, video, and audio:
 
 ```python
-import logging
-from opentelemetry import trace
-
-class TraceContextFormatter(logging.Formatter):
-    def format(self, record):
-        # Add trace context to log records
-        span = trace.get_current_span()
-        if span:
-            trace_id = span.get_span_context().trace_id
-            span_id = span.get_span_context().span_id
-            record.trace_id = f"{trace_id:032x}"
-            record.span_id = f"{span_id:016x}"
-
-        return super().format(record)
-
-# Configure logging with trace context
-formatter = TraceContextFormatter(
-    '%(asctime)s - %(name)s - %(levelname)s - [trace_id=%(trace_id)s] - %(message)s'
-)
-```
-
-#### 5. **Review dashboards regularly** to catch regressions early
-
-**Weekly Review Checklist:**
-
-- [ ] Check for error rate increases
-- [ ] Monitor latency trends (P95, P99)
-- [ ] Review token usage patterns for cost optimization
-- [ ] Validate that all tools are functioning correctly
-- [ ] Check for any new error patterns in logs
-
-#### 6. **Implement proper security boundaries** between agents
-
-```bash
-# Create separate service accounts for different agent types
-gcloud iam service-accounts create customer-service-agent-sa
-gcloud iam service-accounts create internal-tools-agent-sa
-
-# Grant minimal required permissions
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:customer-service-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
-    --role="roles/aiplatform.user"
-```
-
-#### 7. **Use structured logging** for machine-parseable logs
-
-```python
-import json
-import logging
-from typing import Dict, Any
-
-def structured_log(level: str, message: str, **kwargs: Any) -> None:
-    log_entry = {
-        "timestamp": time.time(),
-        "level": level,
-        "message": message,
-        "service": "adk-agent",
-        **kwargs
-    }
-    print(json.dumps(log_entry))
-
-# Usage
-structured_log(
-    "INFO",
-    "Request processed",
-    request_id="req-123",
-    duration_ms=1500,
-    tokens_used=200
-)
-```
-
-#### 8. **Monitor token usage** to control costs
-
-```python
-def log_token_usage(model: str, prompt_tokens: int, completion_tokens: int, request_id: str):
-    total_tokens = prompt_tokens + completion_tokens
-
-    # Log for analysis
+def monitor_multimodal_request(request_parts: list, 
+                              response, 
+                              request_id: str, 
+                              model: str) -> None:
+    """Monitor multi-modal request characteristics."""
+    
+    # Analyze input modalities
+    modalities = []
+    total_size = 0
+    
+    for part in request_parts:
+        if hasattr(part, 'text') and part.text:
+            modalities.append("text")
+        elif hasattr(part, 'inline_data') and part.inline_data:
+            modalities.append(part.inline_data.mime_type.split('/')[0])
+            # Estimate size from base64 data
+            if hasattr(part.inline_data, 'data'):
+                total_size += len(part.inline_data.data) * 3 / 4  # Base64 to bytes
+        elif hasattr(part, 'file_data') and part.file_data:
+            modalities.append(part.file_data.mime_type.split('/')[0])
+    
+    unique_modalities = list(set(modalities))
+    
     logger.info(
-        "Token usage recorded",
+        "Multi-modal request processed",
         extra={
+            "event_type": "multimodal_request",
             "request_id": request_id,
             "model": model,
-            "prompt_tokens": prompt_tokens,
-            "completion_tokens": completion_tokens,
-            "total_tokens": total_tokens
+            "modalities": unique_modalities,
+            "modality_count": len(unique_modalities),
+            "total_parts": len(request_parts),
+            "estimated_size_bytes": total_size,
+            "is_multimodal": len(unique_modalities) > 1
         }
     )
-
-    # Create custom metric
-    create_token_usage_metric(model, total_tokens)
-
-    # Alert if usage is high
-    if total_tokens > 10000:
+    
+    # Monitor for large requests
+    if total_size > 10 * 1024 * 1024:  # 10MB threshold
         logger.warning(
-            "High token usage detected",
-            extra={"request_id": request_id, "total_tokens": total_tokens}
+            "Large multi-modal request detected",
+            extra={
+                "event_type": "large_multimodal_request",
+                "request_id": request_id,
+                "estimated_size_mb": total_size / (1024 * 1024),
+                "modalities": unique_modalities
+            }
         )
+
+def monitored_multimodal_generate(parts: list, 
+                                model: str = "gemini-2.5-flash") -> Dict[str, Any]:
+    """Generate content from multi-modal input with monitoring."""
+    
+    request_id = f"mm_req_{int(time.time() * 1000)}"
+    start_time = time.time()
+    
+    try:
+        client = genai.Client()
+        
+        response = client.models.generate_content(
+            model=model,
+            contents=parts
+        )
+        
+        # Monitor the multi-modal request
+        monitor_multimodal_request(parts, response, request_id, model)
+        
+        # Standard monitoring
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.info(
+            "Multi-modal generation completed",
+            extra={
+                "event_type": "multimodal_completion",
+                "request_id": request_id,
+                "model": model,
+                "duration_ms": duration_ms,
+                "response_length": len(response.text) if response.text else 0
+            }
+        )
+        
+        return {
+            "text": response.text,
+            "request_id": request_id,
+            "duration_ms": duration_ms
+        }
+        
+    except Exception as e:
+        duration_ms = (time.time() - start_time) * 1000
+        
+        logger.error(
+            "Multi-modal generation failed",
+            extra={
+                "event_type": "multimodal_error",
+                "request_id": request_id,
+                "model": model,
+                "duration_ms": duration_ms,
+                "error": str(e)
+            }
+        )
+        raise
 ```
 
-### Observability Security Best Practices
+### 4. Dynamic Shared Quota (DSQ) Monitoring
 
-#### Identity and Access Management
-
-1. **Use dedicated service accounts** for each agent type
-2. **Apply principle of least privilege** - grant only necessary permissions
-3. **Rotate service account keys** regularly (or use Workload Identity)
-4. **Monitor service account usage** for unusual patterns
-
-#### Data Protection
-
-1. **Redact sensitive information** from logs and traces
-2. **Use Secret Manager** for API keys and credentials
-3. **Enable audit logging** for all security-related events
-4. **Implement data retention policies** for compliance
-
-#### Network Security
-
-1. **Use VPC Service Controls** for sensitive workloads
-2. **Implement IP allowlisting** where appropriate
-3. **Enable Private Google Access** for internal communications
-4. **Monitor network traffic** for anomalies
-
-### Performance Optimization
-
-#### Monitoring Performance
+Monitor quota usage for models that use Dynamic Shared Quota:
 
 ```python
-# Monitor key performance indicators
-def track_performance_metrics(request_id: str, start_time: float):
-    duration = time.time() - start_time
+import requests
+from google.auth import default
+from google.auth.transport.requests import Request
 
-    # Log performance data
+class DSQMonitor:
+    def __init__(self, project_id: str):
+        self.project_id = project_id
+        self.credentials, _ = default()
+        
+    def monitor_quota_usage(self, model: str, request_count: int = 1) -> None:
+        """Monitor quota usage for DSQ-enabled models."""
+        
+        # List of DSQ-enabled models (as of 2025)
+        dsq_models = [
+            "gemini-2.5-flash",
+            "gemini-2.5-pro", 
+            "gemini-2.0-flash",
+            "gemini-2.0-flash-lite",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash"
+        ]
+        
+        if model in dsq_models:
+            logger.info(
+                "DSQ model usage tracked",
+                extra={
+                    "event_type": "dsq_usage",
+                    "model": model,
+                    "request_count": request_count,
+                    "quota_type": "dynamic_shared",
+                    "timestamp": time.time()
+                }
+            )
+        else:
+            logger.info(
+                "Standard quota model usage tracked",
+                extra={
+                    "event_type": "standard_quota_usage", 
+                    "model": model,
+                    "request_count": request_count,
+                    "quota_type": "standard",
+                    "timestamp": time.time()
+                }
+            )
+    
+    def get_quota_status(self) -> Dict[str, Any]:
+        """Get current quota status (requires appropriate permissions)."""
+        try:
+            # Refresh credentials
+            self.credentials.refresh(Request())
+            
+            # This is a simplified example - actual implementation would use
+            # the appropriate Vertex AI APIs to check quota status
+            return {
+                "status": "monitored",
+                "timestamp": time.time(),
+                "note": "Use Cloud Monitoring for detailed quota metrics"
+            }
+        except Exception as e:
+            logger.error(f"Failed to get quota status: {e}")
+            return {"error": str(e)}
+```
+
+### 5. Function Calling Monitoring
+
+Monitor function calling and tool usage patterns:
+
+```python
+def monitor_function_calling(response, request_id: str, model: str, functions_declared: list) -> None:
+    """Monitor function calling behavior."""
+    
+    if not response.candidates:
+        return
+        
+    candidate = response.candidates[0]
+    
+    # Check for function calls in the response
+    function_calls = []
+    if hasattr(candidate, 'content') and candidate.content.parts:
+        for part in candidate.content.parts:
+            if hasattr(part, 'function_call') and part.function_call:
+                function_calls.append({
+                    "name": part.function_call.name,
+                    "args_count": len(part.function_call.args) if part.function_call.args else 0
+                })
+    
     logger.info(
-        "Performance metrics",
+        "Function calling analysis",
         extra={
+            "event_type": "function_calling",
             "request_id": request_id,
-            "total_duration_ms": duration * 1000,
-            "performance_grade": get_performance_grade(duration)
+            "model": model,
+            "functions_declared": len(functions_declared),
+            "functions_called": len(function_calls),
+            "function_calls": function_calls,
+            "function_usage_rate": len(function_calls) / len(functions_declared) if functions_declared else 0
         }
     )
+    
+    # Alert on unexpected function usage patterns
+    if len(function_calls) > 5:
+        logger.warning(
+            "High function call volume",
+            extra={
+                "event_type": "high_function_usage",
+                "request_id": request_id,
+                "function_call_count": len(function_calls)
+            }
+        )
 
-def get_performance_grade(duration: float) -> str:
-    if duration < 1.0:
-        return "excellent"
-    elif duration < 3.0:
-        return "good"
-    elif duration < 10.0:
-        return "acceptable"
-    else:
-        return "needs_improvement"
+def monitored_function_calling_generate(prompt: str,
+                                      functions: list,
+                                      model: str = "gemini-2.5-flash") -> Dict[str, Any]:
+    """Generate content with function calling monitoring."""
+    
+    request_id = f"fc_req_{int(time.time() * 1000)}"
+    
+    try:
+        client = genai.Client()
+        
+        response = client.models.generate_content(
+            model=model,
+            contents=prompt,
+            tools=[{"function_declarations": functions}]
+        )
+        
+        # Monitor function calling
+        monitor_function_calling(response, request_id, model, functions)
+        
+        # Standard monitoring
+        monitor = TokenUsageMonitor(PROJECT_ID)
+        usage = response.usage_metadata
+        monitor.log_token_usage(
+            model=model,
+            prompt_tokens=usage.prompt_token_count,
+            candidate_tokens=usage.candidates_token_count,
+            total_tokens=usage.total_token_count,
+            request_id=request_id,
+            application="function_calling"
+        )
+        
+        return {
+            "response": response,
+            "request_id": request_id
+        }
+        
+    except Exception as e:
+        logger.error(
+            "Function calling generation failed",
+            extra={
+                "event_type": "function_calling_error",
+                "request_id": request_id,
+                "error": str(e),
+                "functions_count": len(functions)
+            }
+        )
+        raise
 ```
 
-#### Optimization Strategies
+### 6. Generative AI Dashboards and Alerting
 
-1. **Cache frequently used data** to reduce latency
-2. **Optimize tool execution order** based on success rates
-3. **Implement request batching** where appropriate
-4. **Use connection pooling** for external API calls
-5. **Monitor and optimize memory usage** to prevent garbage collection pauses
+Create specific dashboards and alerts for Generative AI applications:
 
-### Operational Excellence
+#### Log-Based Metrics for Generative AI
 
-#### Monitoring Maturity Levels
+1. Go to [Log-based Metrics](https://console.cloud.google.com/logs/metrics)
+2. Create the following metrics:
 
-##### Level 1 - Basic (Quick Wins Path)
-
-- Built-in metrics collection
-- Basic tracing enabled
-- Standard logging configured
-- Manual dashboard reviews
-
-##### Level 2 - Intermediate
-
-- Custom metrics for business KPIs
-- Automated alerting policies
-- Log-based metrics configured
-- Weekly performance reviews
-
-##### Level 3 - Advanced (Production Path)
-
-- Full OpenTelemetry instrumentation
-- Comprehensive security monitoring
-- Automated anomaly detection
-- Continuous observability testing
-
-##### Level 4 - Expert
-
-- Predictive monitoring and alerting
-- Advanced correlation analysis
-- Custom observability tools
-- Cross-team observability standards
-
-#### Continuous Improvement
-
-1. **Regular observability reviews** (monthly)
-2. **Alert tuning** to reduce false positives
-3. **Dashboard optimization** based on user feedback
-4. **Tool performance benchmarking**
-5. **Cost optimization** for observability infrastructure
-
-## Observability for ADK Agents on Cloud Run
-
-When deploying ADK agents to Cloud Run instead of using Vertex AI Agent Engine directly, you need a different approach to observability. Cloud Run provides its own built-in monitoring capabilities while requiring some custom configuration for advanced tracing and metrics.
-
-### Key Differences in Observability Approach
-
-| Vertex AI Agent Engine               | Cloud Run Deployment                                      |
-| ------------------------------------ | --------------------------------------------------------- |
-| Built-in metric collection           | Built-in Cloud Run metrics with option for custom metrics |
-| Distributed tracing with simple flag | Automatic trace generation with optional custom spans     |
-| Automatic context propagation        | W3C trace context propagation header support              |
-| Uses Vertex AI service identity      | Requires custom service account configuration             |
-| Higher tracing sampling rate         | Limited to 0.1 requests per second per instance           |
-
-### 1. Metrics Collection for Cloud Run ADK Agents
-
-Cloud Run automatically provides built-in operational metrics without any configuration required:
-
-```python
-# Cloud Run built-in metrics (no code needed)
-# - Container CPU utilization
-# - Container memory utilization
-# - Request count and latencies
-# - Container instance count
-# - Maximum concurrent requests
-# - Sent/received bytes
-```
-
-For ADK-specific metrics (like token usage or tool execution counts), you have two options:
-
-1. **Use log-based metrics** (simpler approach)
-   - Structure your logs to include key metrics data
-   - Create log-based metrics in Cloud Monitoring
-2. **Deploy an OpenTelemetry Collector sidecar** (more powerful approach):
+**Token Usage Counter:**
 
 ```yaml
-# service.yaml for Cloud Run deployment with OpenTelemetry sidecar
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: adk-agent-service
-  annotations:
-    run.googleapis.com/launch-stage: BETA
-spec:
-  template:
-    metadata:
-      annotations:
-        run.googleapis.com/container-dependencies: "{app:[collector]}"
-    spec:
-      containers:
-        - image: gcr.io/PROJECT_ID/adk-agent:latest
-          name: app
-          env:
-            - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-              value: "http://localhost:4317"
-        - image: us-docker.pkg.dev/cloud-ops-agents-artifacts/google-cloud-opentelemetry-collector/otelcol-google:latest
-          name: collector
-          startupProbe:
-            httpGet:
-              path: /
-              port: 13133
-          # OpenTelemetry collector configuration
+Filter: jsonPayload.event_type="token_usage"
+Metric Type: Counter
+Labels: model, application
 ```
 
-### 2. Distributed Tracing for Cloud Run ADK Agents
+**High Token Usage Alerts:**
 
-Cloud Run automatically generates traces without any instrumentation required. The standard W3C trace context propagation header (`traceparent`) is automatically populated for Cloud Run requests.
+```yaml
+Filter: jsonPayload.event_type="high_token_usage" 
+Metric Type: Counter
+Labels: model, threshold_exceeded
+```
 
-**Important note:** Automatically generated traces in Cloud Run do not result in billing charges. Cloud Run samples traces at a maximum rate of 0.1 requests per second for each instance (one request every 10 seconds).
+**Safety Filtering Counter:**
 
-If you need to add custom spans to measure specific ADK operations (optional):
+```yaml
+Filter: jsonPayload.event_type="content_blocked"
+Metric Type: Counter  
+Labels: model, finish_reason, safety_concern
+```
+
+**Multi-modal Request Counter:**
+
+```yaml
+Filter: jsonPayload.event_type="multimodal_request"
+Metric Type: Counter
+Labels: modalities, is_multimodal
+```
+
+#### Recommended Alerting Policies
+
+1. **High Token Usage**: Alert when hourly token usage exceeds budget
+2. **Increased Safety Filtering**: Alert when content blocking rate > 5%
+3. **Model Error Rate**: Alert when error rate > 2% over 5 minutes
+4. **High Latency**: Alert when P95 latency > 10 seconds
+5. **Cost Threshold**: Alert when daily costs exceed budget
+
+### 7. Cost Optimization Strategies
+
+Implement cost optimization based on monitoring data:
 
 ```python
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-# Configure tracer for ADK agent on Cloud Run
-tracer_provider = TracerProvider()
-tracer_provider.add_span_processor(
-    BatchSpanProcessor(OTLPSpanExporter(endpoint="localhost:4317"))
-)
-trace.set_tracer_provider(tracer_provider)
-tracer = trace.get_tracer(__name__)
-
-# Instrument ADK agent requests with custom spans
-def handle_request(request):
-    with tracer.start_as_current_span("adk_agent_request") as span:
-        span.set_attribute("user_query", request.query)
-
-        # ADK agent processing
-        result = process_with_adk(request)
-
-        span.set_attribute("response_tokens", len(result.text))
-        return result
+class CostOptimizer:
+    def __init__(self):
+        self.cost_thresholds = {
+            "daily": 100.0,    # Daily budget in USD
+            "hourly": 10.0,    # Hourly budget in USD
+            "per_request": 0.50 # Max cost per request
+        }
+    
+    def check_cost_optimization(self, tokens: int, model: str) -> Dict[str, Any]:
+        """Check if request fits within cost constraints."""
+        
+        estimated_cost = self._estimate_cost(model, tokens)
+        
+        recommendations = []
+        
+        # Check if we should suggest a cheaper model
+        if estimated_cost > self.cost_thresholds["per_request"]:
+            if model.startswith("gemini-2.5-pro"):
+                recommendations.append({
+                    "type": "model_downgrade",
+                    "suggestion": "Consider using gemini-2.5-flash for this request",
+                    "potential_savings": estimated_cost * 0.9  # Flash is ~90% cheaper
+                })
+        
+        # Check token optimization
+        if tokens > 100000:
+            recommendations.append({
+                "type": "token_optimization",
+                "suggestion": "Consider breaking large requests into smaller chunks",
+                "current_tokens": tokens,
+                "recommended_max": 50000
+            })
+        
+        return {
+            "current_cost": estimated_cost,
+            "within_budget": estimated_cost <= self.cost_thresholds["per_request"],
+            "recommendations": recommendations
+        }
+    
+    def _estimate_cost(self, model: str, tokens: int) -> float:
+        """Estimate cost based on current pricing."""
+        # Update these based on current Vertex AI pricing
+        rates = {
+            "gemini-2.5-flash": 0.075,
+            "gemini-2.5-pro": 1.25,
+            "gemini-2.0-flash": 0.075,
+            "gemini-2.0-flash-lite": 0.075
+        }
+        
+        rate = rates.get(model, 0.075)
+        return (tokens / 1_000_000) * rate
 ```
 
-**Important:** Custom spans created through instrumentation will incur standard Cloud Trace billing charges. You only need to add this custom instrumentation if you require detailed timing information about specific operations within your ADK agent.
+### 8. Integration with Existing Monitoring Stack
 
-### 3. Service Identity and Security
-
-When running on Cloud Run, ADK agents use Cloud Run's service identity to access Google APIs. There are two types of service accounts that can be used:
-
-1. **User-managed service account (recommended)**: Create a dedicated service account with minimal permissions for your ADK agent.
-2. **Compute Engine default service account**: Automatically provided but often has more permissions than needed.
-
-**Important security recommendation**: Avoid using the default service account for production deployments. Instead, create a user-managed service account with only the necessary permissions:
-
-```bash
-# Create a dedicated service account for your ADK agent
-gcloud iam service-accounts create adk-agent-sa \
-    --description="Service account for ADK agent" \
-    --display-name="ADK Agent Service Account"
-
-# Grant necessary permissions to the service account
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:adk-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
-    --role="roles/monitoring.metricWriter"
-
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:adk-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
-    --role="roles/cloudtrace.agent"
-
-# For ADK-specific permissions (e.g., for Vertex AI model access)
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:adk-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
-    --role="roles/aiplatform.user"
-```
-
-Then specify this service account when deploying your Cloud Run service:
-
-```bash
-gcloud run deploy adk-agent-service \
-    --image=gcr.io/PROJECT_ID/adk-agent:latest \
-    --service-account=adk-agent-sa@$PROJECT_ID.iam.gserviceaccount.com
-```
-
-### 4. Structured Logging for Cloud Run ADK Agents
-
-Implement structured logging that works well with Cloud Logging and enables creating log-based metrics:
+If you have an existing monitoring stack, integrate Generative AI metrics:
 
 ```python
-import logging
-import json
-import os
+# Example integration with Prometheus/Grafana
+from prometheus_client import Counter, Histogram, Gauge
 import time
-import uuid
-import google.cloud.logging
-from flask import request
 
-# Optional: Configure Cloud Logging client
-client = google.cloud.logging.Client()
-client.setup_logging()
+# Prometheus metrics
+genai_requests_total = Counter(
+    'genai_requests_total',
+    'Total Generative AI requests',
+    ['model', 'application', 'status']
+)
 
-# Configure structured logging for Cloud Run
-class StructuredLogFormatter(logging.Formatter):
-    def format(self, record):
-        log_record = {
-            "severity": record.levelname,
-            "message": super().format(record),
-            "time": self.formatTime(record, self.datefmt),
-            "service": os.environ.get("K_SERVICE", "adk-agent"),
-            "revision": os.environ.get("K_REVISION", "unknown"),
-        }
+genai_tokens_total = Counter(
+    'genai_tokens_total', 
+    'Total tokens used',
+    ['model', 'token_type']  # prompt, candidate, total
+)
 
-        # Add trace context if available
-        trace_header = request.headers.get('X-Cloud-Trace-Context', '')
-        if trace_header:
-            trace_id = trace_header.split('/')[0]
-            log_record['logging.googleapis.com/trace'] = f"projects/{os.environ.get('GOOGLE_CLOUD_PROJECT')}/traces/{trace_id}"
+genai_request_duration = Histogram(
+    'genai_request_duration_seconds',
+    'Request duration in seconds',
+    ['model']
+)
 
-        # Add any extra attributes from the record
-        if hasattr(record, 'extras'):
-            for key, value in record.extras.items():
-                log_record[key] = value
+genai_cost_total = Counter(
+    'genai_cost_total_usd',
+    'Total estimated cost in USD',
+    ['model', 'application']
+)
 
-        return json.dumps(log_record)
-
-# Set up logger
-logger = logging.getLogger("adk_agent")
-handler = logging.StreamHandler()
-handler.setFormatter(StructuredLogFormatter())
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
-
-# Example usage with context information for observability
-def log_adk_event(event_type, details, trace_id=None):
-    request_id = str(uuid.uuid4())
-    logger.info(
-        f"ADK Event: {event_type}",
-        extra={
-            "extras": {
-                "event_type": event_type,
-                "request_id": request_id,
-                "details": details,
-                "trace_id": trace_id,
-                "timestamp_ms": int(time.time() * 1000)
-            }
-        }
-    )
-    return request_id
+def export_to_prometheus(model: str, 
+                        duration: float,
+                        prompt_tokens: int,
+                        candidate_tokens: int, 
+                        total_tokens: int,
+                        estimated_cost: float,
+                        application: str = "default",
+                        status: str = "success") -> None:
+    """Export metrics to Prometheus."""
+    
+    genai_requests_total.labels(
+        model=model, 
+        application=application, 
+        status=status
+    ).inc()
+    
+    genai_tokens_total.labels(model=model, token_type="prompt").inc(prompt_tokens)
+    genai_tokens_total.labels(model=model, token_type="candidate").inc(candidate_tokens)
+    genai_tokens_total.labels(model=model, token_type="total").inc(total_tokens)
+    
+    genai_request_duration.labels(model=model).observe(duration)
+    
+    genai_cost_total.labels(model=model, application=application).inc(estimated_cost)
 ```
 
-This structured logging format:
+---
 
-- Automatically includes service name and revision
-- Links logs to traces when available
-- Includes consistent fields for filtering and creating log-based metrics
-- Works with Cloud Logging's built-in JSON parsing
+## Best Practices for All Deployments
 
-### 5. Viewing and Dashboarding Cloud Run ADK Agent Metrics
+Implementing comprehensive observability for Generative AI applications requires following established best practices that ensure reliability, cost efficiency, and responsible AI usage. This section outlines essential practices for monitoring, alerting, and optimizing your Vertex AI Generative AI implementations.
 
-Access your metrics through Google Cloud Monitoring:
+### 1. Monitoring Strategy
 
-1. Go to [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)
-2. Select resource type: `Cloud Run Revision`
-3. Browse available metrics:
-   - Request count
-   - Request latencies
-   - Container CPU utilization
-   - Container memory utilization
-   - Instance count
-   - Network sent/received bytes
+#### Set Up Comprehensive Metrics Collection
 
-For custom metrics created with OpenTelemetry:
+- **Token Usage Monitoring**: Track input and output tokens across all models
+- **Latency Tracking**: Monitor P50, P95, and P99 response times
+- **Error Rate Monitoring**: Track 4xx and 5xx errors, including quota exceeded errors
+- **Cost Tracking**: Monitor spend across projects, models, and regions
+- **Safety Filter Monitoring**: Track safety filter activations and blocked requests
 
-1. Select resource type: `Prometheus Target`
-2. Browse your custom metrics (like token usage, tool execution counts, etc.)
+```yaml
+# Example monitoring configuration
+monitoring:
+  metrics:
+    - vertex_ai_prediction_count
+    - vertex_ai_prediction_latency
+    - vertex_ai_token_count
+    - vertex_ai_error_count
+    - vertex_ai_safety_filter_count
+  aggregation_period: 60s
+  retention_period: 90d
+```
 
-For log-based metrics:
+#### Implement Proactive Alerting
 
-1. Look under the "Logging Metrics" section in Metrics Explorer
-2. Select the log-based metrics you've created
+- **Quota Alerts**: Set alerts at 80% and 95% of quota limits
+- **Cost Alerts**: Configure budget alerts with multiple thresholds
+- **Error Rate Alerts**: Alert on error rates exceeding 5%
+- **Latency Alerts**: Alert on P95 latency exceeding SLA thresholds
+- **Safety Alerts**: Monitor unusual safety filter activation patterns
 
-Create custom dashboards specifically for ADK agent monitoring:
+### 2. Cost Optimization and Control
 
-1. Go to [Dashboards](https://console.cloud.google.com/monitoring/dashboards)
-2. Create a new dashboard with these recommended panels:
+#### Dynamic Shared Quota (DSQ) Management
 
-   **Operational Health:**
+- **Enable DSQ**: Use Dynamic Shared Quota for better resource utilization
+- **Monitor Quota Efficiency**: Track quota utilization across regions
+- **Implement Failover**: Configure multi-region deployments for quota exhaustion scenarios
 
-   - Request volume (requests/min)
-   - Error rate (% of total requests)
-   - P50/P95/P99 latency
-   - Instance count
+```python
+# Example quota monitoring
+def monitor_quota_usage():
+    """Monitor and alert on quota usage patterns."""
+    quota_usage = get_quota_metrics()
+    for region, usage in quota_usage.items():
+        if usage['utilization'] > 0.8:
+            send_alert(f"High quota usage in {region}: {usage['utilization']:.1%}")
+```
 
-   **ADK-Specific Metrics:**
+#### Cost Control Mechanisms
 
-   - Token usage by model
-   - Tool execution count by tool type
-   - Success rate by tool
-   - Response generation time
+- **Budget Controls**: Set project-level and model-specific budgets
+- **Rate Limiting**: Implement application-level rate limiting
+- **Model Selection**: Choose appropriate model sizes for your use cases
+- **Batch Processing**: Use batch requests when possible to reduce costs
 
-   **Resource Utilization:**
+### 3. Safety and Responsible AI
 
-   - CPU utilization
-   - Memory utilization
-   - Network traffic
+#### Content Safety Monitoring
 
-You can also set up alerts based on these metrics, for example:
+- **Safety Filter Analytics**: Analyze patterns in blocked content
+- **Bias Detection**: Monitor for potential bias in model outputs
+- **Content Classification**: Track content categories and safety scores
+- **Audit Trails**: Maintain comprehensive logs for compliance
 
-- High error rates (>5%)
-- Elevated P95 latency (>2s)
-- Excessive token usage
-- Abnormal tool failure rates
+```python
+# Example safety monitoring
+def analyze_safety_patterns():
+    """Analyze safety filter patterns for insights."""
+    safety_logs = query_safety_logs(days=7)
+    patterns = {
+        'harassment': count_category(safety_logs, 'HARASSMENT'),
+        'hate_speech': count_category(safety_logs, 'HATE_SPEECH'),
+        'dangerous_content': count_category(safety_logs, 'DANGEROUS_CONTENT')
+    }
+    return patterns
+```
+
+#### Responsible AI Practices
+
+- **Human Review Loops**: Implement human oversight for high-risk applications
+- **Model Evaluation**: Regularly evaluate model performance and fairness
+- **Documentation**: Maintain model cards and usage documentation
+- **Incident Response**: Have clear procedures for handling AI-related incidents
+
+### 4. Performance Optimization
+
+#### Multi-Modal Request Optimization
+
+- **Image Processing**: Optimize image sizes and formats for vision models
+- **Audio Processing**: Use appropriate audio formats and compression
+- **Batch Multimodal**: Group multimodal requests efficiently
+- **Caching Strategies**: Implement intelligent caching for repeated requests
+
+#### Model Performance Tuning
+
+- **Parameter Optimization**: Tune temperature, top-p, and other parameters
+- **Prompt Engineering**: Optimize prompts for better performance and cost
+- **Model Comparison**: A/B test different models for your use cases
+- **Response Caching**: Cache common responses to reduce API calls
+
+### 5. Error Handling and Resilience
+
+#### Robust Error Handling
+
+- **Retry Logic**: Implement exponential backoff for transient errors
+- **Circuit Breakers**: Prevent cascade failures with circuit breaker patterns
+- **Graceful Degradation**: Handle quota exceeded and rate limit errors
+- **Error Classification**: Categorize and track different error types
+
+```python
+# Example resilient request handling
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type(QuotaExceededError)
+)
+async def make_resilient_request(prompt, model="gemini-1.5-pro"):
+    """Make a resilient request with proper error handling."""
+    try:
+        response = await vertex_ai_client.generate_content(
+            prompt=prompt,
+            model=model,
+            safety_settings=safety_settings
+        )
+        log_successful_request(model, len(prompt))
+        return response
+    except QuotaExceededError as e:
+        log_quota_exceeded(model, e)
+        raise
+    except Exception as e:
+        log_error(model, e)
+        raise
+```
+
+### 6. Dashboard and Visualization
+
+#### Essential Dashboards
+
+- **Executive Dashboard**: High-level metrics for business stakeholders
+- **Operations Dashboard**: Real-time system health and performance
+- **Cost Dashboard**: Detailed cost breakdown and trends
+- **Safety Dashboard**: Content safety and responsible AI metrics
+
+#### Key Visualizations
+
+- **Token Usage Trends**: Track token consumption over time
+- **Model Performance**: Compare latency and accuracy across models
+- **Geographic Usage**: Monitor usage patterns across regions
+- **Error Analysis**: Visualize error patterns and root causes
+
+### 7. Compliance and Governance
+
+#### Data Governance
+
+- **Data Lineage**: Track data flow through your AI pipeline
+- **Access Controls**: Implement proper IAM for AI resources
+- **Audit Logging**: Maintain comprehensive audit trails
+- **Data Retention**: Follow data retention policies for AI interactions
+
+#### Compliance Monitoring
+
+- **Regulatory Compliance**: Monitor for industry-specific requirements
+- **Privacy Protection**: Ensure PII handling compliance
+- **Content Policies**: Enforce organizational content policies
+- **Model Governance**: Track model versions and deployments
+
+### 8. Continuous Improvement
+
+#### Performance Analysis
+
+- **Usage Pattern Analysis**: Identify optimization opportunities
+- **Cost Trend Analysis**: Track cost efficiency improvements
+- **Quality Metrics**: Monitor output quality and user satisfaction
+- **A/B Testing**: Continuously test model and parameter improvements
+
+#### Feedback Loops
+
+- **User Feedback Integration**: Collect and analyze user feedback
+- **Model Drift Detection**: Monitor for model performance degradation
+- **Continuous Training**: Update monitoring based on new patterns
+- **Documentation Updates**: Keep monitoring documentation current
+
+### Implementation Checklist
+
+- [ ] Set up comprehensive metrics collection for all Generative AI models
+- [ ] Configure proactive alerting for quotas, costs, errors, and performance
+- [ ] Implement Dynamic Shared Quota (DSQ) for optimal resource utilization
+- [ ] Enable safety monitoring and responsible AI practices
+- [ ] Set up robust error handling with retry logic and circuit breakers
+- [ ] Create essential dashboards for different stakeholder groups
+- [ ] Implement compliance monitoring and audit trails
+- [ ] Establish continuous improvement processes and feedback loops
+- [ ] Document all monitoring procedures and escalation processes
+- [ ] Train teams on monitoring tools and incident response procedures
+
+These best practices provide a comprehensive foundation for observing and optimizing Generative AI applications on Vertex AI, ensuring they operate efficiently, safely, and in compliance with organizational and regulatory requirements.
 
 ---
 
@@ -1422,16 +1867,37 @@ Contact Google Cloud Support if you encounter:
 
 ### Official Google Cloud Documentation
 
+#### Vertex AI Generative AI
+
+- [Vertex AI Generative AI Overview](https://cloud.google.com/vertex-ai/generative-ai/docs)
+- [Generate content with Gemini API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference)
+- [Generative AI quotas and limits](https://cloud.google.com/vertex-ai/generative-ai/docs/quotas)
+- [Dynamic Shared Quota (DSQ)](https://cloud.google.com/vertex-ai/generative-ai/docs/dynamic-shared-quota)
+- [Gemini model versions and lifecycle](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versioning)
+- [Responsible AI practices](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/responsible-ai)
+- [Configure safety attributes](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes)
+
+#### Vertex AI Agent Engine & ADK
+
 - [Vertex AI Agent Engine Monitoring](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/monitoring)
 - [Vertex AI Agent Engine Tracing](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/tracing)
-- [Cloud Trace Python Setup](https://cloud.google.com/trace/docs/setup/python)
-- [OpenTelemetry Python](https://opentelemetry.io/docs/languages/python/)
 - [Cloud Logging for Agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/logging)
 - [Managing Access for Deployed Agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/access)
-- [Google Cloud IAM Best Practices](https://cloud.google.com/iam/docs/using-iam-securely)
+- [ADK API Reference](https://google.github.io/adk-docs/api-reference/)
+
+#### Observability and Monitoring
+
+- [Cloud Trace Python Setup](https://cloud.google.com/trace/docs/setup/python)
+- [OpenTelemetry Python](https://opentelemetry.io/docs/languages/python/)
+- [Google Cloud Platform Logs](https://cloud.google.com/logging/docs/api/platform-logs#vertex-ai-api)
+- [Cloud Monitoring Custom Metrics](https://cloud.google.com/monitoring/custom-metrics)
 - [Cloud Run Monitoring](https://cloud.google.com/run/docs/monitoring)
 - [Cloud Run Distributed Tracing](https://cloud.google.com/run/docs/trace)
 - [Cloud Run OpenTelemetry Integration](https://cloud.google.com/run/docs/tutorials/custom-metrics-opentelemetry-sidecar)
+
+#### Security and IAM
+
+- [Google Cloud IAM Best Practices](https://cloud.google.com/iam/docs/using-iam-securely)
 - [Cloud Run Service Identity](https://cloud.google.com/run/docs/securing/service-identity)
 - [OpenTelemetry Semantic Conventions for GenAI](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
 
@@ -1440,12 +1906,14 @@ Contact Google Cloud Support if you encounter:
 - [OpenTelemetry Community](https://opentelemetry.io/community/)
 - [Google Cloud Community](https://cloud.google.com/community)
 - [Stack Overflow - Google Cloud](https://stackoverflow.com/questions/tagged/google-cloud-platform)
+- [Stack Overflow - Vertex AI](https://stackoverflow.com/questions/tagged/google-vertex-ai)
 
 ### Training and Certification
 
 - [Google Cloud Observability Certification](https://cloud.google.com/learn/certification)
 - [Coursera - Site Reliability Engineering](https://www.coursera.org/learn/site-reliability-engineering-slos)
 - [OpenTelemetry Bootcamp](https://opentelemetry.io/docs/getting-started/)
+- [Vertex AI Generative AI Learning Path](https://cloud.google.com/learn/training/ai-ml)
 
 ---
 
