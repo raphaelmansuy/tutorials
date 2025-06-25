@@ -411,13 +411,13 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
 
-    # Log the request start
+    # Log the request start, including the prompt
     logger.info("Gemini request started", extra={
         "json_fields": {
             "request_id": request_id,
-            "model": model,
-            "prompt_length": len(prompt),
-            "event_type": "request_start"
+            "event_type": "request_start",
+            "prompt": prompt,
+            "model": model
         }
     })
 
@@ -427,29 +427,30 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
 
         duration_ms = (time.time() - start_time) * 1000
         usage = response.usage_metadata
+        completion = response.text
 
         # Log successful completion with structured data
         logger.info("Gemini request completed", extra={
             "json_fields": {
                 "request_id": request_id,
+                "event_type": "request_success",
                 "model": model,
-                "duration_ms": duration_ms,
-                "prompt_tokens": usage.prompt_token_count,
-                "candidate_tokens": usage.candidates_token_count,
+                "prompt": prompt,
+                "completion": completion,
                 "total_tokens": usage.total_token_count,
-                "cost_estimate_usd": (usage.total_token_count / 1_000_000) * 0.075,  # Flash pricing
-                "event_type": "request_success"
+                "prompt_tokens": usage.prompt_token_count,
+                "completion_tokens": usage.candidates_token_count,
+                "latency_ms": duration_ms,
+                "success": True
             }
         })
 
         return {
-            "text": response.text,
+            "text": completion,
+            "request_id": request_id,
             "usage": {
-                "prompt_tokens": usage.prompt_token_count,
-                "candidate_tokens": usage.candidates_token_count,
                 "total_tokens": usage.total_token_count
-            },
-            "request_id": request_id
+            }
         }
 
     except Exception as e:
@@ -458,10 +459,12 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
         logger.error("Gemini request failed", extra={
             "json_fields": {
                 "request_id": request_id,
+                "event_type": "request_error",
                 "model": model,
-                "duration_ms": duration_ms,
+                "prompt": prompt,
                 "error": str(e),
-                "event_type": "request_error"
+                "latency_ms": duration_ms,
+                "success": False
             }
         })
         raise
@@ -516,11 +519,13 @@ import time
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
 
 def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
     """Generate content with tracing and logging."""
     with tracer.start_as_current_span("gemini_generation") as span:
         span.set_attribute("model", model)
+        span.set_attribute("prompt", prompt)
         span.set_attribute("prompt_length", len(prompt))
 
         request_id = f"req_{int(time.time() * 1000)}"
@@ -532,16 +537,20 @@ def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
 
             duration_ms = (time.time() - start_time) * 1000
             usage = response.usage_metadata
+            completion = response.text
 
-            # Add span attributes
+            # Add span attributes, including the response
+            span.set_attribute("response_text", response.text)
             span.set_attribute("total_tokens", usage.total_token_count)
             span.set_attribute("duration_ms", duration_ms)
             span.set_attribute("success", True)
 
-            # Log with trace correlation
+            # Log with trace correlation, including prompt and response
             logger.info("Traced Gemini request completed", extra={
                 "json_fields": {
                     "request_id": request_id,
+                    "prompt": prompt,
+                    "response_text": response.text,
                     "total_tokens": usage.total_token_count,
                     "duration_ms": duration_ms,
                     "trace_id": format(span.get_span_context().trace_id, '032x')
@@ -785,7 +794,7 @@ Once you have foundational logging and tracing, the next step is to build a robu
 
 While standard logs and traces are powerful, custom metrics provide at-a-glance insights into the specific behaviors of your LLM application. Let's create custom metrics for token usage and latency.
 
-**a. Create Log-Based Metrics**
+#### a. Create Log-Based Metrics
 
 We can create metrics from the structured logs we set up earlier.
 
@@ -815,7 +824,7 @@ We can create metrics from the structured logs we set up earlier.
    - **Units:** `ms`
    - Click **Create Metric**.
 
-**b. Update `app.py` to Include New Metrics**
+#### b. Update `app.py` to Include New Metrics
 
 The `app.py` code provided in the "Create a Simple ADK Agent" section already includes the `total_tokens` and `latency_ms` fields in the structured log for successful requests. No changes are needed if you used that code.
 
@@ -838,7 +847,7 @@ Here is the relevant logging snippet from the `run_agent` function for reference
         return jsonify({"response": result})
 ```
 
-**c. Redeploy and Verify**
+#### c. Redeploy and Verify
 
 If you had an older version deployed, redeploy the agent to ensure the new log fields are being sent.
 
@@ -1112,14 +1121,14 @@ Beyond standard metrics, you should also monitor for issues specific to AI and L
 
 | Issue | Symptom | How to Fix |
 | :--- | :--- | :--- |
-| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check `gcloud config get-value project`. <br/> 2. Verify authentication with `gcloud auth list`. <br/> 3. Ensure the Cloud Logging API is enabled. |
-| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br/> 2. Check that the OTLP exporter is configured correctly. <br/> 3. For Cloud Run, ensure the container has egress network access. |
-| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the filter for the log-based metric is correct and matches your log entries. <br/> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) exactly matches the field in your JSON payload. <br/> 3. Wait 5-10 minutes for data to populate. |
-| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account or user running the code has the required IAM roles (e.g., `roles/logging.logWriter`, `roles/cloudtrace.agent`). <br/> 2. If using a service account on Cloud Run, check its permissions. |
+| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check project: `gcloud config get-value project`. <br> 2. Verify auth: `gcloud auth list`. <br> 3. Ensure Cloud Logging API is enabled. |
+| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br> 2. Check OTLP exporter configuration. <br> 3. For Cloud Run, ensure egress network access. |
+| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the metric's filter matches your log entries. <br> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) is exact. <br> 3. Wait 5-10 minutes for data to populate. |
+| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account/user has required IAM roles (`roles/logging.logWriter`, `roles/cloudtrace.agent`). <br> 2. Check the service account's permissions on Cloud Run. |
 
 ---
 
-## 🎉 Conclusion & Next Steps
+## 🏁 Conclusion
 
 Congratulations! You have successfully implemented a comprehensive observability solution for your Vertex AI and ADK applications. You now have the tools to monitor performance, control costs, debug issues, and scale with confidence.
 
