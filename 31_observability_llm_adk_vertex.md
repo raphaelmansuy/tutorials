@@ -94,10 +94,12 @@ Observability is essential for running production-grade AI applications built wi
 
 ## Observability Architecture: OpenTelemetry and Google Cloud
 
-When implementing observability for Vertex AI Generative AI applications, understanding the relationship between OpenTelemetry, direct API calls, and Google Cloud services is essential for effective instrumentation:
+When implementing observability for Vertex AI Generative AI applications, understanding the relationship between OpenTelemetry, direct API calls, and Google Cloud services is essential for effective instrumentation. Modern architectures also support exporting observability data to third-party platforms like Datadog using the OpenTelemetry Protocol (OTLP).
+
+### Core Architecture Overview
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph "Your Applications"
         APP[Direct Gemini API Calls]
         ADK[ADK Agent Code]
@@ -106,7 +108,7 @@ flowchart LR
 
     subgraph "Vertex AI Services"
         GENAI[Generative AI API]
-        ENGINE[Agent Engine]
+        ENGINE[Agent Engine] 
         MODEL[Gemini Models]
     end
 
@@ -138,6 +140,212 @@ flowchart LR
     style GENAI fill:#fff2cc,stroke:#d6b656
     style MODEL fill:#f8cecc,stroke:#b85450
 ```
+
+### Multi-Platform Observability with Datadog Integration
+
+For organizations using multiple observability platforms or seeking advanced analytics, OpenTelemetry enables seamless export to external systems like Datadog. This architecture provides flexibility while maintaining Google Cloud's native observability benefits:
+
+```mermaid
+flowchart TB
+    subgraph "Applications & Services"
+        APP[Direct Gemini API Calls]
+        ADK[ADK Agent Applications]
+        OTEL[OpenTelemetry SDK]
+    end
+
+    subgraph "OpenTelemetry Data Processing"
+        OTLP[OTLP Protocol]
+        COLLECTOR[OpenTelemetry Collector]
+        DDAGENT[Datadog Agent with OTLP]
+    end
+
+    subgraph "Google Cloud Observability"
+        GCM[Cloud Monitoring]
+        GCT[Cloud Trace] 
+        GCL[Cloud Logging]
+    end
+
+    subgraph "Datadog Platform"
+        DDM[Datadog Metrics]
+        DDT[Datadog APM/Traces]
+        DDL[Datadog Logs]
+        DDD[Datadog Dashboards]
+    end
+
+    subgraph "Vertex AI Services"
+        GENAI[Generative AI API]
+        MODEL[Gemini Models]
+    end
+
+    %% Application flows
+    APP --> GENAI
+    ADK --> GENAI
+    GENAI --> MODEL
+    
+    %% OpenTelemetry instrumentation
+    APP --> OTEL
+    ADK --> OTEL
+    OTEL --> OTLP
+
+    %% Dual export paths
+    OTLP --> GCM
+    OTLP --> GCT
+    OTLP --> GCL
+
+    %% Datadog export options
+    OTLP --> COLLECTOR
+    OTLP --> DDAGENT
+    COLLECTOR -->|Datadog Exporter| DDM
+    COLLECTOR -->|Datadog Exporter| DDT
+    COLLECTOR -->|Datadog Exporter| DDL
+    
+    DDAGENT -->|OTLP Ingestion| DDM
+    DDAGENT -->|OTLP Ingestion| DDT
+    DDAGENT -->|OTLP Ingestion| DDL
+
+    %% Native Google Cloud metadata
+    GENAI -->|Usage Metrics| GCM
+    MODEL -->|Safety Ratings| GCL
+
+    %% Visualization and analysis
+    DDM --> DDD
+    DDT --> DDD
+    DDL --> DDD
+
+    style OTEL fill:#f5f5ff,stroke:#9999ff
+    style OTLP fill:#e6f3ff,stroke:#4d94ff
+    style COLLECTOR fill:#fff2e6,stroke:#ff8800
+    style DDAGENT fill:#632ca6,stroke:#632ca6,color:#fff
+    style GCM fill:#e6f4ea,stroke:#5bb974
+    style GCT fill:#fef7e0,stroke:#fbbc04
+    style GCL fill:#e8f0fe,stroke:#4285f4
+    style DDM fill:#774aa4,stroke:#774aa4,color:#fff
+    style DDT fill:#774aa4,stroke:#774aa4,color:#fff
+    style DDL fill:#774aa4,stroke:#774aa4,color:#fff
+    style DDD fill:#632ca6,stroke:#632ca6,color:#fff
+```
+
+### Exporting to Datadog: Two Primary Approaches
+
+#### Approach 1: OpenTelemetry Collector with Datadog Exporter
+
+This approach uses the standard OpenTelemetry Collector with Datadog's exporter component:
+
+**Benefits:**
+
+- Complete vendor neutrality
+- Flexible data processing and transformations
+- Supports advanced sampling strategies
+- Works without Datadog Agent
+
+**Configuration Example:**
+
+```yaml
+# collector.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    send_batch_max_size: 100
+    send_batch_size: 10
+    timeout: 10s
+
+connectors:
+  datadog/connector:
+
+exporters:
+  datadog/exporter:
+    api:
+      site: datadoghq.com
+      key: ${env:DD_API_KEY}
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp, datadog/connector]
+      processors: [batch]
+      exporters: [datadog/exporter]
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [datadog/connector, datadog/exporter]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [datadog/exporter]
+```
+
+#### Approach 2: Datadog Agent with OTLP Ingestion
+
+This approach leverages the Datadog Agent's built-in OTLP support:
+
+**Benefits:**
+
+- Access to 850+ Datadog integrations
+- Fleet management via Datadog Fleet Automation
+- Live Container Monitoring and Network Monitoring
+- Unified agent for multiple data sources
+
+**Configuration Example:**
+
+```yaml
+# datadog.yaml
+otlp_config:
+  receiver:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  logs:
+    enabled: true
+
+logs_enabled: true
+```
+
+### Implementation Recommendations
+
+**For Google Cloud-first organizations:**
+
+- Start with native Google Cloud Observability
+- Add Datadog integration for advanced analytics or compliance requirements
+- Use Approach 2 (Datadog Agent) if you need additional integrations
+
+**For multi-cloud or Datadog-centric organizations:**
+
+- Use Approach 1 (OpenTelemetry Collector) for maximum flexibility
+- Maintain dual export to both platforms during transition periods
+- Leverage Datadog's unified service tagging for consistent labeling
+
+**Key Configuration Considerations:**
+
+- **Batch Processing:** Configure appropriate batch sizes (traces: 3.2MB limit, logs: 5MB limit, metrics: 500KB limit)
+- **Resource Attributes:** Use OpenTelemetry semantic conventions (`service.name`, `deployment.environment`, `service.version`)
+- **Correlation:** Ensure trace/log correlation by extracting `trace_id` and `span_id` in log processing
+- **Security:** Use environment variables for API keys and follow OpenTelemetry security best practices
+
+### Summary: Enhanced Observability Options
+
+The updated architecture provides comprehensive observability options for Vertex AI and ADK applications:
+
+**✅ Google Cloud Native:** Direct integration with Cloud Monitoring, Logging, and Trace for seamless GCP-first observability
+
+**✅ Multi-Platform Flexibility:** Export to Datadog using OpenTelemetry Protocol (OTLP) with two proven approaches:
+
+- **OpenTelemetry Collector + Datadog Exporter:** Maximum vendor neutrality and flexibility
+- **Datadog Agent + OTLP Ingestion:** Access to 850+ integrations and fleet management
+
+**✅ Unified Instrumentation:** Single OpenTelemetry SDK codebase works across all export destinations
+
+**✅ Enterprise-Ready:** Supports compliance requirements, advanced analytics, and multi-cloud architectures
+
+This approach enables organizations to start with Google Cloud's native observability while maintaining the flexibility to expand to enterprise observability platforms as needed.
 
 ## Understanding Observability: Metrics, Logs, and Traces
 
