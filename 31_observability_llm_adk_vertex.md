@@ -70,15 +70,15 @@ Observability is essential for running production-grade AI agents. With Google A
 
 ### Executive Summary
 
-| Feature | Quick Wins Path | Production Path |
-|---------|-----------------|-----------------|
-| **Setup Time** | 5 minutes | 2-4 hours |
-| **Monitoring** | Built-in metrics | Custom metrics + alerting |
-| **Tracing** | Basic distributed tracing | Advanced OpenTelemetry |
-| **Security** | Default permissions | Least privilege + audit logs |
-| **Maintenance** | Minimal | Requires monitoring team |
-| **Cost** | Low (built-in features) | Medium (custom metrics) |
-| **Best For** | Development, proof-of-concepts | Production, enterprise |
+| Feature         | Quick Wins Path                | Production Path              |
+| --------------- | ------------------------------ | ---------------------------- |
+| **Setup Time**  | 5 minutes                      | 2-4 hours                    |
+| **Monitoring**  | Built-in metrics               | Custom metrics + alerting    |
+| **Tracing**     | Basic distributed tracing      | Advanced OpenTelemetry       |
+| **Security**    | Default permissions            | Least privilege + audit logs |
+| **Maintenance** | Minimal                        | Requires monitoring team     |
+| **Cost**        | Low (built-in features)        | Medium (custom metrics)      |
+| **Best For**    | Development, proof-of-concepts | Production, enterprise       |
 
 ### Cost Considerations
 
@@ -89,45 +89,32 @@ Observability is essential for running production-grade AI agents. With Google A
 
 > **💡 Recommendation:** Start with Quick Wins Path for immediate value, then gradually implement Production Path features based on your specific needs.
 
+## Observability Architecture: OpenTelemetry and Google Cloud
+
+When implementing observability for ADK agents, understanding the relationship between OpenTelemetry and Google Cloud services is essential for effective instrumentation:
+
 ```mermaid
-flowchart TB
-    subgraph "ADK Observability Architecture"
-        style ADK fill:#e6f7ff,stroke:#1890ff,stroke-width:2px
+flowchart LR
+    subgraph "Your ADK Application"
+        APP[ADK Agent Code]
+        OTEL[OpenTelemetry SDK]
     end
 
-    subgraph "Quick Wins Path"
-        style QW fill:#f6ffed,stroke:#52c41a,stroke-width:2px
-        BM["Built-in Monitoring<br>Cloud Monitoring"]
-        DT["Distributed Tracing<br>enable_tracing=True"]
-        LG["Standard Logging<br>stdout/stderr"]
+    subgraph "Google Cloud Observability"
+        CM[Cloud Monitoring]
+        CT[Cloud Trace]
+        CL[Cloud Logging]
     end
 
-    subgraph "Production Path"
-        style PP fill:#fff2e8,stroke:#fa8c16,stroke-width:2px
-        CM["Custom Metrics<br>User-defined & Log-based"]
-        SD["Security & IAM<br>Least Privilege Access"]
-        AL["Audit Logging<br>Security Events"]
-        OT["OpenTelemetry<br>Custom Instrumentation"]
-        CI["Continuous Integration<br>Metrics Testing"]
-        AD["Alerting & Dashboards<br>Proactive Monitoring"]
-    end
+    APP --> OTEL
+    OTEL -->|Metrics| CM
+    OTEL -->|Traces| CT
+    OTEL -->|Logs| CL
 
-    User("User") --> ADKAgent("ADK Agent")
-    ADKAgent --> BM
-    ADKAgent --> DT
-    ADKAgent --> LG
-    
-    BM --> CM
-    DT --> OT
-    LG --> AL
-    
-    CM --> AD
-    OT --> AD
-    AL --> SD
-    SD --> CI
-    
-    classDef highlight fill:#f5222d,stroke:#f5222d,color:white,stroke-width:2px;
-    class ADKAgent highlight
+    style OTEL fill:#f5f5ff,stroke:#9999ff
+    style CM fill:#e6f4ea,stroke:#5bb974
+    style CT fill:#fef7e0,stroke:#fbbc04
+    style CL fill:#e8f0fe,stroke:#4285f4
 ```
 
 ## Understanding Observability: Metrics, Logs, and Traces
@@ -142,7 +129,7 @@ Before diving into implementation, let's understand the three pillars of observa
 - Performance monitoring
 - Resource utilization
 - Business KPIs
-- Alerting thresholds  
+- Alerting thresholds
 
 **ADK Examples:**
 
@@ -159,7 +146,7 @@ Before diving into implementation, let's understand the three pillars of observa
 - Debugging
 - Audit trails
 - Error investigation
-- Security monitoring  
+- Security monitoring
 
 **ADK Examples:**
 
@@ -175,7 +162,7 @@ Before diving into implementation, let's understand the three pillars of observa
 
 - Performance bottlenecks
 - Component dependencies
-- Request path analysis  
+- Request path analysis
 
 **ADK Examples:**
 
@@ -262,9 +249,9 @@ try:
         agent=agent,
         enable_tracing=True,  # <--- Just add this one line!
     )
-    
+
     logger.info("ADK Agent with tracing enabled successfully")
-    
+
 except Exception as e:
     logger.error(f"Failed to initialize ADK Agent with tracing: {e}")
     raise
@@ -316,15 +303,15 @@ def process_request(request_id: str) -> None:
 # Better: Use structured logging with extra fields
 def process_request_structured(request_id: str, user_query: str) -> Dict[str, Any]:
     start_time = time.time()
-    
+
     try:
         # Your ADK agent processing logic here
         result = {"response": "Agent response", "tokens_used": 150}
-        
+
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.info(
-            "Request processed successfully", 
+            "Request processed successfully",
             extra={
                 "request_id": request_id,
                 "duration_ms": duration_ms,
@@ -332,14 +319,14 @@ def process_request_structured(request_id: str, user_query: str) -> Dict[str, An
                 "query_length": len(user_query)
             }
         )
-        
+
         return result
-        
+
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
-        
+
         logger.error(
-            "Request processing failed", 
+            "Request processing failed",
             extra={
                 "request_id": request_id,
                 "duration_ms": duration_ms,
@@ -527,10 +514,10 @@ def my_custom_tool(input_data):
     with tracer.start_as_current_span("my_custom_tool") as span:
         span.set_attribute("tool.name", "my_custom_tool")
         span.set_attribute("tool.input", str(input_data))
-        
+
         # Tool implementation
         result = process_data(input_data)
-        
+
         span.set_attribute("tool.result", str(result))
         return result
 ```
@@ -568,10 +555,10 @@ Integrate observability testing into your CI/CD pipeline:
   run: |
     # Validate monitoring configuration
     python ./tests/validate_monitoring.py
-    
+
     # Test custom metrics
     python ./tests/test_custom_metrics.py
-    
+
     # Verify alerts are properly configured
     python ./tests/verify_alerts.py
 ```
@@ -618,16 +605,16 @@ tracer = trace.get_tracer(__name__)
 def custom_tool_with_observability(input_data):
     with tracer.start_as_current_span("custom_tool") as span:
         start_time = time.time()
-        
+
         span.set_attribute("tool.name", "custom_tool")
         span.set_attribute("input.size", len(str(input_data)))
-        
+
         try:
             result = process_tool_logic(input_data)
-            
+
             span.set_attribute("tool.success", True)
             span.set_attribute("output.size", len(str(result)))
-            
+
             duration = time.time() - start_time
             logger.info(
                 "Tool execution completed",
@@ -637,13 +624,13 @@ def custom_tool_with_observability(input_data):
                     "success": True
                 }
             )
-            
+
             return result
-            
+
         except Exception as e:
             span.set_attribute("tool.success", False)
             span.set_attribute("error.message", str(e))
-            
+
             duration = time.time() - start_time
             logger.error(
                 "Tool execution failed",
@@ -671,7 +658,7 @@ class TraceContextFormatter(logging.Formatter):
             span_id = span.get_span_context().span_id
             record.trace_id = f"{trace_id:032x}"
             record.span_id = f"{span_id:016x}"
-        
+
         return super().format(record)
 
 # Configure logging with trace context
@@ -735,7 +722,7 @@ structured_log(
 ```python
 def log_token_usage(model: str, prompt_tokens: int, completion_tokens: int, request_id: str):
     total_tokens = prompt_tokens + completion_tokens
-    
+
     # Log for analysis
     logger.info(
         "Token usage recorded",
@@ -747,10 +734,10 @@ def log_token_usage(model: str, prompt_tokens: int, completion_tokens: int, requ
             "total_tokens": total_tokens
         }
     )
-    
+
     # Create custom metric
     create_token_usage_metric(model, total_tokens)
-    
+
     # Alert if usage is high
     if total_tokens > 10000:
         logger.warning(
@@ -790,7 +777,7 @@ def log_token_usage(model: str, prompt_tokens: int, completion_tokens: int, requ
 # Monitor key performance indicators
 def track_performance_metrics(request_id: str, start_time: float):
     duration = time.time() - start_time
-    
+
     # Log performance data
     logger.info(
         "Performance metrics",
@@ -866,13 +853,13 @@ When deploying ADK agents to Cloud Run instead of using Vertex AI Agent Engine d
 
 ### Key Differences in Observability Approach
 
-| Vertex AI Agent Engine | Cloud Run Deployment |
-|---|---|
-| Built-in metric collection | Built-in Cloud Run metrics with option for custom metrics |
-| Distributed tracing with simple flag | Automatic trace generation with optional custom spans |
-| Automatic context propagation | W3C trace context propagation header support |
-| Uses Vertex AI service identity | Requires custom service account configuration |
-| Higher tracing sampling rate | Limited to 0.1 requests per second per instance |
+| Vertex AI Agent Engine               | Cloud Run Deployment                                      |
+| ------------------------------------ | --------------------------------------------------------- |
+| Built-in metric collection           | Built-in Cloud Run metrics with option for custom metrics |
+| Distributed tracing with simple flag | Automatic trace generation with optional custom spans     |
+| Automatic context propagation        | W3C trace context propagation header support              |
+| Uses Vertex AI service identity      | Requires custom service account configuration             |
+| Higher tracing sampling rate         | Limited to 0.1 requests per second per instance           |
 
 ### 1. Metrics Collection for Cloud Run ADK Agents
 
@@ -893,7 +880,6 @@ For ADK-specific metrics (like token usage or tool execution counts), you have t
 1. **Use log-based metrics** (simpler approach)
    - Structure your logs to include key metrics data
    - Create log-based metrics in Cloud Monitoring
-   
 2. **Deploy an OpenTelemetry Collector sidecar** (more powerful approach):
 
 ```yaml
@@ -911,18 +897,18 @@ spec:
         run.googleapis.com/container-dependencies: "{app:[collector]}"
     spec:
       containers:
-      - image: gcr.io/PROJECT_ID/adk-agent:latest
-        name: app
-        env:
-        - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-          value: "http://localhost:4317"
-      - image: us-docker.pkg.dev/cloud-ops-agents-artifacts/google-cloud-opentelemetry-collector/otelcol-google:latest
-        name: collector
-        startupProbe:
-          httpGet:
-            path: /
-            port: 13133
-        # OpenTelemetry collector configuration
+        - image: gcr.io/PROJECT_ID/adk-agent:latest
+          name: app
+          env:
+            - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
+              value: "http://localhost:4317"
+        - image: us-docker.pkg.dev/cloud-ops-agents-artifacts/google-cloud-opentelemetry-collector/otelcol-google:latest
+          name: collector
+          startupProbe:
+            httpGet:
+              path: /
+              port: 13133
+          # OpenTelemetry collector configuration
 ```
 
 ### 2. Distributed Tracing for Cloud Run ADK Agents
@@ -951,10 +937,10 @@ tracer = trace.get_tracer(__name__)
 def handle_request(request):
     with tracer.start_as_current_span("adk_agent_request") as span:
         span.set_attribute("user_query", request.query)
-        
+
         # ADK agent processing
         result = process_with_adk(request)
-        
+
         span.set_attribute("response_tokens", len(result.text))
         return result
 ```
@@ -1026,18 +1012,18 @@ class StructuredLogFormatter(logging.Formatter):
             "service": os.environ.get("K_SERVICE", "adk-agent"),
             "revision": os.environ.get("K_REVISION", "unknown"),
         }
-        
+
         # Add trace context if available
         trace_header = request.headers.get('X-Cloud-Trace-Context', '')
         if trace_header:
             trace_id = trace_header.split('/')[0]
             log_record['logging.googleapis.com/trace'] = f"projects/{os.environ.get('GOOGLE_CLOUD_PROJECT')}/traces/{trace_id}"
-        
+
         # Add any extra attributes from the record
         if hasattr(record, 'extras'):
             for key, value in record.extras.items():
                 log_record[key] = value
-                
+
         return json.dumps(log_record)
 
 # Set up logger
@@ -1051,7 +1037,7 @@ logger.setLevel(logging.INFO)
 def log_adk_event(event_type, details, trace_id=None):
     request_id = str(uuid.uuid4())
     logger.info(
-        f"ADK Event: {event_type}", 
+        f"ADK Event: {event_type}",
         extra={
             "extras": {
                 "event_type": event_type,
@@ -1100,20 +1086,23 @@ Create custom dashboards specifically for ADK agent monitoring:
 
 1. Go to [Dashboards](https://console.cloud.google.com/monitoring/dashboards)
 2. Create a new dashboard with these recommended panels:
-   
+
    **Operational Health:**
+
    - Request volume (requests/min)
    - Error rate (% of total requests)
    - P50/P95/P99 latency
    - Instance count
-   
+
    **ADK-Specific Metrics:**
+
    - Token usage by model
    - Tool execution count by tool type
    - Success rate by tool
    - Response generation time
-   
+
    **Resource Utilization:**
+
    - CPU utilization
    - Memory utilization
    - Network traffic
@@ -1138,7 +1127,7 @@ Understanding the limitations of observability tools is crucial for proper plann
   - Maximum 1,000 spans per trace
   - Maximum trace size: 50 MB
   - Maximum 32 attributes per span
- 
+
 ### Cloud Run
 
 - **Trace Sampling Rate**: Maximum 0.1 requests per second per instance (one request every 10 seconds)
@@ -1268,17 +1257,17 @@ logger = logging.getLogger(__name__)
 
 def timed_agent_call(query):
     start_time = time.time()
-    
+
     try:
         result = your_agent.process(query)
         duration = time.time() - start_time
-        
+
         logger.info(f"Agent call completed", extra={
             "duration_ms": duration * 1000,
             "query_length": len(query),
             "response_length": len(result.text) if result else 0
         })
-        
+
         return result
     except Exception as e:
         duration = time.time() - start_time
@@ -1467,51 +1456,5 @@ June 2025
 ## Contributors
 
 This guide was created with input from Google Cloud engineers and the ADK community. For questions or suggestions, please open an issue in the repository.
-
-## Observability Architecture: OpenTelemetry and Google Cloud
-
-When implementing observability for ADK agents, understanding the relationship between OpenTelemetry and Google Cloud services is essential for effective instrumentation:
-
-```mermaid
-flowchart LR
-    subgraph "Your ADK Application"
-        APP[ADK Agent Code]
-        OTEL[OpenTelemetry SDK]
-    end
-    
-    subgraph "Google Cloud Observability"
-        CM[Cloud Monitoring]
-        CT[Cloud Trace]
-        CL[Cloud Logging]
-    end
-    
-    APP --> OTEL
-    OTEL -->|Metrics| CM
-    OTEL -->|Traces| CT
-    OTEL -->|Logs| CL
-    
-    style OTEL fill:#f5f5ff,stroke:#9999ff
-    style CM fill:#e6f4ea,stroke:#5bb974
-    style CT fill:#fef7e0,stroke:#fbbc04
-    style CL fill:#e8f0fe,stroke:#4285f4
-```
-
-**OpenTelemetry and Google Cloud Integration:**
-
-- **OpenTelemetry** is an open-source observability framework that provides a standardized way to collect telemetry data (metrics, logs, and traces) regardless of your cloud provider.
-- **Google Cloud Observability** includes Cloud Monitoring, Cloud Trace, and Cloud Logging, which natively receive and process telemetry data.
-- **Integration Flow**: Instrument your ADK application with OpenTelemetry SDK → Configure appropriate exporters → Data flows to Google Cloud services.
-
-**Actionable Implementation Steps:**
-
-1. Add OpenTelemetry SDK dependencies to your project
-2. Configure Google Cloud exporters for each telemetry type:
-   - `OTLPMetricExporter` for metrics to Cloud Monitoring
-   - `OTLPSpanExporter` for traces to Cloud Trace
-   - Structured logging with trace context for logs to Cloud Logging
-3. Set resource attributes to properly identify your ADK agent services
-4. Implement automatic or manual instrumentation based on your needs
-
-This approach gives you the flexibility to use standard instrumentation practices while fully leveraging Google Cloud's observability suite, enabling future portability if needed.
 
 ---
