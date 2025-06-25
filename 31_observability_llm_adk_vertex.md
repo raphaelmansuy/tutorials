@@ -1,5 +1,42 @@
 # Vertex AI Generative AI & ADK Observability: Complete Monitoring, Tracing, and Security Guide
 
+## 🎯 What You'll Build
+
+By the end of this tutorial, you'll have built a complete observability system for your Vertex AI applications with:
+
+### Quick Wins Path (5 minutes) - Immediate Results
+
+- [ ] **Live logs** streaming from your Gemini API calls to Cloud Logging
+- [ ] **Token usage tracking** with cost estimates in structured JSON logs
+- [ ] **Request tracing** showing exactly where time is spent in your AI requests
+- [ ] **Ready-to-use dashboard** in Google Cloud Console
+
+### Production Path (2-4 hours) - Enterprise Ready
+
+- [ ] **Custom metrics** for business KPIs (requests/min, token costs, error rates)
+- [ ] **Intelligent alerting** that notifies you before problems become critical
+- [ ] **Security monitoring** with audit logs and IAM compliance
+- [ ] **Advanced tracing** with OpenTelemetry across multiple services
+
+### AI-Specific Monitoring (1-2 hours) - Specialized
+
+- [ ] **Safety monitoring** tracking content filtering and responsible AI compliance
+- [ ] **Multi-modal request analysis** for text, image, video, and audio inputs
+- [ ] **Dynamic quota monitoring** preventing unexpected service interruptions
+- [ ] **Cost optimization dashboards** showing token usage patterns and optimization opportunities
+
+### Real-World Outcomes
+
+After completing this tutorial, you'll be able to:
+
+- **Debug AI issues in seconds** instead of hours using correlated logs and traces
+- **Prevent costly surprises** with proactive token usage monitoring and alerts
+- **Meet compliance requirements** with comprehensive audit logging
+- **Optimize performance** using detailed latency and throughput metrics
+- **Scale confidently** with production-grade monitoring and alerting
+
+---
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
@@ -67,6 +104,142 @@ python --version  # Should be 3.9+
 ```
 
 > **⚠️ Important:** If you don't have the required permissions, work with your GCP administrator to grant them or use a dedicated observability project.
+
+## 🧪 Quick Environment Test (2 minutes)
+
+Before diving into the full tutorial, let's verify your environment is ready with a simple test:
+
+### Step 1: Test Your Google Cloud Setup
+
+```bash
+# Create a simple test script
+cat > test_setup.py << 'EOF'
+import google.cloud.logging
+import google.cloud.monitoring_v3
+import google.cloud.trace_v1
+import sys
+
+def test_gcp_setup():
+    try:
+        # Test Cloud Logging
+        logging_client = google.cloud.logging.Client()
+        print("✅ Cloud Logging client created successfully")
+
+        # Test Cloud Monitoring
+        monitoring_client = google.cloud.monitoring_v3.MetricServiceClient()
+        print("✅ Cloud Monitoring client created successfully")
+
+        # Test Cloud Trace
+        trace_client = google.cloud.trace_v1.TraceServiceClient()
+        print("✅ Cloud Trace client created successfully")
+
+        print("\n🎉 Your environment is ready for the tutorial!")
+        return True
+
+    except Exception as e:
+        print(f"❌ Setup issue: {e}")
+        print("\n🔧 Please check your authentication and permissions.")
+        return False
+
+if __name__ == "__main__":
+    success = test_gcp_setup()
+    sys.exit(0 if success else 1)
+EOF
+
+# Run the test
+python test_setup.py
+```
+
+### Step 2: Test Vertex AI Access
+
+```bash
+# Test Vertex AI Generative AI access
+cat > test_vertex_ai.py << 'EOF'
+from google import genai
+import sys
+
+def test_vertex_ai():
+    try:
+        client = genai.Client()
+        print("✅ Vertex AI Generative AI client created successfully")
+
+        # Test with a simple request
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents="Hello! This is a test."
+        )
+
+        print(f"✅ Gemini API call successful")
+        print(f"✅ Response received: {response.text[:50]}...")
+        print(f"✅ Token usage: {response.usage_metadata.total_token_count} tokens")
+
+        print("\n🎉 Vertex AI access is working!")
+        return True
+
+    except Exception as e:
+        print(f"❌ Vertex AI issue: {e}")
+        print("\n🔧 Please check your Vertex AI API access and billing.")
+        return False
+
+if __name__ == "__main__":
+    success = test_vertex_ai()
+    sys.exit(0 if success else 1)
+EOF
+
+# Run the test
+python test_vertex_ai.py
+```
+
+### Expected Output
+
+If everything is working correctly, you should see:
+
+```text
+✅ Cloud Logging client created successfully
+✅ Cloud Monitoring client created successfully
+✅ Cloud Trace client created successfully
+
+🎉 Your environment is ready for the tutorial!
+
+✅ Vertex AI Generative AI client created successfully
+✅ Gemini API call successful
+✅ Response received: Hello! I'm ready to help you with your test...
+✅ Token usage: 12 tokens
+
+🎉 Vertex AI access is working!
+```
+
+### ⚠️ If You See Errors
+
+**Authentication Issues:**
+
+```bash
+gcloud auth application-default login
+gcloud auth login --update-adc
+```
+
+**Permission Issues:**
+
+```bash
+# Check your current project
+gcloud config get-value project
+
+# Verify your permissions
+gcloud auth list
+gcloud projects get-iam-policy $(gcloud config get-value project)
+```
+
+**Vertex AI Not Enabled:**
+
+```bash
+# Enable required APIs
+gcloud services enable aiplatform.googleapis.com
+gcloud services enable monitoring.googleapis.com
+gcloud services enable logging.googleapis.com
+gcloud services enable cloudtrace.googleapis.com
+```
+
+---
 
 ## Overview
 
@@ -139,7 +312,7 @@ flowchart TB
     LOGS --> L_DATA
     TRACES --> T_DATA
 
-    REQUEST --> LOGS 
+    REQUEST --> LOGS
     RESPONSE --> LOGS
 
 
@@ -210,18 +383,18 @@ flowchart LR
     style API fill:#fff2cc,stroke:#d6b656
     style MODEL fill:#f8cecc,stroke:#b85450
     style RESP fill:#e8f5e8,stroke:#4caf50
-    
+
     style M1 fill:#e6f4ea,stroke:#5bb974
     style M2 fill:#e6f4ea,stroke:#5bb974
     style M3 fill:#e6f4ea,stroke:#5bb974
     style M4 fill:#e6f4ea,stroke:#5bb974
-    
+
     style L0 fill:#e8f0fe,stroke:#4285f4
     style L1 fill:#e8f0fe,stroke:#4285f4
     style L2 fill:#e8f0fe,stroke:#4285f4
     style L3 fill:#e8f0fe,stroke:#4285f4
     style L4 fill:#e8f0fe,stroke:#4285f4
-    
+
     style T1 fill:#fef7e0,stroke:#fbbc04
     style T2 fill:#fef7e0,stroke:#fbbc04
     style T3 fill:#fef7e0,stroke:#fbbc04
@@ -322,7 +495,7 @@ flowchart LR
     %% Application flows
     APP --> GENAI
     ADK --> ENGINE
-    
+
     %% Service interactions
     GENAI --> MODEL
     ENGINE --> MODEL
@@ -671,11 +844,28 @@ result = generate_content("Write a short poem about observability")
 print(result)
 ```
 
-**✅ View logs immediately:**
+### ✅ Checkpoint 1: Verify Basic Logging Works
 
-1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
-2. Your logs appear under "Global" resource type
-3. Filter by `severity>=INFO` to see your messages
+**Test your setup right now:**
+
+1. **Run the code above** and make a few requests
+2. **Go to [Logs Explorer](https://console.cloud.google.com/logs/query)** (opens in new tab)
+3. **Look for your logs** under "Global" resource type
+4. **Filter by severity** using: `severity>=INFO`
+
+**You should see entries like:**
+
+```text
+2025-06-25 10:30:15  INFO  Generated response with 156 tokens
+```
+
+**🚨 Not seeing logs?** Check:
+
+- [ ] Project ID is correct: `gcloud config get-value project`
+- [ ] Authentication is working: `gcloud auth list`
+- [ ] Cloud Logging API is enabled: `gcloud services list --enabled | grep logging`
+
+---
 
 ### 2. Structured Logging with Token Tracking (2 minutes) 📊
 
@@ -854,7 +1044,7 @@ import json
 import time
 
 def create_logged_agent():
-    """Create ADK agent with instant logging."""
+    """Create ADK agent with instant logging"""
 
     # All print statements automatically go to Cloud Logging
     print("🚀 Starting ADK Agent initialization")
@@ -1966,20 +2156,6 @@ Labels: modalities, is_multimodal
 Implement cost optimization based on monitoring data:
 
 ```python
-class CostOptimizer:
-    def __init__(self):
-        self.cost_thresholds = {
-            "daily": 100.0,    # Daily budget in USD
-            "hourly": 10.0,    # Hourly budget in USD
-            "per_request": 0.50 # Max cost per request
-        }
-
-    def check_cost_optimization(self, tokens: int, model: str) -> Dict[str, Any]:
-        """Check if request fits within cost constraints."""
-
-        estimated_cost = self._estimate_cost(model, tokens)
-
-        recommendations = []
 
         # Check if we should suggest a cheaper model
         if estimated_cost > self.cost_thresholds["per_request"]:
@@ -2493,6 +2669,7 @@ def structured_log(message, severity="INFO", **kwargs):
 ```
 
 #### 6. **OpenTelemetry Integration Problems**
+
 **Solutions:**
 
 ```python
