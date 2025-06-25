@@ -48,6 +48,64 @@ flowchart TB
     class ADKAgent highlight
 ```
 
+## Understanding Observability: Metrics, Logs, and Traces
+
+Before diving into implementation, let's understand the three pillars of observability and how they work together for AI agents:
+
+### **Metrics**
+
+**What they are:** Numerical measurements of system behavior over time  
+**When to use:**
+
+- Performance monitoring
+- Resource utilization
+- Business KPIs
+- Alerting thresholds  
+
+**ADK Examples:**
+
+- Request count
+- Latency percentiles
+- Token usage
+- Error rates
+
+### **Logs**
+
+**What they are:** Time-stamped records of discrete events  
+**When to use:**
+
+- Debugging
+- Audit trails
+- Error investigation
+- Security monitoring  
+
+**ADK Examples:**
+
+- Tool execution details
+- LLM prompt/response
+- Authentication events
+- Error messages
+
+### **Traces**
+
+**What they are:** End-to-end request flows across components  
+**When to use:**
+
+- Performance bottlenecks
+- Component dependencies
+- Request path analysis  
+
+**ADK Examples:**
+
+- Full agent query flow
+- Tool call sequences
+- LLM invocation timing
+- Cross-service calls
+
+> **🔑 Quick Tip:** Think of observability like a detective story: **Metrics** tell you something happened (system is slow), **Logs** provide clues and context (error in tool X), and **Traces** show the complete timeline and connections between events (exactly how the request flowed through your system).
+
+Using all three together provides a complete picture of your ADK agent's behavior, enabling both proactive monitoring and effective troubleshooting.
+
 ---
 
 ## ⚡ Quick Wins Path (5 Minutes)
@@ -63,11 +121,13 @@ Vertex AI Agent Engine automatically exports key operational metrics to Cloud Mo
 ```
 
 **Metrics available out-of-the-box:**
+
 - **Request count**
 - **Request latencies (p50, p95, p99)**
 - **CPU and memory allocation**
 
 **How to view metrics (2 minutes):**
+
 1. Go to [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)
 2. Select your project
 3. Search for `Vertex AI Reasoning Engine`
@@ -94,6 +154,7 @@ app = AdkApp(
 ```
 
 **How to view traces (2 minutes):**
+
 1. Go to [Trace Explorer](https://console.cloud.google.com/traces/list)
 2. Select your project
 3. Filter by `Vertex AI Reasoning Engine` resource
@@ -114,6 +175,7 @@ logger.info("Tool execution complete", extra={"tool": "search", "duration_ms": 3
 ```
 
 **View logs:**
+
 1. Go to [Logs Explorer](https://console.cloud.google.com/logs/query)
 2. Filter by `Vertex AI Reasoning Engine` resource
 
@@ -266,6 +328,7 @@ gcloud logging metrics create adk-security-violations \
 ```
 
 Set up security dashboards and alerts:
+
 1. Monitor unusual access patterns
 2. Track authentication failures
 3. Monitor service account usage
@@ -302,6 +365,174 @@ Integrate observability testing into your CI/CD pipeline:
 - **Use structured logging** for machine-parseable logs
 - **Monitor token usage** to control costs
 
+## Observability for ADK Agents on Cloud Run
+
+When deploying ADK agents to Cloud Run instead of using Vertex AI Agent Engine directly, you need a different approach to observability. Cloud Run provides its own built-in monitoring capabilities while requiring some custom configuration for advanced tracing and metrics.
+
+### Key Differences in Observability Approach
+
+| Vertex AI Agent Engine | Cloud Run Deployment |
+|---|---|
+| Built-in metric collection | Requires explicit configuration for ADK-specific metrics |
+| Distributed tracing with simple flag | Requires OpenTelemetry sidecar for comprehensive tracing |
+| Automatic context propagation | Manual context propagation between services |
+| Predefined IAM roles | Custom IAM configuration needed |
+
+### 1. Metrics Collection for Cloud Run ADK Agents
+
+Cloud Run automatically provides basic operational metrics:
+
+```python
+# Cloud Run built-in metrics (no code needed)
+# - CPU utilization
+# - Memory utilization
+# - Request count and latencies
+# - Container instance count
+```
+
+For ADK-specific metrics (like token usage), deploy an OpenTelemetry Collector sidecar:
+
+```yaml
+# service.yaml for Cloud Run deployment with OpenTelemetry sidecar
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: adk-agent-service
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/container-dependencies: "{app:[collector]}"
+    spec:
+      containers:
+      - image: gcr.io/PROJECT_ID/adk-agent:latest
+        name: app
+        env:
+        - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
+          value: "http://localhost:4317"
+      - image: gcr.io/PROJECT_ID/otel-collector:latest
+        name: collector
+        # OpenTelemetry collector configuration
+```
+
+### 2. Distributed Tracing for Cloud Run ADK Agents
+
+Implement tracing with the OpenTelemetry SDK in your ADK agent code:
+
+```python
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+# Configure tracer for ADK agent on Cloud Run
+tracer_provider = TracerProvider()
+tracer_provider.add_span_processor(
+    BatchSpanProcessor(OTLPSpanExporter(endpoint="localhost:4317"))
+)
+trace.set_tracer_provider(tracer_provider)
+tracer = trace.get_tracer(__name__)
+
+# Instrument ADK agent requests
+def handle_request(request):
+    with tracer.start_as_current_span("adk_agent_request") as span:
+        span.set_attribute("user_query", request.query)
+        
+        # ADK agent processing
+        result = process_with_adk(request)
+        
+        span.set_attribute("response_tokens", len(result.text))
+        return result
+```
+
+### 3. Service Identity and Security
+
+When running on Cloud Run, ADK agents use Cloud Run's service identity to access Google APIs:
+
+```bash
+# Grant necessary permissions to the Cloud Run service account
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
+    --role="roles/monitoring.metricWriter"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
+    --role="roles/cloudtrace.agent"
+
+# For ADK-specific permissions (e.g., for Vertex AI model access)
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
+    --role="roles/aiplatform.user"
+```
+
+### 4. Logging Strategy for Cloud Run ADK Agents
+
+Implement structured logging that works well with Cloud Run:
+
+```python
+import logging
+import json
+import os
+
+# Configure structured logging for Cloud Run
+class StructuredLogFormatter(logging.Formatter):
+    def format(self, record):
+        log_record = {
+            "severity": record.levelname,
+            "message": super().format(record),
+            "time": self.formatTime(record, self.datefmt),
+            "service": os.environ.get("K_SERVICE", "adk-agent"),
+            "revision": os.environ.get("K_REVISION", "unknown"),
+            "trace_id": getattr(record, "trace_id", ""),
+        }
+        
+        # Add any extra attributes from the record
+        if hasattr(record, "extras"):
+            for key, value in record.extras.items():
+                log_record[key] = value
+                
+        return json.dumps(log_record)
+
+# Set up logger
+logger = logging.getLogger("adk_agent")
+handler = logging.StreamHandler()
+handler.setFormatter(StructuredLogFormatter())
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
+# Example usage
+def log_adk_event(event_type, details, trace_id=None):
+    logger.info(
+        f"ADK Event: {event_type}", 
+        extra={
+            "extras": {
+                "event_type": event_type,
+                "details": details,
+                "trace_id": trace_id
+            }
+        }
+    )
+```
+
+### 5. Viewing Cloud Run ADK Agent Metrics
+
+Access your metrics through Google Cloud Monitoring:
+
+1. Go to [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)
+2. Select resource type: `Cloud Run Service`
+3. Browse the built-in metrics or custom metrics from your OpenTelemetry collector
+
+Create custom dashboards specifically for ADK agent monitoring:
+
+1. Go to [Dashboards](https://console.cloud.google.com/monitoring/dashboards)
+2. Create a new dashboard with these recommended panels:
+   - ADK agent request volume and latency
+   - Error rates by tool type
+   - Token usage and efficiency metrics
+   - Container resource utilization
+
 ---
 
 ## References
@@ -313,9 +544,10 @@ Integrate observability testing into your CI/CD pipeline:
 - [Cloud Logging for Agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/logging)
 - [Managing Access for Deployed Agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/access)
 - [Google Cloud IAM Best Practices](https://cloud.google.com/iam/docs/using-iam-securely)
-
----
+- [Cloud Run Monitoring](https://cloud.google.com/run/docs/monitoring)
+- [Cloud Run OpenTelemetry Integration](https://cloud.google.com/run/docs/tutorials/custom-metrics-opentelemetry-sidecar)
+- [Cloud Run Service Identity](https://cloud.google.com/run/docs/securing/service-identity)
 
 ## Last updated
 
-August 2024
+October 2023
