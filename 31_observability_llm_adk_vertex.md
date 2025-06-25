@@ -2050,11 +2050,11 @@ By leveraging OpenTelemetry, you can build a flexible and future-proof observabi
 ### Google Cloud Documentation
 
 - **Vertex AI:**
+
   - [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
   - [Generative AI on Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview)
   - [Vertex AI Pricing](https://cloud.google.com/vertex-ai/pricing)
-- **ADK (Application Development Kit):**
-  - [ADK Overview](https://cloud.google.com/adk/docs) (Note: Link is conceptual as ADK may be in private preview)
+
 - **Observability:**
   - [Google Cloud's operations suite](https://cloud.google.com/products/operations)
   - [Cloud Logging Documentation](https://cloud.google.com/logging/docs)
