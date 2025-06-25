@@ -86,6 +86,9 @@ This tutorial is divided into two main paths, allowing you to choose the level o
 
 ## ✅ Prerequisites
 
+<details>
+<summary>Click to expand/collapse Prerequisites</summary>
+
 Before you begin, ensure you have the following set up:
 
 ### Required Tools and Accounts
@@ -139,9 +142,7 @@ pip install google-genai>=1.21.0 \
             langchain-google-vertexai>=2.0.0
 ```
 
-> **📝 Important:** The Google Gen AI SDK (`google-genai`) provides a unified interface to Gemini models and supersedes the older `vertexai.generative_models` module for many use cases. However, Vertex AI generative models themselves are not deprecated - only the older SDK methods are being phased out. For agents, we use the Vertex AI Agent Engine (formerly Reasoning Engine) which provides a managed runtime for deploying agents built with LangChain, LangGraph, and other frameworks.
-
-> **⚠️ Important Model Availability:** New Google Cloud projects (created after April 29, 2025) cannot access Gemini 1.5 Pro and Gemini 1.5 Flash models. This tutorial uses the latest Gemini 2.5 models which are available to all projects and offer improved capabilities.
+> **📝 Important:** The Google Gen AI SDK (`google-genai`) replaces the deprecated `vertexai.generative_models` module. The Vertex AI generative models are deprecated as of June 2025 and will be removed in June 2026. For agents, we use the Vertex AI Agent Engine (formerly Reasoning Engine) which provides a managed runtime for deploying agents built with LangChain, LangGraph, and other frameworks.
 
 ### Verify Your Setup
 
@@ -154,6 +155,8 @@ python --version
 ```
 
 > **⚠️ Important:** If you do not have the required permissions, please work with your GCP administrator to have them granted. Alternatively, you can use a dedicated project for this tutorial where you have full access.
+
+</details>
 
 ---
 
@@ -218,7 +221,7 @@ def test_vertex_ai():
 
         # Test Gemini API call
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-2.0-flash-001',
             contents='Hello!'
         )
         print("✅ Gemini API call successful")
@@ -282,7 +285,7 @@ flowchart TB
 
     subgraph "🤖 AI Agent Example"
         REQUEST[User Query:<br/>What are your hours?]
-        AGENT[AI Agent Processing]
+        AGENT[ADK Agent Processing]
         TOOLS[Tool Execution]
         LLM[LLM Generation]
         RESPONSE[Agent Response]
@@ -400,7 +403,7 @@ flowchart LR
 
 ## ⚡ Quick Wins Path (5 Minutes)
 
-Get immediate observability for your AI applications with minimal setup. This section covers both direct Vertex AI Gemini API usage and Agent Engine applications.
+Get immediate observability for your AI applications with minimal setup. This section covers both direct Vertex AI Gemini API usage and ADK agents.
 
 > **🎯 Success Criteria:** By the end of this section, you'll have logs, traces, and metrics working for your Generative AI applications in under 5 minutes.
 
@@ -432,7 +435,7 @@ def generate_content(prompt: str):
         )
 
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-2.0-flash-001',
             contents=prompt
         )
 
@@ -485,7 +488,7 @@ client.setup_logging()
 import logging
 logger = logging.getLogger(__name__)
 
-def monitored_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
+def monitored_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
     """Generate content with comprehensive logging using Google Gen AI SDK."""
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
@@ -609,7 +612,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 FlaskInstrumentor().instrument_app(app)
 
-def traced_generate_content(prompt: str, model: str = "gemini-2.5-flash"):
+def traced_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
     """Generate content with tracing and logging using Google Gen AI SDK."""
     with tracer.start_as_current_span("gemini_generation") as span:
         span.set_attribute("model", model)
@@ -720,7 +723,7 @@ class ObservableAgent:
         chat = ChatVertexAI(
             project=self.project_id,
             location=self.location,
-            model_name="gemini-2.5-flash"
+            model_name="gemini-2.0-flash-001"
         )
         self.chain = prompt | chat
 
@@ -849,7 +852,7 @@ When you use OpenTelemetry, your application code is instrumented with the OpenT
 ```mermaid
 flowchart TB
     subgraph "Your Application"
-        AGENT[AI Agent Code]
+        ADK[ADK Agent Code]
         OTEL_SDK[OpenTelemetry SDK]
     end
 
@@ -859,12 +862,12 @@ flowchart TB
         CT[Cloud Trace]
     end
 
-    AGENT --> OTEL_SDK
+    ADK --> OTEL_SDK
     OTEL_SDK --> CL
     OTEL_SDK --> CM
     OTEL_SDK --> CT
 
-    style AGENT fill:#e1f5fe,stroke:#0277bd
+    style ADK fill:#e1f5fe,stroke:#0277bd
     style OTEL_SDK fill:#d5e8d4,stroke:#82b366
     style CL fill:#e8f0fe,stroke:#4285f4
     style CM fill:#e6f4ea,stroke:#5bb974
@@ -880,7 +883,7 @@ A common pattern is to use the **OpenTelemetry Collector**, a standalone service
 ```mermaid
 flowchart TB
     subgraph "Your Application"
-        AGENT[AI Agent Code]
+        ADK[ADK Agent Code]
         OTEL_SDK[OpenTelemetry SDK]
     end
 
@@ -893,12 +896,12 @@ flowchart TB
         DATADOG[Datadog]
     end
 
-    AGENT --> OTEL_SDK
+    ADK --> OTEL_SDK
     OTEL_SDK --> OTEL_COLLECTOR
     OTEL_COLLECTOR --> GCP
     OTEL_COLLECTOR --> DATADOG
 
-    style AGENT fill:#e1f5fe,stroke:#0277bd
+    style ADK fill:#e1f5fe,stroke:#0277bd
     style OTEL_SDK fill:#d5e8d4,stroke:#82b366
     style OTEL_COLLECTOR fill:#dae8fc,stroke:#6c8ebf
     style GCP fill:#e8f0fe,stroke:#4285f4
@@ -973,7 +976,7 @@ logs_enabled: true
 - **For Datadog-centric teams:** Use the OpenTelemetry Collector with dual exporters to get the best of both worlds. This gives you a unified view in Datadog while retaining deep integration with Google Cloud services.
 - **For simplicity:** If you are already using the Datadog Agent for other monitoring, using its OTLP ingestion capabilities is often the easiest path.
 
-By leveraging OpenTelemetry, you can build a flexible and future-proof observability strategy for your Vertex AI and Agent Engine applications.
+By leveraging OpenTelemetry, you can build a flexible and future-proof observability strategy for your Vertex AI and ADK applications.
 
 ---
 
@@ -985,8 +988,8 @@ By leveraging OpenTelemetry, you can build a flexible and future-proof observabi
   - [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
   - [Generative AI on Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview)
   - [Vertex AI Pricing](https://cloud.google.com/vertex-ai/pricing)
-- **ADK (Agent Development Kit):**
-  - [ADK Overview](https://google.github.io/adk-docs/) (Open-source framework for building AI agents)
+- **ADK (Application Development Kit):**
+  - [ADK Overview](https://cloud.google.com/adk/docs) (Note: Link is conceptual as ADK may be in private preview)
 - **Observability:**
   - [Google Cloud's operations suite](https://cloud.google.com/products/operations)
   - [Cloud Logging Documentation](https://cloud.google.com/logging/docs)
@@ -994,7 +997,7 @@ By leveraging OpenTelemetry, you can build a flexible and future-proof observabi
   - [Cloud Trace Documentation](https://cloud.google.com/trace/docs)
 - **Compute:**
   - [Cloud Run Documentation](https://cloud.google.com/run/docs)
-  - [AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview)
+  - [AI Agent Engine](https://cloud.google.com/vertex-ai/docs/agent-engine/overview) (Note: Link is conceptual as Agent Engine may be in private preview)
 
 ### OpenTelemetry
 
@@ -1011,5 +1014,3 @@ By leveraging OpenTelemetry, you can build a flexible and future-proof observabi
 
 - [google-cloud-python on GitHub](https://github.com/googleapis/google-cloud-python)
 - [OpenTelemetry Python on GitHub](https://github.com/open-telemetry/opentelemetry-python)
-
-> **📝 Note about ADK:** The Agent Development Kit (ADK) is an open-source framework available at [google.github.io/adk-docs](https://google.github.io/adk-docs/). While ADK can be deployed to Vertex AI Agent Engine, this tutorial focuses primarily on official Google Cloud services and widely-adopted frameworks like LangChain.
