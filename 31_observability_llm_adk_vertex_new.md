@@ -783,7 +783,7 @@ Once you have foundational logging and tracing, the next step is to build a robu
 
 ### 1. Custom Metrics & Advanced Monitoring (10 minutes) 📊
 
-While standard logs and traces are powerful, custom metrics provide at-a-glance insights into the specific behaviors of your LLM application. Let's create custom metrics for token counts and latency.
+While standard logs and traces are powerful, custom metrics provide at-a-glance insights into the specific behaviors of your LLM application. Let's create custom metrics for token usage and latency.
 
 **a. Create Log-Based Metrics**
 
@@ -978,6 +978,123 @@ These logs are invaluable for security investigations and meeting compliance req
 
 ---
 
+## 🏢 Advanced: Multi-Platform Observability with OpenTelemetry
+
+For organizations that use multiple monitoring platforms or want to avoid vendor lock-in, OpenTelemetry provides a standardized way to collect and export telemetry data. You can send your logs, traces, and metrics to Google Cloud, Datadog, and other platforms simultaneously from a single instrumentation setup.
+
+### Architecture: Dual Export to Google Cloud & Datadog
+
+This diagram illustrates how you can use an OpenTelemetry Collector to export data to both Google Cloud and a third-party platform like Datadog.
+
+```mermaid
+flowchart TB
+    subgraph "Data Sources"
+        APP[Your Application Direct API or ADK Agent]
+    end
+
+    subgraph "Telemetry Collection"
+        OTEL_SDK[OpenTelemetry SDK]
+        COLLECTOR[OpenTelemetry Collector]
+    end
+
+    subgraph "Observability Platforms"
+        GC[Google Cloud<br/>Logging, Trace, Monitoring]
+        DD[Datadog]
+    end
+
+    APP -- OTLP --> OTEL_SDK
+    OTEL_SDK -- OTLP --> COLLECTOR
+    COLLECTOR -- Google Cloud Exporter --> GC
+    COLLECTOR -- Datadog Exporter --> DD
+
+    style APP fill:#e1f5fe,stroke:#0277bd
+    style OTEL_SDK fill:#fff2cc,stroke:#d6b656
+    style COLLECTOR fill:#fff2cc,stroke:#d6b656
+    style GC fill:#e8f0fe,stroke:#4285f4
+    style DD fill:#fce8f4,stroke:#d91883
+```
+
+### Integrating with Datadog
+
+There are two primary approaches to send OpenTelemetry data to Datadog.
+
+#### Approach 1: OpenTelemetry Collector with Datadog Exporter
+
+This is the most flexible approach, using a standalone OpenTelemetry Collector to process and export data.
+
+**Benefits:**
+
+- Vendor-neutral and highly configurable.
+- Allows for advanced data processing, filtering, and sampling.
+- Works without needing to install the Datadog agent on every host.
+
+**Example Collector Configuration (`collector.yaml`):**
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+exporters:
+  googlecloud:
+    project: "your-gcp-project-id"
+  datadog:
+    api:
+      key: "${DD_API_KEY}"
+    # Optional: specify the datadog site
+    # site: "datadoghq.eu"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [googlecloud, datadog]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [googlecloud, datadog]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [googlecloud, datadog]
+```
+
+#### Approach 2: Datadog Agent with OTLP Ingestion
+
+This approach uses the Datadog Agent, which has built-in support for receiving OTLP data.
+
+**Benefits:**
+
+- Unified agent for metrics, traces, logs, and other Datadog products (e.g., APM, Live Containers).
+- Simplified fleet management through Datadog.
+- Access to over 850 Datadog integrations.
+
+**Example Datadog Agent Configuration (`datadog.yaml`):**
+
+```yaml
+# Enable the OTLP receiver in the Datadog Agent
+otlp_config:
+  receiver:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
+
+# Ensure logs are enabled to process OTLP logs
+logs_enabled: true
+```
+
+With this setup, you configure your application's OpenTelemetry SDK to export directly to the Datadog Agent's OTLP endpoint. The Datadog Agent then forwards the data to Datadog's backend.
+
+---
+
 ## 🤖 Advanced AI-Specific Monitoring
 
 Beyond standard metrics, you should also monitor for issues specific to AI and LLMs.
@@ -995,10 +1112,10 @@ Beyond standard metrics, you should also monitor for issues specific to AI and L
 
 | Issue | Symptom | How to Fix |
 | :--- | :--- | :--- |
-| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check `gcloud config get-value project`. <br> 2. Verify authentication with `gcloud auth list`. <br> 3. Ensure the Cloud Logging API is enabled. |
-| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br> 2. Check that the OTLP exporter is configured correctly. <br> 3. For Cloud Run, ensure the container has egress network access. |
-| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the filter for the log-based metric is correct and matches your log entries. <br> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) exactly matches the field in your JSON payload. <br> 3. Wait 5-10 minutes for data to populate. |
-| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account or user running the code has the required IAM roles (e.g., `roles/logging.logWriter`, `roles/cloudtrace.agent`). <br> 2. If using a service account on Cloud Run, check its permissions. |
+| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check `gcloud config get-value project`. <br/> 2. Verify authentication with `gcloud auth list`. <br/> 3. Ensure the Cloud Logging API is enabled. |
+| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br/> 2. Check that the OTLP exporter is configured correctly. <br/> 3. For Cloud Run, ensure the container has egress network access. |
+| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the filter for the log-based metric is correct and matches your log entries. <br/> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) exactly matches the field in your JSON payload. <br/> 3. Wait 5-10 minutes for data to populate. |
+| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account or user running the code has the required IAM roles (e.g., `roles/logging.logWriter`, `roles/cloudtrace.agent`). <br/> 2. If using a service account on Cloud Run, check its permissions. |
 
 ---
 
