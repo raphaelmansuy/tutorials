@@ -786,6 +786,45 @@ Now, deploy your agent as a containerized service on Cloud Run.
    - Go to the **[Trace Explorer](https://console.cloud.google.com/traces/list)**.
    - You should now see traces for your `adk-observability-agent`. Each trace will have a root span for the incoming `/run` request and a child span named `adk_tool_call`.
 
+#### 3. Alternative: Deploy to AI Agent Engine (Preview) 🤖
+
+For a more integrated and managed experience, you can deploy your ADK agent to the **AI Agent Engine**, a serverless runtime designed specifically for hosting and scaling AI agents.
+
+**What is AI Agent Engine?**
+
+AI Agent Engine provides a fully managed environment that handles the complexities of serving your agent, including scalability, versioning, and integration with Google Cloud's ecosystem. Instead of managing Docker containers and Cloud Run services, you simply provide your agent code, and Agent Engine handles the rest.
+
+**Benefits for Observability:**
+
+- **Automatic Integration:** Logs, traces, and metrics are automatically captured and sent to Google Cloud's operations suite without any manual SDK setup in your agent code.
+- **Agent-Specific Metrics:** Get built-in metrics tailored for agents, such as tool usage, latency per tool call, and LLM interaction details.
+- **Simplified Resource Model:** All telemetry is automatically associated with an `agent_engine` resource in Cloud Logging and Monitoring, making it easy to filter and analyze.
+
+**Conceptual Deployment Steps:**
+
+While AI Agent Engine is in Preview, the deployment process is streamlined:
+
+1.  **Package Your Agent:** Structure your agent code and dependencies as required by the ADK.
+2.  **Deploy with `gcloud`:** Use a `gcloud` command to deploy your agent to the engine.
+
+    ```bash
+    # Conceptual command
+    gcloud alpha agent-engine agents deploy my-adk-agent \
+      --source=./my_agent_directory \
+      --region=us-central1
+    ```
+
+3.  **Invoke and Monitor:** Once deployed, you get a serving endpoint. As you send requests to it, observability data is automatically generated.
+
+**✅ Checkpoint 5: View Agent Engine Logs and Traces**
+
+1.  **Go to Logs Explorer:** Navigate to the **[Logs Explorer](https://console.cloud.google.com/logs/query)**.
+2.  **Filter by Resource Type:** In the "Resource" filter, select `AI Agent Engine` (`agent_engine`).
+3.  **Analyze Logs:** You will see detailed, structured logs for each request, including the prompt, the tools invoked, and the final completion, all without adding any logging code yourself.
+4.  **View Traces:** In the **[Trace Explorer](https://console.cloud.google.com/traces/list)**, traces will similarly appear, showing the breakdown of time spent in the LLM, tool execution, and the agent framework.
+
+Using AI Agent Engine simplifies both deployment and observability, making it an excellent choice for production agents.
+
 ## The Production Path: Beyond the Basics
 
 Once you have foundational logging and tracing, the next step is to build a robust monitoring and alerting system suitable for production workloads. This involves creating custom metrics, setting up automated alerts, and ensuring your application is secure and auditable.
@@ -987,162 +1026,37 @@ These logs are invaluable for security investigations and meeting compliance req
 
 ---
 
-## 🏢 Advanced: Multi-Platform Observability with OpenTelemetry
+## 📚 References and Additional Resources
 
-For organizations that use multiple monitoring platforms or want to avoid vendor lock-in, OpenTelemetry provides a standardized way to collect and export telemetry data. You can send your logs, traces, and metrics to Google Cloud, Datadog, and other platforms simultaneously from a single instrumentation setup.
+### Google Cloud Documentation
 
-### Architecture: Dual Export to Google Cloud & Datadog
+- **Vertex AI:**
+  - [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
+  - [Generative AI on Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview)
+  - [Vertex AI Pricing](https://cloud.google.com/vertex-ai/pricing)
+- **ADK (Application Development Kit):**
+  - [ADK Overview](https://cloud.google.com/adk/docs) (Note: Link is conceptual as ADK may be in private preview)
+- **Observability:**
+  - [Google Cloud's operations suite](https://cloud.google.com/products/operations)
+  - [Cloud Logging Documentation](https://cloud.google.com/logging/docs)
+  - [Cloud Monitoring Documentation](https://cloud.google.com/monitoring/docs)
+  - [Cloud Trace Documentation](https://cloud.google.com/trace/docs)
+- **Compute:**
+  - [Cloud Run Documentation](https://cloud.google.com/run/docs)
+  - [AI Agent Engine](https://cloud.google.com/vertex-ai/docs/agent-engine/overview) (Note: Link is conceptual as Agent Engine may be in private preview)
 
-This diagram illustrates how you can use an OpenTelemetry Collector to export data to both Google Cloud and a third-party platform like Datadog.
+### OpenTelemetry
 
-```mermaid
-flowchart TB
-    subgraph "Data Sources"
-        APP[Your Application Direct API or ADK Agent]
-    end
+- [OpenTelemetry Project](https://opentelemetry.io/)
+- [OpenTelemetry Python SDK](https://opentelemetry.io/docs/instrumentation/python/)
+- [OTLP Exporter Specification](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md)
 
-    subgraph "Telemetry Collection"
-        OTEL_SDK[OpenTelemetry SDK]
-        COLLECTOR[OpenTelemetry Collector]
-    end
+### Third-Party Integrations
 
-    subgraph "Observability Platforms"
-        GC[Google Cloud<br/>Logging, Trace, Monitoring]
-        DD[Datadog]
-    end
+- [Datadog Documentation](https://docs.datadoghq.com/)
+- [Datadog OpenTelemetry Integration](https://docs.datadoghq.com/opentelemetry/)
 
-    APP -- OTLP --> OTEL_SDK
-    OTEL_SDK -- OTLP --> COLLECTOR
-    COLLECTOR -- Google Cloud Exporter --> GC
-    COLLECTOR -- Datadog Exporter --> DD
+### Code and Libraries
 
-    style APP fill:#e1f5fe,stroke:#0277bd
-    style OTEL_SDK fill:#fff2cc,stroke:#d6b656
-    style COLLECTOR fill:#fff2cc,stroke:#d6b656
-    style GC fill:#e8f0fe,stroke:#4285f4
-    style DD fill:#fce8f4,stroke:#d91883
-```
-
-### Integrating with Datadog
-
-There are two primary approaches to send OpenTelemetry data to Datadog.
-
-#### Approach 1: OpenTelemetry Collector with Datadog Exporter
-
-This is the most flexible approach, using a standalone OpenTelemetry Collector to process and export data.
-
-**Benefits:**
-
-- Vendor-neutral and highly configurable.
-- Allows for advanced data processing, filtering, and sampling.
-- Works without needing to install the Datadog agent on every host.
-
-**Example Collector Configuration (`collector.yaml`):**
-
-```yaml
-receivers:
-  otlp:
-    protocols:
-      grpc:
-      http:
-
-processors:
-  batch:
-
-exporters:
-  googlecloud:
-    project: "your-gcp-project-id"
-  datadog:
-    api:
-      key: "${DD_API_KEY}"
-    # Optional: specify the datadog site
-    # site: "datadoghq.eu"
-
-service:
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [googlecloud, datadog]
-    metrics:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [googlecloud, datadog]
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [googlecloud, datadog]
-```
-
-#### Approach 2: Datadog Agent with OTLP Ingestion
-
-This approach uses the Datadog Agent, which has built-in support for receiving OTLP data.
-
-**Benefits:**
-
-- Unified agent for metrics, traces, logs, and other Datadog products (e.g., APM, Live Containers).
-- Simplified fleet management through Datadog.
-- Access to over 850 Datadog integrations.
-
-**Example Datadog Agent Configuration (`datadog.yaml`):**
-
-```yaml
-# Enable the OTLP receiver in the Datadog Agent
-otlp_config:
-  receiver:
-    protocols:
-      grpc:
-        endpoint: "0.0.0.0:4317"
-      http:
-        endpoint: "0.0.0.0:4318"
-
-# Ensure logs are enabled to process OTLP logs
-logs_enabled: true
-```
-
-With this setup, you configure your application's OpenTelemetry SDK to export directly to the Datadog Agent's OTLP endpoint. The Datadog Agent then forwards the data to Datadog's backend.
-
----
-
-## 🤖 Advanced AI-Specific Monitoring
-
-Beyond standard metrics, you should also monitor for issues specific to AI and LLMs.
-
-| Metric / Log Signal | What It Tells You | How to Implement |
-| :--- | :--- | :--- |
-| **Safety Attributes** | Is the model generating harmful, toxic, or biased content? | Parse the `safety_ratings` from the Gemini API response and log them. Create alerts for high-severity safety flags. |
-| **Tool Use & Errors** | Are the agent's tools being called correctly? Are they failing? | In your ADK agent, wrap tool calls in `try...except` blocks. Log the tool name, parameters, and success/failure status. |
-| **Grounding / Hallucination** | Is the model making up facts? | This is harder to automate. Log the model's response alongside the source documents or tool outputs it used. Periodically review these logs for inconsistencies. |
-| **User Feedback** | Are users satisfied with the responses? | Add a "thumbs up/down" feature to your application. Log this feedback and correlate it with the request ID and trace ID. |
-
----
-
-## 🛠️ Troubleshooting Common Issues
-
-| Issue | Symptom | How to Fix |
-| :--- | :--- | :--- |
-| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check project: `gcloud config get-value project`. <br> 2. Verify auth: `gcloud auth list`. <br> 3. Ensure Cloud Logging API is enabled. |
-| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br> 2. Check OTLP exporter configuration. <br> 3. For Cloud Run, ensure egress network access. |
-| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the metric's filter matches your log entries. <br> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) is exact. <br> 3. Wait 5-10 minutes for data to populate. |
-| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account/user has required IAM roles (`roles/logging.logWriter`, `roles/cloudtrace.agent`). <br> 2. Check the service account's permissions on Cloud Run. |
-
----
-
-## 🏁 Conclusion
-
-Congratulations! You have successfully implemented a comprehensive observability solution for your Vertex AI and ADK applications. You now have the tools to monitor performance, control costs, debug issues, and scale with confidence.
-
-**What you've accomplished:**
-
-- Configured structured logging for both direct LLM calls and ADK agents.
-- Implemented end-to-end tracing with OpenTelemetry.
-- Created custom metrics for token usage and latency.
-- Built a monitoring dashboard for at-a-glance insights.
-- Set up automated alerting for proactive incident response.
-- Enabled audit logging for enhanced security.
-
-**Next Steps:**
-
-- **Explore AI Quality:** Dive deeper into monitoring for hallucinations, toxicity, and grounding.
-- **Integrate with CI/CD:** Add automated checks to your deployment pipeline to catch performance regressions before they hit production.
-- **Cost Optimization:** Use your token and cost metrics to experiment with different models and prompts to find the most cost-effective solution.
+- [google-cloud-python on GitHub](https://github.com/googleapis/google-cloud-python)
+- [OpenTelemetry Python on GitHub](https://github.com/open-telemetry/opentelemetry-python)
