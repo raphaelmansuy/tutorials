@@ -216,909 +216,171 @@ USE_VERTEX_AI = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE
 
 ### Vertex AI Setup (The Enterprise Track)
 
-For production applications, Vertex AI offers better security and scaling :
+For production applications, Vertex AI offers better security, scaling, and enterprise features. The setup involves configuring IAM roles, enabling APIs, and setting up authentication.
 
+**Quick Setup Summary:**
 ```bash
-# Install and authenticate gcloud CLI
+# Basic Vertex AI configuration
+export PROJECT_ID="your-project-id"
+gcloud config set project $PROJECT_ID
 gcloud auth application-default login
 
-# Set your project
-gcloud config set project YOUR_PROJECT_ID
+# Environment variables
+echo "GOOGLE_CLOUD_PROJECT=$PROJECT_ID" > .env
+echo "GOOGLE_GENAI_USE_VERTEXAI=TRUE" >> .env
 ```
 
-**Common Pitfall**: Never hardcode API keys in your source code . Always use environment variables or secure secret management .
+**📖 For complete Vertex AI setup instructions**, including detailed IAM roles, API enablement, and troubleshooting, see: **[How to Configure Vertex AI for ADK](30_how_to_configure_vertex_ai_for_adk.md)**
 
-## Your First Agent: The "Hello, Intelligent World" Moment
-
-Time to build something that actually works . We're creating a weather assistant that demonstrates core ADK concepts .
-
-### The Simplest Possible Agent
-
-```python
-# src/intelligent_assistant/agents/simple_agent.py
-from google.adk.agents import Agent
-
-# Create your first agent
-simple_agent = Agent(
-    name="helpful_assistant",
-    model="gemini-2.0-flash",
-    description="A helpful AI assistant",
-    instruction="You are a friendly and helpful AI assistant. "
-                "Respond to user questions in a clear and concise manner."
-)
-```
-
-An Agent in ADK is a self-contained execution unit designed to act autonomously to achieve specific goals . Agents can perform tasks, interact with users, utilize external tools, and coordinate with other agents .
-
-### Running Your Agent
-
-```python
-# src/intelligent_assistant/main.py
-from .agents.simple_agent import simple_agent
-
-if __name__ == "__main__":
-    # Interactive mode
-    simple_agent.run()
-```
-
-Run it:
+#### Step 7: Verify Your Setup
 
 ```bash
-poetry run python -m src.intelligent_assistant.main
+# Test Vertex AI access
+gcloud ai models list --region=us-central1 --project=$PROJECT_ID
+
+# Test ADK installation with Vertex AI
+python -c "
+import vertexai
+from vertexai import agent_engines
+print('✅ Vertex AI setup successful!')
+"
 ```
 
-**Congratulations!** You just created your first AI agent . But it's not very smart yet – it can only chat . Let's give it superpowers.
-
-### Quick Quiz
-
-What are the four required parameters for creating a basic Agent?
-
-<details>
-<summary>Click to reveal answer</summary>
-1. name
-2. model  
-3. description
-4. instruction
-</details>
-
-## Adding Intelligence: Tools That Actually Do Things
-
-This is where ADK shines – giving your agents the ability to interact with the real world through tools . Tools represent specific capabilities provided to an AI agent, enabling it to perform actions and interact with the world beyond its core text generation and reasoning abilities .
-
-```mermaid
-flowchart TB
-    subgraph "Agent Layer"
-        A[Weather Agent]
-        style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    end
-    
-    subgraph "Tool Layer" 
-        B[get_current_weather]
-        C[get_weather_forecast]
-        D[External API Tool]
-        style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-        style C fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-        style D fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    end
-    
-    subgraph "External Systems"
-        E[Weather API Service]
-        F[Database]
-        G[Third-party Services]
-        style E fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-        style F fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-        style G fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    end
-    
-    subgraph "User Interface"
-        H["User Query: Weather in NYC?"]
-        I["Agent Response: 22°C, Partly cloudy"]
-        style H fill:#fff3e0,stroke:#e65100,stroke-width:2px
-        style I fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    end
-    
-    H --> A
-    A --> B
-    A --> C
-    B --> E
-    C --> E
-    D --> F
-    D --> G
-    A --> I
-```
-
-### Building a Weather Tool
+#### Step 8: Configure Python Environment for Vertex AI
 
 ```python
-# src/intelligent_assistant/tools/weather_tools.py
-import requests
-from typing import Dict, Any
+# src/intelligent_assistant/config.py
+import os
+from dotenv import load_dotenv
 
-def get_current_weather(city: str) -> Dict[str, Any]:
-    """
-    Get current weather information for a specified city.
+load_dotenv()
 
-    Args:
-        city (str): The name of the city
+# Vertex AI Configuration
+GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
+GOOGLE_CLOUD_LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+USE_VERTEX_AI = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE"
+STAGING_BUCKET = f"gs://{GOOGLE_CLOUD_PROJECT}-adk-agents"
 
-    Returns:
-        dict: Weather information including temperature and conditions
-    """
-    # For demo purposes, we'll simulate weather data
-    # In production, you'd integrate with a real weather API
-
-    weather_data = {
-        "new york": {
-            "temperature": "22°C (72°F)",
-            "condition": "Partly cloudy",
-            "humidity": "65%",
-            "wind": "15 km/h NW"
-        },
-        "london": {
-            "temperature": "18°C (64°F)",
-            "condition": "Light rain",
-            "humidity": "80%",
-            "wind": "10 km/h SW"
-        },
-        "tokyo": {
-            "temperature": "25°C (77°F)",
-            "condition": "Sunny",
-            "humidity": "55%",
-            "wind": "8 km/h E"
-        }
-    }
-
-    city_lower = city.lower()
-    if city_lower in weather_data:
-        return {
-            "status": "success",
-            "city": city,
-            "weather": weather_data[city_lower]
-        }
-    else:
-        return {
-            "status": "error",
-            "message": f"Weather data not available for {city}"
-        }
-
-def get_weather_forecast(city: str, days: int = 3) -> Dict[str, Any]:
-    """
-    Get weather forecast for specified number of days.
-
-    Args:
-        city (str): The name of the city
-        days (int): Number of days for forecast (1-7)
-
-    Returns:
-        dict: Forecast information
-    """
-    if days > 7:
-        return {
-            "status": "error",
-            "message": "Forecast only available for up to 7 days"
-        }
-
-    # Simulated forecast data
-    forecast = []
-    for i in range(days):
-        forecast.append({
-            "day": f"Day {i+1}",
-            "temperature": f"{20 + i*2}°C",
-            "condition": ["Sunny", "Cloudy", "Rainy"][i % 3]
-        })
-
-    return {
-        "status": "success",
-        "city": city,
-        "forecast": forecast
-    }
-```
-
-### Creating a Weather Agent
-
-```python
-# src/intelligent_assistant/agents/weather_agent.py
-from google.adk.agents import Agent
-from ..tools.weather_tools import get_current_weather
-
-weather_agent = Agent(
-    name="weather_assistant",
-    model="gemini-2.0-flash",
-    description="AI assistant that provides weather information and forecasts",
-    instruction="""
-    You are a helpful weather assistant. You can provide current weather
-    information and forecasts for cities around the world.
-
-    When users ask about weather:
-    1. Use get_current_weather for current conditions
-    2. Be conversational and helpful in your responses
-    3. If weather data isn't available, suggest alternatives
-    """,
-    tools=[get_current_weather]
-)
-```
-
-### Testing Your Weather Agent
-
-```python
-# src/intelligent_assistant/test_weather.py
-from .agents.weather_agent import weather_agent
-from google.adk.runners import InMemoryRunner
-
-async def test_weather_agent():
-    runner = InMemoryRunner(weather_agent)
-
-    # Test current weather
-    response = await runner.run_async(
-        "What's the weather like in New York?"
+# Initialize Vertex AI
+if USE_VERTEX_AI:
+    import vertexai
+    vertexai.init(
+        project=GOOGLE_CLOUD_PROJECT,
+        location=GOOGLE_CLOUD_LOCATION,
+        staging_bucket=STAGING_BUCKET
     )
-    print("Weather Response:", response)
-
-    # Test forecast
-    response = await runner.run_async(
-        "Can you give me a 5-day forecast for London?"
-    )
-    print("Forecast Response:", response)
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(test_weather_agent())
 ```
 
-**Pro Tip**: Always test your tools independently before integrating them with agents . It's easier to debug a single function than a full agent conversation.
+### Troubleshooting Common Setup Issues
 
-## Multi-Agent Systems: When One Agent Isn't Enough
+#### Permission Denied Errors
 
-Real-world applications need specialized agents working together. Think of it like a restaurant kitchen – you don't want the sous chef making desserts.
+**Error**: `Permission denied` when running ADK commands
 
-```mermaid
-flowchart TD
-    subgraph "Multi-Agent Architecture"
-        subgraph "Coordination Layer"
-            COORD[Coordinator Agent]
-            style COORD fill:#fff3e0,stroke:#f57f17,stroke-width:3px
-        end
-        
-        subgraph "Specialist Agents"
-            WS[Weather Specialist]
-            TS[Task Specialist] 
-            ES[Email Specialist]
-            style WS fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-            style TS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-            style ES fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-        end
-        
-        subgraph "Tool Layer"
-            WT[Weather Tools]
-            TT[Task Tools]
-            ET[Email Tools]
-            style WT fill:#f1f8e9,stroke:#689f38,stroke-width:1px
-            style TT fill:#e1f5fe,stroke:#0288d1,stroke-width:1px
-            style ET fill:#fce4ec,stroke:#ad1457,stroke-width:1px
-        end
-        
-        subgraph "External Services"
-            API[Weather API]
-            DB[Task Database]
-            MAIL[Email Service]
-            style API fill:#f9fbe7,stroke:#827717,stroke-width:1px
-            style DB fill:#e0f2f1,stroke:#00695c,stroke-width:1px
-            style MAIL fill:#fde7f3,stroke:#880e4f,stroke-width:1px
-        end
-    end
-    
-    COORD --> WS
-    COORD --> TS
-    COORD --> ES
-    
-    WS --> WT
-    TS --> TT
-    ES --> ET
-    
-    WT --> API
-    TT --> DB
-    ET --> MAIL
+**Solution**: 
+```bash
+# Check your current permissions
+gcloud auth list
+gcloud config get-value project
+
+# Re-authenticate if needed
+gcloud auth application-default login
 ```
 
-ADK provides distinct agent categories to build sophisticated applications . You can build modular and scalable applications by composing multiple specialized agents in a hierarchy, enabling complex coordination and delegation .
+#### API Not Enabled Errors
 
-### Building Specialized Agents
+**Error**: `API [aiplatform.googleapis.com] not enabled`
 
-```python
-# src/intelligent_assistant/agents/specialists.py
-from google.adk.agents import Agent
-from ..tools.weather_tools import get_current_weather
-
-# Weather Specialist
-weather_specialist = Agent(
-    name="weather_expert",
-    model="gemini-2.0-flash",
-    description="Expert in weather information and forecasts",
-    instruction="""
-    You are a weather specialist. Provide detailed, accurate weather
-    information. Always include relevant details like temperature,
-    conditions, and any weather warnings.
-    """,
-    tools=[get_current_weather]
-)
-
-# Task Specialist
-task_specialist = Agent(
-    name="task_manager",
-    model="gemini-2.0-flash",
-    description="Helps organize and manage tasks and schedules",
-    instruction="""
-    You are a task management specialist. Help users organize their
-    schedules, set priorities, and manage their to-do lists efficiently.
-    """
-)
-
-# Coordinator Agent
-coordinator = Agent(
-    name="personal_assistant",
-    model="gemini-2.0-flash",
-    description="Personal assistant that coordinates various specialists",
-    instruction="""
-    You are a personal assistant coordinator. Based on user requests:
-
-    - For weather questions: delegate to weather_expert
-    - For task/schedule questions: delegate to task_manager
-    - For general questions: handle directly
-
-    Always provide helpful, comprehensive responses.
-    """,
-    sub_agents=[weather_specialist, task_specialist]
-)
+**Solution**:
+```bash
+# Enable the API and wait for propagation
+gcloud services enable aiplatform.googleapis.com --project=$PROJECT_ID
+sleep 30  # Wait 30 seconds for API to be fully enabled
 ```
 
-### Workflow Agents for Structured Execution
+#### Service Agent Not Found
 
-Workflow agents are specialized components in ADK designed purely for orchestrating the execution flow of sub-agents . Their primary role is to manage how and when other agents run, defining the control flow of a process .
+**Error**: `Service agent not found` during deployment
 
-Unlike LLM Agents, which use Large Language Models for dynamic reasoning and decision-making, Workflow Agents operate based on predefined logic . They determine the execution sequence according to their type without consulting an LLM for the orchestration itself, resulting in deterministic and predictable execution patterns .
+**Solution**:
+```bash
+# Manually create the service agent
+gcloud beta services identity create --service=aiplatform.googleapis.com --project=$PROJECT_ID
 
-```python
-# src/intelligent_assistant/workflows/morning_briefing.py
-from google.adk.agents import SequentialAgent
-from ..agents.specialists import weather_specialist, task_specialist
-
-morning_briefing = SequentialAgent(
-    name="morning_briefing_workflow",
-    sub_agents=[
-        weather_specialist,  # Get weather first
-        task_specialist,     # Then get schedule
-    ],
-    instruction="""
-    Provide a comprehensive morning briefing:
-    1. Weather specialist provides today's weather
-    2. Task specialist provides today's schedule
-    3. Combine into a helpful morning summary
-    """
-)
+# Grant additional permissions if needed
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.reasoningEngineServiceAgent"
 ```
 
-ADK provides three core workflow agent types: Sequential Agents execute sub-agents one after another in sequence, Loop Agents repeatedly execute sub-agents until a termination condition is met, and Parallel Agents execute multiple sub-agents simultaneously .
+#### Quota Exceeded Errors
 
-**Pause and Reflect**: Think about your daily routine. What repetitive tasks could be automated with a multi-agent system?
+**Error**: `Quota exceeded for requests`
 
-## Best Practices: Building Production-Ready Agents
+**Solution**: Request quota increases via Google Cloud Console → IAM & Admin → Quotas
 
-The difference between a demo and a production system isn't features – it's reliability, monitoring, and maintainability .
+### Security Best Practices
 
-### Error Handling That Actually Helps
-
-```python
-# src/intelligent_assistant/utils/error_handling.py
-import logging
-from typing import Dict, Any, Optional
-from functools import wraps
-
-logger = logging.getLogger(__name__)
-
-def handle_tool_errors(func):
-    """Decorator for robust tool error handling"""
-    @wraps(func)
-    def wrapper(*args, **kwargs) -> Dict[str, Any]:
-        try:
-            result = func(*args, **kwargs)
-            return result
-        except Exception as e:
-            logger.error(f"Tool {func.__name__} failed: {str(e)}")
-            return {
-                "status": "error",
-                "message": f"Sorry, I encountered an issue: {str(e)}",
-                "tool": func.__name__
-            }
-    return wrapper
-
-# Apply to your tools
-@handle_tool_errors
-def get_current_weather(city: str) -> Dict[str, Any]:
-    # Your weather tool implementation
-    pass
-```
-
-### Testing Strategy
-
-```python
-# tests/test_agents.py
-import pytest
-from src.intelligent_assistant.agents.weather_agent import weather_agent
-
-class TestWeatherAgent:
-    @pytest.mark.asyncio
-    async def test_current_weather_query(self):
-        # Test implementation here
-        assert True  # Replace with actual test
-
-    @pytest.mark.asyncio
-    async def test_forecast_query(self):
-        # Test implementation here
-        assert True  # Replace with actual test
-```
-
-The easiest way to test your agent in your development environment is to use the ADK web UI . This approach allows you to launch a local web server where you can run commands or send API requests to test your agent .
-
-### Development Workflow with ADK Web
-
-```mermaid
-flowchart TD  
-    subgraph "Setup Phase"
-        A[Install Dependencies]
-        B[Structure Project]
-        C[Configure Environment]
-        style A fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-        style B fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-        style C fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    end
-    
-    subgraph "Development Loop"
-        D[Write Agent Code]
-        E[Launch ADK Web]
-        F[Interactive Testing]
-        G[Debug & Iterate]
-        style D fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-        style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-        style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-        style G fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    end
-    
-    subgraph "Testing & Validation"
-        H[Unit Tests]
-        I[Agent Evaluation]
-        J[Performance Monitoring]
-        style H fill:#f1f8e9,stroke:#689f38,stroke-width:2px
-        style I fill:#f1f8e9,stroke:#689f38,stroke-width:2px
-        style J fill:#f1f8e9,stroke:#689f38,stroke-width:2px
-    end
-    
-    subgraph "Production Ready"
-        K[Deploy Agent]
-        L[Monitor in Production]
-        style K fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
-        style L fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
-    end
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> D
-    G --> H
-    H --> I
-    I --> J
-    J --> K
-    K --> L
-    
-    E -.->|adk web| F
-    F -.->|Real-time feedback| G
-```
-
-#### Rapid Prototyping
-
-```python
-# Rapid prototyping with ADK Web
-# 1. Launch ADK Web
-!adk web
-
-# 2. In your browser, go to http://localhost:8080
-
-# 3. Use the web interface to interact with your agent
-```
-
-## Real-World Application: Task Management Assistant
-
-Let's build something you can actually use – a task management assistant that demonstrates all ADK concepts working together .
-
-### Complete Project Structure
-
-```
-task-assistant/
-├── pyproject.toml
-├── .env
-├── src/
-│   └── task_assistant/
-│       ├── __init__.py
-│       ├── main.py
-│       ├── agents/
-│       │   ├── __init__.py
-│       │   ├── coordinator.py
-│       │   └── specialists.py
-│       ├── tools/
-│       │   ├── __init__.py
-│       │   ├── task_tools.py
-│       │   └── calendar_tools.py
-│       └── workflows/
-│           ├── __init__.py
-│           └── daily_planning.py
-└── tests/
-    ├── __init__.py
-    └── test_task_assistant.py
-```
-
-### Task Management Tools
-
-```python
-# src/task_assistant/tools/task_tools.py
-from typing import List, Dict, Any
-from datetime import datetime, timedelta
-import json
-
-# In-memory task storage (use database in production)
-TASKS = []
-TASK_ID_COUNTER = 1
-
-def create_task(title: str, description: str = "", priority: str = "medium",
-               due_date: str = None) -> Dict[str, Any]:
-    """Create a new task"""
-    global TASK_ID_COUNTER
-
-    task = {
-        "id": TASK_ID_COUNTER,
-        "title": title,
-        "description": description,
-        "priority": priority,
-        "due_date": due_date,
-        "status": "pending",
-        "created_at": datetime.now().isoformat()
-    }
-
-    TASKS.append(task)
-    TASK_ID_COUNTER += 1
-
-    return {
-        "status": "success",
-        "message": f"Task '{title}' created successfully",
-        "task": task
-    }
-
-def list_tasks(status: str = "all") -> Dict[str, Any]:
-    """List tasks by status"""
-    if status == "all":
-        filtered_tasks = TASKS
-    else:
-        filtered_tasks = [t for t in TASKS if t["status"] == status]
-
-    return {
-        "status": "success",
-        "tasks": filtered_tasks,
-        "count": len(filtered_tasks)
-    }
-
-def complete_task(task_id: int) -> Dict[str, Any]:
-    """Mark a task as completed"""
-    for task in TASKS:
-        if task["id"] == task_id:
-            task["status"] = "completed"
-            task["completed_at"] = datetime.now().isoformat()
-            return {
-                "status": "success",
-                "message": f"Task '{task['title']}' marked as completed",
-                "task": task
-            }
-
-    return {
-        "status": "error",
-        "message": f"Task with ID {task_id} not found"
-    }
-```
-
-### Intelligent Task Assistant
-
-```python
-# src/task_assistant/agents/coordinator.py
-from google.adk.agents import Agent
-from ..tools.task_tools import create_task, list_tasks, complete_task
-
-task_assistant = Agent(
-    name="intelligent_task_assistant",
-    model="gemini-2.0-flash",
-    description="AI assistant for task and productivity management",
-    instruction="""
-    You are an intelligent task management assistant. Help users:
-
-    1. Create tasks with appropriate priorities and due dates
-    2. List and organize their tasks
-    3. Mark tasks as completed
-    4. Provide productivity insights and suggestions
-
-    Be proactive in suggesting task organization and time management tips.
-    Always confirm actions taken and provide clear summaries.
-    """,
-    tools=[create_task, list_tasks, complete_task]
-)
-```
-
-### Running Your Complete Assistant
-
-```python
-# src/task_assistant/main.py
-from .agents.coordinator import task_assistant
-
-def main():
-    print("🚀 Task Assistant Ready!")
-    print("Try commands like:")
-    print("- 'Create a task to review quarterly reports'")
-    print("- 'Show me all my pending tasks'")
-    print("- 'Mark task 1 as completed'")
-    print("- 'Help me plan my day'")
-
-    # Interactive mode
-    task_assistant.run()
-
-if __name__ == "__main__":
-    main()
-```
-
-**Pro Tip**: Start with simple tools and gradually add complexity . It's easier to debug and extend modular components.
-
-## Deployment and Scaling
-
-Your agent is ready for the real world. Here's how to deploy it professionally.
-
-### Development to Production Pipeline
-
-```mermaid
-flowchart LR
-    subgraph "Development Phase"
-        A[Local Development]
-        B[Testing Suite]
-        style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-        style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    end
-    
-    subgraph "Testing & Validation"
-        C[Unit Tests]
-        D[Integration Tests] 
-        E[Agent Evaluation]
-        style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-        style D fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-        style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    end
-    
-    subgraph "Containerization"
-        F[Docker Build]
-        G[Image Registry]
-        style F fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-        style G fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    end
-    
-    subgraph "Cloud Deployment"
-        H[Vertex AI Agent Engine]
-        I[Cloud Run]
-        J[Custom Infrastructure]
-        style H fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-        style I fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-        style J fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    end
-    
-    A --> B
-    B --> C
-    B --> D
-    B --> E
-    C --> F
-    D --> F
-    E --> F
-    F --> G
-    G --> H
-    G --> I
-    G --> J
-```
-
-### Docker Configuration
-
-```dockerfile
-# Dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install Poetry
-RUN pip install poetry
-
-# Copy dependency files
-COPY pyproject.toml poetry.lock ./
-
-# Install dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev
-
-# Copy application
-COPY src/ ./src/
-
-# Set environment
-ENV PYTHONPATH=/app
-
-# Run application
-CMD ["python", "-m", "src.task_assistant.main"]
-```
-
-### Environment Configuration
-
-```yaml
-# docker-compose.yml
-version: "3.8"
-services:
-  task-assistant:
-    build: .
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - GOOGLE_GENAI_USE_VERTEXAI=FALSE
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./data:/app/data # Persistent task storage
-```
-
-## Advanced Features and Next Steps
-
-You've built a solid foundation . Here's where to go next.
-
-### Advanced Agent Patterns
-
-1. **ReACT Pattern**: Reasoning and Acting in cycles for complex problem-solving
-2. **Chain-of-Thought**: Breaking complex tasks into manageable steps
-3. **Human-in-the-Loop**: Incorporating human feedback and oversight
-4. **Memory Systems**: Persistent context across conversations
-
-### Integration Possibilities
-
-ADK's rich tool ecosystem allows you to equip agents with diverse capabilities: use pre-built tools like Search and Code Execution, create custom functions, integrate 3rd-party libraries like LangChain and CrewAI, or even use other agents as tools .
-
-```python
-# Examples of advanced integrations
-from google.adk.tools import google_search
-
-enterprise_agent = Agent(
-    name="enterprise_assistant",
-    model="gemini-2.0-flash",
-    tools=[
-        google_search,
-        # Add your custom tools here
-    ]
-)
-```
-
-### Performance Optimization
-
-```python
-# Async patterns for better performance
-import asyncio
-
-async def parallel_agent_execution():
-    # Implementation for parallel execution
-    pass
-```
-
-## Your 24-Hour Challenge: Build and Deploy
-
-Here's your immediate action plan – complete this within 24 hours of reading this article :
-
-### Hour 1-2: Setup
-
-- [ ] Install Poetry and create project structure
-- [ ] Get Google AI Studio API key
-- [ ] Create your first "Hello World" agent
-
-### Hour 3-6: Build Core Functionality
-
-- [ ] Add one custom tool (weather, news, or calculator)
-- [ ] Test your agent thoroughly using ADK Web
-- [ ] Add error handling
-
-### Hour 7-8: Deploy and Share
-
-- [ ] Containerize your agent
-- [ ] Deploy to a cloud platform
-- [ ] Share your creation on social media with \#ADKAgent
-
-### Bonus Challenges (Next Week)
-
-- [ ] Add a second specialized agent
-- [ ] Implement multi-agent coordination
-- [ ] Build a simple web interface
-- [ ] Add persistent storage
-
-## The ADK Community and Resources
-
-You're not alone in this journey . Here's your support network:
-
-### Essential Resources
-
-- **Official Documentation**: Google ADK Documentation
-- **Sample Agents**: ADK Samples Repository
-- **Community Examples**: Various community tutorials
-- **Advanced Tutorials**: Developer blogs and video guides
-
-### Pro Tips for Continued Learning
-
-1. **Start Small**: Master simple agents before building complex systems
-2. **Join Communities**: Engage with other ADK developers online
-3. **Read Source Code**: Study successful agent implementations
-4. **Experiment Fearlessly**: The best way to learn is by building
-
-## Conclusion: Your AI Agent Empire Starts Now
-
-Remember Sarah and Jake from the beginning? The difference between them wasn't talent, experience, or resources – it was choosing the right tool and taking action immediately .
-
-Google ADK isn't just another framework – it's your competitive advantage in the AI-driven future . While others debate whether AI will replace developers, you're building the tools that augment human intelligence and solve real problems .
-
-The agents you build today will be the foundation of tomorrow's breakthrough applications . Every successful AI company started with someone building their first simple agent and iterating from there .
-
-**Your journey from novice to ADK practitioner doesn't end here – it begins here.**
-
-The question isn't whether you'll build AI agents – it's whether you'll build them before your competition does . The tools are ready , the documentation is clear , and the community is supportive .
-
-**Start your 24-hour challenge now. Your future self will thank you.**
-
----
-
-_"The expert in anything was once a beginner who refused to give up."_ Your ADK mastery journey starts with a single `poetry init` command . What are you waiting for?
-
-**Pro Tip**: Bookmark this article and revisit it as you build . The patterns and examples here will serve as your reference guide for months to come.
-
-Now stop reading and start building . Your first AI agent is just one command away:
+1. **Use Least Privilege**: Only grant the minimum required roles
+2. **Environment Variables**: Never hardcode project IDs or credentials
+3. **Service Accounts**: For production, use dedicated service accounts instead of personal accounts
+4. **Audit Logs**: Enable Cloud Audit Logs to monitor API usage
 
 ```bash
-mkdir my-first-agent && cd my-first-agent && poetry init
+# Create a dedicated service account for production
+gcloud iam service-accounts create adk-agent-sa \
+    --display-name="ADK Agent Service Account" \
+    --project=$PROJECT_ID
+
+# Grant only necessary roles to the service account
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:adk-agent-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
 ```
 
-The future is agentic . Make sure you're part of building it.
+### Regional Availability and Cost Considerations
 
-## Official Resources
+#### Supported Regions for Vertex AI Agent Engine (June 2025)
 
-- [Google ADK Documentation](https://google.github.io/adk-docs/)
-- [ADK Samples Repository](https://github.com/google/adk-samples)
-- [ADK Docs GitHub](https://github.com/google/adk-docs)
-- [ADK Web UI](https://github.com/google/adk-web)
-- [ADK on PyPI](https://pypi.org/project/google-adk/)
-- [Quickstart Guide](https://google.github.io/adk-docs/get-started/quickstart/)
-- [Workflow Agents](https://google.github.io/adk-docs/agents/workflow-agents/)
-- [Tools Reference](https://google.github.io/adk-docs/tools/)
-- [Testing Agents](https://google.github.io/adk-docs/get-started/testing/)
-- [Vertex AI Agent Engine Docs](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/develop/adk)
-- [Vertex AI ADK Quickstart](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart)
+Choose the region closest to your users for optimal performance:
 
-## Recommended Tutorials
+- **Americas**: `us-central1` (Iowa), `us-east1` (South Carolina), `us-west1` (Oregon)
+- **Europe**: `europe-west1` (Belgium), `europe-west4` (Netherlands)
+- **Asia Pacific**: `asia-southeast1` (Singapore), `asia-northeast1` (Tokyo)
 
-- [Codelab: Your First Agent with ADK](https://codelabs.developers.google.com/your-first-agent-with-adk)
-- [Getting Started with Agent Development Kit (YouTube)](https://www.youtube.com/watch?v=ZF8Jnyw8aCs)
-- [Build KYC Agentic Workflows with Google’s ADK (Cloud Blog)](https://cloud.google.com/blog/products/ai-machine-learning/build-kyc-agentic-workflows-with-googles-adk)
-- [Step-by-Step Guide to Create an AI Agent with Google ADK (Learnopoly)](https://learnopoly.com/step-by-step-guide-to-create-an-ai-agent-with-google-adk/)
-- [The Complete Guide to Google’s Agent Development Kit ADK](https://www.siddharthbharath.com/the-complete-guide-to-googles-agent-development-kit-adk/)
-- [ADK Docs: Agents Overview](https://google.github.io/adk-docs/agents/)
+```bash
+# Set your preferred region
+export GOOGLE_CLOUD_LOCATION="us-central1"  # Recommended for tutorials
+```
 
-## Poetry & Python Environment
+#### Cost Estimation
 
-- [Poetry Official Site](https://python-poetry.org)
-- [Poetry on Real Python](https://realpython.com/dependency-management-python-poetry/)
-- [Poetry: Key Features (StudyRaid)](https://app.studyraid.com/en/read/15003/518558/key-features-of-poetry-for-modern-python-projects)
-- [Best Practices for Python Virtual Environments](https://paulorod7.com/best-practices-to-use-and-manage-python-virtual-environments)
-- [Poetry Quickstart (Hexlet)](https://hexlet.io/courses/python-setup-environment/lessons/start-with-poetry/theory_unit)
-- [Poetry Video: Understand pyproject.toml](https://realpython.com/videos/understand-pyprojecttoml/)
-- [Getting Started with Poetry (Hamon Blog)](https://hamon.in/blog/getting-started-with-poetry-the-modern-python-dependency-manager/)
-- [Python Poetry Tutorial (DataCamp)](https://www.datacamp.com/tutorial/python-poetry)
+**Vertex AI Agent Engine Pricing** (as of June 2025):
+- **Model Usage**: Pay per token (input/output)
+  - Gemini 2.0 Flash: ~$0.075 per 1M input tokens, ~$0.30 per 1M output tokens
+- **Agent Engine Hosting**: ~$0.50-2.00 per hour depending on instance size
+- **Cloud Storage**: ~$0.020 per GB/month for bucket storage
 
----
+**Cost Optimization Tips**:
+```bash
+# Use efficient model configurations
+# In your agent code:
+generate_content_config = types.GenerateContentConfig(
+    temperature=0.1,        # Lower temperature = more deterministic
+    max_output_tokens=500,  # Limit output length
+    top_p=0.95,
+)
+```
+
+### Alternative: Local Development vs Cloud Deployment
+
+| Feature | Google AI Studio (Local) | Vertex AI (Cloud) |
+|---------|---------------------------|-------------------|
+| **Setup Complexity** | ⭐⭐ Simple | ⭐⭐⭐⭐ Advanced |
+| **Cost** | Free tier available | Pay-as-you-use |
+| **Production Ready** | ❌ Development only | ✅ Production ready |
+| **Security** | API Key based | IAM & Service Accounts |
+| **Scalability** | Limited | Auto-scaling |
+| **Team Collaboration** | ❌ Individual | ✅ Team-friendly |
+
+**Recommendation**: Start with Google AI Studio for learning, migrate to Vertex AI for production.
