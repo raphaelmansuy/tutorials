@@ -2,6 +2,8 @@
 
 _"The best time to plant a tree was 20 years ago. The second best time is now."_ - This ancient Chinese proverb perfectly captures why you should start building AI agents today, not tomorrow.
 
+> **Updated for Google ADK 1.4.2** - This tutorial is current as of June 2025 and uses the latest Agent Development Kit features including the built-in web UI and command-line tools.
+
 ## Prerequisites
 
 <details>
@@ -11,7 +13,7 @@ Before diving in, ensure you have:
 
 **Required:**
 
-- Python 3.9+ installed
+- **Python 3.11+** installed (ADK supports 3.9+, but 3.11+ recommended for best performance)
 - Basic Python knowledge (functions, classes, imports)
 - Command line familiarity
 - Internet connection for API access
@@ -20,9 +22,14 @@ Before diving in, ensure you have:
 
 - Google Cloud Platform account (free tier works)
 - Git installed
-- Text editor or IDE
+- Text editor or IDE (VS Code recommended)
 
 **Estimated Prerequisites Setup Time:** 15 minutes
+
+**Verify your Python version:**
+```bash
+python --version  # Should show 3.11.x or higher
+```
 
 </details>
 
@@ -36,6 +43,9 @@ Before diving in, ensure you have:
   - [What Makes Google ADK the Swiss Army Knife of Agent Development](#what-makes-google-adk-the-swiss-army-knife-of-agent-development)
   - [Core ADK Architecture](#core-adk-architecture)
   - [Why ADK Wins the Developer Experience Battle](#why-adk-wins-the-developer-experience-battle)
+- [ADK Command-Line Tools & Web Interface 🛠️](#adk-command-line-tools--web-interface-️)
+  - [The `adk` Command Suite](#the-adk-command-suite)
+  - [ADK Web - Your Development Companion 🌐](#adk-web---your-development-companion-)
 - [Choose Your Path 🚀](#choose-your-path-)
   - [Path Selection Guide](#path-selection-guide)
 - [⚡ Quick Start Path (30 Minutes)](#quick-start-path-30-minutes)
@@ -124,6 +134,58 @@ flowchart TB
 3. **Multi-Agent Orchestration**: Build agent teams that coordinate like a well-oiled machine
 4. **Production-Ready**: Deploy anywhere from local development to Vertex AI Agent Engine
 
+## ADK Command-Line Tools & Web Interface 🛠️
+
+Google ADK 1.4.2 comes with powerful built-in tools that make development, testing, and debugging a breeze.
+
+### The `adk` Command Suite
+
+Once you install Google ADK, you get access to a comprehensive command-line toolkit:
+
+```bash
+# Install ADK (includes all command-line tools)
+pip install google-adk
+
+# Available commands after installation:
+adk web           # Launch interactive development UI
+adk run           # Run agents from command line
+adk api_server    # Start REST API server for agents  
+adk eval          # Evaluate agent performance with test sets
+```
+
+### ADK Web - Your Development Companion 🌐
+
+**ADK Web** is a game-changing browser-based development UI that comes built-in with ADK. Think of it as your agent development command center.
+
+**Key Features:**
+- 🎯 **Interactive Chat Interface** - Test your agents in real-time
+- 🔍 **Event Tracing** - See exactly what your agent is thinking and doing
+- 📊 **Function Call Inspector** - Debug tool calls with detailed logs
+- 🎤 **Voice Integration** - Test voice interactions with supported models
+- 📈 **Performance Metrics** - Track latency and execution traces
+- 🔄 **Live Reload** - Changes to your code automatically update
+
+**Getting Started with ADK Web:**
+
+```bash
+# Navigate to your agent project directory
+cd your-agent-project/
+
+# Launch the development UI
+adk web
+
+# Opens automatically at http://localhost:8000
+# Select your agent from the dropdown and start chatting!
+```
+
+**Why ADK Web is Revolutionary:**
+- **Zero Configuration** - Works out of the box with any ADK project
+- **Real-time Debugging** - See function calls, model responses, and traces live
+- **Production Preview** - Test how your agent will behave in real scenarios
+- **Multi-Agent Support** - Switch between different agents in the same interface
+
+**Pro Tip:** Use `adk web --no-reload` on Windows if you encounter subprocess transport errors.
+
 ## Choose Your Path 🚀
 
 **⚡ Quick Start (30 minutes)** - Get your first agent running with minimal setup
@@ -150,14 +212,39 @@ _Get a working AI agent with minimal friction - prove to yourself that ADK works
 
 ### Step 1: Minimal Setup (5 minutes)
 
+**Modern Python Setup (Recommended):**
+
 ```bash
-# Create a simple directory and file
+# Create a simple directory and navigate into it
 mkdir my-first-agent && cd my-first-agent
 
-# Install uv (the modern Python package manager)
+# Create and activate virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+# macOS/Linux:
+source .venv/bin/activate
+# Windows CMD:
+# .venv\Scripts\activate.bat
+# Windows PowerShell:
+# .venv\Scripts\Activate.ps1
+
+# Install Google ADK (latest 1.4.2)
+pip install google-adk python-dotenv
+
+# Verify installation
+pip show google-adk
+```
+
+**Alternative: Using uv (Ultra-fast Python package manager):**
+
+```bash
+# Install uv if you prefer (optional but faster)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install ADK using uv
+# Create project with uv
+mkdir my-first-agent && cd my-first-agent
+uv init --python 3.11
 uv add google-adk python-dotenv
 ```
 
@@ -184,44 +271,79 @@ from google.adk.agents import Agent
 # Load environment variables
 load_dotenv()
 
-def get_weather(location: str) -> str:
-    """Mock weather function - replace with real API in production"""
+def get_weather(city: str) -> dict:
+    """Retrieves the current weather report for a specified city.
+    
+    Args:
+        city (str): The name of the city for which to retrieve the weather report.
+        
+    Returns:
+        dict: status and result or error msg.
+    """
+    # Mock weather data - replace with real API in production
     weather_data = {
-        "paris": "Sunny, 22°C",
-        "london": "Cloudy, 15°C",
-        "tokyo": "Rainy, 18°C",
-        "new york": "Partly cloudy, 20°C"
+        "paris": "Sunny, 22°C (72°F) with light winds",
+        "london": "Cloudy, 15°C (59°F) with occasional drizzle",
+        "tokyo": "Rainy, 18°C (64°F) with high humidity",
+        "new york": "Partly cloudy, 20°C (68°F) with gentle breeze"
     }
-    return weather_data.get(location.lower(), f"Weather data not available for {location}")
+    
+    if city.lower() in weather_data:
+        return {
+            "status": "success",
+            "report": f"The weather in {city.title()} is {weather_data[city.lower()]}"
+        }
+    else:
+        return {
+            "status": "error",
+            "error_message": f"Weather information for '{city}' is not available."
+        }
 
-def calculate(expression: str) -> str:
-    """Safe calculator for basic math"""
+def calculate(expression: str) -> dict:
+    """Safe calculator for basic math expressions.
+    
+    Args:
+        expression (str): Mathematical expression to evaluate
+        
+    Returns:
+        dict: status and result or error message
+    """
     try:
-        # Basic safety check
+        # Basic safety check for allowed characters
         allowed_chars = set('0123456789+-*/(). ')
         if all(c in allowed_chars for c in expression):
             result = eval(expression)
-            return f"{expression} = {result}"
+            return {
+                "status": "success",
+                "report": f"{expression} = {result}"
+            }
         else:
-            return "Invalid expression. Only basic math allowed."
-    except:
-        return "Error in calculation"
+            return {
+                "status": "error",
+                "error_message": "Invalid expression. Only basic math operations allowed."
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error_message": f"Error in calculation: {str(e)}"
+        }
 
-# Create your agent
+# Create your agent with modern ADK 1.4.2 syntax
 weather_assistant = Agent(
-    name="helpful_assistant",
+    name="weather_time_agent",
     model="gemini-2.0-flash",
-    description="A helpful assistant that can check weather and do calculations",
+    description="Agent to answer questions about weather and perform calculations",
     instruction="""
     You are a helpful assistant with access to weather information and basic calculations.
 
     When users ask about weather:
     - Use the get_weather function for the specified location
-    - Be friendly and conversational
+    - Be friendly and conversational in your response
+    - If weather data is not available, suggest they try a different city
 
     When users ask for calculations:
     - Use the calculate function for math problems
-    - Explain the result clearly
+    - Explain the result clearly and show the calculation
 
     Always be helpful, concise, and engaging in your responses.
     """,
@@ -251,15 +373,47 @@ if __name__ == "__main__":
 
 ### Step 4: Test Your Agent (5 minutes)
 
+You have two great options to test your agent:
+
+#### Option A: ADK Web (Recommended) 🌐
+
 ```bash
-python simple_agent.py
+# Launch the interactive development UI
+adk web
 ```
 
-Try these examples:
+1. Open your browser to `http://localhost:8000`
+2. Select your agent from the dropdown menu
+3. Start chatting with your agent in the interface
+4. Use the **Events** tab to see:
+   - Function calls being made
+   - Model responses
+   - Execution traces and timing
+   - Debug information
+
+**ADK Web Advantages:**
+- Visual debugging with event tracing
+- Real-time function call inspection  
+- Performance metrics and latency tracking
+- Easy switching between different agents
+- Built-in voice support (with compatible models)
+
+#### Option B: Command Line
+
+```bash
+# Run directly in terminal
+python simple_agent.py
+
+# Or use ADK's built-in runner
+adk run simple_agent:weather_assistant
+```
+
+Try these examples in either interface:
 
 - "What's the weather in Paris?"
-- "Calculate 25 \* 4 + 10"
+- "Calculate 25 * 4 + 10"
 - "What's 15% of 200?"
+- "Show me the weather in Tokyo and calculate 100 / 5"
 
 ### Step 5: Quick Improvements (5 minutes)
 
@@ -333,10 +487,10 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Create project directory
 mkdir intelligent-task-assistant && cd intelligent-task-assistant
 
-# Initialize uv project
-uv init --name intelligent-task-assistant --python "3.9"
+# Initialize uv project with Python 3.11
+uv init --name intelligent-task-assistant --python "3.11"
 
-# Add dependencies
+# Add dependencies (Google ADK 1.4.2)
 uv add google-adk python-dotenv
 
 # Add development dependencies  
@@ -344,32 +498,50 @@ uv add --dev pytest black ruff mypy
 
 # Activate environment (uv automatically manages virtual environments)
 source .venv/bin/activate
+
+# Verify installation
+uv run python -c "import google.adk; print('ADK installed successfully!')"
 ```
 
 #### Step 2: Production Project Structure
 
 ```text
 intelligent-task-assistant/
-├── pyproject.toml          # uv configuration
-├── .python-version         # Python version specification
+├── pyproject.toml          # uv configuration and dependencies
+├── .python-version         # Python version specification (3.11)
 ├── uv.lock                 # Lock file for reproducible builds
-├── README.md
+├── README.md               # Project documentation
 ├── .env                    # Environment variables
+├── .gitignore              # Git ignore file
 ├── src/
-│   └── task_assistant/
-│       ├── __init__.py
-│       ├── main.py
-│       ├── config.py
-│       ├── agents/
+│   └── task_assistant/     # Main application package
+│       ├── __init__.py     # Package initialization
+│       ├── main.py         # Application entry point
+│       ├── config.py       # Configuration management
+│       ├── agents/         # Agent definitions
 │       │   ├── __init__.py
 │       │   └── coordinator.py
-│       └── tools/
+│       └── tools/          # Custom tools
 │           ├── __init__.py
 │           └── task_tools.py
-└── tests/
+└── tests/                  # Test suite
     ├── __init__.py
     └── test_agents.py
+
+# Create the directory structure
+mkdir -p src/task_assistant/{agents,tools} tests
+touch src/task_assistant/__init__.py
+touch src/task_assistant/agents/__init__.py  
+touch src/task_assistant/tools/__init__.py
+touch tests/__init__.py
 ```
+
+**Key Files for ADK Development:**
+
+- `pyproject.toml` - Contains Google ADK dependency
+- `src/task_assistant/agents/` - Your agent definitions
+- `.env` - API keys and configuration
+- Tests can use `adk eval` for systematic evaluation
 
 #### Step 3: Authentication Setup (15 minutes)
 
@@ -662,20 +834,71 @@ if __name__ == "__main__":
 
 #### Step 8: Testing Your Production Agent
 
-```bash
-# Run the application
-uv run python -m src.task_assistant.main
+You now have multiple sophisticated ways to test your production agent:
 
-# Or with proper module execution
-cd src && uv run python -m task_assistant.main
+#### Method 1: ADK Web (Development UI) 🌐
+
+```bash
+# Navigate to the project root
+cd intelligent-task-assistant
+
+# Launch the development interface
+adk web
+
+# Access the web UI at http://localhost:8000
 ```
 
-Try these advanced examples:
+**In ADK Web, you can:**
+- Select your `task_coordinator` from the agent dropdown
+- Test complex scenarios with the interactive chat
+- Monitor function calls in the Events tab
+- View execution traces and performance metrics
+- Debug multi-step agent workflows
+- Export conversation logs for analysis
+
+#### Method 2: Command Line Execution
+
+```bash
+# Method A: Direct Python execution
+uv run python -m src.task_assistant.main
+
+# Method B: Using ADK's built-in runner
+adk run src.task_assistant.agents.coordinator:task_coordinator
+
+# Method C: Start as API server for external access
+adk api_server --allow_origins=http://localhost:4200 --host=0.0.0.0
+```
+
+#### Method 3: Systematic Evaluation with adk eval
+
+```bash
+# Create evaluation test set (create eval_set.json)
+cat > eval_set.json << EOF
+{
+  "test_cases": [
+    {
+      "input": "Create a high-priority task to review quarterly reports by Friday",
+      "expected_outputs": ["high", "quarterly reports", "Friday"]
+    },
+    {
+      "input": "Show me all pending tasks sorted by priority", 
+      "expected_outputs": ["pending", "priority", "sorted"]
+    }
+  ]
+}
+EOF
+
+# Run systematic evaluation
+adk eval src.task_assistant.agents.coordinator:task_coordinator eval_set.json
+```
+
+Try these advanced examples in any method:
 
 - "Create a high-priority task to review quarterly reports by Friday"
-- "Show me all pending tasks sorted by priority"
+- "Show me all pending tasks sorted by priority"  
 - "Update task 1 status to completed"
 - "What's my current workload distribution?"
+- "Create three related tasks for a product launch campaign"
 
 #### Step 9: Testing and Quality Assurance
 
@@ -806,20 +1029,32 @@ gcloud run deploy task-assistant \
 5. **Multi-Agent Workflows**: Build specialist agents for different domains
 6. **CI/CD Pipeline**: Automated testing, building, and deployment
 
+**📚 Essential Resources:**
+
+- **[Official ADK Documentation](https://google.github.io/adk-docs/)** - Comprehensive guides and API reference
+- **[ADK Python Repository](https://github.com/google/adk-python)** - Source code and issues
+- **[ADK Samples Repository](https://github.com/google/adk-samples)** - Real-world examples and templates
+- **[ADK Web Repository](https://github.com/google/adk-web)** - Development UI source code
+- **[ADK PyPI Package](https://pypi.org/project/google-adk/)** - Version history and installation info
+
 ---
 
 ## Comparison: Quick Start vs Production
 
-| Feature              | Quick Start    | Production Path           |
-| -------------------- | -------------- | ------------------------- |
-| **Time Investment**  | 30 minutes     | 2-3 hours                 |
-| **Code Quality**     | Demo-ready     | Production-ready          |
-| **Scalability**      | Single file    | Modular architecture      |
-| **Testing**          | Manual testing | Automated test suite      |
-| **Deployment**       | Local only     | Multi-platform deployment |
-| **Maintenance**      | Prototype      | Long-term maintainable    |
-| **Team Development** | Individual     | Team-friendly             |
-| **Error Handling**   | Basic          | Comprehensive             |
+| Feature              | Quick Start           | Production Path              |
+| -------------------- | --------------------- | ---------------------------- |
+| **Time Investment**  | 30 minutes            | 2-3 hours                    |
+| **Python Version**   | 3.11+ (recommended)   | 3.11+ (recommended)          |
+| **ADK Version**      | 1.4.2                 | 1.4.2                        |
+| **Code Quality**     | Demo-ready            | Production-ready             |
+| **Scalability**      | Single file           | Modular architecture         |
+| **Testing**          | Manual + ADK Web      | Automated + `adk eval`       |
+| **Deployment**       | Local only            | Multi-platform deployment    |
+| **Maintenance**      | Prototype             | Long-term maintainable       |
+| **Team Development** | Individual            | Team-friendly                |
+| **Error Handling**   | Basic                 | Comprehensive                |
+| **Debug Tools**      | ADK Web UI            | ADK Web + CLI + evaluation   |
+| **Command Tools**    | `adk web`, `adk run`  | Full `adk` suite             |
 
 ---
 
@@ -832,11 +1067,9 @@ gcloud run deploy task-assistant \
 
 ---
 
-_Last updated: June 2025_
-
 ## Summary
 
-This tutorial provides two distinct paths for learning Google ADK:
+This tutorial provides two distinct paths for learning Google ADK 1.4.2:
 
 - **⚡ Quick Start (30 minutes)**: Get a working agent with minimal setup to prove the concept
 - **🏗️ Production Path (2-3 hours)**: Build scalable, production-ready agent systems
@@ -847,16 +1080,33 @@ Both paths are designed to be highly actionable and provide immediate value, whe
 
 By following either path, you now have:
 
-- ✅ **Hands-on ADK Experience**: Working code that demonstrates agent capabilities
+- ✅ **Hands-on ADK Experience**: Working code that demonstrates Google ADK 1.4.2 capabilities
 - ✅ **Modern Development Practices**: Proper project structure, testing, and deployment
 - ✅ **Real-World Applications**: Tools and patterns you can adapt to your use cases
 - ✅ **Production Knowledge**: Understanding of scalable architecture and deployment options
+- ✅ **Advanced Debugging**: Experience with ADK Web UI and command-line tools
+- ✅ **Evaluation Framework**: Knowledge of systematic agent testing with `adk eval`
 
 ### Next Steps
 
 1. **Experiment**: Modify the examples to solve your specific problems
-2. **Integrate**: Connect your agents with real APIs and data sources
+2. **Integrate**: Connect your agents with real APIs and data sources  
 3. **Scale**: Use the production patterns to build larger, more complex systems
 4. **Deploy**: Take your agents to production using the deployment strategies provided
+5. **Evaluate**: Use `adk eval` to systematically test and improve your agents
+6. **Collaborate**: Share your agents using ADK Web for team development
 
 **Ready to build the future with AI agents? Start coding and make it happen!** 🚀
+
+---
+
+## Author
+
+### Raphaël MANSUY
+
+- Website: [Elitizon](https://www.elitizon.com)
+- LinkedIn: [Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)
+
+---
+
+**Last updated:** June 2025 | **Google ADK Version:** 1.4.2 | **Python Version:** 3.11+
