@@ -35,6 +35,73 @@ _"The best time to plant a tree was 20 years ago. The second best time is now."_
   - [What You've Accomplished](#what-youve-accomplished)
   - [Next Steps](#next-steps)
 
+
+## Why Build AI Agents Now?
+
+Picture this: It's 2019, and a small startup called OpenAI releases something called GPT-2. Most developers shrugged it off as "another AI experiment." Fast forward to today, and those who dismissed the AI revolution are scrambling to catch up while early adopters are building million-dollar businesses with AI agents.
+
+### The "Manual Car vs. Auto-Pilot Car" Analogy
+
+Traditional software is like driving a manual car: you need to know every control, shift gears yourself, and constantly pay attention to the road. Building with AI agents using ADK is like switching to an auto-pilot car: you simply tell it your destination in plain language, and it handles the route, traffic, and driving for you—quickly and efficiently.
+
+**Pro Tip**: The companies winning with AI aren't necessarily the ones with the biggest budgets – they're the ones who moved first and moved fast. Don't be the Blockbuster of your industry.
+
+### What Makes Google ADK the Swiss Army Knife of Agent Development
+
+Google's Agent Development Kit isn't just another AI framework – it's what happens when Google's internal agent-building experience meets the real world's messiness. Let me paint you a picture with a story.
+
+#### The Tale of Two Developers
+
+Sarah tried to build a customer service agent from scratch using basic LLM APIs. Months later, she was still stuck on setup and integration problems.
+
+Jake used Google ADK. In just a few weeks, he launched a working multi-agent system that handled real customer requests and integrated with business tools—saving time and delivering results fast.
+
+**The difference?** ADK's "batteries-included" approach versus building from first principles.
+
+```mermaid
+flowchart TB
+    subgraph "Google ADK"
+        ADK[Google ADK]
+        style ADK fill:#fff3e0,stroke:#f57f17,stroke-width:3px
+    end
+
+    subgraph "Core Features"
+        AG[🤖 Agents]
+        TL[🔧 Tools]
+        WO[⚡ Workflows]
+        style AG fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+        style TL fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+        style WO fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    end
+
+    subgraph "Key Benefits"
+        RD[⚡ Rapid Development]
+        PR[🚀 Production Ready]
+        MA[🔄 Model Agnostic]
+        style RD fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+        style PR fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+        style MA fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    end
+
+    ADK --> AG
+    ADK --> TL
+    ADK --> WO
+    ADK --> RD
+    ADK --> PR
+    ADK --> MA
+```
+
+#### Why ADK Wins the Developer Experience Battle
+
+1. **Code-First Philosophy**: Define your agents like you define classes – clean, testable, maintainable
+2. **Tool Ecosystem**: Pre-built integrations for Google Search, code execution, and more
+3. **Multi-Agent Orchestration**: Build agent teams that coordinate like a well-oiled machine
+4. **Production-Ready**: Deploy anywhere from local development to Vertex AI Agent Engine
+
+**Pause and Reflect**: Think about the last time you had to integrate multiple APIs. How long did it take? ADK reduces that complexity by 90%.
+
+Here's the uncomfortable truth: **Every minute you delay learning AI agent development, your competitors gain another minute of advantage**. But here's the good news – Google's Agent Development Kit (ADK) is about to level the playing field, and this tutorial will get you there faster than a caffeinated developer on a Friday deadline.
+
 ## Choose Your Path 🚀
 
 **⚡ Quick Start (30 minutes)** - Get your first agent running with minimal setup
@@ -215,69 +282,6 @@ You now have a working AI agent! In just 30 minutes, you've:
 
 Build production-ready, scalable agent systems with modern development practices
 
-Picture this: It's 2019, and a small startup called OpenAI releases something called GPT-2. Most developers shrugged it off as "another AI experiment." Fast forward to today, and those who dismissed the AI revolution are scrambling to catch up while early adopters are building million-dollar businesses with AI agents.
-
-### The "Manual Car vs. Auto-Pilot Car" Analogy
-
-Traditional software is like driving a manual car: you need to know every control, shift gears yourself, and constantly pay attention to the road. Building with AI agents using ADK is like switching to an auto-pilot car: you simply tell it your destination in plain language, and it handles the route, traffic, and driving for you—quickly and efficiently.
-
-**Pro Tip**: The companies winning with AI aren't necessarily the ones with the biggest budgets – they're the ones who moved first and moved fast. Don't be the Blockbuster of your industry.
-
-### What Makes Google ADK the Swiss Army Knife of Agent Development
-
-Google's Agent Development Kit isn't just another AI framework – it's what happens when Google's internal agent-building experience meets the real world's messiness. Let me paint you a picture with a story.
-
-#### The Tale of Two Developers
-
-Sarah tried to build a customer service agent from scratch using basic LLM APIs. Months later, she was still stuck on setup and integration problems.
-
-Jake used Google ADK. In just a few weeks, he launched a working multi-agent system that handled real customer requests and integrated with business tools—saving time and delivering results fast.
-
-**The difference?** ADK's "batteries-included" approach versus building from first principles.
-
-```mermaid
-flowchart TB
-    subgraph "Google ADK"
-        ADK[Google ADK]
-        style ADK fill:#fff3e0,stroke:#f57f17,stroke-width:3px
-    end
-
-    subgraph "Core Features"
-        AG[🤖 Agents]
-        TL[🔧 Tools]
-        WO[⚡ Workflows]
-        style AG fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-        style TL fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-        style WO fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    end
-
-    subgraph "Key Benefits"
-        RD[⚡ Rapid Development]
-        PR[🚀 Production Ready]
-        MA[🔄 Model Agnostic]
-        style RD fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-        style PR fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-        style MA fill:#f1f8e9,stroke:#689f38,stroke-width:2px
-    end
-
-    ADK --> AG
-    ADK --> TL
-    ADK --> WO
-    ADK --> RD
-    ADK --> PR
-    ADK --> MA
-```
-
-#### Why ADK Wins the Developer Experience Battle
-
-1. **Code-First Philosophy**: Define your agents like you define classes – clean, testable, maintainable
-2. **Tool Ecosystem**: Pre-built integrations for Google Search, code execution, and more
-3. **Multi-Agent Orchestration**: Build agent teams that coordinate like a well-oiled machine
-4. **Production-Ready**: Deploy anywhere from local development to Vertex AI Agent Engine
-
-**Pause and Reflect**: Think about the last time you had to integrate multiple APIs. How long did it take? ADK reduces that complexity by 90%.
-
-Here's the uncomfortable truth: **Every minute you delay learning AI agent development, your competitors gain another minute of advantage**. But here's the good news – Google's Agent Development Kit (ADK) is about to level the playing field, and this tutorial will get you there faster than a caffeinated developer on a Friday deadline.
 
 ### Production Setup: Modern Python Development
 
