@@ -2,7 +2,7 @@
 
 _"The best time to plant a tree was 20 years ago. The second best time is now."_ - This ancient Chinese proverb perfectly captures why you should start building AI agents today, not tomorrow.
 
-> **Updated for Google ADK 1.4.2** - This tutorial is current as of June 2025 and uses the latest Agent Development Kit features including the built-in web UI and command-line tools.
+> **Updated for Google ADK 1.4.2 & Gemini 2.5** - This tutorial is current as of June 2025 and uses the latest Agent Development Kit features with Google's newest Gemini 2.5 models, including the built-in web UI and command-line tools.
 
 ## Prerequisites
 
@@ -186,6 +186,39 @@ adk web
 
 **Pro Tip:** Use `adk web --no-reload` on Windows if you encounter subprocess transport errors.
 
+## Gemini 2.5 Models - Choosing the Right One 🤖
+
+Google's latest Gemini 2.5 family offers three models optimized for different use cases:
+
+### **gemini-2.5-pro** - Maximum Intelligence
+
+- **Best for:** Complex reasoning, advanced coding, multimodal understanding
+- **Features:** Enhanced thinking and reasoning, best performance on difficult tasks
+- **Use cases:** Production applications requiring highest accuracy, complex problem-solving
+
+### **gemini-2.5-flash** - Balanced Performance (Recommended)
+
+- **Best for:** Most applications, balanced price-performance
+- **Features:** Adaptive thinking, cost efficiency, well-rounded capabilities  
+- **Use cases:** General agent development, recommended for tutorials and production
+
+### **gemini-2.5-flash-lite-preview** - Speed & Cost Optimization
+
+- **Best for:** High-throughput, real-time applications
+- **Features:** Fastest responses, most cost-effective, high volume support
+- **Use cases:** Chatbots, real-time interactions, batch processing
+
+**Model Selection Guide:**
+
+| Use Case | Recommended Model | Why |
+|----------|------------------|-----|
+| Learning & Tutorials | `gemini-2.5-flash` | Best balance of capability and cost |
+| Production Apps | `gemini-2.5-flash` | Reliable performance for most scenarios |
+| Complex Reasoning | `gemini-2.5-pro` | Maximum intelligence for difficult tasks |
+| High-Volume/Real-time | `gemini-2.5-flash-lite-preview` | Optimized for speed and cost |
+
+**Note:** All Gemini 2.5 models include built-in thinking capabilities and support multimodal inputs (text, images, audio, video).
+
 ## Choose Your Path 🚀
 
 **⚡ Quick Start (30 minutes)** - Get your first agent running with minimal setup
@@ -331,7 +364,7 @@ def calculate(expression: str) -> dict:
 # Create your agent with modern ADK 1.4.2 syntax
 weather_assistant = Agent(
     name="weather_time_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description="Agent to answer questions about weather and perform calculations",
     instruction="""
     You are a helpful assistant with access to weather information and basic calculations.
@@ -392,6 +425,7 @@ adk web
    - Debug information
 
 **ADK Web Advantages:**
+
 - Visual debugging with event tracing
 - Real-time function call inspection  
 - Performance metrics and latency tracking
@@ -434,6 +468,8 @@ def get_joke() -> str:
 tools=[get_weather, calculate, get_joke]
 ```
 
+**Pro Tip:** The Gemini 2.5 models include built-in thinking capabilities. You might notice longer response times as the model "thinks" through complex problems - this leads to more accurate and thoughtful responses!
+
 ### Quick Troubleshooting
 
 **Common Issues:**
@@ -460,6 +496,7 @@ You now have a working AI agent! In just 30 minutes, you've:
 
 **Progress through production steps:**
 
+- [ ] Step 0: Quick Vertex AI Validation (Optional)
 - [ ] Step 1: uv Project Setup
 - [ ] Step 2: Production Project Structure
 - [ ] Step 3: Authentication Setup
@@ -474,6 +511,137 @@ You now have a working AI agent! In just 30 minutes, you've:
 </details>
 
 Build production-ready, scalable agent systems with modern development practices
+
+### Step 0: Quick Vertex AI Validation (Optional - 10 minutes)
+
+Before diving into the full production setup, you can quickly validate your Vertex AI configuration using the simple agent example from the Quick Start path. This helps ensure your GCP setup is working correctly.
+
+**Prerequisites:**
+
+- Google Cloud Platform project
+- Vertex AI API enabled
+- `gcloud` CLI installed and authenticated
+
+**Quick Setup:**
+
+```bash
+# Set up your GCP project (replace with your actual project ID)
+export PROJECT_ID="your-project-id"
+gcloud config set project $PROJECT_ID
+
+# Authenticate for ADK to use Vertex AI
+gcloud auth application-default login
+
+# Enable required APIs
+gcloud services enable aiplatform.googleapis.com
+
+# Create a simple test directory
+mkdir vertex-ai-test && cd vertex-ai-test
+
+# Install ADK
+pip install google-adk python-dotenv
+```
+
+**Create Test Configuration:**
+
+Create `.env` file:
+
+```bash
+echo "GOOGLE_CLOUD_PROJECT=$PROJECT_ID" > .env
+echo "GOOGLE_GENAI_USE_VERTEXAI=TRUE" >> .env
+echo "GOOGLE_CLOUD_LOCATION=us-central1" >> .env
+```
+
+**Create Test Agent (`vertex_test.py`):**
+
+```python
+import os
+from dotenv import load_dotenv
+import vertexai
+from google.adk.agents import Agent
+
+# Load environment variables
+load_dotenv()
+
+# Initialize Vertex AI
+vertexai.init(
+    project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+)
+
+def get_weather(city: str) -> dict:
+    """Mock weather function for testing"""
+    return {
+        "status": "success",
+        "report": f"Weather in {city}: Sunny, 22°C - Vertex AI connection working!"
+    }
+
+# Create agent with Gemini 2.5 Flash on Vertex AI
+vertex_agent = Agent(
+    name="vertex_test_agent",
+    model="gemini-2.5-flash",  # This will use Vertex AI instead of AI Studio
+    description="Test agent to validate Vertex AI connection",
+    instruction="You are a test assistant. Always mention that you're running on Vertex AI when responding.",
+    tools=[get_weather]
+)
+
+if __name__ == "__main__":
+    print("🧪 Testing ADK with Vertex AI...")
+    print("If this works, your Vertex AI setup is ready for production!")
+    
+    try:
+        response = vertex_agent.run("What's the weather in Paris? Also confirm you're using Vertex AI.")
+        print(f"✅ Success! Agent response: {response}")
+        print("\n🎉 Vertex AI is working correctly! You can proceed with the production setup.")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        print("\n🔧 Troubleshooting tips:")
+        print("1. Check your PROJECT_ID is correct")
+        print("2. Ensure you've run: gcloud auth application-default login")
+        print("3. Verify Vertex AI API is enabled")
+        print("4. Try: gcloud projects describe $PROJECT_ID")
+```
+
+**Test Your Vertex AI Setup:**
+
+```bash
+# Run the test
+python vertex_test.py
+```
+
+**Expected Output:**
+
+```text
+🧪 Testing ADK with Vertex AI...
+✅ Success! Agent response: The weather in Paris is sunny, 22°C - Vertex AI connection working! I'm running on Google's Vertex AI platform, which provides enterprise-grade AI capabilities.
+
+🎉 Vertex AI is working correctly! You can proceed with the production setup.
+```
+
+**If You Get Errors:**
+
+Common issues and solutions:
+
+- **Authentication Error**: Run `gcloud auth application-default login`
+- **Project Not Found**: Verify `PROJECT_ID` with `gcloud projects list`
+- **API Not Enabled**: Run `gcloud services enable aiplatform.googleapis.com`
+- **Permission Denied**: Ensure your account has Vertex AI User role
+
+**Quick ADK Web Test:**
+
+You can also test with ADK Web:
+
+```bash
+# Launch ADK Web in the test directory
+adk web
+
+# Visit http://localhost:8000
+# Select your vertex_test_agent and chat with it
+```
+
+Once this test succeeds, you know your Vertex AI configuration is correct and you can confidently proceed with the full production setup below.
+
+---
 
 
 ### Production Setup: Modern Python Development
@@ -753,7 +921,7 @@ from ..tools.task_tools import create_task, list_tasks, update_task_status
 # Main coordinator agent with comprehensive instruction set
 task_coordinator = Agent(
     name="intelligent_task_coordinator",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description="Advanced AI coordinator for comprehensive task and productivity management",
     instruction="""
     You are an intelligent task management coordinator with expertise in productivity optimization.
@@ -849,6 +1017,7 @@ adk web
 ```
 
 **In ADK Web, you can:**
+
 - Select your `task_coordinator` from the agent dropdown
 - Test complex scenarios with the interactive chat
 - Monitor function calls in the Events tab
@@ -1100,13 +1269,4 @@ By following either path, you now have:
 
 ---
 
-## Author
-
-### Raphaël MANSUY
-
-- Website: [Elitizon](https://www.elitizon.com)
-- LinkedIn: [Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)
-
----
-
-**Last updated:** June 2025 | **Google ADK Version:** 1.4.2 | **Python Version:** 3.11+
+**Last updated:** June 2025 | **Google ADK Version:** 1.4.2 | **Gemini Version:** 2.5 | **Python Version:** 3.11+
