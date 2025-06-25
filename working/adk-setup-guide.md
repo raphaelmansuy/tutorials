@@ -49,7 +49,7 @@ from google.adk.sessions import InMemorySessionService
 # Test your setup with a simple agent
 test_agent = LlmAgent(
     model="gemini-2.0-flash",
-    name="test_agent", 
+    name="test_agent",
     instruction="You are a helpful assistant."
 )
 
@@ -168,7 +168,7 @@ When using Vertex AI, you have access to the following Gemini models:
 # Available models for Vertex AI
 VERTEX_AI_MODELS = {
     "gemini-2.0-flash": "Latest model with advanced reasoning",
-    "gemini-2.0-flash-lite": "Faster, more cost-effective option", 
+    "gemini-2.0-flash-lite": "Faster, more cost-effective option",
     "gemini-1.5-pro": "Previous generation with strong performance",
     "gemini-1.5-flash": "Fast processing for simpler tasks"
 }
@@ -186,16 +186,16 @@ extraction_agent = Agent(
 
 ## Key Differences: Google AI Studio vs Vertex AI
 
-| Feature | Google AI Studio | Vertex AI |
-|---------|------------------|-----------|
-| **Authentication** | API Key | Service Account / ADC |
-| **Rate Limits** | Lower limits | Higher enterprise limits |
-| **Data Privacy** | Shared infrastructure | Private Google Cloud |
-| **Monitoring** | Basic usage tracking | Full Cloud Monitoring integration |
-| **Cost** | Pay-per-use pricing | Enterprise pricing with commitments |
-| **Compliance** | Standard terms | Enterprise compliance (SOC2, HIPAA, etc.) |
-| **Team Collaboration** | Individual accounts | Project-based team access |
-| **Production Ready** | Development/Testing | Full production workloads |
+| Feature                | Google AI Studio      | Vertex AI                                 |
+| ---------------------- | --------------------- | ----------------------------------------- |
+| **Authentication**     | API Key               | Service Account / ADC                     |
+| **Rate Limits**        | Lower limits          | Higher enterprise limits                  |
+| **Data Privacy**       | Shared infrastructure | Private Google Cloud                      |
+| **Monitoring**         | Basic usage tracking  | Full Cloud Monitoring integration         |
+| **Cost**               | Pay-per-use pricing   | Enterprise pricing with commitments       |
+| **Compliance**         | Standard terms        | Enterprise compliance (SOC2, HIPAA, etc.) |
+| **Team Collaboration** | Individual accounts   | Project-based team access                 |
+| **Production Ready**   | Development/Testing   | Full production workloads                 |
 
 ### When to Use Each Approach
 
@@ -233,7 +233,7 @@ python -c "import os; print('API Key set:', bool(os.environ.get('GOOGLE_API_KEY'
 # Check authentication status
 gcloud auth list
 
-# Verify project configuration  
+# Verify project configuration
 gcloud config list
 
 # Test API access
@@ -265,6 +265,7 @@ This guide helps you install and configure Google ADK for both prototyping and p
 ---
 
 ## 1. Environment Setup
+
 - Python 3.9 or newer
 - Recommended: Create a virtual environment
 
@@ -286,6 +287,7 @@ pip install google-adk
 ## 3. Authentication
 
 ### For Google AI Studio (Prototyping)
+
 - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 - Set it as an environment variable:
 
@@ -294,6 +296,7 @@ export GOOGLE_API_KEY="your-api-key-here"
 ```
 
 ### For Vertex AI (Production)
+
 - Create a Google Cloud project
 - Enable Vertex AI API
 - Create a Service Account and download the JSON key
@@ -312,6 +315,7 @@ Run a simple ADK agent (see [Quick Start](24-adk-quick-start.md)) to verify ever
 ---
 
 ## 5. Troubleshooting
+
 - If you see authentication errors, check your API key or credentials
 - If you get import errors, ensure your virtual environment is active and ADK is installed
 - For more help, see the [official ADK docs](https://google.github.io/adk-docs/)
@@ -338,4 +342,4 @@ Once you've completed the setup:
 
 ---
 
-*Last updated: June 22, 2025*
+_Last updated: June 22, 2025_
