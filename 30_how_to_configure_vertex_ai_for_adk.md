@@ -9,7 +9,7 @@ For production applications, Vertex AI offers better security, scaling, and ente
 **📋 Navigation:**
 
 - [🚀 Quick Start (5 minutes)](#-quick-start-5-minutes) - Get running immediately
-- [📖 Detailed Setup](#-detailed-setup) - Step-by-step configuration  
+- [📖 Detailed Setup](#-detailed-setup) - Step-by-step configuration
 - [🏢 Advanced Configuration](#-advanced-configuration) - Enterprise patterns & best practices
 - [🔧 Troubleshooting](#troubleshooting) - Common issues and solutions
 
@@ -67,7 +67,7 @@ flowchart LR
     D --> E[Create Storage<br/>Bucket]
     E --> F[Configure<br/>Environment]
     F --> G[✅ Ready to Use<br/>ADK with Vertex AI]
-    
+
     style A fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
     style B fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
     style C fill:#fff8e1,stroke:#f57c00,stroke-width:2px
@@ -95,11 +95,11 @@ To run ADK with Vertex AI, you need these **minimum IAM roles** on your Google C
 
 ### IAM Roles Detailed Breakdown
 
-| Role | Role ID | Description | Purpose for ADK |
-|------|---------|-------------|-----------------|
-| **Vertex AI User** | `roles/aiplatform.user` | Provides access to all Vertex AI resources including models, endpoints, training jobs, and batch prediction jobs. Allows creating, reading, updating, and deleting Vertex AI resources. | Essential for running agents, accessing Gemini models, creating reasoning engines, and deploying to Vertex AI Agent Engine. |
-| **Storage Admin** | `roles/storage.admin` | Full control over Cloud Storage buckets and objects. Includes permissions to create, delete, and manage buckets and their contents. | Required for storing agent artifacts, model files, conversation logs, and deployment packages. ADK agents need to read/write data during execution. |
-| **Service Usage Admin** | `roles/serviceusage.serviceUsageAdmin` | Ability to enable and disable Google Cloud services and APIs on projects. Can view service usage and quotas. | Needed to enable required APIs (Vertex AI, Cloud Storage, Logging, etc.) for the ADK setup process. |
+| Role                    | Role ID                                | Description                                                                                                                                                                             | Purpose for ADK                                                                                                                                     |
+| ----------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Vertex AI User**      | `roles/aiplatform.user`                | Provides access to all Vertex AI resources including models, endpoints, training jobs, and batch prediction jobs. Allows creating, reading, updating, and deleting Vertex AI resources. | Essential for running agents, accessing Gemini models, creating reasoning engines, and deploying to Vertex AI Agent Engine.                         |
+| **Storage Admin**       | `roles/storage.admin`                  | Full control over Cloud Storage buckets and objects. Includes permissions to create, delete, and manage buckets and their contents.                                                     | Required for storing agent artifacts, model files, conversation logs, and deployment packages. ADK agents need to read/write data during execution. |
+| **Service Usage Admin** | `roles/serviceusage.serviceUsageAdmin` | Ability to enable and disable Google Cloud services and APIs on projects. Can view service usage and quotas.                                                                            | Needed to enable required APIs (Vertex AI, Cloud Storage, Logging, etc.) for the ADK setup process.                                                 |
 
 ```mermaid
 flowchart TD
@@ -107,11 +107,11 @@ flowchart TD
     B --> C[Vertex AI User<br/>roles/aiplatform.user]
     B --> D[Storage Admin<br/>roles/storage.admin]
     B --> E[Service Usage Admin<br/>roles/serviceusage.serviceUsageAdmin]
-    
+
     C --> F[🤖 Access Gemini Models<br/>Deploy Agents<br/>Create Reasoning Engines]
     D --> G[📦 Store Agent Artifacts<br/>Manage Buckets<br/>Read/Write Data]
     E --> H[⚙️ Enable APIs<br/>View Service Usage<br/>Manage Quotas]
-    
+
     style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     style C fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     style D fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
@@ -123,11 +123,11 @@ flowchart TD
 
 ### Additional Optional Roles for Advanced Features
 
-| Role | Role ID | Description | When Needed |
-|------|---------|-------------|-------------|
-| **Logging Admin** | `roles/logging.admin` | Full access to Cloud Logging resources for viewing and managing logs. | For advanced monitoring and debugging of agent execution logs. |
-| **Monitoring Admin** | `roles/monitoring.admin` | Full access to Cloud Monitoring resources for metrics and alerting. | For setting up custom metrics and alerts for agent performance monitoring. |
-| **Cloud Trace Admin** | `roles/cloudtrace.admin` | Full access to Cloud Trace for distributed tracing capabilities. | For detailed performance analysis and troubleshooting of agent request flows. |
+| Role                  | Role ID                  | Description                                                           | When Needed                                                                   |
+| --------------------- | ------------------------ | --------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **Logging Admin**     | `roles/logging.admin`    | Full access to Cloud Logging resources for viewing and managing logs. | For advanced monitoring and debugging of agent execution logs.                |
+| **Monitoring Admin**  | `roles/monitoring.admin` | Full access to Cloud Monitoring resources for metrics and alerting.   | For setting up custom metrics and alerts for agent performance monitoring.    |
+| **Cloud Trace Admin** | `roles/cloudtrace.admin` | Full access to Cloud Trace for distributed tracing capabilities.      | For detailed performance analysis and troubleshooting of agent request flows. |
 
 **How to Grant These Roles:**
 
@@ -171,12 +171,12 @@ flowchart TD
     A --> C[Cloud Storage API<br/>storage.googleapis.com]
     A --> D[Cloud Logging API<br/>logging.googleapis.com]
     A --> E[Cloud Monitoring API<br/>monitoring.googleapis.com]
-    
+
     B --> F[🤖 Gemini Models<br/>Agent Deployment<br/>Reasoning Engine]
     C --> G[📦 Artifact Storage<br/>Configuration Files<br/>Model Assets]
     D --> H[📋 Execution Logs<br/>Error Tracking<br/>Audit Trail]
     E --> I[📊 Performance Metrics<br/>Resource Usage<br/>Health Monitoring]
-    
+
     style A fill:#e1f5fe,stroke:#01579b,stroke-width:3px
     style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
@@ -203,7 +203,7 @@ sequenceDiagram
     participant G as gcloud CLI
     participant GC as Google Cloud
     participant ADK as ADK Application
-    
+
     U->>G: gcloud auth application-default login
     G->>GC: Request authentication
     GC-->>U: Open browser for OAuth
@@ -228,7 +228,7 @@ gcloud beta services identity create \
     --service=aiplatform.googleapis.com \
     --project=$PROJECT_ID
 
-# The service agent email will be: 
+# The service agent email will be:
 # service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com
 ```
 
@@ -281,12 +281,12 @@ Following the principle of least privilege is crucial for maintaining security i
 
 ### 🔒 Core Security Principles
 
-| **Principle** | **Implementation** | **ADK-Specific Guidance** |
-|---------------|-------------------|---------------------------|
-| **Grant Minimal Required Permissions** | Avoid basic roles (Owner, Editor, Viewer) in production environments. Use predefined roles or custom roles instead. | For ADK agents, prefer `aiplatform.user` over `aiplatform.admin` unless you need to manage Vertex AI infrastructure itself. |
-| **Use Resource-Level Access** | Grant roles at the smallest scope needed (resource > project > folder > organization). | Consider granting `Storage Object Viewer` only on specific buckets containing agent artifacts rather than project-wide `Storage Admin`. |
-| **Separate Service Concerns** | Create separate service accounts for each component with different permission requirements. | Use different service accounts for development, testing, and production ADK deployments. |
-| **Time-Limited Access** | Use conditional role bindings with expiration dates for temporary elevated access. | Grant temporary `aiplatform.admin` access only during initial setup, then downgrade to `aiplatform.user`. |
+| **Principle**                          | **Implementation**                                                                                                  | **ADK-Specific Guidance**                                                                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Grant Minimal Required Permissions** | Avoid basic roles (Owner, Editor, Viewer) in production environments. Use predefined roles or custom roles instead. | For ADK agents, prefer `aiplatform.user` over `aiplatform.admin` unless you need to manage Vertex AI infrastructure itself.             |
+| **Use Resource-Level Access**          | Grant roles at the smallest scope needed (resource > project > folder > organization).                              | Consider granting `Storage Object Viewer` only on specific buckets containing agent artifacts rather than project-wide `Storage Admin`. |
+| **Separate Service Concerns**          | Create separate service accounts for each component with different permission requirements.                         | Use different service accounts for development, testing, and production ADK deployments.                                                |
+| **Time-Limited Access**                | Use conditional role bindings with expiration dates for temporary elevated access.                                  | Grant temporary `aiplatform.admin` access only during initial setup, then downgrade to `aiplatform.user`.                               |
 
 ### 🎯 Role-Specific Optimization Tips
 
@@ -385,33 +385,33 @@ flowchart TD
         D2[Development<br/>Resources]
         D3[Relaxed<br/>Permissions]
     end
-    
+
     subgraph PROD [Production Environment]
         P1[adk-prod-sa<br/>Service Account]
         P2[Production<br/>Resources]
         P3[Restricted<br/>Permissions]
         P4[Time-Limited<br/>Access]
     end
-    
+
     subgraph SHARED [Shared Resources]
         S1[IAM Policies]
         S2[Audit Logging]
         S3[Monitoring]
     end
-    
+
     D1 --> D2
     D1 --> D3
     P1 --> P2
     P1 --> P3
     P1 --> P4
-    
+
     S1 --> DEV
     S1 --> PROD
     S2 --> DEV
     S2 --> PROD
     S3 --> DEV
     S3 --> PROD
-    
+
     style DEV fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     style PROD fill:#ffebee,stroke:#c62828,stroke-width:2px
     style SHARED fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
@@ -432,13 +432,13 @@ gcloud logging read "resource.type=gce_instance AND severity>=WARNING" \
 
 ### ⚠️ Common Security Pitfalls to Avoid
 
-| **Pitfall** | **Risk** | **Solution** |
-|-------------|----------|--------------|
-| Using basic roles (`Owner`, `Editor`) | Overly broad permissions across all Google Cloud services | Use predefined roles like `aiplatform.user` and `storage.objectAdmin` |
-| Project-wide Storage Admin | Access to all buckets in the project | Use bucket-level permissions with conditional bindings |
-| Long-lived service account keys | Key compromise risk | Use Workload Identity Federation or Application Default Credentials |
-| Single service account for all functions | Difficult to track and limit access | Create function-specific service accounts |
-| No expiration on elevated access | Persistent security risk | Use conditional bindings with time limits |
+| **Pitfall**                              | **Risk**                                                  | **Solution**                                                          |
+| ---------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Using basic roles (`Owner`, `Editor`)    | Overly broad permissions across all Google Cloud services | Use predefined roles like `aiplatform.user` and `storage.objectAdmin` |
+| Project-wide Storage Admin               | Access to all buckets in the project                      | Use bucket-level permissions with conditional bindings                |
+| Long-lived service account keys          | Key compromise risk                                       | Use Workload Identity Federation or Application Default Credentials   |
+| Single service account for all functions | Difficult to track and limit access                       | Create function-specific service accounts                             |
+| No expiration on elevated access         | Persistent security risk                                  | Use conditional bindings with time limits                             |
 
 ### 📋 Security Checklist
 
@@ -481,19 +481,19 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ```mermaid
 flowchart TD
     A[ADK Error Encountered] --> B{Error Type?}
-    
+
     B -->|Permission Denied| C[Check IAM Roles<br/>& Authentication]
     B -->|API Not Enabled| D[Enable Required<br/>APIs]
     B -->|Authentication Failed| E[Reset Application<br/>Default Credentials]
     B -->|Bucket Access Denied| F[Verify Storage<br/>Permissions]
     B -->|Deployment Failed| G[Check Agent Engine<br/>Service Account]
-    
+
     C --> C1[✓ Verify gcloud auth<br/>✓ Check IAM bindings<br/>✓ Re-authenticate]
     D --> D1[✓ gcloud services enable<br/>✓ Verify APIs list<br/>✓ Check quotas]
     E --> E1[✓ gcloud auth login<br/>✓ Check project setting<br/>✓ Test token]
     F --> F1[✓ Check bucket IAM<br/>✓ Grant storage roles<br/>✓ Test access]
     G --> G1[✓ Create service agent<br/>✓ Check deployment logs<br/>✓ Monitor status]
-    
+
     style A fill:#ffebee,stroke:#c62828,stroke-width:2px
     style B fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
     style C fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
@@ -510,6 +510,7 @@ flowchart TD
 **Problem:** `Permission denied` when running ADK operations
 
 **Solutions:**
+
 ```bash
 # 1. Check current user permissions
 gcloud auth list
@@ -532,6 +533,7 @@ gcloud auth application-default login
 **Problem:** `API [aiplatform.googleapis.com] not enabled`
 
 **Solutions:**
+
 ```bash
 # Check which APIs are enabled
 gcloud services list --enabled --project=$PROJECT_ID
@@ -548,6 +550,7 @@ gcloud services list --enabled --filter="name:aiplatform.googleapis.com" --proje
 **Problem:** `Could not automatically determine credentials`
 
 **Solutions:**
+
 ```bash
 # 1. Set up Application Default Credentials
 gcloud auth application-default login
@@ -568,6 +571,7 @@ gcloud auth application-default print-access-token
 **Problem:** `Access denied` when accessing Cloud Storage
 
 **Solutions:**
+
 ```bash
 # 1. Check bucket permissions
 gsutil iam get gs://your-bucket-name
@@ -587,6 +591,7 @@ gsutil ls gs://your-bucket-name
 **Problem:** Agent deployment fails or times out
 
 **Solutions:**
+
 ```bash
 # 1. Check if Reasoning Engine Service Agent exists
 gcloud beta services identity create --service=aiplatform.googleapis.com --project=$PROJECT_ID
@@ -722,12 +727,14 @@ gcloud alpha billing budgets create \
 ## Next Steps
 
 ### For Beginners
+
 1. **Test your setup** with a simple ADK agent example
-2. **Explore ADK documentation** for available features  
+2. **Explore ADK documentation** for available features
 3. **Start with basic use cases** before scaling up
 4. **Join the community** for support and best practices
 
 ### For Advanced Users
+
 1. **Implement enterprise security patterns** from the Advanced Configuration section
 2. **Set up CI/CD pipelines** for automated deployments
 3. **Configure monitoring and alerting** for production workloads
@@ -742,10 +749,10 @@ graph TD
     B --> C[Production Security]
     C --> D[Advanced Patterns]
     D --> E[Enterprise Architecture]
-    
+
     B --> F[Development Best Practices]
     F --> C
-    
+
     C --> G[Monitoring & Logging]
     G --> D
 ```
@@ -755,24 +762,28 @@ graph TD
 ## Resources
 
 ### Essential Documentation
+
 - [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs) - Official Vertex AI guide
 - [ADK Documentation](https://google.github.io/adk-docs/) - Agent Development Kit docs
 - [IAM Best Practices](https://cloud.google.com/iam/docs/using-iam-securely) - Security guidelines
 - [Cloud Storage Setup](https://cloud.google.com/storage/docs/quickstart) - Storage configuration
 
 ### Advanced Resources
+
 - [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/docs/agent-engine) - Advanced agent deployment
 - [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) - Keyless authentication
 - [VPC Service Controls](https://cloud.google.com/vpc-service-controls/docs) - Network security
 - [Binary Authorization](https://cloud.google.com/binary-authorization/docs) - Container security
 
 ### Community & Support
+
 - [Google Cloud Community](https://www.googlecloudcommunity.com/) - Community discussions
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/google-vertex-ai) - Technical Q&A
 - [GitHub Discussions](https://github.com/google/adk/discussions) - ADK-specific discussions
 - [Google Cloud Support](https://cloud.google.com/support) - Official support channels
 
 ### Tools & Utilities
+
 - [gcloud CLI](https://cloud.google.com/sdk/gcloud) - Command-line interface
 - [Cloud Console](https://console.cloud.google.com/) - Web interface
 - [Terraform Provider](https://registry.terraform.io/providers/hashicorp/google/latest) - Infrastructure as Code
@@ -800,13 +811,13 @@ GOOGLE_CLOUD_UNIVERSE_DOMAIN=googleapis.com
 
 ### IAM Roles Quick Reference
 
-| Use Case | Recommended Role | Alternative |
-|----------|------------------|-------------|
-| **Development** | `aiplatform.user` | Custom role with minimal permissions |
-| **Production Runtime** | `aiplatform.user` | Custom role with specific permissions |
-| **CI/CD Pipeline** | Service account with `aiplatform.user` | Workload Identity Federation |
-| **Monitoring** | `aiplatform.viewer` | `monitoring.viewer` |
-| **Storage Access** | `storage.objectAdmin` (bucket-specific) | `storage.objectViewer` (read-only) |
+| Use Case               | Recommended Role                        | Alternative                           |
+| ---------------------- | --------------------------------------- | ------------------------------------- |
+| **Development**        | `aiplatform.user`                       | Custom role with minimal permissions  |
+| **Production Runtime** | `aiplatform.user`                       | Custom role with specific permissions |
+| **CI/CD Pipeline**     | Service account with `aiplatform.user`  | Workload Identity Federation          |
+| **Monitoring**         | `aiplatform.viewer`                     | `monitoring.viewer`                   |
+| **Storage Access**     | `storage.objectAdmin` (bucket-specific) | `storage.objectViewer` (read-only)    |
 
 ### Cost Optimization Tips
 
@@ -819,4 +830,13 @@ GOOGLE_CLOUD_UNIVERSE_DOMAIN=googleapis.com
 
 ---
 
-*Last updated: June 2025 | For questions or feedback, please [open an issue](https://github.com/your-repo/issues) or contribute improvements.*
+## Author
+
+### Raphaël MANSUY
+
+- Website: [Elitizon](https://www.elitizon.com)
+- LinkedIn: [Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)
+
+---
+
+_Last updated: June 2025_
