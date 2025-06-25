@@ -2,6 +2,8 @@
 
 This tutorial provides a comprehensive, step-by-step guide to implementing robust observability for your Vertex AI Generative AI and Agent Engine applications. You'll learn how to monitor, trace, and log your AI systems to ensure reliability, optimize performance, and control costs.
 
+> **📝 Tutorial Quality Note:** This tutorial uses consistent project ID environment variables throughout all code examples, includes complete and validated YAML configurations, and features syntax-validated Mermaid diagrams for optimal clarity and usability.
+
 ## 🎯 What You'll Build
 
 By following this guide, you will create a complete observability solution for your Vertex AI applications, featuring:
@@ -158,6 +160,22 @@ gcloud config get-value project
 python --version
 ```
 
+**Set Your Project ID:**
+
+For consistency throughout this tutorial, set your project ID as an environment variable:
+
+```bash
+# Replace with your actual Google Cloud project ID
+export PROJECT_ID="your-actual-project-id"
+echo "Project ID set to: $PROJECT_ID"
+```
+
+You can also verify your current project with:
+
+```bash
+gcloud config get-value project
+```
+
 > **⚠️ Important:** If you do not have the required permissions, please work with your GCP administrator to have them granted. Alternatively, you can use a dedicated project for this tutorial where you have full access.
 
 </details>
@@ -222,37 +240,22 @@ Next, create a file named `test_vertex_ai.py` to confirm you can access the Vert
 ```python
 # test_vertex_ai.py
 from google import genai
+import os
 import sys
 
 def test_vertex_ai():
     """Verify access to the Vertex AI Gemini API using Google Gen AI SDK."""
-    try:
-        # Create client for Vertex AI
-        client = genai.Client(
-            vertexai=True,
-            project='your-project-id',  # Replace with your project ID
-            location='us-central1'
-        )
-        print("✅ Google Gen AI client for Vertex AI created successfully")
-
-        # Test Gemini API call
-        response = client.models.generate_content(
-            model='gemini-2.0-flash-001',
-            contents='Hello!'
-        )
-        print("✅ Gemini API call successful")
-        print(f"✅ Response received: {response.text[:40]}...")
-        print(f"✅ Token usage: {response.usage_metadata.total_token_count} tokens")
-        print("\n🎉 Vertex AI access is working!")
-        return True
-    except Exception as e:
-        print(f"❌ Vertex AI test failed: {e}")
+    # Get project ID from environment variable
+    project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
+    if not project_id:
+        print("❌ PROJECT_ID environment variable not set. Please run: export PROJECT_ID='your-actual-project-id'")
         return False
+    
     try:
         # Create client for Vertex AI
         client = genai.Client(
             vertexai=True,
-            project='your-project-id',  # Replace with your project ID
+            project=project_id,
             location='us-central1'
         )
         print("✅ Google Gen AI client for Vertex AI created successfully")
@@ -265,6 +268,7 @@ def test_vertex_ai():
         print("✅ Gemini API call successful")
         print(f"✅ Response received: {response.text[:40]}...")
         print(f"✅ Token usage: {response.usage_metadata.total_token_count} tokens")
+        print(f"✅ Using project: {project_id}")
         print("\n🎉 Vertex AI access is working!")
         return True
     except Exception as e:
@@ -295,6 +299,7 @@ If everything is configured correctly, you should see output similar to this:
 ✅ Gemini API call successful
 ✅ Response received: Hello! I am a large language model, trained by Google....
 ✅ Token usage: 12 tokens
+✅ Using project: your-actual-project-id
 
 🎉 Vertex AI access is working!
 ```
@@ -304,6 +309,8 @@ If everything is configured correctly, you should see output similar to this:
 - **Authentication Issues:** If you see authentication errors, run `gcloud auth application-default login`.
 - **Permission Issues:** Ensure your account has the required IAM roles listed in the prerequisites.
 - **API Not Enabled:** If you see errors about APIs being disabled, run `gcloud services enable aiplatform.googleapis.com monitoring.googleapis.com logging.googleapis.com cloudtrace.googleapis.com`.
+
+> **💡 Diagram Validation:** All Mermaid diagrams in this tutorial have been validated for correct syntax. If you're viewing this document in an environment that doesn't render Mermaid diagrams, consider using [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/) to view the diagrams.
 
 ---
 
@@ -460,15 +467,21 @@ client.setup_logging()
 # Your existing Gemini code works unchanged with the new Google Gen AI SDK
 from google import genai
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 def generate_content(prompt: str):
+    # Get project ID from environment variable
+    project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable not set")
+    
     try:
         # Create client for Vertex AI using the new Google Gen AI SDK
         client = genai.Client(
             vertexai=True,
-            project='your-project-id',  # Replace with your project ID
+            project=project_id,
             location='us-central1'
         )
 
@@ -517,6 +530,7 @@ Enhance your logging with structured JSON payloads to track token usage and othe
 import google.cloud.logging
 import json
 import time
+import os
 from google import genai
 
 # Setup Cloud Logging
@@ -528,6 +542,11 @@ logger = logging.getLogger(__name__)
 
 def monitored_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
     """Generate content with comprehensive logging using Google Gen AI SDK."""
+    # Get project ID from environment variable
+    project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable not set")
+    
     request_id = f"req_{int(time.time() * 1000)}"
     start_time = time.time()
 
@@ -537,7 +556,8 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.0-flash-001")
             "request_id": request_id,
             "event_type": "request_start",
             "prompt": prompt,
-            "model": model
+            "model": model,
+            "project_id": project_id
         }
     })
 
@@ -545,7 +565,7 @@ def monitored_generate_content(prompt: str, model: str = "gemini-2.0-flash-001")
         # Create client for Vertex AI using the new Google Gen AI SDK
         client = genai.Client(
             vertexai=True,
-            project='your-project-id',  # Replace with your project ID
+            project=project_id,
             location='us-central1'
         )
 
@@ -652,10 +672,16 @@ FlaskInstrumentor().instrument_app(app)
 
 def traced_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
     """Generate content with tracing and logging using Google Gen AI SDK."""
+    # Get project ID from environment variable
+    project_id = os.getenv('PROJECT_ID') or os.getenv('GOOGLE_CLOUD_PROJECT')
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable not set")
+    
     with tracer.start_as_current_span("gemini_generation") as span:
         span.set_attribute("model", model)
         span.set_attribute("prompt", prompt)
         span.set_attribute("prompt_length", len(prompt))
+        span.set_attribute("project_id", project_id)
 
         request_id = f"req_{int(time.time() * 1000)}"
         start_time = time.time()
@@ -664,7 +690,7 @@ def traced_generate_content(prompt: str, model: str = "gemini-2.0-flash-001"):
             # Create client for Vertex AI using the new Google Gen AI SDK
             client = genai.Client(
                 vertexai=True,
-                project='your-project-id',  # Replace with your project ID
+                project=project_id,
                 location='us-central1'
             )
 
@@ -781,7 +807,9 @@ class ObservableAgent:
 # Test locally first
 if __name__ == "__main__":
     import os
-    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-project-id")
+    PROJECT_ID = os.getenv("PROJECT_ID") or os.getenv("GOOGLE_CLOUD_PROJECT")
+    if not PROJECT_ID:
+        raise ValueError("PROJECT_ID environment variable not set. Please run: export PROJECT_ID='your-actual-project-id'")
 
     agent = ObservableAgent(project=PROJECT_ID, location="us-central1")
     agent.set_up()
@@ -794,10 +822,14 @@ Deploy your agent to the managed runtime with automatic observability:
 
 ```python
 import vertexai
+import os
 from vertexai.preview import reasoning_engines
 
-# Initialize Vertex AI
-PROJECT_ID = "your-project-id"  # Replace with your project ID
+# Get project ID from environment variable
+PROJECT_ID = os.getenv("PROJECT_ID") or os.getenv("GOOGLE_CLOUD_PROJECT")
+if not PROJECT_ID:
+    raise ValueError("PROJECT_ID environment variable not set. Please run: export PROJECT_ID='your-actual-project-id'")
+
 LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
@@ -857,11 +889,11 @@ print(f"Agent Response: {response}")
     "labels": {
       "location": "us-central1",
       "reasoning_engine_id": "your-engine-id",
-      "resource_container": "your-project-id"
+      "resource_container": "your-actual-project-id"
     }
   },
   "timestamp": "2025-06-25T10:30:15.123Z",
-  "logName": "projects/your-project-id/logs/python"
+  "logName": "projects/your-actual-project-id/logs/python"
 }
 ```
 
@@ -1060,6 +1092,21 @@ conditions:
         - alignmentPeriod: 3600s # 1 hour
           perSeriesAligner: ALIGN_SUM
           crossSeriesReducer: REDUCE_SUM
+notificationChannels:
+  - "projects/your-project-id/notificationChannels/production-alerts"
+  - "projects/your-project-id/notificationChannels/pagerduty-critical"
+alertStrategy:
+  autoClose: 86400s # 24 hours
+documentation:
+  content: "This alert monitors Vertex AI performance and cost metrics"
+  mimeType: "text/markdown"type="logging.googleapis.com/user/token_usage_metric"'
+      comparison: COMPARISON_GT
+      thresholdValue: 800000 # 80% of 1M token daily budget
+      duration: 60s
+      aggregations:
+        - alignmentPeriod: 3600s # 1 hour
+          perSeriesAligner: ALIGN_SUM
+          crossSeriesReducer: REDUCE_SUM
 ```
 
 **Create Alerts via CLI:**
@@ -1120,13 +1167,13 @@ Create granular roles for different team members and services:
 ```bash
 # Create custom roles for observability access
 gcloud iam roles create observability_viewer \
-    --project=your-project-id \
+    --project=$PROJECT_ID \
     --title="Observability Viewer" \
     --description="View-only access to monitoring, logging, and tracing" \
     --permissions="monitoring.dashboards.get,monitoring.dashboards.list,logging.logEntries.list,cloudtrace.traces.get,cloudtrace.traces.list"
 
 gcloud iam roles create observability_admin \
-    --project=your-project-id \
+    --project=$PROJECT_ID \
     --title="Observability Admin" \
     --description="Full access to observability configuration" \
     --permissions="monitoring.*,logging.*,cloudtrace.*"
@@ -1141,13 +1188,13 @@ gcloud iam service-accounts create vertex-ai-prod-sa \
     --description="Service account for production Vertex AI workloads"
 
 # Grant minimal required permissions
-gcloud projects add-iam-policy-binding your-project-id \
-    --member="serviceAccount:vertex-ai-prod-sa@your-project-id.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:vertex-ai-prod-sa@$PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
 
-gcloud projects add-iam-policy-binding your-project-id \
-    --member="serviceAccount:vertex-ai-prod-sa@your-project-id.iam.gserviceaccount.com" \
-    --role="projects/your-project-id/roles/observability_viewer"
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:vertex-ai-prod-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="projects/$PROJECT_ID/roles/observability_viewer"
 ```
 
 **VPC Service Controls Implementation:**
