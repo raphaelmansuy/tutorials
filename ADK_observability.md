@@ -688,3 +688,51 @@ For production systems, consider:
 ## Last updated
 
 June 2025
+
+## Observability Architecture: OpenTelemetry and Google Cloud
+
+When implementing observability for ADK agents, understanding the relationship between OpenTelemetry and Google Cloud services is essential for effective instrumentation:
+
+```mermaid
+flowchart LR
+    subgraph "Your ADK Application"
+        APP[ADK Agent Code]
+        OTEL[OpenTelemetry SDK]
+    end
+    
+    subgraph "Google Cloud Observability"
+        CM[Cloud Monitoring]
+        CT[Cloud Trace]
+        CL[Cloud Logging]
+    end
+    
+    APP --> OTEL
+    OTEL -->|Metrics| CM
+    OTEL -->|Traces| CT
+    OTEL -->|Logs| CL
+    
+    style OTEL fill:#f5f5ff,stroke:#9999ff
+    style CM fill:#e6f4ea,stroke:#5bb974
+    style CT fill:#fef7e0,stroke:#fbbc04
+    style CL fill:#e8f0fe,stroke:#4285f4
+```
+
+**OpenTelemetry and Google Cloud Integration:**
+
+- **OpenTelemetry** is an open-source observability framework that provides a standardized way to collect telemetry data (metrics, logs, and traces) regardless of your cloud provider.
+- **Google Cloud Observability** includes Cloud Monitoring, Cloud Trace, and Cloud Logging, which natively receive and process telemetry data.
+- **Integration Flow**: Instrument your ADK application with OpenTelemetry SDK → Configure appropriate exporters → Data flows to Google Cloud services.
+
+**Actionable Implementation Steps:**
+
+1. Add OpenTelemetry SDK dependencies to your project
+2. Configure Google Cloud exporters for each telemetry type:
+   - `OTLPMetricExporter` for metrics to Cloud Monitoring
+   - `OTLPSpanExporter` for traces to Cloud Trace
+   - Structured logging with trace context for logs to Cloud Logging
+3. Set resource attributes to properly identify your ADK agent services
+4. Implement automatic or manual instrumentation based on your needs
+
+This approach gives you the flexibility to use standard instrumentation practices while fully leveraging Google Cloud's observability suite, enabling future portability if needed.
+
+---
