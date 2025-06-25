@@ -663,8 +663,8 @@ def run_agent():
                 "result": result,
                 "event_type": "agent_request_success",
                 "trace_id": trace_id,
-                "total_tokens": simulated_tokens, # <-- ADDED
-                "latency_ms": latency_ms # <-- ADDED
+                "total_tokens": simulated_tokens,
+                "latency_ms": latency_ms
             }
         })
         return jsonify({"response": result})
@@ -802,7 +802,7 @@ We can create metrics from the structured logs we set up earlier.
    - **Metric Type:** Distribution
    - **Name:** `llm/token_count`
    - **Description:** `Tracks the total tokens used in LLM responses.`
-   - **Field Name:** `jsonPayload.total_tokens` (This assumes you add `total_tokens` to your log entry. Let's add it to the `app.py` later).
+   - **Field Name:** `jsonPayload.total_tokens`
    - **Units:** `1`
    - Click **Create Metric**.
 
@@ -811,33 +811,18 @@ We can create metrics from the structured logs we set up earlier.
    - **Metric Type:** Distribution
    - **Name:** `llm/generation_latency_ms`
    - **Description:** `Tracks the latency of LLM generation in milliseconds.`
-   - **Field Name:** `jsonPayload.latency_ms` (We will add this to `app.py`).
+   - **Field Name:** `jsonPayload.latency_ms`
    - **Units:** `ms`
    - Click **Create Metric**.
 
 **b. Update `app.py` to Include New Metrics**
 
-Let's modify the `run_agent` function in `app.py` to log the latency and a placeholder for token count.
+The `app.py` code provided in the "Create a Simple ADK Agent" section already includes the `total_tokens` and `latency_ms` fields in the structured log for successful requests. No changes are needed if you used that code.
+
+Here is the relevant logging snippet from the `run_agent` function for reference:
 
 ```python
-# ... existing imports ...
-import time
-
 # ... inside run_agent() ...
-    try:
-        start_time = time.time()
-        with tracer.start_as_current_span("adk_tool_call") as tool_span:
-            tool_span.set_attribute("tool_name", "SimpleTool")
-            tool_span.set_attribute("query", query)
-            # In a real agent, you would use agent.run() which might call an LLM.
-            # For this simple example, we'll call the tool directly to focus on observability.
-            result = agent.tools[0].call(query)
-            # In a real scenario with an LLM, you would get token counts from the response.
-            # For this example, we'll simulate it.
-            simulated_tokens = len(query.split()) + len(result.split())
-            tool_span.set_attribute("result_length", len(result))
-            tool_span.set_attribute("total_tokens", simulated_tokens)
-
         latency_ms = (time.time() - start_time) * 1000
 
         logger.info("ADK Agent request completed", extra={
@@ -846,150 +831,192 @@ import time
                 "result": result,
                 "event_type": "agent_request_success",
                 "trace_id": trace_id,
-                "total_tokens": simulated_tokens, # <-- ADDED
-                "latency_ms": latency_ms # <-- ADDED
+                "total_tokens": simulated_tokens,
+                "latency_ms": latency_ms
             }
         })
         return jsonify({"response": result})
-
-    except Exception as e:
-        span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
-        logger.error("ADK Agent request failed", extra={
-            "json_fields": {
-                "request_id": request_id,
-                "error": str(e),
-                "event_type": "agent_request_error",
-                "trace_id": trace_id
-            }
-        })
-        return jsonify({"error": "Agent processing failed"}), 500
 ```
 
 **c. Redeploy and Verify**
 
-1. Rebuild and push your Docker image:
+If you had an older version deployed, redeploy the agent to ensure the new log fields are being sent.
 
-   ```bash
-   gcloud builds submit --tag $IMAGE_TAG
-   ```
+1. **Rebuild and push your Docker image:**
 
-2. Deploy a new revision to Cloud Run:
+    ```bash
+    gcloud builds submit --tag $IMAGE_TAG
+    ```
 
-   ```bash
-   gcloud run deploy adk-observability-agent --image $IMAGE_TAG --region $REGION --platform managed
-   ```
+2. **Deploy a new revision to Cloud Run:**
 
-3. Send a few more test requests.
+    ```bash
+    gcloud run deploy adk-observability-agent \
+      --image $IMAGE_TAG \
+      --region $REGION \
+      --allow-unauthenticated \
+      --platform managed
+    ```
+
+3. **Send a few more test requests** to generate new log data.
+
+    ```bash
+    curl -X POST -H "Content-Type: application/json" -d '{"query": "another test"}' $SERVICE_URL/run
+    ```
 
 #### ✅ Checkpoint 5: View Custom Metrics
 
-1. Go to **[Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)**.
-2. In the **Metric** dropdown, search for your custom metrics by name (`llm/token_count` and `llm/generation_latency_ms`).
-3. You should see data points appearing for your new metrics. You can now add these to a dashboard for easy monitoring.
+1. Wait a few minutes for the metrics to be processed.
+2. Go to the **[Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer)** in the Google Cloud Console.
+3. In the "Select a metric" field, start typing `llm/token_count`. Select the metric.
+4. You should see a chart displaying the distribution of token counts from your agent.
+5. Repeat the process for `llm/generation_latency_ms`.
 
-### 2. Automated Alerting (5 minutes) 🔔
+### 2. Creating a Monitoring Dashboard (15 minutes) 🖼️
 
-Monitoring is only useful if it drives action. Let's create an alert that notifies us if the P95 latency goes above a certain threshold.
+Now, let's create a centralized dashboard to visualize all our key observability signals.
 
-1. **Go to Alerting:** Navigate to **[Alerting](https://console.cloud.google.com/monitoring/alerting)** in the Cloud Monitoring console.
+1. **Go to Dashboards:** In the Cloud Console, navigate to **[Monitoring > Dashboards](https://console.cloud.google.com/monitoring/dashboards)**.
+2. Click **Create Dashboard**.
+3. Give your dashboard a name, like "LLM Agent Performance".
+4. **Add a Chart for Token Usage:**
+    - Click **Add Widget** and choose **Line Chart**.
+    - In the "Select a metric" field, find your custom metric `llm/token_count`.
+    - Under "Aggregation", choose `Sum` to see the total tokens used over time.
+    - Give the chart a title, like "Total Token Usage".
+5. **Add a Chart for Latency:**
+    - Click **Add Widget** and choose **Line Chart**.
+    - Select the `llm/generation_latency_ms` metric.
+    - Under "Aggregation", choose `95th percentile` to track worst-case latency.
+    - Title the chart "P95 Generation Latency (ms)".
+6. **Add a Chart for Error Rate:**
+    - Click **Add Widget** and choose **Line Chart**.
+    - Select the metric `logging.googleapis.com/log_entry_count`.
+    - Filter for your service: `resource.labels.service_name = "adk-observability-agent"`.
+    - Create two series:
+        - **Errors:** Filter by `severity = "ERROR"`.
+        - **Total:** No severity filter.
+    - Use the **Ratio** transformation to calculate `Errors / Total`.
+    - Title the chart "Error Rate".
+7. **Add a Widget for Recent Logs:**
+    - Click **Add Widget** and choose **Logs Panel**.
+    - Enter a filter for your agent's logs:
+
+      ```log
+      resource.type="cloud_run_revision"
+      resource.labels.service_name="adk-observability-agent"
+      ```
+
+    - Title it "Live Agent Logs".
+
+Save your dashboard. You now have a single view for monitoring your agent's health and performance.
+
+### 3. Setting Up Automated Alerts (10 minutes) 🔔
+
+Dashboards are great for analysis, but alerts are crucial for proactive incident response. Let's create alerts for high latency and error rates.
+
+1. **Go to Alerting:** Navigate to **[Monitoring > Alerting](https://console.cloud.google.com/monitoring/alerting)**.
 2. Click **Create Policy**.
-3. **Select a Metric:**
-   - Find and select your `llm/generation_latency_ms` metric.
-   - Set the **Aggregation** to `95th percentile`.
-4. **Configure Trigger:**
-   - **Trigger Type:** `Threshold`
-   - **Alert trigger if:** `Any time series violates`
-   - **Threshold Position:** `Above threshold`
-   - **Threshold Value:** `2000` (i.e., 2 seconds)
-5. **Configure Notifications:**
-   - Choose a notification channel (e.g., email). You may need to configure one first under **Notification Channels**.
-6. **Name and Save:** Give the policy a descriptive name like `P95 Latency > 2s` and save it.
 
-#### ✅ Checkpoint 6: Trigger a Test Alert
+#### a. High Latency Alert
 
-To test the alert, you can temporarily lower the threshold to a value you know will be breached (e.g., 10ms) and send a request. Remember to set it back to a reasonable value afterward.
+- **Select Metric:** Choose your `llm/generation_latency_ms` metric.
+- **Configuration:**
+  - **Condition triggers if:** `Any time series violates`
+  - **Condition:** `is above`
+  - **Threshold:** `2000` (for 2 seconds)
+  - **For:** `5 minutes`
+- **Notifications:**
+  - Choose a notification channel (e.g., email, PagerDuty). If you don't have one, you can create one.
+- **Name the alert:** "High LLM Generation Latency".
+- Save the policy.
 
-### 3. Security & Audit Logging (5 minutes) 🛡️
+#### b. High Error Rate Alert
 
-For production systems, it's crucial to know who is accessing your services and what they are doing. Cloud Audit Logs provide this visibility.
+- **Select Metric:** Use the same log count ratio you created for the dashboard.
+- **Configuration:**
+  - **Condition triggers if:** `Any time series violates`
+  - **Condition:** `is above`
+  - **Threshold:** `0.05` (for 5% error rate)
+  - **For:** `10 minutes`
+- **Notifications:** Choose your notification channel.
+- **Name the alert:** "High Agent Error Rate".
+- Save the policy.
 
-#### a. Understanding Audit Logs
+You will now be automatically notified if your agent's performance degrades or it starts failing.
 
-Google Cloud automatically generates several types of audit logs:
+### 4. Security and Auditing (5 minutes) 🛡️
 
-- **Admin Activity logs:** Records administrative actions (e.g., creating a VM, changing IAM permissions). Always enabled.
-- **Data Access logs:** Records API calls that read, write, or modify user-provided data. These are high-volume and disabled by default, except for BigQuery.
-- **System Event logs:** Records actions taken by Google Cloud systems.
+For production systems, understanding who did what and when is critical for security and compliance.
 
-For our Cloud Run service, enabling Data Access logs for the Run API can provide detailed insight into every request made to your service.
+#### a. Enable Audit Logs
 
-#### b. Enabling Data Access Logs
+Vertex AI and other Google Cloud services generate audit logs that provide a trail of administrative actions and data access events.
 
-1. Go to **[IAM & Admin -> Audit Logs](https://console.cloud.google.com/iam-admin/audit)**.
-2. Find **Cloud Run API** in the list and select it.
-3. In the info panel on the right, check the boxes for **Admin Read**, **Data Read**, and **Data Write**.
+1. Go to **[IAM & Admin > Audit Logs](https://console.cloud.google.com/iam-admin/audit)**.
+2. Find "Vertex AI API" in the list.
+3. Select the checkboxes for **Admin Read**, **Data Read**, and **Data Write**.
 4. Click **Save**.
 
-#### c. Querying Audit Logs
+#### b. Querying Audit Logs
 
-You can now query these logs in the **[Logs Explorer](https://console.cloud.google.com/logs/viewer)**. Use a filter like the following to see all requests to your specific Cloud Run service:
+You can query these logs in the **[Logs Explorer](https://console.cloud.google.com/logs/query)**.
 
-```text
-protoPayload.authenticationInfo.principalEmail!=""
-protoPayload.methodName="run.googleapis.com/services.run"
-resource.labels.service_name="adk-observability-agent"
-```
+- **To see who made predictions:**
 
-This query shows you:
+  ```log
+  protoPayload.methodName="google.cloud.aiplatform.v1.PredictionService.Predict"
+  ```
 
-- `principalEmail`: The identity that called the service.
-- `methodName`: The specific API method invoked.
-- `request`: The full request payload (if enabled and configured).
+- **To see who modified a model:**
 
-#### ✅ Checkpoint 7: Verify Audit Logs
+  ```log
+  protoPayload.methodName="google.cloud.aiplatform.v1.ModelService.UpdateModel"
+  ```
 
-1. After enabling Data Access logs, send another test request to your Cloud Run service.
-2. Go to the Logs Explorer and run the query above.
-3. You should see a new log entry detailing your request, including your identity as the `principalEmail`.
+These logs are invaluable for security investigations and meeting compliance requirements.
 
-## Advanced Topics: AI-Specific Monitoring
+---
 
-Beyond operational metrics, monitoring the *quality* of LLM outputs is essential. This includes tracking for safety, content quality, and tool usage.
+## 🤖 Advanced AI-Specific Monitoring
 
-### 1. Monitoring for Safety & Content Quality
+Beyond standard metrics, you should also monitor for issues specific to AI and LLMs.
 
-Vertex AI includes built-in safety filters that block harmful content. You can monitor when these filters are triggered.
+| Metric / Log Signal | What It Tells You | How to Implement |
+| :--- | :--- | :--- |
+| **Safety Attributes** | Is the model generating harmful, toxic, or biased content? | Parse the `safety_ratings` from the Gemini API response and log them. Create alerts for high-severity safety flags. |
+| **Tool Use & Errors** | Are the agent's tools being called correctly? Are they failing? | In your ADK agent, wrap tool calls in `try...except` blocks. Log the tool name, parameters, and success/failure status. |
+| **Grounding / Hallucination** | Is the model making up facts? | This is harder to automate. Log the model's response alongside the source documents or tool outputs it used. Periodically review these logs for inconsistencies. |
+| **User Feedback** | Are users satisfied with the responses? | Add a "thumbs up/down" feature to your application. Log this feedback and correlate it with the request ID and trace ID. |
 
-- **Monitor Safety Attributes:** When you make a call to the Gemini API, the response includes `safetyAttributes`. A response is blocked if the probability for a harmful category (e.g., `HARM_CATEGORY_HATE_SPEECH`) exceeds a threshold.
-- **Log Safety Scores:** Log the `safetyAttributes` scores for every response. This allows you to create metrics or alerts if you see a spike in responses with high (but not blocking) scores for certain categories.
+---
 
-### 2. Monitoring Tool Use & Grounding
+## 🛠️ Troubleshooting Common Issues
 
-For agent-based systems, it's critical to monitor how the agent uses its tools and whether its responses are grounded in the information provided by those tools.
+| Issue | Symptom | How to Fix |
+| :--- | :--- | :--- |
+| **Logs not appearing** | You run your code, but nothing shows up in Logs Explorer. | 1. Check `gcloud config get-value project`. <br> 2. Verify authentication with `gcloud auth list`. <br> 3. Ensure the Cloud Logging API is enabled. |
+| **Traces are missing** | Logs appear, but no traces are in the Trace Explorer. | 1. Ensure OpenTelemetry libraries are installed. <br> 2. Check that the OTLP exporter is configured correctly. <br> 3. For Cloud Run, ensure the container has egress network access. |
+| **Metrics are empty** | You created log-based metrics, but the charts are empty. | 1. Verify the filter for the log-based metric is correct and matches your log entries. <br> 2. Check that the `Field Name` (e.g., `jsonPayload.total_tokens`) exactly matches the field in your JSON payload. <br> 3. Wait 5-10 minutes for data to populate. |
+| **Permission Denied** | Your code fails with a 403 error. | 1. Ensure the service account or user running the code has the required IAM roles (e.g., `roles/logging.logWriter`, `roles/cloudtrace.agent`). <br> 2. If using a service account on Cloud Run, check its permissions. |
 
-- **Log Tool Calls:** Your ADK agent code should already log when tools are called. You can create log-based metrics to track the frequency of each tool's usage.
-- **Analyze Grounding:** Use Vertex AI's built-in grounding features. The API response can include `groundingMetadata` that indicates whether the output was based on the provided context. Log this information to track how often the model generates ungrounded or hallucinatory responses.
+---
 
-## Conclusion & Next Steps
+## 🎉 Conclusion & Next Steps
 
-In this tutorial, you have built a comprehensive observability framework for your Vertex AI and ADK applications. You started with foundational logging and tracing, then moved to production-grade monitoring with custom metrics and alerting, and finally explored advanced AI-specific monitoring techniques.
+Congratulations! You have successfully implemented a comprehensive observability solution for your Vertex AI and ADK applications. You now have the tools to monitor performance, control costs, debug issues, and scale with confidence.
 
-### What we've covered
+**What you've accomplished:**
 
-- **Structured Logging:** Creating detailed, queryable logs for both direct LLM calls and ADK agents.
-- **Distributed Tracing:** Visualizing request flows and identifying performance bottlenecks with OpenTelemetry.
-- **Custom Metrics:** Building log-based metrics to monitor key performance indicators like token usage and latency.
-- **Automated Alerting:** Setting up policies to be notified of production issues proactively.
-- **Security Auditing:** Enabling and querying audit logs to track access and usage.
+- Configured structured logging for both direct LLM calls and ADK agents.
+- Implemented end-to-end tracing with OpenTelemetry.
+- Created custom metrics for token usage and latency.
+- Built a monitoring dashboard for at-a-glance insights.
+- Set up automated alerting for proactive incident response.
+- Enabled audit logging for enhanced security.
 
-From here, you can continue to build on this foundation:
+**Next Steps:**
 
-- **Create Dashboards:** Build a custom monitoring dashboard in Cloud Monitoring to visualize all your key metrics in one place.
-- **Integrate with Evaluation:** Connect your observability data with evaluation pipelines to correlate online performance with offline evaluation scores.
-- **Cost Optimization:** Use token count and latency metrics to identify expensive queries and optimize your prompts or model choices.
-
-For more information, refer to the official documentation:
-
-- [Google Cloud Observability](https://cloud.google.com/products/observability)
-- [Vertex AI Monitoring](https://cloud.google.com/vertex-ai/docs/general/monitoring)
-- [Application Development Kit (ADK)](https://cloud.google.com/adk)
+- **Explore AI Quality:** Dive deeper into monitoring for hallucinations, toxicity, and grounding.
+- **Integrate with CI/CD:** Add automated checks to your deployment pipeline to catch performance regressions before they hit production.
+- **Cost Optimization:** Use your token and cost metrics to experiment with different models and prompts to find the most cost-effective solution.
