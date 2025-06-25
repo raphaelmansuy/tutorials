@@ -193,6 +193,18 @@ def test_gcp_setup():
     except Exception as e:
         print(f"❌ GCP setup test failed: {e}")
         return False
+    try:
+        google.cloud.logging.Client()
+        print("✅ Cloud Logging client created successfully")
+        google.cloud.monitoring_v3.MetricServiceClient()
+        print("✅ Cloud Monitoring client created successfully")
+        google.cloud.trace_v1.TraceServiceClient()
+        print("✅ Cloud Trace client created successfully")
+        print("\n🎉 Your environment is ready for the tutorial!")
+        return True
+    except Exception as e:
+        print(f"❌ GCP setup test failed: {e}")
+        return False
 
 if __name__ == "__main__":
     success = test_gcp_setup()
@@ -214,6 +226,28 @@ import sys
 
 def test_vertex_ai():
     """Verify access to the Vertex AI Gemini API using Google Gen AI SDK."""
+    try:
+        # Create client for Vertex AI
+        client = genai.Client(
+            vertexai=True,
+            project='your-project-id',  # Replace with your project ID
+            location='us-central1'
+        )
+        print("✅ Google Gen AI client for Vertex AI created successfully")
+
+        # Test Gemini API call
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-001',
+            contents='Hello!'
+        )
+        print("✅ Gemini API call successful")
+        print(f"✅ Response received: {response.text[:40]}...")
+        print(f"✅ Token usage: {response.usage_metadata.total_token_count} tokens")
+        print("\n🎉 Vertex AI access is working!")
+        return True
+    except Exception as e:
+        print(f"❌ Vertex AI test failed: {e}")
+        return False
     try:
         # Create client for Vertex AI
         client = genai.Client(
@@ -789,6 +823,9 @@ print(f"Agent deployed: {reasoning_engine.resource_name}")
 # Query the deployed agent
 response = reasoning_engine.query(
     input={"question": "What are the benefits of using Agent Engine?"}
+)
+
+print(f"Agent Response: {response}")
 ```
 
 #### ✅ Checkpoint 4: View Agent Engine Observability
@@ -882,7 +919,9 @@ Create comprehensive dashboards that provide real-time visibility into your Vert
    }
    ```
 
-##### Widget 1: Request Rate and Success Rate
+3. **Add Dashboard Widgets:**
+
+#### Widget 1: Request Rate and Success Rate
 
 ```json
 {
@@ -890,32 +929,30 @@ Create comprehensive dashboards that provide real-time visibility into your Vert
   "xyChart": {
     "dataSets": [
       {
-     "dataSets": [
-        {
-          "timeSeriesQuery": {
-             "timeSeriesFilter": {
-                "filter": "resource.type=\"aiplatform.googleapis.com/ReasoningEngine\"",
-                "aggregation": {
-                  "alignmentPeriod": "60s",
-                  "perSeriesAligner": "ALIGN_RATE",
-                  "crossSeriesReducer": "REDUCE_SUM"
-                }
-             }
-          },
-          "plotType": "LINE",
-          "targetAxis": "Y1"
-        }
-     ],
-     "timeshiftDuration": "0s",
-     "yAxis": {
-        "label": "Requests/sec",
-        "scale": "LINEAR"
-     }
+        "timeSeriesQuery": {
+          "timeSeriesFilter": {
+            "filter": "resource.type=\"aiplatform.googleapis.com/ReasoningEngine\"",
+            "aggregation": {
+              "alignmentPeriod": "60s",
+              "perSeriesAligner": "ALIGN_RATE",
+              "crossSeriesReducer": "REDUCE_SUM"
+            }
+          }
+        },
+        "plotType": "LINE",
+        "targetAxis": "Y1"
+      }
+    ],
+    "timeshiftDuration": "0s",
+    "yAxis": {
+      "label": "Requests/sec",
+      "scale": "LINEAR"
+    }
   }
 }
 ```
 
-**Widget 2: Token Usage and Cost Tracking**
+#### Widget 2: Token Usage and Cost Tracking
 
 ```json
 {
@@ -935,20 +972,24 @@ Create comprehensive dashboards that provide real-time visibility into your Vert
         },
         "plotType": "STACKED_AREA"
       }
-    ]
+    ],
+    "yAxis": {
+      "label": "Total Tokens",
+      "scale": "LINEAR"
+    }
   }
 }
 ```
 
-**Widget 3: Response Latency Distribution**
+#### Widget 3: Response Latency Distribution
 
 ```json
 {
   "title": "Response Latency Distribution",
   "xyChart": {
-     "dataSets": [
-        {
-          "timeSeriesQuery":
+    "dataSets": [
+      {
+        "timeSeriesQuery": {
           "timeSeriesFilter": {
             "filter": "resource.type=\"aiplatform.googleapis.com/ReasoningEngine\" AND metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\"",
             "aggregation": {
@@ -960,7 +1001,11 @@ Create comprehensive dashboards that provide real-time visibility into your Vert
         },
         "plotType": "LINE"
       }
-    ]
+    ],
+    "yAxis": {
+      "label": "Latency (ms)",
+      "scale": "LINEAR"
+    }
   }
 }
 ```
@@ -1224,6 +1269,9 @@ gcloud logging buckets update _Default \
 import google.cloud.monitoring_v3 as monitoring_v3
 import google.cloud.logging_v2 as logging_v2
 
+# Set your project ID
+PROJECT_ID = "your-project-id"  # Replace with your actual project ID
+
 def create_security_dashboard():
     """Create a dashboard for security monitoring."""
     client = monitoring_v3.DashboardsServiceClient()
@@ -1452,6 +1500,9 @@ class CostAnalyzer:
 ```python
 # cost_dashboard.py
 import google.cloud.monitoring_v3 as monitoring_v3
+
+# Set your project ID
+PROJECT_ID = "your-project-id"  # Replace with your actual project ID
 
 def create_cost_monitoring_dashboard():
     """Create a comprehensive cost monitoring dashboard."""
