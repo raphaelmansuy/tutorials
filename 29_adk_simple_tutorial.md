@@ -16,7 +16,7 @@ flowchart TD
         style B fill:#ffcccc,stroke:#d32f2f,stroke-width:2px
         style C fill:#ffcccc,stroke:#d32f2f,stroke-width:2px
     end
-    
+
     subgraph "AI Agent Approach"
         D[🤖 AI Agents]
         E[🧠 Dynamic Reasoning]
@@ -33,7 +33,7 @@ flowchart TD
         style I fill:#ccffcc,stroke:#388e3c,stroke-width:2px
         style J fill:#ccffcc,stroke:#388e3c,stroke-width:2px
     end
-    
+
     A --> B
     B --> C
     D --> E
@@ -70,7 +70,7 @@ flowchart TB
         ADK[Google ADK]
         style ADK fill:#fff3e0,stroke:#f57f17,stroke-width:3px
     end
-    
+
     subgraph "Core Features"
         AG[🤖 Agents]
         TL[🔧 Tools]
@@ -79,7 +79,7 @@ flowchart TB
         style TL fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
         style WO fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     end
-    
+
     subgraph "Key Benefits"
         RD[⚡ Rapid Development]
         PR[🚀 Production Ready]
@@ -88,7 +88,7 @@ flowchart TB
         style PR fill:#e1f5fe,stroke:#01579b,stroke-width:2px
         style MA fill:#f1f8e9,stroke:#689f38,stroke-width:2px
     end
-    
+
     ADK --> AG
     ADK --> TL
     ADK --> WO
@@ -219,6 +219,7 @@ USE_VERTEX_AI = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE
 For production applications, Vertex AI offers better security, scaling, and enterprise features. The setup involves configuring IAM roles, enabling APIs, and setting up authentication.
 
 **Quick Setup Summary:**
+
 ```bash
 # Basic Vertex AI configuration
 export PROJECT_ID="your-project-id"
@@ -277,7 +278,8 @@ if USE_VERTEX_AI:
 
 **Error**: `Permission denied` when running ADK commands
 
-**Solution**: 
+**Solution**:
+
 ```bash
 # Check your current permissions
 gcloud auth list
@@ -292,6 +294,7 @@ gcloud auth application-default login
 **Error**: `API [aiplatform.googleapis.com] not enabled`
 
 **Solution**:
+
 ```bash
 # Enable the API and wait for propagation
 gcloud services enable aiplatform.googleapis.com --project=$PROJECT_ID
@@ -303,6 +306,7 @@ sleep 30  # Wait 30 seconds for API to be fully enabled
 **Error**: `Service agent not found` during deployment
 
 **Solution**:
+
 ```bash
 # Manually create the service agent
 gcloud beta services identity create --service=aiplatform.googleapis.com --project=$PROJECT_ID
@@ -356,12 +360,14 @@ export GOOGLE_CLOUD_LOCATION="us-central1"  # Recommended for tutorials
 #### Cost Estimation
 
 **Vertex AI Agent Engine Pricing** (as of June 2025):
+
 - **Model Usage**: Pay per token (input/output)
   - Gemini 2.0 Flash: ~$0.075 per 1M input tokens, ~$0.30 per 1M output tokens
 - **Agent Engine Hosting**: ~$0.50-2.00 per hour depending on instance size
 - **Cloud Storage**: ~$0.020 per GB/month for bucket storage
 
 **Cost Optimization Tips**:
+
 ```bash
 # Use efficient model configurations
 # In your agent code:
@@ -374,13 +380,24 @@ generate_content_config = types.GenerateContentConfig(
 
 ### Alternative: Local Development vs Cloud Deployment
 
-| Feature | Google AI Studio (Local) | Vertex AI (Cloud) |
-|---------|---------------------------|-------------------|
-| **Setup Complexity** | ⭐⭐ Simple | ⭐⭐⭐⭐ Advanced |
-| **Cost** | Free tier available | Pay-as-you-use |
-| **Production Ready** | ❌ Development only | ✅ Production ready |
-| **Security** | API Key based | IAM & Service Accounts |
-| **Scalability** | Limited | Auto-scaling |
-| **Team Collaboration** | ❌ Individual | ✅ Team-friendly |
+| Feature                | Google AI Studio (Local) | Vertex AI (Cloud)      |
+| ---------------------- | ------------------------ | ---------------------- |
+| **Setup Complexity**   | ⭐⭐ Simple              | ⭐⭐⭐⭐ Advanced      |
+| **Cost**               | Free tier available      | Pay-as-you-use         |
+| **Production Ready**   | ❌ Development only      | ✅ Production ready    |
+| **Security**           | API Key based            | IAM & Service Accounts |
+| **Scalability**        | Limited                  | Auto-scaling           |
+| **Team Collaboration** | ❌ Individual            | ✅ Team-friendly       |
 
 **Recommendation**: Start with Google AI Studio for learning, migrate to Vertex AI for production.
+
+## Author
+
+### Raphaël MANSUY
+
+- Website: [Elitizon](https://www.elitizon.com)
+- LinkedIn: [Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)
+
+---
+
+_Last updated: June 2025_
