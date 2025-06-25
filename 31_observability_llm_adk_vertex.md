@@ -139,6 +139,10 @@ flowchart TB
     LOGS --> L_DATA
     TRACES --> T_DATA
 
+    REQUEST --> LOGS 
+    RESPONSE --> LOGS
+
+
     style METRICS fill:#e6f4ea,stroke:#5bb974
     style LOGS fill:#e8f0fe,stroke:#4285f4
     style TRACES fill:#fef7e0,stroke:#fbbc04
@@ -168,6 +172,7 @@ flowchart LR
     end
 
     subgraph "📋 Logs Generated"
+        L0["User identified:<br/>user_id=abc123"]
         L1["Request started:<br/>model=gemini-2.5-flash<br/>prompt_length=156"]
         L2["Generation completed:<br/>tokens=2847<br/>duration=1180ms"]
         L3["Safety check passed:<br/>no_blocked_content"]
@@ -190,6 +195,7 @@ flowchart LR
     MODEL -.->|Token Count| M3
     RESP -.->|Cost Calc| M4
 
+    USER -.->|User Info| L0
     API -.->|Start Event| L1
     MODEL -.->|Completion| L2
     MODEL -.->|Safety Info| L3
@@ -210,6 +216,7 @@ flowchart LR
     style M3 fill:#e6f4ea,stroke:#5bb974
     style M4 fill:#e6f4ea,stroke:#5bb974
     
+    style L0 fill:#e8f0fe,stroke:#4285f4
     style L1 fill:#e8f0fe,stroke:#4285f4
     style L2 fill:#e8f0fe,stroke:#4285f4
     style L3 fill:#e8f0fe,stroke:#4285f4
@@ -230,75 +237,6 @@ flowchart LR
 ### Direct LLM Generation Call - Detailed Observability
 
 For direct LLM generation calls, here's how the three pillars of observability capture different aspects of the interaction:
-
-```mermaid
-flowchart TD
-    subgraph "LLM Call Flow"
-        A[Application Request] --> B[LLM Generation Call]
-        B --> C[LLM Response]
-        C --> D[Application Processing]
-    end
-    
-    subgraph "📊 Metrics Layer"
-        M1[Request Rate<br/>calls/second]
-        M2[Response Time<br/>p95, p99 latencies]
-        M3[Error Rate<br/>4xx, 5xx errors]
-        M4[Token Usage<br/>input/output tokens]
-        M5[Cost Tracking<br/>$/request]
-    end
-    
-    subgraph "📋 Logs Layer"
-        L1[Request Payload<br/>prompt, parameters]
-        L2[Response Content<br/>generated text]
-        L3[Error Details<br/>failure reasons]
-        L4[Model Metadata<br/>version, config]
-        L5[Business Context<br/>user_id, session]
-    end
-    
-    subgraph "🔗 Traces Layer"
-        T1[Request Span<br/>end-to-end timing]
-        T2[LLM Call Span<br/>model processing time]
-        T3[Preprocessing Span<br/>prompt preparation]
-        T4[Postprocessing Span<br/>response handling]
-        T5[Error Spans<br/>retry attempts]
-    end
-    
-    %% Connect flow to observability layers
-    A -.->|Captures| M1
-    B -.->|Measures| M2
-    B -.->|Records| L1
-    B -.->|Tracks| T1
-    
-    C -.->|Counts| M4
-    C -.->|Stores| L2
-    C -.->|Times| T2
-    
-    D -.->|Calculates| M5
-    D -.->|Enriches| L5
-    D -.->|Completes| T4
-    
-    %% Error paths
-    B -.->|Monitors| M3
-    B -.->|Logs| L3
-    B -.->|Traces| T5
-    
-    %% Style the layers
-    classDef metricsStyle fill:#e6f4ea,stroke:#5bb974,stroke-width:2px
-    classDef logsStyle fill:#e8f0fe,stroke:#4285f4,stroke-width:2px
-    classDef tracesStyle fill:#fef7e0,stroke:#fbbc04,stroke-width:2px
-    classDef flowStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
-    class M1,M2,M3,M4,M5 metricsStyle
-    class L1,L2,L3,L4,L5 logsStyle
-    class T1,T2,T3,T4,T5 tracesStyle
-    class A,B,C,D flowStyle
-```
-
-**Practical Examples:**
-
-- **Metrics**: "Average response time is 2.3s, 95th percentile is 4.1s, processing 45 requests/minute"
-- **Logs**: "User abc123 requested text generation with model gemini-1.5-pro at 2024-01-15T10:30:00Z"
-- **Traces**: "Total request took 2.1s: 0.1s preprocessing + 1.8s model call + 0.2s postprocessing"
 
 ### **Metrics**
 
