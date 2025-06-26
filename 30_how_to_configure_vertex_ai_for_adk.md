@@ -137,10 +137,14 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ### Step 2: Enable Required APIs
 
 ```bash
-# Enable all required APIs in one command
+# Enable core required APIs
 gcloud services enable \
     aiplatform.googleapis.com \
     storage.googleapis.com \
+    --project=$PROJECT_ID
+
+# Optional: Enable additional APIs for advanced features
+gcloud services enable \
     logging.googleapis.com \
     monitoring.googleapis.com \
     cloudtrace.googleapis.com \
@@ -769,7 +773,7 @@ graph TD
 - [gcloud CLI](https://cloud.google.com/sdk/gcloud) - Command-line interface
 - [Cloud Console](https://console.cloud.google.com/) - Web interface
 - [Terraform Provider](https://registry.terraform.io/providers/hashicorp/google/latest) - Infrastructure as Code
-- [Monitoring Dashboard Templates](https://cloud.google.com/monitoring/support/notification-options) - Pre-built dashboards
+- [Cloud Monitoring](https://cloud.google.com/monitoring/dashboards) - Monitoring and dashboards
 
 ---
 
