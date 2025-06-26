@@ -2,8 +2,6 @@
 
 This tutorial provides a comprehensive, step-by-step guide to implementing robust observability for your Vertex AI Generative AI and Agent Engine applications. You'll learn how to monitor, trace, and log your AI systems to ensure reliability, optimize performance, and control costs.
 
-> **📝 Tutorial Quality Note:** This tutorial uses consistent project ID environment variables throughout all code examples, includes complete and validated YAML configurations, and features syntax-validated Mermaid diagrams for optimal clarity and usability.
-
 ## 🎯 What You'll Build
 
 By following this guide, you will create a complete observability solution for your Vertex AI applications, featuring:
@@ -309,8 +307,6 @@ If everything is configured correctly, you should see output similar to this:
 - **Authentication Issues:** If you see authentication errors, run `gcloud auth application-default login`.
 - **Permission Issues:** Ensure your account has the required IAM roles listed in the prerequisites.
 - **API Not Enabled:** If you see errors about APIs being disabled, run `gcloud services enable aiplatform.googleapis.com monitoring.googleapis.com logging.googleapis.com cloudtrace.googleapis.com`.
-
-> **💡 Diagram Validation:** All Mermaid diagrams in this tutorial have been validated for correct syntax. If you're viewing this document in an environment that doesn't render Mermaid diagrams, consider using [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/) to view the diagrams.
 
 ---
 
@@ -1176,7 +1172,7 @@ gcloud iam roles create observability_admin \
     --project=$PROJECT_ID \
     --title="Observability Admin" \
     --description="Full access to observability configuration" \
-    --permissions="monitoring.*,logging.*,cloudtrace.*"
+    --permissions="monitoring.dashboards.create,monitoring.dashboards.delete,monitoring.dashboards.get,monitoring.dashboards.list,monitoring.dashboards.update,logging.logEntries.create,logging.logEntries.list,cloudtrace.traces.get,cloudtrace.traces.list,cloudtrace.traces.patch"
 ```
 
 **Service Account Security:**
@@ -1240,7 +1236,7 @@ gcloud compute firewall-rules create allow-vertex-ai-egress \
     --network=your-vpc \
     --action=ALLOW \
     --rules=tcp:443 \
-    --destination-ranges=199.36.153.8/30 \
+    --destination-ranges=199.36.153.8/30,34.126.0.0/18 \
     --target-tags=vertex-ai-workload
 ```
 
@@ -1285,7 +1281,7 @@ gcloud logging buckets update _Default \
 # Create separate buckets for different data classifications
 gcloud logging buckets create pii-logs \
     --location=us-central1 \
-    --retention-days=90 \  # Shorter retention for PII data
+    --retention-days=90 \
     --description="Bucket for logs containing PII data"
 ```
 
@@ -1396,7 +1392,7 @@ conditions:
 alertStrategy:
   autoClose: 3600s # 1 hour
 notificationChannels:
-  - "projects/your-project/notificationChannels/security-team"
+  - "projects/your-project-id/notificationChannels/security-team"
 ```
 
 #### 4. Compliance Reporting and Documentation
@@ -1834,7 +1830,7 @@ conditions:
 alertStrategy:
   autoClose: 86400s
 notificationChannels:
-  - "projects/your-project/notificationChannels/finance-team"
+  - "projects/your-project-id/notificationChannels/finance-team"
 ```
 
 **Budget Threshold Alerts:**
