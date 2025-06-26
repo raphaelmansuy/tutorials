@@ -910,14 +910,18 @@ print(f"Agent Response: {response}")
 
 ---
 
+## 🏢 Production Path (2-4 Hours)
+
+*Enterprise Observability, Security, and Cost Optimization*
+
 <details>
-<summary>🏢 <strong>Production Path (2-4 Hours)</strong> — Enterprise Observability, Security, and Cost Optimization</summary>
+<summary>Click to expand/collapse Production Path Overview</summary>
 
 The Production Path provides a comprehensive, enterprise-ready observability solution for your Vertex AI applications. This section covers custom dashboards, alerting, security, and cost optimization.
 
 > **🎯 Success Criteria:** By the end of this section, you'll have a complete observability solution in place, including custom metrics, alerts, and production-grade security.
 
-## </details>
+</details>
 
 ### Custom Dashboards and Alerts
 
