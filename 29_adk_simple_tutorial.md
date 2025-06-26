@@ -2,7 +2,7 @@
 
 _"The best time to plant a tree was 20 years ago. The second best time is now."_ - This ancient Chinese proverb perfectly captures why you should start building AI agents today, not tomorrow.
 
-> **Updated for Google ADK 1.4.2 & Gemini 2.5** - This tutorial is current as of June 2025 and uses the latest Agent Development Kit features with Google's newest Gemini 2.5 models, including the built-in web UI and command-line tools.
+> **Updated for Google ADK 1.5.0 & Gemini 2.5** - This tutorial is current as of June 2025 and uses the latest Agent Development Kit features with Google's newest Gemini 2.5 models, including the built-in web UI and command-line tools.
 
 ## Prerequisites
 
@@ -137,7 +137,7 @@ flowchart TB
 
 ## ADK Command-Line Tools & Web Interface 🛠️
 
-Google ADK 1.4.2 comes with powerful built-in tools that make development, testing, and debugging a breeze.
+Google ADK 1.5.0 comes with powerful built-in tools that make development, testing, and debugging a breeze.
 
 ### The `adk` Command Suite
 
@@ -265,7 +265,7 @@ source .venv/bin/activate
 # Windows PowerShell:
 # .venv\Scripts\Activate.ps1
 
-# Install Google ADK (latest 1.4.2)
+# Install Google ADK (latest 1.5.0)
 pip install google-adk python-dotenv
 
 # Verify installation
@@ -364,7 +364,7 @@ def calculate(expression: str) -> dict:
             "error_message": f"Error in calculation: {str(e)}"
         }
 
-# Create your agent with modern ADK 1.4.2 syntax
+# Create your agent with modern ADK 1.5.0 syntax
 weather_assistant = Agent(
     name="weather_time_agent",
     model="gemini-2.5-flash",
@@ -660,7 +660,7 @@ mkdir intelligent-task-assistant && cd intelligent-task-assistant
 # Initialize uv project with Python 3.11
 uv init --name intelligent-task-assistant --python "3.11"
 
-# Add dependencies (Google ADK 1.4.2)
+# Add dependencies (Google ADK 1.5.0)
 uv add google-adk python-dotenv
 
 # Add development dependencies
@@ -1216,7 +1216,7 @@ gcloud run deploy task-assistant \
 | -------------------- | -------------------- | -------------------------- |
 | **Time Investment**  | 30 minutes           | 2-3 hours                  |
 | **Python Version**   | 3.11+ (recommended)  | 3.11+ (recommended)        |
-| **ADK Version**      | 1.4.2                | 1.4.2                      |
+| **ADK Version**      | 1.5.0                | 1.5.0                      |
 | **Code Quality**     | Demo-ready           | Production-ready           |
 | **Scalability**      | Single file          | Modular architecture       |
 | **Testing**          | Manual + ADK Web     | Automated + `adk eval`     |
@@ -1240,7 +1240,7 @@ gcloud run deploy task-assistant \
 
 ## Summary
 
-This tutorial provides two distinct paths for learning Google ADK 1.4.2:
+This tutorial provides two distinct paths for learning Google ADK 1.5.0:
 
 - **⚡ Quick Start (30 minutes)**: Get a working agent with minimal setup to prove the concept
 - **🏗️ Production Path (2-3 hours)**: Build scalable, production-ready agent systems
@@ -1251,7 +1251,7 @@ Both paths are designed to be highly actionable and provide immediate value, whe
 
 By following either path, you now have:
 
-- ✅ **Hands-on ADK Experience**: Working code that demonstrates Google ADK 1.4.2 capabilities
+- ✅ **Hands-on ADK Experience**: Working code that demonstrates Google ADK 1.5.0 capabilities
 - ✅ **Modern Development Practices**: Proper project structure, testing, and deployment
 - ✅ **Real-World Applications**: Tools and patterns you can adapt to your use cases
 - ✅ **Production Knowledge**: Understanding of scalable architecture and deployment options
@@ -1271,4 +1271,4 @@ By following either path, you now have:
 
 ---
 
-**Last updated:** June 2025 | **Google ADK Version:** 1.4.2 | **Gemini Version:** 2.5 | **Python Version:** 3.11+
+**Last updated:** June 2025 | **Google ADK Version:** 1.5.0 | **Gemini Version:** 2.5 | **Python Version:** 3.11+
