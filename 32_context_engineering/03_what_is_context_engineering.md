@@ -4,7 +4,7 @@
 **Website**: [https://www.elitizon.com](https://www.elitizon.com)  
 **LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
 **Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
-**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contact), driving large-scale AI adoption and organizational transformation.**
+**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
 **Date**: June 2025
 
 ---
