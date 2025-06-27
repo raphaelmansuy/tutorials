@@ -106,16 +106,83 @@ Imagine you have the world's most brilliant researcher, but they've been locked 
 
 **The Growing Knowledge Gap**:
 
-- Your LLM knows about COVID-19 but not the latest variants
+- Your LLM knows general programming concepts but not your company's specific coding standards
 - It understands JavaScript but missed the newest frameworks
 - It has historical stock data but can't tell you today's prices
-- It knows old company policies but not recent updates
+- It knows public information but not your proprietary business processes, internal policies, or confidential client data
+
+### The Proprietary Knowledge Challenge
+
+Even if an LLM was trained yesterday, it would still miss the most important information for your business—your **private, proprietary knowledge**:
+
+- Internal procedures and workflows
+- Company-specific product documentation
+- Confidential client requirements
+- Proprietary methodologies and best practices
+- Private databases and internal systems data
 
 This isn't a bug—it's the fundamental architecture of how LLMs work. They're trained once on a massive dataset, then their knowledge becomes **immutable**.
 
 ### 🎯 WHAT: In-Context Learning (ICL) as the Bridge
 
 **In-Context Learning** is the breakthrough that transforms your frozen encyclopedia into a living, breathing knowledge system. Instead of retraining the entire model (which costs millions), you strategically feed relevant, current information directly into the AI's "working memory."
+
+### Understanding LLM Memory: The Context Window Challenge
+
+Think of your LLM's memory like a **briefcase with limited space**—you can only pack so much for each trip. This "briefcase" is called the **context window**, and it's where all your In-Context Learning magic happens.
+
+```mermaid
+flowchart TD
+    subgraph "🧳 LLM Context Window (Limited Space)"
+        A[📝 User Query<br/>~50 tokens]
+        B[📚 Retrieved Context<br/>~3,000 tokens]
+        C[💬 Conversation History<br/>~500 tokens]
+        D[🎯 System Instructions<br/>~200 tokens]
+        E[⚡ Available Space<br/>~250 tokens left]
+    end
+    
+    subgraph "📦 Information Waiting Outside"
+        F[📄 More Documents<br/>10,000+ tokens]
+        G[🗂️ Full Database<br/>1M+ tokens]
+        H[📊 Complete History<br/>50,000+ tokens]
+    end
+    
+    subgraph "⚖️ The Packing Challenge"
+        I[🎯 Smart Selection<br/>Context Engineering]
+        J[🗑️ What to Leave Behind<br/>Less Important Info]
+        K[✨ Optimal Mix<br/>Quality > Quantity]
+    end
+    
+    F -.->|❌ Won't Fit| A
+    G -.->|❌ Too Big| B
+    H -.->|❌ Exceeds Limit| C
+    
+    I --> B
+    I --> C
+    J --> F
+    J --> G
+    
+    A --> L[🤖 LLM Processing]
+    B --> L
+    C --> L
+    D --> L
+    
+    L --> M[📋 Smart Response<br/>Based on Selected Context]
+    
+    classDef contextWindow fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
+    classDef waiting fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
+    classDef selection fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef processing fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A,B,C,D,E contextWindow
+    class F,G,H waiting
+    class I,J,K selection
+    class L,M processing
+```
+
+**The Reality**: Modern LLMs have context windows ranging from 4K tokens (older models) to 128K+ tokens (latest models). But here's the catch—**more tokens = higher costs and slower responses**.
+
+**The Context Engineering Solution**: Instead of cramming everything in, you strategically select the **most relevant pieces** for each specific query. It's like being a master packer who knows exactly what to bring for each trip.
 
 **Think of it like this**:
 
