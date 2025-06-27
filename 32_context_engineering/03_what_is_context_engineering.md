@@ -32,6 +32,29 @@
 ---
 
 ## The Definition That Changes Everything
+```mermaid
+flowchart LR
+    A[🤖 AI System] --> B[Context Engineering]
+    B --> C[🗂️ Static]
+    B --> D[⚡ Dynamic]
+    B --> E[💬 Conversational]
+    B --> F[🎯 Behavioral]
+    B --> G[🌍 Environmental]
+    B --> H[⏰ Temporal]
+    B --> I[🧠 Latent]
+    C & D & E & F & G & H & I --> J[📋 Better Answers]
+    J --> K[✅ +40-60% Accuracy]
+
+    classDef ai fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    classDef engine fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef contexts fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px
+
+    class A ai
+    class B engine
+    class C,D,E,F,G,H,I contexts
+    class J,K result
+```
 
 Context Engineering is the **systematic discipline of architecting information flows** that enable AI systems to understand, reason about, and respond to queries with precision and relevance. Think of it as building the nervous system for artificial intelligence—a sophisticated network that connects scattered information into coherent, actionable knowledge.
 
@@ -43,73 +66,58 @@ Context Engineering is the **systematic discipline of architecting information f
 
 This interdisciplinary approach transforms how AI accesses and processes knowledge, moving from simple keyword matching to intelligent context-aware reasoning that rivals human information processing patterns.
 
+The full picture looks like this:
+
 ```mermaid
-flowchart TB
-    subgraph "🧠 Context Engineering: The AI Nervous System"
-        A[🤖 AI System<br/>Core Intelligence] 
-        
-        subgraph "🌐 Scattered Information Sources"
-            B[📚 Static Knowledge<br/>Documents, Policies]
-            C[⚡ Real-time Data<br/>APIs, Streams]
-            D[💬 Conversations<br/>Chat History]
-            E[👤 User Context<br/>Preferences, Behavior]
-            F[🌍 Environment<br/>Location, Device]
-            G[⏰ Temporal<br/>Time Patterns]
-        end
-        
-        subgraph "🔄 Information Architecture"
-            H[🎯 Context Selection<br/>Intelligent Filtering]
-            I[� Information Fusion<br/>Data Integration]
-            J[⚡ Real-time Processing<br/>Stream Analytics]
-            K[🧠 Reasoning Engine<br/>Context-Aware Logic]
-        end
-        
-        subgraph "✨ Coherent Knowledge Output"
-            L[� Expert Responses<br/>Contextually Accurate]
-            M[🚀 Actionable Insights<br/>Decision Support]
-            N[🎯 Personalized Results<br/>User-Specific]
-        end
+flowchart TD
+    A[🤖 AI System] --> B{Query Processing}
+    
+    subgraph "📚 Knowledge Sources"
+        C[Cognitive Science<br/>Human Memory Patterns]
+        D[Information Retrieval<br/>Search & Discovery]
+        E[Distributed Systems<br/>Scalable Architecture]
     end
     
-    %% Information Flow - The Nervous System Network
-    B --> H
-    C --> H
-    D --> H
-    E --> H
-    F --> H
+    subgraph "🔄 Context Engineering Process"
+        F[📥 Information Flow<br/>Architecture]
+        G[🧠 Understanding<br/>& Reasoning]
+        H[🎯 Precision<br/>Response]
+    end
+    
+    B --> F
+    F --> G
     G --> H
     
-    H --> I
+    C --> F
+    D --> F
+    E --> F
+    
+    H --> I[✨ Enhanced AI<br/>Performance]
+    
+    subgraph "📊 Performance Impact"
+        J[40-60% Higher<br/>Accuracy]
+        K[Domain-Specific<br/>Expertise]
+        L[Selective Memory<br/>Retrieval]
+    end
+    
     I --> J
-    J --> K
-    K --> A
+    I --> K
+    I --> L
     
-    A --> L
-    A --> M
-    A --> N
+    classDef aiSystem fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#01579b
+    classDef knowledge fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef process fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef outcome fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    classDef performance fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
     
-    %% Feedback Loop - Learning Network
-    L -.->|Feedback| H
-    M -.->|Learning| I
-    N -.->|Adaptation| K
-    
-    %% Neural Network Style Connections
-    B -.->|Context Signals| K
-    C -.->|Live Updates| J
-    D -.->|Memory Traces| A
-    E -.->|Behavioral Patterns| A
-    
-    %% Styling
-    classDef aiCore fill:#e1f5fe,stroke:#0277bd,stroke-width:4px,color:#01579b
-    classDef infoSources fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
-    classDef architecture fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#1b5e20
-    classDef output fill:#fff8e1,stroke:#ffa000,stroke-width:3px,color:#ff6f00
-    
-    class A aiCore
-    class B,C,D,E,F,G infoSources
-    class H,I,J,K architecture
-    class L,M,N output
+    class A aiSystem
+    class B aiSystem
+    class C,D,E knowledge
+    class F,G,H process
+    class I outcome
+    class J,K,L performance
 ```
+
 
 **The Science Behind It**: Research from Stanford's AI Lab and MIT's CSAIL shows that context-aware systems achieve 40-60% higher accuracy on domain-specific tasks compared to general-purpose models. The key lies in mimicking human cognitive patterns—we don't recall everything at once; we selectively retrieve relevant memories based on situational cues.
 
