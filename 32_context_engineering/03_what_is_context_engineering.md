@@ -528,14 +528,6 @@ flowchart TD
 
 ---
 
-## Navigation
-
-- [← Previous: Why Context Engineering?](02_why_context_engineering.md)
-- [Next: How to Implement →](04_how_to_implement.md)
-- [🏠 Back to Main](README.md)
-
----
-
 ## 3.1 The Context Taxonomy: Your AI's Information Diet
 
 > 🟢 **Beginner Start Here**: If this is your first time with Context Engineering, focus on **Static Context** and **Latent Knowledge** first. You can implement these in 1-2 weeks and see immediate results. The other context types can be added later as you gain experience.
