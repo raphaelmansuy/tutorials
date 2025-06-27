@@ -131,6 +131,25 @@ graph TB
 
 Picture your AI having a personal Wikipedia that never changes—policy manuals, product specs, that kind of stuff.
 
+```mermaid
+flowchart LR
+    A[User Query] --> B[Vector Search]
+    B --> C[(Static Knowledge<br/>Base)]
+    C --> D[📋 Policy Manuals<br/>📖 Documentation<br/>📊 Product Specs]
+    D --> E[Fast Retrieval<br/>< 100ms]
+    E --> F[✅ Reliable Answer]
+    
+    classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef storage fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef content fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A query
+    class B,C storage
+    class D content
+    class E,F result
+```
+
 - **What it is**: Your AI's permanent reference materials—the stuff that doesn't change much
 - **Real example**: When someone asks about your return policy, your bot pulls from the same document every time
 - **Why it matters**: Fast, reliable answers from your knowledge vault
@@ -146,6 +165,32 @@ _Tech Deep-Dive (Skip if you're just starting):_
 ### ⚡ Dynamic Context (The Live News Feed)
 
 Your AI's real-time intelligence—like having a constantly updating dashboard of what's happening right now.
+
+```mermaid
+flowchart TD
+    A[User Query] --> B{Context Freshness<br/>Check}
+    B -->|Fresh| C[✅ Use Cached Data]
+    B -->|Stale| D[🔄 Fetch Live Data]
+    
+    D --> E[📈 Stock Prices<br/>🌤️ Weather API<br/>📦 Inventory DB]
+    E --> F[Update Cache]
+    F --> G[📊 Real-time Answer]
+    C --> G
+    
+    G --> H[⏰ Set Expiry Timer]
+    
+    classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
+    classDef live fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
+    classDef cache fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A query
+    class B decision
+    class D,E live
+    class C,F,H cache
+    class G result
+```
 
 - **What it is**: Info that changes constantly—stock prices, weather, inventory levels
 - **Real example**: "Is my item in stock?" pulls live inventory data, not yesterday's numbers
@@ -163,6 +208,34 @@ _Tech Deep-Dive:_
 
 Your AI remembers what you just said—like having a conversation with someone who actually listens.
 
+```mermaid
+flowchart TD
+    A[Previous Messages] --> B[🧠 Conversation<br/>Memory]
+    C[Current Query] --> D[Context Fusion]
+    B --> D
+    
+    D --> E{Reference Resolution}
+    E -->|'it', 'that', 'them'| F[Entity Linking]
+    E -->|Complete context| G[Direct Answer]
+    
+    F --> H[💡 'Red jacket you<br/>ordered yesterday']
+    H --> I[🎯 Contextual Response]
+    G --> I
+    
+    I --> J[Update Memory<br/>Buffer]
+    J --> B
+    
+    classDef memory fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef process fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A,B,J memory
+    class C input
+    class D,E,F,H process
+    class G,I result
+```
+
 - **What it is**: Everything that happened in your chat so far
 - **Real example**: You say "I ordered a red one" and later ask "When will it arrive?"—your bot knows what "it" means
 - **Why it matters**: Natural conversations instead of starting over every message
@@ -177,6 +250,41 @@ _Tech Deep-Dive:_
 ### 🎯 Behavioral Context (The Personal Shopper)
 
 Your AI learns your patterns—like a barista who knows your "usual" before you ask.
+
+```mermaid
+flowchart TD
+    A[User Interactions] --> B[📊 Pattern Analysis]
+    B --> C[🏷️ Preference Profile]
+    
+    subgraph "Learning Sources"
+        D[🛒 Purchase History]
+        E[👆 Click Patterns]
+        F[⏰ Usage Times]
+        G[📍 Location Data]
+    end
+    
+    D --> B
+    E --> B
+    F --> B
+    G --> B
+    
+    H[New Query] --> I[Context Enrichment]
+    C --> I
+    
+    I --> J[🎯 Personalized<br/>Suggestions]
+    J --> K[User Feedback]
+    K --> A
+    
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef learning fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
+    classDef profile fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A,H,K input
+    class B,D,E,F,G learning
+    class C,I profile
+    class J result
+```
 
 - **What it is**: Your preferences, habits, and history rolled into smart suggestions
 - **Real example**: "Show me flights" becomes "Here are evening flights to Chicago like you usually prefer"
@@ -193,6 +301,46 @@ _Tech Deep-Dive:_
 
 Your AI knows where you are and what you're working with—mobile vs. desktop, WiFi vs. cellular, New York vs. Tokyo.
 
+```mermaid
+flowchart LR
+    A[User Request] --> B[🔍 Environmental<br/>Detection]
+    
+    subgraph "Context Signals"
+        C[📱 Device Type]
+        D[📶 Network Speed]
+        E[📍 Location]
+        F[🕐 Time Zone]
+        G[♿ Accessibility]
+    end
+    
+    B --> C
+    B --> D
+    B --> E
+    B --> F
+    B --> G
+    
+    C --> H[⚙️ Response<br/>Adaptation]
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+    
+    H --> I{Optimization}
+    I -->|Mobile + Slow| J[📋 Text Summary]
+    I -->|Desktop + Fast| K[🎥 Rich Media]
+    I -->|Accessibility| L[♿ Screen Reader<br/>Friendly]
+    
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef detection fill:#f1f8e9,stroke:#689f38,stroke-width:2px,color:#33691e
+    classDef signals fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A input
+    class B detection
+    class C,D,E,F,G signals
+    class H,I,J,K,L result
+```
+
 - **What it is**: Your current situation and constraints
 - **Real example**: Suggests lighter content when you're on mobile data, local restaurants when you're traveling
 - **Why it matters**: Smart adjustments based on your reality, not assumptions
@@ -207,6 +355,43 @@ _Tech Deep-Dive:_
 ### ⏰ Temporal Context (The Time Traveler)
 
 Your AI understands timing—rush hour traffic patterns, holiday shopping spikes, "end of quarter" business cycles.
+
+```mermaid
+flowchart TD
+    A[Query + Timestamp] --> B[⏰ Temporal Analysis]
+    
+    subgraph "Time Patterns"
+        C[📅 Seasonal Trends<br/>Holiday Spikes]
+        D[🕐 Daily Cycles<br/>Rush Hours]
+        E[📈 Business Cycles<br/>Quarter Ends]
+        F[📊 Historical Data<br/>Year-over-Year]
+    end
+    
+    B --> C
+    B --> D
+    B --> E
+    B --> F
+    
+    C --> G[🧠 Pattern Recognition]
+    D --> G
+    E --> G
+    F --> G
+    
+    G --> H{Time-Aware Decision}
+    H -->|Morning Rush| I[🚗 'Heavy traffic,<br/>allow 45 mins']
+    H -->|Holiday Season| J[🛍️ 'Expected delays<br/>in shipping']
+    H -->|Quarter End| K[💼 'Sales teams<br/>very busy now']
+    
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef temporal fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef patterns fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    
+    class A input
+    class B temporal
+    class C,D,E,F patterns
+    class G,H,I,J,K result
+```
 
 - **What it is**: Time-aware intelligence that recognizes patterns and cycles
 - **Real example**: "Traffic to airport" gives different answers at 3 PM vs. 3 AM, and knows about typical Friday delays
