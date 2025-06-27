@@ -149,7 +149,7 @@ flowchart LR
 **The Paradigm Shift**: Context Engineering isn't just another AI technique—it's the **umbrella discipline** that encompasses and unifies all the approaches you've been using to make AI systems smarter. Think of it as the operating system for intelligent information flow.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph "🌟 Everything is Context Engineering!"
         CE[Context Engineering<br/>🏗️ The Umbrella Framework]
 
