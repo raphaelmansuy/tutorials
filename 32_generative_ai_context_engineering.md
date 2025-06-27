@@ -2,9 +2,7 @@
 
 ## Chapter 1: Introduction—Context is King, and You’re About to Rule
 
-You’re at a party, and someone yells, “Get it fixed!” across the room. Is it a spilled drink, a broken chair, or their latest Tinder flop? You’re lost without context—stumbling through guesses like a blindfolded kid swinging at a piñata. Now imagine an AI in the same spot: a user types, “What’s the problem?” and it replies, “Try rebooting your toaster.” Useless. Frustrating. Avoidable. That’s where **Context Engineering** comes in—arming AI with the smarts to decode the *who*, *what*, and *why* behind every query, turning chaos into clarity.
-
-This isn’t your grandma’s 500-page tech manual. In this 10,000-word rocket ride, we’re fast-tracking you from zero to Context Engineering hero. No fluff, no filler—just hard-hitting insights, real-world stories, and hands-on steps to master this game-changer. Expect punchy anecdotes, quizzes to keep your brain buzzing, and diagrams that make sense of the madness. By the end, you’ll wield AI like a pro—and we’ll prove it with a 24-hour challenge. Ready? Let’s roll.
+You’re at a party, and someone yells, “Get it fixed!” across the room. Is it a spilled drink, a broken chair, or their latest Tinder flop? You’re lost without context—stumbling through guesses like a blindfolded kid swinging at a piñata. Now imagine an AI in the same spot: a user types, “What’s the problem?” and it replies, “Try rebooting your toaster.” Useless. Frustrating. Avoidable. That’s where **Context Engineering** comes in—arming AI with the smarts to decode the _who_, _what_, and _why_ behind every query, turning chaos into clarity.
 
 ---
 
@@ -32,7 +30,7 @@ Think of Context Engineering as a GPS for AI. Without it, your bot’s driving b
 
 ## Chapter 3: What’s Context Engineering? The Nuts and Bolts
 
-Context Engineering is the art of feeding AI the *right* info at the *right* time—not a data dump, not a trickle, but a perfectly curated stream. It’s about designing systems to snag, store, and serve context so AI delivers answers that hit the mark, every time.
+Context Engineering is the art of feeding AI the _right_ info at the _right_ time—not a data dump, not a trickle, but a perfectly curated stream. It’s about designing systems to snag, store, and serve context so AI delivers answers that hit the mark, every time.
 
 ### 3.1 The Context Pyramid
 
@@ -80,7 +78,7 @@ A) Flight schedules
 B) User preferences  
 C) Weather updates  
 D) All of the above  
-*Answer: D*
+_Answer: D_
 
 ### 4.2 Build It, Break It, Fix It
 
@@ -171,7 +169,7 @@ Let’s see Context Engineering in action—real problems, real fixes.
 
 ### 6.4 Interactive Twist
 
-**Scenario**: A retail bot misses a return policy.  
+**Scenario**: A retail bot misses a return policy.
 
 - **Your Move**: Add policy docs to its context. What’s the outcome?
 
@@ -207,7 +205,7 @@ Even pros trip. Watch out:
 A) Too much context  
 B) Data leaks  
 C) Both  
-*Answer: C*
+_Answer: C_
 
 ### 8.1 Fixer’s Guide
 
@@ -256,9 +254,9 @@ mindmap
 
 ## Chapter 11: Wrap-Up—Get Up and Build
 
-Context Engineering turns AI from “meh” to “mind-blowing.” You’ve got the *why* (it’s clutch), *what* (smart info stacks), *how* (build it fast), and *when* (perfect timing). Now, move.
+Context Engineering turns AI from “meh” to “mind-blowing.” You’ve got the _why_ (it’s clutch), _what_ (smart info stacks), _how_ (build it fast), and _when_ (perfect timing). Now, move.
 
-**24-Hour Challenge**: Hit [Contextual AI’s Quickstart](https://docs.contextual.ai), craft a RAG bot (try “best coffee” queries), and make it sing. Start *now*—no slackers allowed!
+**24-Hour Challenge**: Hit [Contextual AI’s Quickstart](https://docs.contextual.ai), craft a RAG bot (try “best coffee” queries), and make it sing. Start _now_—no slackers allowed!
 
 ### 11.1 Bonus Goodies
 
