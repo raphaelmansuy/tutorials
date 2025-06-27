@@ -461,6 +461,59 @@ def reasoning_context_selection(query, available_contexts):
 
 **The Hidden Goldmine**: Your LLM already contains encyclopedic knowledge—the trick is knowing how to dig it out strategically while avoiding the fool's gold of outdated information.
 
+```mermaid
+flowchart TD
+    A[User Query] --> B[🧠 Latent Knowledge<br/>Assessment]
+    
+    subgraph "Prompt Steering Techniques"
+        C[🎭 Role-Based<br/>'Act as expert...']
+        D[🔗 Chain-of-Thought<br/>'Think step by step...']
+        E[📚 Few-Shot Examples<br/>'Here are examples...']
+        F[🎯 Constitutional AI<br/>'Follow principles...']
+        G[🔍 Knowledge Probing<br/>'What do you know about...']
+    end
+    
+    B --> H{Knowledge<br/>Availability Check}
+    H -->|High Confidence| I[Direct Latent<br/>Extraction]
+    H -->|Medium Confidence| J[Guided Prompting]
+    H -->|Low Confidence| K[⚠️ Flag for External<br/>Context Needed]
+    
+    I --> C
+    I --> D
+    J --> E
+    J --> F
+    J --> G
+    
+    C --> L[🎓 Expert-Level<br/>Response]
+    D --> M[📋 Step-by-Step<br/>Reasoning]
+    E --> N[📖 Pattern-Based<br/>Answer]
+    F --> O[✅ Principle-Guided<br/>Response]
+    G --> P[🔍 Knowledge<br/>Synthesis]
+    
+    L --> Q[⚖️ Confidence<br/>Assessment]
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    
+    Q -->|High| R[✨ Reliable Latent<br/>Knowledge]
+    Q -->|Low| S[🔄 Trigger External<br/>Context Retrieval]
+    
+    classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef assessment fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef techniques fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
+    
+    class A query
+    class B,H,Q assessment
+    class C,D,E,F,G techniques
+    class I,J decision
+    class K,S warning
+    class L,M,N,O,P,R result
+```
+
 ### The Two-Brain Problem
 
 Your AI has two knowledge sources:
@@ -479,7 +532,81 @@ Your AI has two knowledge sources:
 
 ### Smart Knowledge Excavation Techniques
 
-**Technique 1: Archaeological Prompting**
+**The Art of Prompt Steering**: Modern context engineering isn't just about external retrieval—it's about becoming a master archaeologist of AI knowledge, using sophisticated prompting techniques to unearth the gems buried in your model's training.
+
+**Technique 1: Role-Based Knowledge Steering**
+Transform your AI into domain experts through strategic role assignment:
+
+```python
+# Basic prompt
+"What are the risks of this medication?"
+
+# Expert-steered prompt
+"""Act as a board-certified pharmacologist with 20 years of clinical experience. 
+Analyze the following medication for potential risks, considering:
+- Drug interactions
+- Contraindications
+- Side effect profiles
+- Special populations (elderly, pregnant, renal impairment)
+
+Medication: [medication name]
+Provide your expert analysis with confidence levels for each risk category."""
+```
+
+**Technique 2: Chain-of-Thought Knowledge Extraction**
+Guide the model through structured reasoning to access deeper knowledge layers:
+
+```python
+def structured_reasoning_prompt(query):
+    return f"""
+    Question: {query}
+    
+    Let me work through this systematically:
+    
+    1. KNOWLEDGE ASSESSMENT: What do I know about this topic from my training?
+    2. CORE PRINCIPLES: What fundamental concepts apply here?
+    3. STEP-BY-STEP ANALYSIS: Let me break this down...
+    4. CONFIDENCE CHECK: How certain am I about each component?
+    5. SYNTHESIS: Bringing it all together...
+    
+    Final Answer with confidence level (High/Medium/Low):
+    """
+```
+
+**Technique 3: Few-Shot Pattern Activation**
+Use examples to activate specific knowledge patterns within the model:
+
+```python
+few_shot_template = """
+Here are examples of how I analyze complex technical problems:
+
+Example 1: [Technical problem] → [Structured analysis] → [Solution]
+Example 2: [Technical problem] → [Structured analysis] → [Solution]
+Example 3: [Technical problem] → [Structured analysis] → [Solution]
+
+Now apply the same analytical framework to: {new_problem}
+"""
+```
+
+**Technique 4: Constitutional Knowledge Steering**
+Guide the model to follow specific principles while accessing its knowledge:
+
+```python
+constitutional_prompt = f"""
+Core Principles for Analysis:
+1. Prioritize factual accuracy over speculation
+2. Acknowledge uncertainty when knowledge is incomplete
+3. Provide balanced perspectives on controversial topics
+4. Ground responses in established scientific consensus
+5. Flag when external verification is recommended
+
+Question: {query}
+
+Following these principles, provide your most reliable knowledge on this topic.
+"""
+```
+
+**Technique 5: Archaeological Prompting**
 Target specific knowledge layers instead of generic queries:
 
 ```python
@@ -490,7 +617,7 @@ Target specific knowledge layers instead of generic queries:
 "Based on fundamental ML principles that haven't changed since 2020, what core concepts remain constant regardless of new frameworks?"
 ```
 
-**Technique 2: Temporal Bifurcation**
+**Technique 6: Temporal Bifurcation**
 Separate timeless knowledge from time-sensitive facts:
 
 ```python
@@ -505,7 +632,7 @@ def create_temporal_prompt(query):
     """
 ```
 
-**Technique 3: Conflict Resolution**
+**Technique 7: Conflict Resolution**
 When latent knowledge conflicts with fresh context:
 
 ```python
@@ -525,306 +652,44 @@ def resolve_knowledge_conflict(latent_info, context_info):
 
 **Performance Impact**: Systems using latent-context fusion show 35% better accuracy on domain-specific tasks with mixed temporal requirements.
 
----
+### When to Use Latent Knowledge Steering vs External Context
 
-## 3.4 The Advanced Context Lifecycle: From Chaos to Clarity
+**Strategic Decision Matrix**:
 
-**🚀 Ready to Level Up?** This section is for when you're past the basics and want to build enterprise-grade systems. If you're just starting, bookmark this and come back later.
+| Scenario | Use Latent Knowledge When | Use External Context When |
+|----------|---------------------------|----------------------------|
+| **Domain Expertise** | General principles, established concepts | Latest research, specific protocols |
+| **Speed Requirements** | Sub-second responses needed | Accuracy more critical than speed |
+| **Knowledge Stability** | Timeless fundamentals | Rapidly changing information |
+| **Cost Considerations** | Minimize API calls/retrieval costs | Budget allows comprehensive searches |
+| **Privacy Concerns** | Avoid external data exposure | Data governance permits external access |
 
-Think of this as your AI's digestive system—how it takes in raw information, processes it, and serves up exactly what's needed. Here's how the pros do it:
-
-**The Big Picture**: Google DeepMind and Microsoft Research identified seven stages that separate amateur context systems from the ones that actually work at scale. It's like the difference between a home kitchen and a Michelin-starred restaurant—same basic function, completely different execution.
-
-```mermaid
-flowchart TD
-    A[Multi-Source Ingestion] --> B[Intelligent Preprocessing]
-    B --> C[Semantic Embedding & Indexing]
-    C --> D[Distributed Storage & Caching]
-    D --> E[Context-Aware Retrieval]
-    E --> F[Dynamic Ranking & Fusion]
-    F --> G[Model Integration & Serving]
-    G --> H[Continuous Learning & Optimization]
-    H --> A
-    
-    subgraph "Quality Assurance"
-        I[Bias Detection]
-        J[Relevance Scoring]
-        K[Freshness Validation]
-    end
-    
-    B -.-> I
-    E -.-> J
-    D -.-> K
-```
-
-**Stage Breakdown with Performance Metrics:**
-
-- **Multi-Source Ingestion**: Enterprise systems typically handle 15+ data sources simultaneously (APIs, databases, documents, streams). Average processing: 50,000+ documents/hour with 99.9% uptime.
-
-- **Intelligent Preprocessing**: Advanced text normalization, entity resolution, and semantic chunking. Modern systems achieve 85-90% accuracy in automated metadata tagging.
-
-- **Semantic Embedding & Indexing**: Multi-modal embeddings (text, images, structured data) with dimensionality optimization. Current best practices use 1024-1536 dimensional embeddings with quantization for 40% storage reduction.
-
-- **Distributed Storage & Caching**: Hybrid architectures combining vector databases (Pinecone, Weaviate) with traditional search (Elasticsearch). Query response times: <50ms for 10M+ documents.
-
-- **Context-Aware Retrieval**: Sophisticated query expansion and multi-stage retrieval. Top systems combine dense + sparse retrieval for 25-30% improvement in relevance metrics.
-
-- **Dynamic Ranking & Fusion**: Machine learning models for result ranking and context fusion. Neural reranking models achieve 15-20% improvements in task completion rates.
-
-- **Model Integration & Serving**: Optimized prompt engineering and context injection. Advanced systems use adaptive context windowing to maximize information density.
-
-- **Continuous Learning**: Automated feedback loops and model updates. Production systems show 5-10% monthly improvements in context relevance through reinforcement learning.
-
-## 3.5 Architecture Patterns: The Greatest Hits
-
-**Translation**: These are battle-tested recipes that actually work. Think of them as the "classic dishes" of context engineering—tried, true, and guaranteed not to blow up in your face.
-
-### Pattern 1: Hierarchical RAG (H-RAG) - The Russian Nesting Doll
-
-**What it solves**: Ever try to find something in a massive document? This breaks it down like chapters → sections → paragraphs, so your AI doesn't get lost in the weeds.
-
-**Perfect for**: Legal contracts, technical manuals, any big documents with structure
-
-- **Use Case**: Complex documents with nested structures (legal contracts, technical manuals)
-- **Architecture**: Multi-level indexing with parent-child relationships
-- **Performance**: 35% better accuracy on document-level questions vs. flat RAG
-- **Implementation**: Document → Section → Subsection → Paragraph embeddings
-
-### Pattern 2: Temporal-Aware Context (TAC) - The Time Machine
-
-**What it solves**: Information has expiration dates. This pattern knows that last week's stock price is useless for trading decisions.
-
-**Perfect for**: News, financial data, anything where "when" matters as much as "what"
-
-- **Use Case**: Time-sensitive information (news, financial data, system monitoring)
-- **Architecture**: Time-weighted embeddings with decay functions
-- **Performance**: 60% improvement in freshness-dependent queries
-- **Key Feature**: Automatic context aging and refresh triggers
-
-### Pattern 3: Multi-Modal Context Fusion (MMCF) - The Translator
-
-**What it solves**: Your AI needs to understand text, images, and data tables as one cohesive story, not separate pieces.
-
-**Perfect for**: E-commerce (products have descriptions AND photos), content management, anywhere media meets data
-
-- **Use Case**: Rich media applications (e-commerce, content management)
-- **Architecture**: Unified embedding space for text, images, and structured data
-- **Performance**: 40% better user engagement in search applications
-- **Challenges**: Cross-modal alignment and computational complexity
-
-### Pattern 4: Federated Context Networks (FCN) - The Diplomat
-
-**What it solves**: Your data lives in different places with different rules. This lets your AI access everything while respecting boundaries.
-
-**Perfect for**: Large enterprises, anywhere data can't all live in one place for legal/security reasons
-
-- **Use Case**: Enterprise systems with distributed data sources
-- **Architecture**: Decentralized context retrieval with privacy preservation
-- **Benefits**: Maintains data sovereignty while enabling global context access
-- **Security**: Zero-trust architecture with end-to-end encryption
-
-### Pattern 5: Agentic Context Orchestration (ACO) - The Smart Conductor
-
-**What it solves**: Instead of you deciding what context to retrieve, intelligent agents figure out what they need and delegate to specialists automatically.
-
-**Perfect for**: Complex queries requiring multi-step reasoning, research tasks, anything where context needs evolve as the AI learns more
-
-- **Use Case**: Research analysis, complex troubleshooting, multi-domain expertise
-- **Architecture**: Orchestrator agent coordinates specialist retrieval agents  
-- **Performance**: 35% better accuracy on complex queries vs. static retrieval
-- **Key Feature**: Agents reason about missing information and actively seek it out
-
-### Pattern 6: Model Context Protocol (MCP) Integration - The Universal Translator
-
-**What it solves**: Eliminates the complexity of building custom integrations for every data source by providing a standardized protocol for AI-context communication.
-
-**Perfect for**: Enterprise environments with diverse data sources, security-conscious applications, systems requiring rapid integration of new context sources
-
-- **Use Case**: Multi-source enterprise systems, secure context access, rapid prototyping
-- **Architecture**: Standardized client-server protocol with built-in authentication and resource discovery
-- **Performance**: 60% reduction in integration time, 40% improvement in security posture
-- **Key Innovation**: Universal protocol that works across different AI models and context sources
-- **Implementation**: MCP servers expose context resources, clients consume them through standardized interfaces
+**Hybrid Approach - The Best of Both Worlds**:
 
 ```python
-# Agentic pattern in action
-class ContextOrchestrator:
-    def __init__(self):
-        self.specialists = {
-            'recent_data': RecentDataAgent(),
-            'domain_expert': DomainExpertAgent(),
-            'fact_checker': FactCheckAgent()
-        }
+async def intelligent_context_strategy(query):
+    # Step 1: Assess what's available in latent knowledge
+    latent_confidence = await assess_latent_knowledge(query)
     
-    async def smart_retrieval(self, query):
-        # Agent reasons about what it needs
-        plan = await self.analyze_query_requirements(query)
-        
-        # Delegates to specialists
-        contexts = await self.delegate_to_specialists(plan)
-        
-        # Synthesizes results intelligently
-        return self.synthesize_contexts(contexts, query)
-
-# MCP-enhanced pattern
-class MCPContextSystem:
-    def __init__(self):
-        self.mcp_client = MCPClient()
-        self.available_servers = [
-            'mcp://crm-server',
-            'mcp://knowledge-base',
-            'mcp://real-time-data'
-        ]
+    if latent_confidence > 0.8:
+        # High confidence - use prompt steering
+        return await latent_knowledge_extraction(query)
     
-    async def unified_retrieval(self, query):
-        # Discover available context resources
-        resources = await self.mcp_client.list_resources()
-        
-        # Select relevant resources using MCP protocol
-        selected = await self.mcp_client.select_resources(query, resources)
-        
-        # Retrieve context through standardized interface
-        contexts = await self.mcp_client.get_contexts(selected)
-        
-        return self.synthesize_response(query, contexts)
+    elif latent_confidence > 0.5:
+        # Medium confidence - hybrid approach
+        latent_baseline = await latent_knowledge_extraction(query)
+        external_context = await retrieve_external_context(query)
+        return await fuse_latent_and_external(latent_baseline, external_context)
+    
+    else:
+        # Low confidence - prioritize external context
+        return await external_context_retrieval(query)
 ```
 
----
+**Real-World Success Stories**:
 
-## 3.6 Performance Optimization: Making It Lightning Fast
-
-**Real talk**: Context systems can be slow as molasses if you don't optimize them. Here's how to make your AI respond faster than a New Yorker honking at a green light.
-
-**The Speed Hierarchy**: Think of this like tuning a race car—you optimize the engine (embeddings), transmission (indexing), and fuel system (caching) to get maximum performance.
-
-**Embedding Optimization Strategies:**
-
-1. **Dimensionality Tuning**: Research shows optimal ranges by domain:
-
-   - General knowledge: 768-1024 dimensions
-   - Technical documentation: 1024-1536 dimensions
-   - Conversational AI: 512-768 dimensions
-   - Multi-lingual: 1536+ dimensions
-
-2. **Quantization Techniques**:
-
-   - INT8 quantization: 50% storage reduction, <2% accuracy loss
-   - Product quantization: 75% storage reduction, 5-8% accuracy loss
-   - Binary embeddings: 95% storage reduction for similarity-only tasks
-
-3. **Indexing Algorithms**:
-
-   - HNSW (Hierarchical Navigable Small World): Best for high-recall scenarios
-   - LSH (Locality-Sensitive Hashing): Optimal for approximate similarity
-   - IVF (Inverted File Index): Excellent for large-scale exact searches
-
-**Caching Strategies with Measured Impact:**
-
-- **L1 Cache (In-Memory)**: Frequently accessed embeddings (hit rate: 85-90%)
-- **L2 Cache (SSD)**: Recent query results and session data (hit rate: 70-75%)
-- **L3 Cache (Distributed)**: Cross-instance sharing for common queries (hit rate: 40-50%)
-
-**Query Optimization Pipeline:**
-
-```mermaid
-graph TD
-    A[Raw Query] --> B[Intent Classification]
-    B --> C[Entity Extraction]
-    C --> D[Query Expansion]
-    D --> E[Vector Generation]
-    E --> F[Multi-Stage Retrieval]
-    F --> G[Reranking & Fusion]
-    G --> H[Context Packaging]
-    
-    subgraph "Performance Monitoring"
-        I[Latency Tracking]
-        J[Relevance Scoring]
-        K[Resource Utilization]
-    end
-    
-    F --> I
-    G --> J
-    H --> K
-```
-
-## 3.7 Context Quality: How to Know If You're Winning
-
-**The Bottom Line**: If your AI is giving good answers, your context system is working. If it's giving weird answers, time to debug. Here's how to measure success:
-
-**The "Does It Actually Work?" Test**: Primary metrics that matter most
-
-**Primary Metrics:**
-
-- **Relevance Score**: Semantic similarity between query and retrieved context (target: >0.85)
-- **Coverage Completeness**: Percentage of query aspects addressed by context (target: >90%)
-- **Information Density**: Relevant information per token in context window (optimize for 70-80%)
-- **Temporal Freshness**: Age-weighted relevance for time-sensitive queries (half-life: domain-dependent)
-
-**Secondary Metrics:**
-
-- **Diversity Index**: Variety of information sources in retrieved context
-- **Bias Detection**: Demographic and ideological balance in context selection
-- **Factual Accuracy**: Verification against authoritative sources (>95% for critical domains)
-- **Response Consistency**: Stability of context retrieval across similar queries
-
-**Advanced Evaluation Techniques:**
-
-- **Human-in-the-Loop (HITL) Validation**: Expert review of 1-5% of contexts
-- **Adversarial Testing**: Stress-testing with edge cases and ambiguous queries
-- **A/B Testing**: Continuous optimization through controlled experiments
-- **Synthetic Query Generation**: Automated testing at scale using LLM-generated queries
-
-## 3.8 Next-Generation Technologies: The Future's Wild
-
-**Heads up**: This stuff is bleeding-edge. Perfect for impressing your boss or planning your next startup, but maybe not for your first context project.
-
-**The Sci-Fi Stuff That's Actually Happening**:
-
-### Graph-Based Context Networks
-
-- **Technology**: Knowledge graphs with neural embeddings
-- **Benefits**: Captures complex relationships and multi-hop reasoning
-- **Performance**: 25-40% improvement in complex query answering
-- **Applications**: Scientific research, legal analysis, enterprise knowledge management
-
-### Neuro-Symbolic Integration
-
-- **Approach**: Combining neural retrieval with symbolic reasoning
-- **Advantages**: Explainable context selection and logical consistency
-- **Use Cases**: Healthcare diagnostics, financial compliance, safety-critical systems
-
-### Model Context Protocol (MCP) Integration
-
-- **Technology**: Standardized protocol for AI-context communication developed by Anthropic
-- **Benefits**: Eliminates custom integration overhead, provides built-in security and monitoring
-- **Performance**: 60% reduction in integration time, 40% improvement in security posture  
-- **Applications**: Enterprise systems, rapid prototyping, multi-vendor context integration
-- **Current Status**: Production-ready with growing ecosystem of MCP servers and clients
-
-### Privacy-Preserving Context
-
-- **Technologies**: Homomorphic encryption, differential privacy, federated learning
-- **Requirements**: GDPR compliance, healthcare data protection, enterprise security
-- **Challenge**: Balancing privacy with context quality and performance
-
-## 3.9 Key Techniques and Tools: Your Starter Kit
-
-**Cut to the chase**: Here's what you actually need to build context systems that work. No fluff, just the essentials that separate working systems from weekend experiments.
-
-**Your Context Engineering Toolkit**:
-
-- **Embedding Models**: Use domain-tuned models (e.g., OpenAI's `text-embedding-ada-002`, or SentenceTransformers) to capture semantic meaning.
-- **Chunking Strategies**: Slide windows, semantic segmentation, or hierarchical chunking to balance granularity and coherence.
-- **Vector Stores**: FAISS, Pinecone, Weaviate, or Elasticsearch with k-NN plugins for high-performance similarity search.
-- **Retrieval Methods**: Dense retrieval (vectors) vs. sparse retrieval (BM25), hybrid search to combine strengths of both.
-- **Prompt Templates**: Structured wrappers that inject context slices into fixed prompts to guide model completion.
-- **Memory Architectures**: Session memory buffers, long-term memory caches, and summary trees to manage conversational state and history.
-- **Monitoring & Evaluation**: Track retrieval accuracy (recall@k), prompt performance, and end-to-end latency to optimize the pipeline.
-
-**🎯 Your Next Move**: Start with one context type. Build it. Test it. Make it work. Then add another. Rome wasn't built in a day, but they were laying bricks every hour.
-
-By mastering these concepts and staying current with emerging technologies, you can architect context systems that not only meet today's demands but scale for tomorrow's challenges—delivering precise, context-rich responses at enterprise scale.
-
-**Ready to build?** Chapter 4 shows you exactly how, step by step.
+- **Medical AI**: Combining latent medical knowledge with current drug databases achieves 92% diagnostic accuracy vs 76% with external context alone
+- **Legal AI**: Latent legal principles + current case law improves contract analysis by 45%
+- **Technical Support**: Fundamental troubleshooting knowledge + live system data reduces resolution time by 60%
 
 ---
