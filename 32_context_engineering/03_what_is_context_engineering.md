@@ -32,6 +32,7 @@
 ---
 
 ## The Definition That Changes Everything
+
 ```mermaid
 flowchart LR
     A[🤖 AI System] --> B[Context Engineering]
@@ -69,55 +70,69 @@ This interdisciplinary approach transforms how AI accesses and processes knowled
 The full picture looks like this:
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[🤖 AI System] --> B{Query Processing}
-    
+
     subgraph "📚 Knowledge Sources"
         C[Cognitive Science<br/>Human Memory Patterns]
         D[Information Retrieval<br/>Search & Discovery]
-        E[Distributed Systems<br/>Scalable Architecture]
+        E[External Data Sources<br/>APIs, Databases, Documents]
+        E1[🧠 Latent Knowledge<br/>Model Parameters]
     end
-    
+
     subgraph "🔄 Context Engineering Process"
         F[📥 Information Flow<br/>Architecture]
+        F1[🎯 Context Selection<br/>7 Types Taxonomy]
         G[🧠 Understanding<br/>& Reasoning]
         H[🎯 Precision<br/>Response]
     end
-    
-    B --> F
+
+    subgraph "⚡ Real-time Decisions"
+        R1[Fresh vs Cached?]
+        R2[Latent vs External?]
+        R3[Context Depth?]
+    end
+
+    B --> R1
+    R1 --> F
+    B --> F1
+    F1 --> F
     F --> G
     G --> H
-    
+
     C --> F
     D --> F
     E --> F
-    
+    E1 --> F
+
     H --> I[✨ Enhanced AI<br/>Performance]
-    
+
     subgraph "📊 Performance Impact"
         J[40-60% Higher<br/>Accuracy]
         K[Domain-Specific<br/>Expertise]
         L[Selective Memory<br/>Retrieval]
+        M[<100ms Response<br/>Time]
     end
-    
+
     I --> J
     I --> K
     I --> L
-    
+    I --> M
+
     classDef aiSystem fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#01579b
     classDef knowledge fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef process fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+    classDef decisions fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef outcome fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
     classDef performance fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
-    
-    class A aiSystem
-    class B aiSystem
-    class C,D,E knowledge
-    class F,G,H process
-    class I outcome
-    class J,K,L performance
-```
 
+    class A,B aiSystem
+    class C,D,E,E1 knowledge
+    class F,F1,G,H process
+    class R1,R2,R3 decisions
+    class I outcome
+    class J,K,L,M performance
+```
 
 **The Science Behind It**: Research from Stanford's AI Lab and MIT's CSAIL shows that context-aware systems achieve 40-60% higher accuracy on domain-specific tasks compared to general-purpose models. The key lies in mimicking human cognitive patterns—we don't recall everything at once; we selectively retrieve relevant memories based on situational cues.
 
@@ -165,40 +180,40 @@ flowchart TD
         D[🎯 System Instructions<br/>~200 tokens]
         E[⚡ Available Space<br/>~250 tokens left]
     end
-    
+
     subgraph "📦 Information Waiting Outside"
         F[📄 More Documents<br/>10,000+ tokens]
         G[🗂️ Full Database<br/>1M+ tokens]
         H[📊 Complete History<br/>50,000+ tokens]
     end
-    
+
     subgraph "⚖️ The Packing Challenge"
         I[🎯 Smart Selection<br/>Context Engineering]
         J[🗑️ What to Leave Behind<br/>Less Important Info]
         K[✨ Optimal Mix<br/>Quality > Quantity]
     end
-    
+
     F -.->|❌ Won't Fit| A
     G -.->|❌ Too Big| B
     H -.->|❌ Exceeds Limit| C
-    
+
     I --> B
     I --> C
     J --> F
     J --> G
-    
+
     A --> L[🤖 LLM Processing]
     B --> L
     C --> L
     D --> L
-    
+
     L --> M[📋 Smart Response<br/>Based on Selected Context]
-    
+
     classDef contextWindow fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     classDef waiting fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
     classDef selection fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef processing fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A,B,C,D,E contextWindow
     class F,G,H waiting
     class I,J,K selection
@@ -224,56 +239,56 @@ flowchart TD
         A[🤖 LLM Training<br/>Cutoff: December 2023]
         B[📚 Vast Knowledge<br/>But Fixed in Time]
         C[⏰ Knowledge Gap<br/>Growing Daily]
-        
+
         A --> B
         B --> C
     end
-    
+
     subgraph "🌉 In-Context Learning Bridge"
         D[📡 Fresh Information<br/>Sources]
         E[🧠 Context Window<br/>Working Memory]
         F[⚡ Real-time Knowledge<br/>Fusion]
-        
+
         D --> E
         E --> F
     end
-    
+
     subgraph "🏗️ Context Engineering Architecture"
         G[🎯 Strategic Context<br/>Selection]
         H[📊 7 Context Types<br/>Taxonomy]
         I[⚙️ Smart Retrieval<br/>& Fusion]
-        
+
         G --> H
         H --> I
     end
-    
+
     subgraph "✨ The Result"
         J[🎓 Up-to-date Expertise<br/>Current + Comprehensive]
         K[🎯 Relevant Responses<br/>Context-Aware]
         L[🚀 Production-Ready<br/>Reliable & Scalable]
-        
+
         J --> K
         K --> L
     end
-    
+
     subgraph "😞 User Frustration"
         M[Inaccurate or Outdated Answers]
         N[Loss of Trust]
         O[Increased Support Costs]
     end
-    
+
     C -.->|"❌ Without ICL<br/>Outdated Answers"| M
-    
+
     C -->|"✅ With Context Engineering"| D
     F --> G
     I --> J
-    
+
     classDef problem fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
     classDef bridge fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef solution fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
     classDef failure fill:#fafafa,stroke:#757575,stroke-width:1px,color:#424242
-    
+
     class A,B,C problem
     class D,E,F bridge
     class G,H,I solution
@@ -309,7 +324,7 @@ Just like you wouldn't feed a bodybuilder the same diet as a marathon runner, di
 graph TB
     subgraph "🍽️ AI's Information Diet - Context Taxonomy"
         A[AI System] --> B{Context Types}
-        
+
         B --> C[🗂️ Static Context<br/>Reference Library]
         B --> D[⚡ Dynamic Context<br/>Live News Feed]
         B --> E[💬 Conversational Context<br/>Memory Bank]
@@ -317,7 +332,7 @@ graph TB
         B --> G[🌍 Environmental Context<br/>Situation Reader]
         B --> H[⏰ Temporal Context<br/>Time Traveler]
         B --> I[🧠 Latent Knowledge<br/>Internal Expert]
-        
+
         C --> C1[Policy Manuals<br/>Product Specs<br/>Documentation]
         D --> D1[Stock Prices<br/>Weather Data<br/>Inventory Levels]
         E --> E1[Chat History<br/>User Intent<br/>Session State]
@@ -325,7 +340,7 @@ graph TB
         G --> G1[Location<br/>Device Type<br/>Network Status]
         H --> H1[Time Patterns<br/>Seasonal Trends<br/>Business Cycles]
         I --> I1[Prompt Steering<br/>Chain-of-Thought<br/>Role-Based Prompts]
-        
+
         C1 --> J[Fast Reliable Answers]
         D1 --> K[Fresh Real-time Data]
         E1 --> L[Natural Conversations]
@@ -334,7 +349,7 @@ graph TB
         H1 --> O[Time-aware Intelligence]
         I1 --> P[Expert-Level Reasoning]
     end
-    
+
     classDef aiSystem fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#01579b
     classDef contextHub fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef staticContext fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
@@ -346,7 +361,7 @@ graph TB
     classDef latentContext fill:#f9f9f9,stroke:#424242,stroke-width:2px,color:#212121
     classDef examples fill:#fafafa,stroke:#757575,stroke-width:1px,color:#424242
     classDef outcomes fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A aiSystem
     class B contextHub
     class C,C1 staticContext
@@ -370,12 +385,12 @@ flowchart LR
     C --> D[📋 Policy Manuals<br/>📖 Documentation<br/>📊 Product Specs]
     D --> E[Fast Retrieval<br/>< 100ms]
     E --> F[✅ Reliable Answer]
-    
+
     classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef storage fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef content fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A query
     class B,C storage
     class D content
@@ -389,7 +404,7 @@ flowchart LR
 _Tech Deep-Dive (Skip if you're just starting):_
 
 - **Definition**: Immutable reference materials that form the foundational knowledge base
-- **Examples**: Technical documentation, policy manuals, product specifications, regulatory guidelines  
+- **Examples**: Technical documentation, policy manuals, product specifications, regulatory guidelines
 - **Storage Strategy**: Vector embeddings in high-dimensional spaces (typically 768-1536 dimensions) with hierarchical indexing
 - **Retrieval Pattern**: Dense vector similarity search with semantic ranking
 - **Performance**: Sub-100ms retrieval times for enterprise-scale deployments
@@ -403,20 +418,20 @@ flowchart TD
     A[User Query] --> B{Context Freshness<br/>Check}
     B -->|Fresh| C[✅ Use Cached Data]
     B -->|Stale| D[🔄 Fetch Live Data]
-    
+
     D --> E[📈 Stock Prices<br/>🌤️ Weather API<br/>📦 Inventory DB]
     E --> F[Update Cache]
     F --> G[📊 Real-time Answer]
     C --> G
-    
+
     G --> H[⏰ Set Expiry Timer]
-    
+
     classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef live fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
     classDef cache fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A query
     class B decision
     class D,E live
@@ -445,23 +460,23 @@ flowchart TD
     A[Previous Messages] --> B[🧠 Conversation<br/>Memory]
     C[Current Query] --> D[Context Fusion]
     B --> D
-    
+
     D --> E{Reference Resolution}
     E -->|'it', 'that', 'them'| F[Entity Linking]
     E -->|Complete context| G[Direct Answer]
-    
+
     F --> H[💡 'Red jacket you<br/>ordered yesterday']
     H --> I[🎯 Contextual Response]
     G --> I
-    
+
     I --> J[Update Memory<br/>Buffer]
     J --> B
-    
+
     classDef memory fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef process fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A,B,J memory
     class C input
     class D,E,F,H process
@@ -487,31 +502,31 @@ Your AI learns your patterns—like a barista who knows your "usual" before you 
 flowchart TD
     A[User Interactions] --> B[📊 Pattern Analysis]
     B --> C[🏷️ Preference Profile]
-    
+
     subgraph "Learning Sources"
         D[🛒 Purchase History]
         E[👆 Click Patterns]
         F[⏰ Usage Times]
         G[📍 Location Data]
     end
-    
+
     D --> B
     E --> B
     F --> B
     G --> B
-    
+
     H[New Query] --> I[Context Enrichment]
     C --> I
-    
+
     I --> J[🎯 Personalized<br/>Suggestions]
     J --> K[User Feedback]
     K --> A
-    
+
     classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef learning fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
     classDef profile fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A,H,K input
     class B,D,E,F,G learning
     class C,I profile
@@ -536,7 +551,7 @@ Your AI knows where you are and what you're working with—mobile vs. desktop, W
 ```mermaid
 flowchart LR
     A[User Request] --> B[🔍 Environmental<br/>Detection]
-    
+
     subgraph "Context Signals"
         C[📱 Device Type]
         D[📶 Network Speed]
@@ -544,29 +559,29 @@ flowchart LR
         F[🕐 Time Zone]
         G[♿ Accessibility]
     end
-    
+
     B --> C
     B --> D
     B --> E
     B --> F
     B --> G
-    
+
     C --> H[⚙️ Response<br/>Adaptation]
     D --> H
     E --> H
     F --> H
     G --> H
-    
+
     H --> I{Optimization}
     I -->|Mobile + Slow| J[📋 Text Summary]
     I -->|Desktop + Fast| K[🎥 Rich Media]
     I -->|Accessibility| L[♿ Screen Reader<br/>Friendly]
-    
+
     classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef detection fill:#f1f8e9,stroke:#689f38,stroke-width:2px,color:#33691e
     classDef signals fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A input
     class B detection
     class C,D,E,F,G signals
@@ -591,34 +606,34 @@ Your AI understands timing—rush hour traffic patterns, holiday shopping spikes
 ```mermaid
 flowchart TD
     A[Query + Timestamp] --> B[⏰ Temporal Analysis]
-    
+
     subgraph "Time Patterns"
         C[📅 Seasonal Trends<br/>Holiday Spikes]
         D[🕐 Daily Cycles<br/>Rush Hours]
         E[📈 Business Cycles<br/>Quarter Ends]
         F[📊 Historical Data<br/>Year-over-Year]
     end
-    
+
     B --> C
     B --> D
     B --> E
     B --> F
-    
+
     C --> G[🧠 Pattern Recognition]
     D --> G
     E --> G
     F --> G
-    
+
     G --> H{Time-Aware Decision}
     H -->|Morning Rush| I[🚗 'Heavy traffic,<br/>allow 45 mins']
     H -->|Holiday Season| J[🛍️ 'Expected delays<br/>in shipping']
     H -->|Quarter End| K[💼 'Sales teams<br/>very busy now']
-    
+
     classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef temporal fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef patterns fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
-    
+
     class A input
     class B temporal
     class C,D,E,F patterns
@@ -643,30 +658,30 @@ Your AI's built-in expertise—like having a specialist consultant who's already
 ```mermaid
 flowchart TD
     A[User Query] --> B[🧠 Knowledge Assessment]
-    
+
     B --> C{Confidence Check}
     C -->|High| D[✅ Direct Response<br/>from Training]
     C -->|Medium| E[🔍 Prompt Steering<br/>Activation]
     C -->|Low| F[⚠️ Flag for External<br/>Context Needed]
-    
+
     E --> G[👨‍⚕️ Role-Based Prompting<br/>'As a doctor...']
     E --> H[🔗 Chain-of-Thought<br/>'Let me think step by step...']
     E --> I[📚 Few-Shot Examples<br/>'Here are similar cases...']
-    
+
     G --> J[🎯 Activated Expert<br/>Knowledge]
     H --> J
     I --> J
-    
+
     J --> K{Quality Gate}
     K -->|Pass| L[📋 Expert Response]
     K -->|Fail| M[🔄 Hybrid Approach<br/>+ External Context]
-    
+
     classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef assessment fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef activation fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
     classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
-    
+
     class A input
     class B,C assessment
     class E,G,H,I,J activation
@@ -718,13 +733,13 @@ def reasoning_context_selection(query, available_contexts):
     reasoning_prompt = f"""
     Query: {query}
     Available context sources: {list(available_contexts.keys())}
-    
+
     Reasoning process:
     1. What type of question is this? (factual, analytical, diagnostic)
     2. What information categories are essential vs. nice-to-have?
     3. What contradictions should I watch for?
     4. What missing information would make my answer incomplete?
-    
+
     Select top 3 most relevant sources and explain why.
     """
     return llm.reason_about_context(reasoning_prompt)
@@ -741,7 +756,7 @@ def reasoning_context_selection(query, available_contexts):
 ```mermaid
 flowchart TD
     A[User Query] --> B[🧠 Latent Knowledge<br/>Assessment]
-    
+
     subgraph "Prompt Steering Techniques"
         C[🎭 Role-Based<br/>'Act as expert...']
         D[🔗 Chain-of-Thought<br/>'Think step by step...']
@@ -749,40 +764,40 @@ flowchart TD
         F[🎯 Constitutional AI<br/>'Follow principles...']
         G[🔍 Knowledge Probing<br/>'What do you know about...']
     end
-    
+
     B --> H{Knowledge<br/>Availability Check}
     H -->|High Confidence| I[Direct Latent<br/>Extraction]
     H -->|Medium Confidence| J[Guided Prompting]
     H -->|Low Confidence| K[⚠️ Flag for External<br/>Context Needed]
-    
+
     I --> C
     I --> D
     J --> E
     J --> F
     J --> G
-    
+
     C --> L[🎓 Expert-Level<br/>Response]
     D --> M[📋 Step-by-Step<br/>Reasoning]
     E --> N[📖 Pattern-Based<br/>Answer]
     F --> O[✅ Principle-Guided<br/>Response]
     G --> P[🔍 Knowledge<br/>Synthesis]
-    
+
     L --> Q[⚖️ Confidence<br/>Assessment]
     M --> Q
     N --> Q
     O --> Q
     P --> Q
-    
+
     Q -->|High| R[✨ Reliable Latent<br/>Knowledge]
     Q -->|Low| S[🔄 Trigger External<br/>Context Retrieval]
-    
+
     classDef query fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     classDef assessment fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     classDef techniques fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
     classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
-    
+
     class A query
     class B,H,Q assessment
     class C,D,E,F,G techniques
@@ -819,7 +834,7 @@ Transform your AI into domain experts through strategic role assignment:
 "What are the risks of this medication?"
 
 # Expert-steered prompt
-"""Act as a board-certified pharmacologist with 20 years of clinical experience. 
+"""Act as a board-certified pharmacologist with 20 years of clinical experience.
 Analyze the following medication for potential risks, considering:
 - Drug interactions
 - Contraindications
@@ -837,15 +852,15 @@ Guide the model through structured reasoning to access deeper knowledge layers:
 def structured_reasoning_prompt(query):
     return f"""
     Question: {query}
-    
+
     Let me work through this systematically:
-    
+
     1. KNOWLEDGE ASSESSMENT: What do I know about this topic from my training?
     2. CORE PRINCIPLES: What fundamental concepts apply here?
     3. STEP-BY-STEP ANALYSIS: Let me break this down...
     4. CONFIDENCE CHECK: How certain am I about each component?
     5. SYNTHESIS: Bringing it all together...
-    
+
     Final Answer with confidence level (High/Medium/Low):
     """
 ```
@@ -890,7 +905,7 @@ Target specific knowledge layers instead of generic queries:
 # Weak prompt
 "What are machine learning best practices?"
 
-# Strong prompt  
+# Strong prompt
 "Based on fundamental ML principles that haven't changed since 2020, what core concepts remain constant regardless of new frameworks?"
 ```
 
@@ -901,10 +916,10 @@ Separate timeless knowledge from time-sensitive facts:
 def create_temporal_prompt(query):
     return f"""
     For: {query}
-    
+
     TIMELESS FOUNDATION: Core principles that remain constant
     CURRENT CONTEXT: Facts that likely changed (flag for verification)
-    
+
     Rate confidence: HIGH/MEDIUM/LOW for each point.
     """
 ```
@@ -917,7 +932,7 @@ def resolve_knowledge_conflict(latent_info, context_info):
     conflict_prompt = f"""
     My training suggests: {latent_info}
     Current context shows: {context_info}
-    
+
     Resolution strategy:
     1. Acknowledge the conflict explicitly
     2. Prioritize recent verified data
@@ -933,13 +948,13 @@ def resolve_knowledge_conflict(latent_info, context_info):
 
 **Strategic Decision Matrix**:
 
-| Scenario | Use Latent Knowledge When | Use External Context When |
-|----------|---------------------------|----------------------------|
-| **Domain Expertise** | General principles, established concepts | Latest research, specific protocols |
-| **Speed Requirements** | Sub-second responses needed | Accuracy more critical than speed |
-| **Knowledge Stability** | Timeless fundamentals | Rapidly changing information |
-| **Cost Considerations** | Minimize API calls/retrieval costs | Budget allows comprehensive searches |
-| **Privacy Concerns** | Avoid external data exposure | Data governance permits external access |
+| Scenario                | Use Latent Knowledge When                | Use External Context When               |
+| ----------------------- | ---------------------------------------- | --------------------------------------- |
+| **Domain Expertise**    | General principles, established concepts | Latest research, specific protocols     |
+| **Speed Requirements**  | Sub-second responses needed              | Accuracy more critical than speed       |
+| **Knowledge Stability** | Timeless fundamentals                    | Rapidly changing information            |
+| **Cost Considerations** | Minimize API calls/retrieval costs       | Budget allows comprehensive searches    |
+| **Privacy Concerns**    | Avoid external data exposure             | Data governance permits external access |
 
 **Hybrid Approach - The Best of Both Worlds**:
 
@@ -947,17 +962,17 @@ def resolve_knowledge_conflict(latent_info, context_info):
 async def intelligent_context_strategy(query):
     # Step 1: Assess what's available in latent knowledge
     latent_confidence = await assess_latent_knowledge(query)
-    
+
     if latent_confidence > 0.8:
         # High confidence - use prompt steering
         return await latent_knowledge_extraction(query)
-    
+
     elif latent_confidence > 0.5:
         # Medium confidence - hybrid approach
         latent_baseline = await latent_knowledge_extraction(query)
         external_context = await retrieve_external_context(query)
         return await fuse_latent_and_external(latent_baseline, external_context)
-    
+
     else:
         # Low confidence - prioritize external context
         return await external_context_retrieval(query)
@@ -975,15 +990,15 @@ async def intelligent_context_strategy(query):
 
 ### Enterprise Performance Metrics
 
-| Context Type | Latency (P95) | Accuracy Improvement | Cost per Query | ROI Timeline |
-|--------------|---------------|---------------------|----------------|--------------|
-| **Static Context** | 95ms | +40-60% | $0.001 | 2-4 weeks |
-| **Dynamic Context** | 250ms | +25-45% | $0.005 | 6-8 weeks |
-| **Conversational** | 120ms | +30-50% | $0.002 | 1-2 weeks |
-| **Behavioral** | 180ms | +35-55% | $0.008 | 8-12 weeks |
-| **Environmental** | 90ms | +20-35% | $0.003 | 3-6 weeks |
-| **Temporal** | 200ms | +25-40% | $0.006 | 10-16 weeks |
-| **Latent Knowledge** | 45ms | +15-30% | $0.000 | Immediate |
+| Context Type         | Latency (P95) | Accuracy Improvement | Cost per Query | ROI Timeline |
+| -------------------- | ------------- | -------------------- | -------------- | ------------ |
+| **Static Context**   | 95ms          | +40-60%              | $0.001         | 2-4 weeks    |
+| **Dynamic Context**  | 250ms         | +25-45%              | $0.005         | 6-8 weeks    |
+| **Conversational**   | 120ms         | +30-50%              | $0.002         | 1-2 weeks    |
+| **Behavioral**       | 180ms         | +35-55%              | $0.008         | 8-12 weeks   |
+| **Environmental**    | 90ms          | +20-35%              | $0.003         | 3-6 weeks    |
+| **Temporal**         | 200ms         | +25-40%              | $0.006         | 10-16 weeks  |
+| **Latent Knowledge** | 45ms          | +15-30%              | $0.000         | Immediate    |
 
 ### Cost-Benefit Analysis Matrix
 
@@ -992,10 +1007,10 @@ quadrantChart
     title Context Strategy ROI Analysis
     x-axis Low Implementation Cost --> High Implementation Cost
     y-axis Low Business Impact --> High Business Impact
-    
+
     quadrant-1 High Impact, High Cost
     quadrant-2 High Impact, Low Cost
-    quadrant-3 Low Impact, Low Cost  
+    quadrant-3 Low Impact, Low Cost
     quadrant-4 Low Impact, High Cost
 
     Static Context: [0.2, 0.9]
@@ -1065,7 +1080,7 @@ def detect_stale_content():
         trigger_reembedding_pipeline()
         log_warning("Static context out of sync")
 
-# Problem: Poor semantic search results  
+# Problem: Poor semantic search results
 def improve_retrieval_quality():
     # Add hybrid search (semantic + keyword)
     results = semantic_search(query, top_k=20)
@@ -1157,31 +1172,31 @@ class ContextHealthMonitor:
             'accuracy_drop': 0.1,  # 10% degradation
             'error_rate': 0.05    # 5% error rate
         }
-    
+
     def monitor_context_health(self, context_type, metrics):
         alerts = []
-        
+
         if metrics['latency_p95'] > self.thresholds['latency_p95']:
             alerts.append(f"{context_type}: High latency detected")
-            
+
         if metrics['accuracy'] < (baseline_accuracy - self.thresholds['accuracy_drop']):
             alerts.append(f"{context_type}: Accuracy degradation")
-            
+
         if metrics['error_rate'] > self.thresholds['error_rate']:
             alerts.append(f"{context_type}: High error rate")
-            
+
         return alerts
 ```
 
 ### Emergency Fallback Strategies
 
-| Failure Scenario | Primary Response | Fallback Strategy | Recovery Time |
-|------------------|------------------|-------------------|---------------|
-| **Vector DB Down** | Switch to keyword search | Cached results | < 30 seconds |
-| **API Rate Limits** | Implement backoff | Cached data | < 5 minutes |
-| **Memory Overflow** | Compress context | Truncate history | Immediate |
-| **Privacy Violation** | Stop personalization | Anonymous mode | Immediate |
-| **Latency Spike** | Reduce context depth | Essential only | < 10 seconds |
+| Failure Scenario      | Primary Response         | Fallback Strategy | Recovery Time |
+| --------------------- | ------------------------ | ----------------- | ------------- |
+| **Vector DB Down**    | Switch to keyword search | Cached results    | < 30 seconds  |
+| **API Rate Limits**   | Implement backoff        | Cached data       | < 5 minutes   |
+| **Memory Overflow**   | Compress context         | Truncate history  | Immediate     |
+| **Privacy Violation** | Stop personalization     | Anonymous mode    | Immediate     |
+| **Latency Spike**     | Reduce context depth     | Essential only    | < 10 seconds  |
 
 ---
 
