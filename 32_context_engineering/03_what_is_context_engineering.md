@@ -76,7 +76,7 @@ flowchart TD
 
 ## 3.1 The Context Taxonomy: Your AI's Information Diet
 
-Just like you wouldn't feed a bodybuilder the same diet as a marathon runner, different AI tasks need different types of context. Here are the six flavors your AI craves—think of them as food groups for smart systems:
+Just like you wouldn't feed a bodybuilder the same diet as a marathon runner, different AI tasks need different types of context. Here are the seven flavors your AI craves—think of them as food groups for smart systems:
 
 ```mermaid
 graph TB
@@ -89,6 +89,7 @@ graph TB
         B --> F[🎯 Behavioral Context<br/>Personal Shopper]
         B --> G[🌍 Environmental Context<br/>Situation Reader]
         B --> H[⏰ Temporal Context<br/>Time Traveler]
+        B --> I[🧠 Latent Knowledge<br/>Internal Expert]
         
         C --> C1[Policy Manuals<br/>Product Specs<br/>Documentation]
         D --> D1[Stock Prices<br/>Weather Data<br/>Inventory Levels]
@@ -96,13 +97,15 @@ graph TB
         F --> F1[User Preferences<br/>Usage Patterns<br/>Purchase History]
         G --> G1[Location<br/>Device Type<br/>Network Status]
         H --> H1[Time Patterns<br/>Seasonal Trends<br/>Business Cycles]
+        I --> I1[Prompt Steering<br/>Chain-of-Thought<br/>Role-Based Prompts]
         
-        C1 --> I[Fast Reliable Answers]
-        D1 --> J[Fresh Real-time Data]
-        E1 --> K[Natural Conversations]
-        F1 --> L[Personalized Experience]
-        G1 --> M[Situational Awareness]
-        H1 --> N[Time-aware Intelligence]
+        C1 --> J[Fast Reliable Answers]
+        D1 --> K[Fresh Real-time Data]
+        E1 --> L[Natural Conversations]
+        F1 --> M[Personalized Experience]
+        G1 --> N[Situational Awareness]
+        H1 --> O[Time-aware Intelligence]
+        I1 --> P[Expert-Level Reasoning]
     end
     
     classDef aiSystem fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#01579b
@@ -113,6 +116,7 @@ graph TB
     classDef behavioralContext fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f
     classDef environmentalContext fill:#f1f8e9,stroke:#689f38,stroke-width:2px,color:#33691e
     classDef temporalContext fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef latentContext fill:#f9f9f9,stroke:#424242,stroke-width:2px,color:#212121
     classDef examples fill:#fafafa,stroke:#757575,stroke-width:1px,color:#424242
     classDef outcomes fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
     
@@ -124,7 +128,8 @@ graph TB
     class F,F1 behavioralContext
     class G,G1 environmentalContext
     class H,H1 temporalContext
-    class I,J,K,L,M,N outcomes
+    class I,I1 latentContext
+    class J,K,L,M,N,O,P outcomes
 ```
 
 ### 🗂️ Static Context (The Reference Library)
@@ -404,29 +409,74 @@ _Tech Deep-Dive:_
 - **Techniques**: Temporal embeddings, time-aware attention mechanisms, causal reasoning
 - **Benefits**: Improves prediction accuracy by incorporating historical context and cyclical patterns
 
+### 🧠 Latent Knowledge (The Internal Expert)
+
+Your AI's built-in expertise—like having a specialist consultant who's already absorbed thousands of books and papers.
+
+```mermaid
+flowchart TD
+    A[User Query] --> B[🧠 Knowledge Assessment]
+    
+    B --> C{Confidence Check}
+    C -->|High| D[✅ Direct Response<br/>from Training]
+    C -->|Medium| E[🔍 Prompt Steering<br/>Activation]
+    C -->|Low| F[⚠️ Flag for External<br/>Context Needed]
+    
+    E --> G[👨‍⚕️ Role-Based Prompting<br/>'As a doctor...']
+    E --> H[🔗 Chain-of-Thought<br/>'Let me think step by step...']
+    E --> I[📚 Few-Shot Examples<br/>'Here are similar cases...']
+    
+    G --> J[🎯 Activated Expert<br/>Knowledge]
+    H --> J
+    I --> J
+    
+    J --> K{Quality Gate}
+    K -->|Pass| L[📋 Expert Response]
+    K -->|Fail| M[🔄 Hybrid Approach<br/>+ External Context]
+    
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+    classDef assessment fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    classDef activation fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
+    classDef result fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#b71c1c
+    
+    class A input
+    class B,C assessment
+    class E,G,H,I,J activation
+    class D,L result
+    class F,M warning
+```
+
+- **What it is**: The knowledge already embedded in your AI from training—no external lookups required
+- **Real example**: Ask about Python programming and get expert advice instantly, no docs needed
+- **Why it matters**: Lightning-fast responses with built-in expertise, perfect for common domains
+
+_Tech Deep-Dive:_
+
+- **Definition**: Pre-trained knowledge embedded in model parameters, activated through sophisticated prompting
+- **Activation Techniques**: Role-based prompting, chain-of-thought reasoning, constitutional AI methods
+- **Strengths**: Instant response, broad domain coverage, coherent reasoning chains
+- **Limitations**: Training data cutoffs, potential hallucinations, confidence calibration challenges
+- **Quality Control**: Multi-stage verification, confidence scoring, hybrid validation approaches
+
 ---
 
 ## Key Takeaways
 
-- Context comes in six distinct flavors, each serving different purposes
+- Context comes in seven distinct flavors, each serving different purposes
+- **External Context** (6 types): Static, Dynamic, Conversational, Behavioral, Environmental, Temporal
+- **Internal Context** (1 type): Latent Knowledge through prompt steering and activation techniques
 - Modern AI systems can reason about what context they need before retrieving it
-- Latent knowledge in LLMs must be carefully balanced with fresh context
+- Latent knowledge provides instant expert responses but requires careful confidence assessment
+- Hybrid approaches combining latent and external context achieve the best performance
 - Enterprise-grade context systems follow sophisticated lifecycle patterns
-- Six proven architecture patterns solve most context engineering challenges
+- Seven proven architecture patterns solve most context engineering challenges
 - Performance optimization is critical for sub-100ms response times
 - Quality measurement requires both technical and business metrics
 - Next-generation technologies are rapidly advancing the field
 - Start simple with basic patterns and scale complexity based on needs
 
 ---
-
-## Next Steps
-
-Now that you understand what context is and the advanced patterns available, let's learn how to actually implement these systems in practice.
-
----
-
-**🎯 Quick Decision Guide**: New to this? Start with **Static Context** (easiest wins) and **Conversational Context** (immediate user impact). Ready for more? Add **Dynamic Context** for live data. Going pro? Layer in **Behavioral**, **Environmental**, and **Temporal** for AI that feels psychic.
 
 ## 3.2 Reasoning-Aware Context Selection: Teaching AI to Think About What It Needs
 
@@ -693,3 +743,59 @@ async def intelligent_context_strategy(query):
 - **Technical Support**: Fundamental troubleshooting knowledge + live system data reduces resolution time by 60%
 
 ---
+
+## The 7 Context Types: Your AI's Information Diet
+
+Just like you wouldn't feed a bodybuilder the same diet as a marathon runner, different AI tasks need different types of context. Here are the seven flavors your AI craves—think of them as food groups for smart systems:
+
+1. **🗂️ Static Context**: The Reference Library
+   - **What**: Immutable, foundational knowledge
+   - **Why**: Fast, reliable answers from a stable knowledge base
+   - **Real Example**: Policy manuals, product specs
+   - **Tech Specs**: Vector embeddings, hierarchical indexing, sub-100ms retrieval
+
+2. **⚡ Dynamic Context**: The Live News Feed
+   - **What**: Real-time, changing information
+   - **Why**: Fresh answers that reflect the current state of the world
+   - **Real Example**: Stock prices, weather data
+   - **Tech Specs**: Event-driven pipelines, streaming data processing
+
+3. **💬 Conversational Context**: The Memory Bank
+   - **What**: Multi-turn conversation history
+   - **Why**: Natural, contextually aware conversations
+   - **Real Example**: Remembering user preferences within a session
+   - **Tech Specs**: Sliding window buffers, hierarchical summarization
+
+4. **🎯 Behavioral Context**: The Personal Shopper
+   - **What**: User behavior patterns and preferences
+   - **Why**: Personalized experiences and recommendations
+   - **Real Example**: "Show me flights" adapts to your usual preferences
+   - **Tech Specs**: Click streams, purchase history, federated learning
+
+5. **🌍 Environmental Context**: The Situation Reader
+   - **What**: Metadata about the user's current situation
+   - **Why**: Smart adjustments based on real-world conditions
+   - **Real Example**: Mobile vs. desktop, location-based suggestions
+   - **Tech Specs**: Multi-modal sensor data, implicit signal processing
+
+6. **⏰ Temporal Context**: The Time Traveler
+   - **What**: Time-based patterns and cycles
+   - **Why**: Predictions and advice that consider timing
+   - **Real Example**: Traffic predictions that account for rush hour
+   - **Tech Specs**: Temporal embeddings, causal reasoning
+
+7. **🧠 Latent Knowledge**: The Internal Expert
+   - **What**: Knowledge embedded in the AI's training
+   - **Why**: Instant expert-level responses with zero retrieval latency
+   - **Real Example**: Explaining complex topics like quantum computing
+   - **Tech Specs**: Role-based prompting, chain-of-thought reasoning, constitutional AI
+
+---
+
+## Next Steps
+
+Now that you understand the seven context types and their advanced patterns, let's learn how to implement these systems in practice.
+
+---
+
+**🎯 Quick Decision Guide**: New to this? Start with **Static Context** (easiest wins) and **Conversational Context** (immediate user impact). Ready for more? Add **Dynamic Context** for live data. Going pro? Layer in **Behavioral**, **Environmental**, **Temporal**, and **Latent Knowledge** for AI that feels psychic.
