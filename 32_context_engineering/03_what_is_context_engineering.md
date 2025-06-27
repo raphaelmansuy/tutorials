@@ -1,10 +1,11 @@
-# Chapter 3: What's Context Engineering? The Nuts and Bolts
+# What's Context Engineering? The Nuts and Bolts
 
 **Author**: Raphaël MANSUY  
 **Website**: [https://www.elitizon.com](https://www.elitizon.com)  
 **LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
 **Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
-**Date**: December 2024
+**Experience includes leading AI/ML initiatives with DECATHLON as part of Capgemini Invent, driving large-scale AI adoption and organizational transformation.**
+**Date**: June 2025
 
 ---
 
