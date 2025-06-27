@@ -1,5 +1,13 @@
 # Chapter 3: What's Context Engineering? The Nuts and Bolts
 
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Date**: June 2025
+
+---
+
 ## The Definition That Changes Everything
 
 Context Engineering is the **systematic discipline of architecting information flows** that enable AI systems to understand, reason about, and respond to queries with precision and relevance. Think of it as building the nervous system for artificial intelligence—a sophisticated network that connects scattered information into coherent, actionable knowledge.
