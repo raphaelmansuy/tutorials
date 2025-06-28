@@ -249,41 +249,43 @@ graph TB
 
 ```mermaid
 flowchart LR
-    subgraph "Agent Frameworks"
+    subgraph "Agent Frameworks (Verified Support)"
         A[LangGraph<br/>✅ CoAgents<br/>Full Support]
-        B[CrewAI<br/>✅ Crews & Flows<br/>Multi-Agent]
-        C[Mastra<br/>✅ TypeScript<br/>Type Safety]
-        D[AG2<br/>✅ AgentOS<br/>Production Ready]
-        E[Agno<br/>✅ Multi-Agent<br/>Orchestration]
-        F[LlamaIndex<br/>✅ RAG Integration<br/>Knowledge Base]
+        B[CrewAI Crews<br/>✅ Multi-Agent<br/>Teams]
+        C[CrewAI Flows<br/>✅ Sequential<br/>Workflows]
+        D[Mastra<br/>✅ TypeScript<br/>Type Safety]
+        E[AG2<br/>✅ AgentOS<br/>Production Ready]
+        F[Agno<br/>✅ Multi-Agent<br/>Orchestration]
+        G[LlamaIndex<br/>✅ RAG Integration<br/>Knowledge Base]
     end
     
     subgraph "AG-UI Protocol"
-        G[Event Processing<br/>~16 Event Types]
-        H[Transport Layer<br/>SSE/WS/HTTP]
+        H[Event Processing<br/>22+ Event Types]
+        I[Transport Layer<br/>SSE/WS/HTTP]
     end
     
     subgraph "Frontend Frameworks"
-        I[CopilotKit<br/>🥇 Primary Framework<br/>21.6k+ ⭐]
-        J[Custom React<br/>Direct Integration<br/>Full Control]
-        K[Vue/Angular<br/>🔜 Future Support<br/>Community Driven]
+        J[CopilotKit<br/>🥇 Primary Framework<br/>21.6k+ ⭐]
+        K[Custom React<br/>Direct Integration<br/>Full Control]
+        L[Vue/Angular<br/>🔜 Future Support<br/>Community Driven]
     end
     
-    A --> G
-    B --> G
-    C --> G
-    D --> G
-    E --> G
-    F --> G
-    
+    A --> H
+    B --> H
+    C --> H
+    D --> H
+    E --> H
+    F --> H
     G --> H
-    H --> I
-    H --> J
-    H --> K
     
-    style G fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    style H fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    style I fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    H --> I
+    I --> J
+    I --> K
+    I --> L
+    
+    style H fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style I fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style J fill:#fff3e0,stroke:#f57c00,stroke-width:3px
     style A fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
@@ -442,41 +444,51 @@ AGENT_RESPONSE       // Agent outputs to UI
 
 ### 📋 Complete AG-UI Event Types Reference
 
-**📊 All 15 Official Event Types** (from AG-UI Protocol Specification):
+**📊 All 22+ Official Event Types** (from AG-UI Protocol Specification):
 
 | Event Type | Category | Direction | Description |
 |------------|----------|-----------|-------------|
 | `TEXT_MESSAGE_START` | Message | Agent → UI | Signals the beginning of a text message from the agent |
 | `TEXT_MESSAGE_CONTENT` | Message | Agent → UI | Streams partial text content as the agent generates it |
 | `TEXT_MESSAGE_END` | Message | Agent → UI | Marks the completion of a text message |
-| `ACTION_EXECUTION_START` | Tool | Agent → UI | Indicates an agent is about to execute a tool/action |
-| `ACTION_EXECUTION_ARGS` | Tool | Agent → UI | Streams the arguments being passed to a tool |
-| `ACTION_EXECUTION_END` | Tool | Agent → UI | Signals that tool execution has completed |
-| `ACTION_EXECUTION_RESULT` | Tool | Agent → UI | Delivers the result of tool execution |
-| `AGENT_STATE_MESSAGE` | State | Agent → UI | Provides updates about the agent's internal state |
-| `META_EVENT` | System | Bidirectional | Handles protocol-level events (interrupts, errors) |
+| `TEXT_MESSAGE_CHUNK` | Message | Agent → UI | Chunked text message content for streaming |
+| `THINKING_TEXT_MESSAGE_START` | Thinking | Agent → UI | Start of agent's thinking process text |
+| `THINKING_TEXT_MESSAGE_CONTENT` | Thinking | Agent → UI | Content of agent's thinking process |
+| `THINKING_TEXT_MESSAGE_END` | Thinking | Agent → UI | End of agent's thinking process |
+| `TOOL_CALL_START` | Tool | Agent → UI | Indicates an agent is about to execute a tool/action |
+| `TOOL_CALL_ARGS` | Tool | Agent → UI | Streams the arguments being passed to a tool |
+| `TOOL_CALL_END` | Tool | Agent → UI | Signals that tool execution has completed |
+| `TOOL_CALL_CHUNK` | Tool | Agent → UI | Chunked tool call data for streaming |
+| `TOOL_CALL_RESULT` | Tool | Agent → UI | Delivers the result of tool execution |
+| `THINKING_START` | Thinking | Agent → UI | Agent starts thinking/reasoning process |
+| `THINKING_END` | Thinking | Agent → UI | Agent completes thinking/reasoning process |
+| `STATE_SNAPSHOT` | State | Agent → UI | Complete snapshot of agent state |
+| `STATE_DELTA` | State | Agent → UI | Incremental updates to agent state (JSON Patch) |
+| `MESSAGES_SNAPSHOT` | State | Agent → UI | Complete snapshot of conversation messages |
+| `RAW` | System | Bidirectional | Raw event passthrough for external systems |
+| `CUSTOM` | System | Bidirectional | Custom application-specific events |
 | `RUN_STARTED` | Lifecycle | Agent → UI | Agent run/session has begun |
 | `RUN_FINISHED` | Lifecycle | Agent → UI | Agent run/session has completed successfully |
 | `RUN_ERROR` | Lifecycle | Agent → UI | Agent run/session has encountered an error |
-| `NODE_STARTED` | Workflow | Agent → UI | A workflow node has started execution |
-| `NODE_FINISHED` | Workflow | Agent → UI | A workflow node has completed execution |
-| `USER_INPUT` | Input | UI → Agent | User interaction sent to the agent |
+| `STEP_STARTED` | Workflow | Agent → UI | A workflow step has started execution |
+| `STEP_FINISHED` | Workflow | Agent → UI | A workflow step has completed execution |
 
 **🎯 Event Categories:**
 
-- **Message Events** (3) → Text streaming and conversation flow
-- **Tool Events** (4) → Function calls and agent actions
+- **Message Events** (4) → Text streaming and conversation flow  
+- **Thinking Events** (5) → Agent reasoning and internal processes
+- **Tool Events** (5) → Function calls and agent actions
 - **Lifecycle Events** (3) → Run management and completion status
-- **State Events** (2) → Agent state synchronization
-- **System Events** (2) → Protocol management and workflow control
-- **Input Events** (1) → User interactions and commands
+- **State Events** (3) → Agent state and message synchronization
+- **System Events** (2) → Protocol management and custom functionality
+- **Workflow Events** (2) → Step-by-step process control
 
 **💡 Usage Patterns:**
 
 - **Streaming Text**: `TEXT_MESSAGE_START` → `TEXT_MESSAGE_CONTENT` (multiple) → `TEXT_MESSAGE_END`
-- **Tool Execution**: `ACTION_EXECUTION_START` → `ACTION_EXECUTION_ARGS` → `ACTION_EXECUTION_END` → `ACTION_EXECUTION_RESULT`
+- **Tool Execution**: `TOOL_CALL_START` → `TOOL_CALL_ARGS` → `TOOL_CALL_END` → `TOOL_CALL_RESULT`
 - **Session Management**: `RUN_STARTED` → [work events] → `RUN_FINISHED`/`RUN_ERROR`
-- **Real-time Updates**: `AGENT_STATE_MESSAGE` for continuous state sync
+- **Real-time Updates**: `STATE_SNAPSHOT`/`STATE_DELTA` for continuous state sync
 
 ### 🛠️ Transport Flexibility (Production Verified)
 
@@ -546,21 +558,19 @@ git --version   # Any recent version
 ### Step 1: Create Your CopilotKit App (5 minutes)
 
 ```bash
-# Create a new CopilotKit application with AG-UI protocol support
-npx create-copilot@latest my-ai-assistant
-
-# Navigate to the project
+# Create a new Next.js application with CopilotKit
+npx create-next-app@latest my-ai-assistant
 cd my-ai-assistant
 
-# Install dependencies
-npm install
+# Install CopilotKit dependencies
+npm install @copilotkit/react-core @copilotkit/react-ui
 ```
 
 **🔍 What's happening:**
 
-- Creates a React + TypeScript project with CopilotKit (implements AG-UI protocol)
-- Includes example components and agent integrations
-- Sets up development environment with hot reload and AG-UI event streaming
+- Creates a React + Next.js project with CopilotKit integration
+- Installs core CopilotKit packages for AG-UI protocol support
+- Sets up development environment with hot reload and event streaming
 
 ### Step 2: Configure Your AI Provider (5 minutes)
 
@@ -581,14 +591,17 @@ LOCAL_MODEL_URL=http://localhost:11434  # For Ollama
 
 **🔍 Supported Providers & Frameworks:**
 
-- **LangGraph** → Full AG-UI integration with CoAgents
-- **CrewAI** → Crews and Flows support  
-- **Mastra** → TypeScript agent framework
-- **AG2** → Open-source AgentOS
-- **Agno** → Multi-agent systems
-- **LlamaIndex** → RAG and knowledge integration
-- **OpenAI, Anthropic** → Direct LLM integration
-- **Local models** → Ollama, LM Studio support
+- **LangGraph** → ✅ Full AG-UI integration with CoAgents (verified)
+- **CrewAI Crews** → ✅ Multi-agent team support (verified)
+- **CrewAI Flows** → ✅ Sequential workflow support (verified)
+- **Mastra** → ✅ TypeScript agent framework (verified)
+- **AG2** → ✅ Open-source AgentOS (verified)
+- **Agno** → ✅ Multi-agent systems (verified)
+- **LlamaIndex** → ✅ RAG and knowledge integration (verified)
+- **Direct LLM** → ✅ OpenAI, Anthropic integration (verified)
+- **Local models** → ✅ Ollama, local deployment support (verified)
+- **Pydantic AI** → 🛠️ In Progress
+- **Vercel AI SDK** → 🛠️ In Progress
 
 ### Step 3: Start Your First Agent (5 minutes)
 
@@ -618,7 +631,7 @@ interface Task {
 export const TodoAgent = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  // Make tasks readable to the agent (AG-UI context)
+  // Make tasks readable to the agent (provides context)
   useCopilotReadable({
     description: "Current todo list tasks",
     value: tasks,
@@ -627,22 +640,24 @@ export const TodoAgent = () => {
   // Define action for agent to create todos (AG-UI tool integration)
   useCopilotAction({
     name: "create_todo_list",
-    description: "Create an interactive todo list",
+    description: "Create an interactive todo list with multiple items",
     parameters: [
       {
         name: "title",
         type: "string",
         description: "Title for the todo list",
+        required: true,
       },
       {
         name: "items",
         type: "string[]", 
-        description: "Array of todo items",
+        description: "Array of todo items to create",
+        required: true,
       },
     ],
     handler: async ({ title, items }) => {
-      const newTasks = items.map((item: string) => ({
-        id: Date.now() + Math.random(),
+      const newTasks = items.map((item: string, index: number) => ({
+        id: `${Date.now()}-${index}`,
         text: item,
         completed: false,
       }));
@@ -651,25 +666,63 @@ export const TodoAgent = () => {
     },
   });
 
+  // Additional action to update task status
+  useCopilotAction({
+    name: "update_task_status",
+    description: "Mark a todo item as completed or pending",
+    parameters: [
+      {
+        name: "taskId",
+        type: "string",
+        description: "ID of the task to update",
+        required: true,
+      },
+      {
+        name: "completed",
+        type: "boolean",
+        description: "Whether the task is completed",
+        required: true,
+      },
+    ],
+    handler: async ({ taskId, completed }) => {
+      setTasks(prev => prev.map(task => 
+        task.id === taskId ? { ...task, completed } : task
+      ));
+      return `Task ${taskId} marked as ${completed ? 'completed' : 'pending'}`;
+    },
+  });
+
   return (
     <div className="todo-agent">
       <h3>AI Todo Assistant</h3>
-      {tasks.map((task) => (
-        <div key={task.id} className="task-item">
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={(e) => {
-              setTasks(tasks.map(t => 
-                t.id === task.id 
-                  ? { ...t, completed: e.target.checked }
-                  : t
-              ));
-            }}
-          />
-          <span>{task.text}</span>
-        </div>
-      ))}
+      {tasks.length === 0 ? (
+        <p>No tasks yet. Ask me to create a todo list!</p>
+      ) : (
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id} className="task-item">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={(e) => {
+                    setTasks(tasks.map(t => 
+                      t.id === task.id 
+                        ? { ...t, completed: e.target.checked }
+                        : t
+                    ));
+                  }}
+                />
+                <span style={{ 
+                  textDecoration: task.completed ? 'line-through' : 'none' 
+                }}>
+                  {task.text}
+                </span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
@@ -705,78 +758,204 @@ my-ai-assistant/
 
 ### Building Advanced Interactions
 
-#### Multi-Step Workflows
+#### Real-Time Data Visualization
 
-**🎯 Scenario:** Create a project planning workflow that guides users through multiple steps.
+**🎯 Scenario:** Create an agent that generates dynamic charts based on live data.
 
 ```typescript
-export const projectPlanner = new AgentBuilder()
-  .withName('Project Planner')
-  .withSystemPrompt(`
-    You are a project planning assistant. Guide users through:
-    1. Project definition
-    2. Task breakdown
-    3. Resource allocation
-    4. Timeline creation
-    
-    Use interactive forms and visualizations to make this engaging.
-  `)
-  .withTools([
-    {
-      name: 'project_definition_form',
-      description: 'Create a form to define project basics',
-      handler: async () => ({
-        type: 'ui_component',
-        component: {
-          type: 'form',
-          props: {
-            title: 'Define Your Project',
-            fields: [
-              { name: 'name', type: 'text', label: 'Project Name', required: true },
-              { name: 'description', type: 'textarea', label: 'Description' },
-              { name: 'deadline', type: 'date', label: 'Target Deadline' },
-              { name: 'budget', type: 'number', label: 'Budget ($)' }
-            ],
-            onSubmit: 'project_breakdown'
-          }
+import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import { useState, useEffect } from "react";
+import { BarChart, LineChart, PieChart } from "recharts";
+
+interface ChartData {
+  id: string;
+  type: 'bar' | 'line' | 'pie';
+  data: Array<{ name: string; value: number; [key: string]: any }>;
+  title: string;
+  config: {
+    xAxisKey: string;
+    yAxisKey: string;
+    colorScheme: string[];
+  };
+}
+
+export const DataVisualizationAgent = () => {
+  const [charts, setCharts] = useState<ChartData[]>([]);
+  const [liveData, setLiveData] = useState<any[]>([]);
+
+  // Simulate live data updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveData(prev => [
+        ...prev.slice(-50), // Keep last 50 data points
+        {
+          timestamp: new Date().toISOString(),
+          sales: Math.floor(Math.random() * 1000) + 500,
+          users: Math.floor(Math.random() * 200) + 100,
+          revenue: Math.floor(Math.random() * 5000) + 2000,
         }
-      })
-    },
-    {
-      name: 'project_breakdown',
-      description: 'Break down project into tasks',
-      parameters: {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          description: { type: 'string' },
-          deadline: { type: 'string' },
-          budget: { type: 'number' }
-        }
+      ]);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Make live data available to agent
+  useCopilotReadable({
+    description: "Live business metrics data including sales, users, and revenue",
+    value: { currentData: liveData.slice(-10), totalDataPoints: liveData.length },
+  });
+
+  // Action to create charts from data
+  useCopilotAction({
+    name: "create_data_visualization",
+    description: "Create an interactive chart from the live data or provided dataset",
+    parameters: [
+      {
+        name: "chartType",
+        type: "string",
+        description: "Type of chart: 'bar', 'line', or 'pie'",
+        required: true,
       },
-      handler: async (projectData) => {
-        // Generate task breakdown based on project data
-        const tasks = await generateTaskBreakdown(projectData);
-        
-        return {
-          type: 'ui_component',
-          component: {
-            type: 'kanban_board',
-            props: {
-              title: `${projectData.name} - Task Breakdown`,
-              columns: [
-                { id: 'todo', title: 'To Do', tasks: tasks },
-                { id: 'progress', title: 'In Progress', tasks: [] },
-                { id: 'done', title: 'Done', tasks: [] }
-              ]
-            }
-          }
-        };
+      {
+        name: "title",
+        type: "string", 
+        description: "Title for the chart",
+        required: true,
+      },
+      {
+        name: "xAxisKey",
+        type: "string",
+        description: "Key for X-axis data (e.g., 'timestamp', 'name')",
+        required: true,
+      },
+      {
+        name: "yAxisKey", 
+        type: "string",
+        description: "Key for Y-axis data (e.g., 'sales', 'users', 'revenue')",
+        required: true,
+      },
+      {
+        name: "dataSource",
+        type: "string",
+        description: "Data source: 'live' for live data or 'custom' for provided data",
+        required: false,
+      },
+    ],
+    handler: async ({ chartType, title, xAxisKey, yAxisKey, dataSource = 'live' }) => {
+      const chartData: ChartData = {
+        id: `chart-${Date.now()}`,
+        type: chartType as 'bar' | 'line' | 'pie',
+        title,
+        data: dataSource === 'live' ? liveData.slice(-20) : [],
+        config: {
+          xAxisKey,
+          yAxisKey,
+          colorScheme: ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c'],
+        },
+      };
+
+      setCharts(prev => [...prev, chartData]);
+      return `Created ${chartType} chart "${title}" with ${chartData.data.length} data points`;
+    },
+  });
+
+  // Action to analyze trends
+  useCopilotAction({
+    name: "analyze_data_trends",
+    description: "Analyze trends in the live data and provide insights",
+    parameters: [
+      {
+        name: "metric",
+        type: "string",
+        description: "Metric to analyze: 'sales', 'users', or 'revenue'",
+        required: true,
+      },
+      {
+        name: "timeframe",
+        type: "number",
+        description: "Number of recent data points to analyze",
+        required: false,
+      },
+    ],
+    handler: async ({ metric, timeframe = 10 }) => {
+      if (liveData.length < timeframe) {
+        return "Not enough data points for analysis";
       }
+
+      const recentData = liveData.slice(-timeframe);
+      const values = recentData.map(d => d[metric]).filter(v => typeof v === 'number');
+      
+      if (values.length === 0) {
+        return `No valid data found for metric: ${metric}`;
+      }
+
+      const average = values.reduce((a, b) => a + b, 0) / values.length;
+      const trend = values[values.length - 1] > values[0] ? 'increasing' : 'decreasing';
+      const change = ((values[values.length - 1] - values[0]) / values[0] * 100).toFixed(2);
+
+      return `Analysis for ${metric}: Average: ${average.toFixed(2)}, Trend: ${trend}, Change: ${change}%`;
+    },
+  });
+
+  const renderChart = (chart: ChartData) => {
+    const commonProps = {
+      width: 400,
+      height: 300,
+      data: chart.data,
+    };
+
+    switch (chart.type) {
+      case 'bar':
+        return <BarChart {...commonProps} />;
+      case 'line':
+        return <LineChart {...commonProps} />;
+      case 'pie':
+        return <PieChart {...commonProps} />;
+      default:
+        return <div>Unsupported chart type</div>;
     }
-  ])
-  .build();
+  };
+
+  return (
+    <div className="data-visualization-agent">
+      <h3>Data Visualization Agent</h3>
+      
+      <div className="live-metrics">
+        <h4>Live Metrics ({liveData.length} data points)</h4>
+        {liveData.slice(-1).map((data, index) => (
+          <div key={index} className="metric-display">
+            <span>Sales: {data.sales}</span>
+            <span>Users: {data.users}</span>
+            <span>Revenue: ${data.revenue}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="charts-grid">
+        {charts.map(chart => (
+          <div key={chart.id} className="chart-container">
+            <h4>{chart.title}</h4>
+            {renderChart(chart)}
+            <button onClick={() => setCharts(prev => prev.filter(c => c.id !== chart.id))}>
+              Remove Chart
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {charts.length === 0 && (
+        <p>Ask me to create visualizations from the live data!</p>
+      )}
+    </div>
+  );
+};
 ```
+
+**🎯 Test it:** Try prompts like:
+- "Create a line chart showing sales trends over time"
+- "Analyze the revenue trends in the last 15 data points"
+- "Make a bar chart comparing all three metrics"
 
 #### Real-Time Collaboration
 
@@ -1354,9 +1533,10 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 
 ### Sources Verified
 
-- **AG-UI Protocol Repository:** 4.5k+ ⭐, actively maintained
-- **Official Documentation:** [https://docs.ag-ui.com](https://docs.ag-ui.com)
-- **CopilotKit Integration:** 21.6k+ ⭐, primary frontend framework  
-- **Community Examples:** Live demos and working integrations
-- **Framework Support:** LangGraph, CrewAI, Mastra, AG2, Agno, LlamaIndex verified
+- **AG-UI Protocol Repository:** 4.5k+ ⭐, actively maintained (verified June 28, 2025)
+- **Official Documentation:** [https://docs.ag-ui.com](https://docs.ag-ui.com) (verified)
+- **CopilotKit Integration:** 21.6k+ ⭐, primary frontend framework (verified)
+- **Community Examples:** Live demos and working integrations (verified)
+- **Framework Support:** LangGraph, CrewAI (Crews/Flows), Mastra, AG2, Agno, LlamaIndex (all verified)
+- **Event Types:** 22+ official event types from TypeScript/Python SDKs (verified)
 
