@@ -1727,7 +1727,8 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
   - [Examples](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
 
 - **👥 [CrewAI](https://github.com/crewAIInc/crewAI)** → Collaborative AI agent teams
-  - [CrewAI Crews Documentation](https://docs.crewai.com/)
+  - [CrewAI Documentation](https://docs.crewai.com/)
+  - [CrewAI Crews Guide](https://docs.copilotkit.ai/crewai-crews)
   - [CrewAI Flows Guide](https://docs.crewai.com/concepts/flows)
   - [AG-UI Integration](https://docs.copilotkit.ai/crewai-crews)
 
@@ -1750,4 +1751,62 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
   - [LlamaIndex Documentation](https://docs.llamaindex.ai/)
   - [GitHub Repository](https://github.com/run-llama/llama_index)
   - [AG-UI RAG Examples](https://docs.ag-ui.com/llamaindex)
+
+---
+
+## 🚀 Ready to Transform Your Business with AI Agents?
+
+**This tutorial just scratched the surface of what's possible with AG-UI and modern AI agent architectures.**
+
+If you've made it this far, you understand the transformative potential of AI agents in frontend applications. But moving from tutorial to production-ready, business-critical AI systems requires deep expertise, strategic thinking, and proven methodologies.
+
+### 🎯 **Get Expert AI Agent Consulting from Raphaël**
+
+As the author of this comprehensive guide and an AI/ML architect currently driving large-scale AI adoption at **DECATHLON** through **Capgemini Invent/Quantmetry**, I help organizations transform their ideas into production-ready AI agent systems.
+
+**🏆 What makes this different:**
+- **Real-world experience** building enterprise AI agents at scale
+- **Deep technical expertise** across all major AI frameworks (LangGraph, CrewAI, Mastra, AG2)
+- **Strategic guidance** on AI architecture, not just implementation
+- **Proven methodologies** for organizational AI transformation
+
+### 💼 **How I Can Help Your Organization**
+
+**🚀 AI Agent Strategy & Architecture**
+- Assess your current AI readiness and identify high-impact opportunities
+- Design scalable multi-agent systems for your specific use cases
+- Create technical roadmaps for AI adoption across your organization
+
+**🔧 Implementation & Development**
+- Build production-ready AI agents using AG-UI and modern frameworks
+- Implement secure, scalable agent orchestration systems
+- Integrate AI agents seamlessly into your existing tech stack
+
+**📈 Organizational AI Transformation**
+- Guide leadership through AI adoption strategies
+- Train your development teams on modern AI patterns
+- Establish best practices for AI governance and ethics
+
+### 🎯 **Perfect For:**
+
+- **Startups** looking to integrate AI agents as a core differentiator
+- **Enterprise teams** scaling AI beyond proof-of-concepts
+- **Product managers** defining AI-powered product strategies
+- **CTOs** establishing AI architecture standards
+
+### 📞 **Start Your AI Agent Journey**
+
+**Ready to discuss your AI agent project?** Let's explore how we can transform your ideas into production systems.
+
+**📧 Contact:** [raphael.mansuy@elitizon.com](mailto:raphael.mansuy@elitizon.com)  
+**🌐 Website:** [https://www.elitizon.com](https://www.elitizon.com)  
+**💼 LinkedIn:** [Connect with Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)  
+
+**🚀 Current Focus:** AI/ML initiatives with DECATHLON • Investor at [QuantaLogic](https://www.quantalogic.app/) & [Student Central AI](https://www.studentcentral.ai/)
+
+*From tutorial to transformation. Let's build the future of AI agents together.*
+
+---
+
+**⭐ Found this tutorial valuable?** Star the repository, share it with your team, and follow for more cutting-edge AI development content!
 
