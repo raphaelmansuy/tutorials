@@ -104,25 +104,39 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 ```mermaid
 flowchart TB
-    A[AI Agent Backend] --> B{Integration Challenges}
+    A[🤖 AI Agent Backend] --> B{⚠️ Integration Challenges}
     
-    B --> C[Custom Protocol Development]
-    B --> D[Real-time Communication]
-    B --> E[State Management]
-    B --> F[UI Component Generation]
-    B --> G[Error Handling]
+    B --> C[⚙️ Custom Protocol Development]
+    B --> D[🔄 Real-time Communication]
+    B --> E[🗃️ State Management]
+    B --> F[🎨 UI Component Generation]
+    B --> G[❌ Error Handling]
     
-    C --> C1[Months of Development]
-    D --> D1[WebSocket Complexity]
-    E --> E1[Synchronization Issues]
-    F --> F1[Static UI Limitations]
-    G --> G1[Poor User Experience]
+    C --> C1[📅 Months of Development]
+    D --> D1[🌐 WebSocket Complexity]
+    E --> E1[🔄 Synchronization Issues]
+    F --> F1[🚧 Static UI Limitations]
+    G --> G1[😞 Poor User Experience]
     
-    C1 --> H[Fragmented Ecosystem]
+    C1 --> H[💔 Fragmented Ecosystem]
     D1 --> H
     E1 --> H
     F1 --> H
     G1 --> H
+
+    style A fill:#E8F4FD,stroke:#2C5AA0
+    style B fill:#FADBD8,stroke:#A93226
+    style C fill:#E8F6F3,stroke:#1B5E4F
+    style D fill:#E8F6F3,stroke:#1B5E4F
+    style E fill:#E8F6F3,stroke:#1B5E4F
+    style F fill:#E8F6F3,stroke:#1B5E4F
+    style G fill:#E8F6F3,stroke:#1B5E4F
+    style C1 fill:#FFF2CC,stroke:#B7950B
+    style D1 fill:#FFF2CC,stroke:#B7950B
+    style E1 fill:#FFF2CC,stroke:#B7950B
+    style F1 fill:#FFF2CC,stroke:#B7950B
+    style G1 fill:#FFF2CC,stroke:#B7950B
+    style H fill:#FADBD8,stroke:#A93226
 ```
 
 **⚠️ The Fragmentation Problem:**
@@ -135,37 +149,44 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph "Traditional Approach (Fragmented)"
-        A1[LangGraph] --> B1[Custom Integration<br/>6-12 weeks dev]
-        A2[CrewAI] --> B2[Different Protocol<br/>Rebuild everything]
-        A3[OpenAI] --> B3[Custom Solution<br/>High maintenance]
+    subgraph "Traditional Approach - Fragmented"
+        A1[🧩 LangGraph] --> B1[⚙️ Custom Integration<br/>6-12 weeks dev]
+        A2[🤖 CrewAI] --> B2[🔄 Different Protocol<br/>Rebuild everything]
+        A3[🤖 OpenAI] --> B3[🛠️ Custom Solution<br/>High maintenance]
         
-        B1 --> C1[React App 1<br/>Specific to LangGraph]
-        B2 --> C2[Vue App 2<br/>Specific to CrewAI]
-        B3 --> C3[Angular App 3<br/>Specific to OpenAI]
+        B1 --> C1[⚛️ React App 1<br/>Specific to LangGraph]
+        B2 --> C2[🟢 Vue App 2<br/>Specific to CrewAI]
+        B3 --> C3[🅰️ Angular App 3<br/>Specific to OpenAI]
     end
     
-    subgraph "AG-UI Approach (Unified)"
-        D1[LangGraph] --> E[AG-UI Protocol<br/>~16 Event Types]
-        D2[CrewAI] --> E
-        D3[OpenAI] --> E
-        D4[Mastra] --> E
+    subgraph "AG-UI Approach - Unified"
+        D1[🧩 LangGraph] --> E[📡 AG-UI Protocol<br/>~16 Event Types]
+        D2[🤖 CrewAI] --> E
+        D3[🤖 OpenAI] --> E
+        D4[⚡ Mastra] --> E
         
-        E --> F1[CopilotKit React<br/>Universal Frontend]
-        E --> F2[Custom Frontend<br/>Same Protocol]
-        E --> F3[Any Framework<br/>Consistent API]
+        E --> F1[⚛️ CopilotKit React<br/>Universal Frontend]
+        E --> F2[🎨 Custom Frontend<br/>Same Protocol]
+        E --> F3[🌐 Any Framework<br/>Consistent API]
     end
     
-    style E fill:#4caf50,color:#fff,stroke:#2e7d32,stroke-width:3px
-    style B1 fill:#ff5722,color:#fff,stroke:#d84315,stroke-width:2px
-    style B2 fill:#ff5722,color:#fff,stroke:#d84315,stroke-width:2px
-    style B3 fill:#ff5722,color:#fff,stroke:#d84315,stroke-width:2px
-    style F1 fill:#81c784,stroke:#388e3c,stroke-width:2px
-    style F2 fill:#81c784,stroke:#388e3c,stroke-width:2px
-    style F3 fill:#81c784,stroke:#388e3c,stroke-width:2px
-    style C1 fill:#ffab91,stroke:#ff6d00,stroke-width:1px
-    style C2 fill:#ffab91,stroke:#ff6d00,stroke-width:1px
-    style C3 fill:#ffab91,stroke:#ff6d00,stroke-width:1px
+    style E fill:#E8F6F3,stroke:#1B5E4F
+    style B1 fill:#FADBD8,stroke:#A93226
+    style B2 fill:#FADBD8,stroke:#A93226
+    style B3 fill:#FADBD8,stroke:#A93226
+    style F1 fill:#E8F4FD,stroke:#2C5AA0
+    style F2 fill:#E8F4FD,stroke:#2C5AA0
+    style F3 fill:#E8F4FD,stroke:#2C5AA0
+    style C1 fill:#FFF2CC,stroke:#B7950B
+    style C2 fill:#FFF2CC,stroke:#B7950B
+    style C3 fill:#FFF2CC,stroke:#B7950B
+    style A1 fill:#F4ECF7,stroke:#7D3C98
+    style A2 fill:#F4ECF7,stroke:#7D3C98
+    style A3 fill:#F4ECF7,stroke:#7D3C98
+    style D1 fill:#F4ECF7,stroke:#7D3C98
+    style D2 fill:#F4ECF7,stroke:#7D3C98
+    style D3 fill:#F4ECF7,stroke:#7D3C98
+    style D4 fill:#F4ECF7,stroke:#7D3C98
 ```
 
 ## 🌟 How AG-UI Solves This
@@ -177,25 +198,43 @@ AG-UI transforms AI frontend development by providing a **standardized, event-dr
 ```mermaid
 flowchart LR
     subgraph "Before AG-UI"
-        A1[LangGraph] --> B1[Custom Integration 1]
-        A2[CrewAI] --> B2[Custom Integration 2]
-        A3[Mastra] --> B3[Custom Integration 3]
+        A1[🧩 LangGraph] --> B1[⚙️ Custom Integration 1]
+        A2[🤖 CrewAI] --> B2[⚙️ Custom Integration 2]
+        A3[⚡ Mastra] --> B3[⚙️ Custom Integration 3]
         
-        B1 --> C1[React App 1]
-        B2 --> C2[Vue App 2]
-        B3 --> C3[Angular App 3]
+        B1 --> C1[⚛️ React App 1]
+        B2 --> C2[🟢 Vue App 2]
+        B3 --> C3[🅰️ Angular App 3]
     end
     
     subgraph "With AG-UI Protocol"
-        D1[LangGraph] --> E[AG-UI Protocol]
-        D2[CrewAI] --> E
-        D3[Mastra] --> E
-        D4[AG2] --> E
+        D1[🧩 LangGraph] --> E[📡 AG-UI Protocol]
+        D2[🤖 CrewAI] --> E
+        D3[⚡ Mastra] --> E
+        D4[🔄 AG2] --> E
         
-        E --> F1[CopilotKit React]
-        E --> F2[Custom Frontend]
-        E --> F3[Any AG-UI Client]
+        E --> F1[⚛️ CopilotKit React]
+        E --> F2[🎨 Custom Frontend]
+        E --> F3[🌐 Any AG-UI Client]
     end
+
+    style A1 fill:#F4ECF7,stroke:#7D3C98
+    style A2 fill:#F4ECF7,stroke:#7D3C98
+    style A3 fill:#F4ECF7,stroke:#7D3C98
+    style B1 fill:#FADBD8,stroke:#A93226
+    style B2 fill:#FADBD8,stroke:#A93226
+    style B3 fill:#FADBD8,stroke:#A93226
+    style C1 fill:#FFF2CC,stroke:#B7950B
+    style C2 fill:#FFF2CC,stroke:#B7950B
+    style C3 fill:#FFF2CC,stroke:#B7950B
+    style D1 fill:#F4ECF7,stroke:#7D3C98
+    style D2 fill:#F4ECF7,stroke:#7D3C98
+    style D3 fill:#F4ECF7,stroke:#7D3C98
+    style D4 fill:#F4ECF7,stroke:#7D3C98
+    style E fill:#E8F6F3,stroke:#1B5E4F
+    style F1 fill:#E8F4FD,stroke:#2C5AA0
+    style F2 fill:#E8F4FD,stroke:#2C5AA0
+    style F3 fill:#E8F4FD,stroke:#2C5AA0
 ```
 
 ### ✨ Key Benefits
@@ -227,18 +266,27 @@ flowchart LR
 ```mermaid
 graph TB
     subgraph "The Agentic Protocol Stack"
-        A[AG-UI Protocol<br/>🎨 Agent ↔ User Interface] --> B[Application Layer]
-        C[A2A Protocol<br/>🤝 Agent ↔ Agent Communication] --> B
-        D[MCP Protocol<br/>🛠️ Agent ↔ Tool Integration] --> B
+        A[📡 AG-UI Protocol<br/>🎨 Agent ↔ User Interface] --> B[🚀 Application Layer]
+        C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent Communication] --> B
+        D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool Integration] --> B
         
-        B --> E[Your AI Application]
+        B --> E[🎯 Your AI Application]
     end
     
     subgraph "AG-UI Ecosystem"
-        F[Frontend Apps<br/>React, Vue, Angular] --> A
-        G[AI Frameworks<br/>LangGraph, CrewAI, Mastra] --> A
-        H[UI Components<br/>Chat, Forms, Visualizations] --> A
+        F[🌐 Frontend Apps<br/>React, Vue, Angular] --> A
+        G[🤖 AI Frameworks<br/>LangGraph, CrewAI, Mastra] --> A
+        H[🎨 UI Components<br/>Chat, Forms, Visualizations] --> A
     end
+
+    style A fill:#E8F6F3,stroke:#1B5E4F
+    style C fill:#E8F4FD,stroke:#2C5AA0
+    style D fill:#FFF2CC,stroke:#B7950B
+    style B fill:#F4ECF7,stroke:#7D3C98
+    style E fill:#FADBD8,stroke:#A93226
+    style F fill:#E8F4FD,stroke:#2C5AA0
+    style G fill:#F4ECF7,stroke:#7D3C98
+    style H fill:#E8F6F3,stroke:#1B5E4F
 ```
 
 **🔗 Complementary Protocols:**
@@ -249,25 +297,25 @@ graph TB
 
 ```mermaid
 flowchart LR
-    subgraph "Agent Frameworks (Verified Support)"
-        A[LangGraph<br/>✅ CoAgents<br/>Full Support]
-        B[CrewAI Crews<br/>✅ Multi-Agent<br/>Teams]
-        C[CrewAI Flows<br/>✅ Sequential<br/>Workflows]
-        D[Mastra<br/>✅ TypeScript<br/>Type Safety]
-        E[AG2<br/>✅ AgentOS<br/>Production Ready]
-        F[Agno<br/>✅ Multi-Agent<br/>Orchestration]
-        G[LlamaIndex<br/>✅ RAG Integration<br/>Knowledge Base]
+    subgraph "Agent Frameworks - Verified Support"
+        A[🧩 LangGraph<br/>✅ CoAgents<br/>Full Support]
+        B[🤖 CrewAI Crews<br/>✅ Multi-Agent<br/>Teams]
+        C[🔄 CrewAI Flows<br/>✅ Sequential<br/>Workflows]
+        D[⚡ Mastra<br/>✅ TypeScript<br/>Type Safety]
+        E[🔄 AG2<br/>✅ AgentOS<br/>Production Ready]
+        F[🤖 Agno<br/>✅ Multi-Agent<br/>Orchestration]
+        G[📚 LlamaIndex<br/>✅ RAG Integration<br/>Knowledge Base]
     end
     
     subgraph "AG-UI Protocol"
-        H[Event Processing<br/>16 Event Types]
-        I[Transport Layer<br/>SSE/WS/HTTP]
+        H[⚙️ Event Processing<br/>16 Event Types]
+        I[🌐 Transport Layer<br/>SSE/WS/HTTP]
     end
     
     subgraph "Frontend Frameworks"
-        J[CopilotKit<br/>🥇 Primary Framework<br/>21.6k+ ⭐]
-        K[Custom React<br/>Direct Integration<br/>Full Control]
-        L[Vue/Angular<br/>🔜 Future Support<br/>Community Driven]
+        J[⚛️ CopilotKit<br/>🥇 Primary Framework<br/>21.6k+ ⭐]
+        K[🎨 Custom React<br/>Direct Integration<br/>Full Control]
+        L[🌐 Vue/Angular<br/>🔜 Future Support<br/>Community Driven]
     end
     
     A --> H
@@ -283,12 +331,18 @@ flowchart LR
     I --> K
     I --> L
     
-    style H fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    style I fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    style J fill:#fff3e0,stroke:#f57c00,stroke-width:3px
-    style A fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style H fill:#E8F6F3,stroke:#1B5E4F
+    style I fill:#E8F4FD,stroke:#2C5AA0
+    style J fill:#FFF2CC,stroke:#B7950B
+    style A fill:#F4ECF7,stroke:#7D3C98
+    style B fill:#F4ECF7,stroke:#7D3C98
+    style C fill:#F4ECF7,stroke:#7D3C98
+    style D fill:#F4ECF7,stroke:#7D3C98
+    style E fill:#F4ECF7,stroke:#7D3C98
+    style F fill:#F4ECF7,stroke:#7D3C98
+    style G fill:#F4ECF7,stroke:#7D3C98
+    style K fill:#E8F4FD,stroke:#2C5AA0
+    style L fill:#EAEDED,stroke:#566573
 ```
 
 **💡 The Power of Integration:**
@@ -306,32 +360,30 @@ When combined, these protocols create a complete agentic ecosystem where agents 
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant UI as Frontend App<br/>(CopilotKit)
-    participant AG as AG-UI Protocol
-    participant AI as AI Agent
+    participant U as 👤 User
+    participant UI as 🌐 Frontend App<br/>(CopilotKit)
+    participant AG as 📡 AG-UI Protocol
+    participant AI as 🤖 AI Agent
     
-    rect rgb(230, 247, 255)
-        U->>UI: User interaction
-        UI->>AG: RUN_STARTED event
-        AG->>AI: Forward user input
-        
-        AI->>AG: TEXT_MESSAGE_START
-        AG->>UI: Stream event
-        Note over UI,U: Real-time UI update
-        
-        AI->>AG: TEXT_MESSAGE_CHUNK
-        AG->>UI: Stream content
-        Note over UI,U: Incremental content
-        
-        AI->>AG: TOOL_CALL_CHUNK
-        AG->>UI: Tool execution
-        Note over UI,U: Interactive components
-        
-        AI->>AG: RUN_FINISHED
-        AG->>UI: Complete interaction
-        U->>UI: Continue interaction
-    end
+    U->>UI: User interaction
+    UI->>AG: RUN_STARTED event
+    AG->>AI: Forward user input
+    
+    AI->>AG: TEXT_MESSAGE_START
+    AG->>UI: Stream event
+    Note over UI,U: Real-time UI update
+    
+    AI->>AG: TEXT_MESSAGE_CHUNK
+    AG->>UI: Stream content
+    Note over UI,U: Incremental content
+    
+    AI->>AG: TOOL_CALL_CHUNK
+    AG->>UI: Tool execution
+    Note over UI,U: Interactive components
+    
+    AI->>AG: RUN_FINISHED
+    AG->>UI: Complete interaction
+    U->>UI: Continue interaction
 ```
 
 ### 📡 Event-Driven Communication
@@ -340,10 +392,10 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant UI as Frontend (CopilotKit)
-    participant AG as AG-UI Protocol
-    participant AI as AI Agent
+    participant U as 👤 User
+    participant UI as 🌐 Frontend (CopilotKit)
+    participant AG as 📡 AG-UI Protocol
+    participant AI as 🤖 AI Agent
     
     U->>UI: Interact with interface
     UI->>AG: RUN_STARTED event
@@ -358,9 +410,7 @@ sequenceDiagram
     AI->>AG: RUN_FINISHED
     AG->>UI: Complete interaction
     
-    rect rgb(230, 247, 255)
-    note over U,AI: Real-time streaming enables<br/>immediate UI updates
-    end
+    Note over U,AI: Real-time streaming enables<br/>immediate UI updates
 ```
 
 **📊 Event Types:**
@@ -497,20 +547,20 @@ AGENT_RESPONSE       // Agent outputs to UI
 ```mermaid
 flowchart TB
     subgraph "Application Layer"
-        A[AI Agent<br/>LangGraph/CrewAI]
-        B[Frontend App<br/>CopilotKit/Custom]
+        A[🤖 AI Agent<br/>LangGraph/CrewAI]
+        B[🌐 Frontend App<br/>CopilotKit/Custom]
     end
     
     subgraph "AG-UI Protocol Layer"
-        C[Event Processing<br/>~16 Event Types]
-        D[Middleware Layer<br/>Format Translation]
+        C[⚙️ Event Processing<br/>~16 Event Types]
+        D[🔄 Middleware Layer<br/>Format Translation]
     end
     
     subgraph "Transport Options"
-        E[SSE<br/>Server-Sent Events<br/>✅ Primary]
-        F[WebSockets<br/>Bidirectional<br/>✅ Real-time]
-        G[HTTP<br/>Request-Response<br/>✅ Simple]
-        H[Webhooks<br/>Server-to-Server<br/>✅ Async]
+        E[📡 SSE<br/>Server-Sent Events<br/>✅ Primary]
+        F[🔄 WebSockets<br/>Bidirectional<br/>✅ Real-time]
+        G[🌐 HTTP<br/>Request-Response<br/>✅ Simple]
+        H[🔗 Webhooks<br/>Server-to-Server<br/>✅ Async]
     end
     
     A --> C
@@ -524,11 +574,14 @@ flowchart TB
     G --> B
     H --> B
     
-    style C fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    style D fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    style A fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style E fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style C fill:#E8F6F3,stroke:#1B5E4F
+    style D fill:#E8F4FD,stroke:#2C5AA0
+    style A fill:#FFF2CC,stroke:#B7950B
+    style B fill:#F4ECF7,stroke:#7D3C98
+    style E fill:#FADBD8,stroke:#A93226
+    style F fill:#FADBD8,stroke:#A93226
+    style G fill:#FADBD8,stroke:#A93226
+    style H fill:#FADBD8,stroke:#A93226
 ```
 
 **🎯 Transport Selection Guide:**
