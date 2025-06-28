@@ -5,14 +5,14 @@ flowchart LR
     Frontend[🖥️ Frontend App] --> AGUI[🔄 AG-UI Protocol]
     AGUI --> Agent[🤖 AI Agent]
     Agent --> Backend[🧠 AI Services]
-    
+
     AGUI -.-> UI[🧩 Interactive UI]
     UI -.-> Frontend
-    
+
     classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef protocol fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
     classDef interactive fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    
+
     class Frontend,Agent,Backend main
     class AGUI protocol
     class UI interactive
@@ -30,8 +30,6 @@ flowchart LR
 **Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
 **Date**: June 28, 2025
 
----
-
 ## 🚀 Why AG-UI Changes Everything for AI Frontend Development
 
 **Picture this**: Sarah, a senior frontend developer at a fintech startup, spent six weeks building a custom chat interface for their AI-powered financial advisor. After months of development, she realized users needed more than just chat—they needed interactive forms, real-time data visualization, and seamless workflows. Each feature required rebuilding the entire agent integration layer from scratch.
@@ -48,14 +46,16 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 **🎯 What you'll build:** A complete AI-powered project management assistant with interactive UI components, real-time collaboration, and multi-agent workflows
 
-**⏱️ Time required:** 
+**⏱️ Time required:**
+
 - 🚀 Quick Start: 25 minutes
 - 🔍 Deep Dive: 90 minutes
 - 🎮 Explorer Mode: Self-paced (2-4 hours)
 
 **📊 Difficulty:** Intermediate (requires React/TypeScript knowledge)
 
-**🔧 Prerequisites:** 
+**🔧 Prerequisites:**
+
 - Node.js 18+ and npm/yarn
 - Basic React and TypeScript knowledge
 - AI/LLM API access (OpenAI, Anthropic, or local model)
@@ -64,6 +64,7 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 **📅 Last updated:** June 28, 2025
 
 **Choose your path:**
+
 - 🚀 [Quick Start](#quick-start) (25 min) - Get a working AI agent UI immediately
 - 🔍 [Deep Dive](#deep-dive) (90 min) - Understand the protocol and build comprehensively
 - 🎮 [Explorer Mode](#explorer-mode) - Interactive challenges and customizations
@@ -74,30 +75,35 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 ## 📖 Table of Contents
 
 ### Part I: Foundation (WHY)
+
 - [🎪 The 30-Second Demo](#the-30-second-demo)
 - [🔥 The AI Frontend Integration Problem](#the-ai-frontend-integration-problem)
 - [🌟 How AG-UI Solves This](#how-ag-ui-solves-this)
 - [🏗️ Where AG-UI Fits in the Agentic Stack](#where-ag-ui-fits-in-the-agentic-stack)
 
 ### Part II: Understanding (WHAT)
+
 - [🧠 Core Concepts & Mental Models](#core-concepts--mental-models)
 - [📡 The AG-UI Protocol Specification](#the-ag-ui-protocol-specification)
 - [🔄 Event-Driven Architecture Deep Dive](#event-driven-architecture-deep-dive)
 - [🎨 Generative UI Components](#generative-ui-components)
 
 ### Part III: Implementation (HOW)
+
 - [🚀 Quick Start: Your First AG-UI App](#quick-start)
 - [🔍 Deep Dive: Complete Implementation](#deep-dive)
 - [🎮 Explorer Mode: Interactive Challenges](#explorer-mode)
 - [🏗️ Production-Ready Patterns](#production-ready-patterns)
 
 ### Part IV: Advanced Topics
+
 - [🔐 Security & Authentication](#security--authentication)
 - [📊 Performance & Optimization](#performance--optimization)
 - [🔄 Multi-Agent Orchestration](#multi-agent-orchestration)
 - [🌐 Deployment & Scaling](#deployment--scaling)
 
 ### Part V: Reference & Resources
+
 - [🛠️ Troubleshooting Guide](#troubleshooting-guide)
 - [📚 Framework Integration Guides](#framework-integration-guides)
 - [🔗 Community & Resources](#community--resources)
@@ -107,7 +113,11 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 ## 🎪 The 30-Second Demo
 
-[🎥 *Interactive Demo GIF showing a complete AI project management assistant being built in real-time*]
+---
+
+<p align="center">
+    <img src="./images/ag_ui_01.png" alt="AG-UI" width="1024"/>
+</p>
 
 **💡 Pro Tip:** Bookmark this tutorial—you'll reference the patterns and examples multiple times as you build your own AI-powered applications!
 
@@ -122,6 +132,7 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 **🏢 Enterprise Reality:** Companies are spending significant resources on AI integration projects, with enterprise surveys showing that most development time is spent on frontend connectivity rather than AI logic.
 
 **📊 The Development Challenge:**
+
 - **6-12 weeks** typical time to integrate AI agent with custom UI
 - **3-5 developers** typically required for a complete implementation
 - **Significant project complexity** due to fragmented integration approaches
@@ -132,19 +143,19 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 ```mermaid
 flowchart TB
     A[🤖 AI Agent Backend] --> B{⚠️ Integration Challenges}
-    
+
     B --> C[⚙️ Custom Protocol Development]
     B --> D[🔄 Real-time Communication]
     B --> E[🗃️ State Management]
     B --> F[🎨 UI Component Generation]
     B --> G[❌ Error Handling]
-    
+
     C --> C1[📅 Months of Development]
     D --> D1[🌐 WebSocket Complexity]
     E --> E1[🔄 Synchronization Issues]
     F --> F1[🚧 Static UI Limitations]
     G --> G1[😞 Poor User Experience]
-    
+
     C1 --> H[💔 Fragmented Ecosystem]
     D1 --> H
     E1 --> H
@@ -167,6 +178,7 @@ flowchart TB
 ```
 
 **⚠️ The Fragmentation Problem:**
+
 - **LangChain** → Custom Streamlit/Gradio interfaces
 - **CrewAI** → Proprietary dashboard solutions
 - **OpenAI Assistants** → Limited UI customization
@@ -180,23 +192,23 @@ flowchart TB
         A1[🧩 LangGraph] --> B1[⚙️ Custom Integration<br/>6-12 weeks dev]
         A2[🤖 CrewAI] --> B2[🔄 Different Protocol<br/>Rebuild everything]
         A3[🤖 OpenAI] --> B3[🛠️ Custom Solution<br/>High maintenance]
-        
+
         B1 --> C1[⚛️ React App 1<br/>Specific to LangGraph]
         B2 --> C2[🟢 Vue App 2<br/>Specific to CrewAI]
         B3 --> C3[🅰️ Angular App 3<br/>Specific to OpenAI]
     end
-    
+
     subgraph "AG-UI Approach - Unified"
         D1[🧩 LangGraph] --> E[📡 AG-UI Protocol<br/>~16 Event Types]
         D2[🤖 CrewAI] --> E
         D3[🤖 OpenAI] --> E
         D4[⚡ Mastra] --> E
-        
+
         E --> F1[⚛️ CopilotKit React<br/>Universal Frontend]
         E --> F2[🎨 Custom Frontend<br/>Same Protocol]
         E --> F3[🌐 Any Framework<br/>Consistent API]
     end
-    
+
     style E fill:#E8F6F3,stroke:#1B5E4F
     style B1 fill:#FADBD8,stroke:#A93226
     style B2 fill:#FADBD8,stroke:#A93226
@@ -228,18 +240,18 @@ flowchart LR
         A1[🧩 LangGraph] --> B1[⚙️ Custom Integration 1]
         A2[🤖 CrewAI] --> B2[⚙️ Custom Integration 2]
         A3[⚡ Mastra] --> B3[⚙️ Custom Integration 3]
-        
+
         B1 --> C1[⚛️ React App 1]
         B2 --> C2[🟢 Vue App 2]
         B3 --> C3[🅰️ Angular App 3]
     end
-    
+
     subgraph "With AG-UI Protocol"
         D1[🧩 LangGraph] --> E[📡 AG-UI Protocol]
         D2[🤖 CrewAI] --> E
         D3[⚡ Mastra] --> E
         D4[🔄 AG2] --> E
-        
+
         E --> F1[⚛️ CopilotKit React]
         E --> F2[🎨 Custom Frontend]
         E --> F3[🌐 Any AG-UI Client]
@@ -296,10 +308,10 @@ graph TB
         A[📡 AG-UI Protocol<br/>🎨 Agent ↔ User Interface] --> B[🚀 Application Layer]
         C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent From Google] --> B
         D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool From Anthropic] --> B
-        
+
         B --> E[🎯 Your AI Application]
     end
-    
+
     subgraph "AG-UI Ecosystem"
         F[🌐 Frontend Apps<br/>React, Vue, Angular] --> A
         G[🤖 AI Frameworks<br/>LangGraph, CrewAI, Mastra] --> A
@@ -333,18 +345,18 @@ flowchart LR
         F[🤖 Agno<br/>✅ Multi-Agent<br/>Orchestration]
         G[📚 LlamaIndex<br/>✅ RAG Integration<br/>Knowledge Base]
     end
-    
+
     subgraph "AG-UI Protocol"
         H[⚙️ Event Processing<br/>16 Event Types]
         I[🌐 Transport Layer<br/>SSE/WS/HTTP]
     end
-    
+
     subgraph "Frontend Frameworks"
         J[⚛️ CopilotKit<br/>🥇 Primary Framework<br/>21.6k+ ⭐]
         K[🎨 Custom React<br/>Direct Integration<br/>Full Control]
         L[🌐 Vue/Angular<br/>🔜 Future Support<br/>Community Driven]
     end
-    
+
     A --> H
     B --> H
     C --> H
@@ -352,12 +364,12 @@ flowchart LR
     E --> H
     F --> H
     G --> H
-    
+
     H --> I
     I --> J
     I --> K
     I --> L
-    
+
     style H fill:#E8F6F3,stroke:#1B5E4F
     style I fill:#E8F4FD,stroke:#2C5AA0
     style J fill:#FFF2CC,stroke:#B7950B
@@ -391,23 +403,23 @@ sequenceDiagram
     participant UI as 🌐 Frontend App<br/>(CopilotKit)
     participant AG as 📡 AG-UI Protocol
     participant AI as 🤖 AI Agent
-    
+
     U->>UI: User interaction
     UI->>AG: RUN_STARTED event
     AG->>AI: Forward user input
-    
+
     AI->>AG: TEXT_MESSAGE_START
     AG->>UI: Stream event
     Note over UI,U: Real-time UI update
-    
+
     AI->>AG: TEXT_MESSAGE_CHUNK
     AG->>UI: Stream content
     Note over UI,U: Incremental content
-    
+
     AI->>AG: TOOL_CALL_CHUNK
     AG->>UI: Tool execution
     Note over UI,U: Interactive components
-    
+
     AI->>AG: RUN_FINISHED
     AG->>UI: Complete interaction
     U->>UI: Continue interaction
@@ -423,7 +435,7 @@ sequenceDiagram
     participant UI as 🌐 Frontend (CopilotKit)
     participant AG as 📡 AG-UI Protocol
     participant AI as 🤖 AI Agent
-    
+
     U->>UI: Interact with interface
     UI->>AG: RUN_STARTED event
     AG->>AI: Forward user input
@@ -436,7 +448,7 @@ sequenceDiagram
     AG->>UI: Tool execution
     AI->>AG: RUN_FINISHED
     AG->>UI: Complete interaction
-    
+
     Note over U,AI: Real-time streaming enables<br/>immediate UI updates
 ```
 
@@ -463,6 +475,7 @@ const events = await agentStream.send("Show me sales data");
 ### 🔄 Bidirectional State Management
 
 **🎯 Key Innovation:** Unlike traditional chatbots, AG-UI maintains synchronized state between the agent and UI, enabling:
+
 - **Context preservation** across interactions
 - **Multi-step workflows** with intermediate states
 - **Real-time collaboration** between users and agents
@@ -479,7 +492,7 @@ graph TB
         B --> C[Middleware Layer<br/>Protocol Translation]
         C --> D[Application Layer<br/>Your AI Agent]
     end
-    
+
     subgraph "Frontend Integration"
         E[CopilotKit/Custom UI] --> F[AG-UI Client]
         F --> A
@@ -492,67 +505,67 @@ graph TB
 
 ```typescript
 // Run management
-RUN_STARTED      // Agent execution begins
-RUN_FINISHED     // Agent execution completes  
-RUN_ERROR        // Error during execution
+RUN_STARTED; // Agent execution begins
+RUN_FINISHED; // Agent execution completes
+RUN_ERROR; // Error during execution
 ```
 
 **🗨️ Message Events:**
 
 ```typescript
 // Text streaming
-TEXT_MESSAGE_START     // Start of message
-TEXT_MESSAGE_CONTENT     // Streaming text content
-TEXT_MESSAGE_END       // End of message
+TEXT_MESSAGE_START; // Start of message
+TEXT_MESSAGE_CONTENT; // Streaming text content
+TEXT_MESSAGE_END; // End of message
 ```
 
 **🛠️ Tool & Content Events:**
 
 ```typescript
 // Tool interactions
-TOOL_CALL_START        // Streaming tool calls
-TOOL_CALL_ARGS        // Various tool execution events
+TOOL_CALL_START; // Streaming tool calls
+TOOL_CALL_ARGS; // Various tool execution events
 
 // State management
-STATE_UPDATE          // Bidirectional state sync
-USER_INPUT           // User interactions from UI
-AGENT_RESPONSE       // Agent outputs to UI
+STATE_UPDATE; // Bidirectional state sync
+USER_INPUT; // User interactions from UI
+AGENT_RESPONSE; // Agent outputs to UI
 ```
 
 ### 📋 Complete AG-UI Event Types Reference
 
 **📊 All 22+ Official Event Types** (from AG-UI Protocol Specification):
 
-| Event Type | Category | Direction | Description |
-|------------|----------|-----------|-------------|
-| `TEXT_MESSAGE_START` | Message | Agent → UI | Signals the beginning of a text message from the agent |
-| `TEXT_MESSAGE_CONTENT` | Message | Agent → UI | Streams partial text content as the agent generates it |
-| `TEXT_MESSAGE_END` | Message | Agent → UI | Marks the completion of a text message |
-| `TEXT_MESSAGE_CHUNK` | Message | Agent → UI | Chunked text message content for streaming |
-| `THINKING_TEXT_MESSAGE_START` | Thinking | Agent → UI | Start of agent's thinking process text |
-| `THINKING_TEXT_MESSAGE_CONTENT` | Thinking | Agent → UI | Content of agent's thinking process |
-| `THINKING_TEXT_MESSAGE_END` | Thinking | Agent → UI | End of agent's thinking process |
-| `TOOL_CALL_START` | Tool | Agent → UI | Indicates an agent is about to execute a tool/action |
-| `TOOL_CALL_ARGS` | Tool | Agent → UI | Streams the arguments being passed to a tool |
-| `TOOL_CALL_END` | Tool | Agent → UI | Signals that tool execution has completed |
-| `TOOL_CALL_CHUNK` | Tool | Agent → UI | Chunked tool call data for streaming |
-| `TOOL_CALL_RESULT` | Tool | Agent → UI | Delivers the result of tool execution |
-| `THINKING_START` | Thinking | Agent → UI | Agent starts thinking/reasoning process |
-| `THINKING_END` | Thinking | Agent → UI | Agent completes thinking/reasoning process |
-| `STATE_SNAPSHOT` | State | Agent → UI | Complete snapshot of agent state |
-| `STATE_DELTA` | State | Agent → UI | Incremental updates to agent state (JSON Patch) |
-| `MESSAGES_SNAPSHOT` | State | Agent → UI | Complete snapshot of conversation messages |
-| `RAW` | System | Bidirectional | Raw event passthrough for external systems |
-| `CUSTOM` | System | Bidirectional | Custom application-specific events |
-| `RUN_STARTED` | Lifecycle | Agent → UI | Agent run/session has begun |
-| `RUN_FINISHED` | Lifecycle | Agent → UI | Agent run/session has completed successfully |
-| `RUN_ERROR` | Lifecycle | Agent → UI | Agent run/session has encountered an error |
-| `STEP_STARTED` | Workflow | Agent → UI | A workflow step has started execution |
-| `STEP_FINISHED` | Workflow | Agent → UI | A workflow step has completed execution |
+| Event Type                      | Category  | Direction     | Description                                            |
+| ------------------------------- | --------- | ------------- | ------------------------------------------------------ |
+| `TEXT_MESSAGE_START`            | Message   | Agent → UI    | Signals the beginning of a text message from the agent |
+| `TEXT_MESSAGE_CONTENT`          | Message   | Agent → UI    | Streams partial text content as the agent generates it |
+| `TEXT_MESSAGE_END`              | Message   | Agent → UI    | Marks the completion of a text message                 |
+| `TEXT_MESSAGE_CHUNK`            | Message   | Agent → UI    | Chunked text message content for streaming             |
+| `THINKING_TEXT_MESSAGE_START`   | Thinking  | Agent → UI    | Start of agent's thinking process text                 |
+| `THINKING_TEXT_MESSAGE_CONTENT` | Thinking  | Agent → UI    | Content of agent's thinking process                    |
+| `THINKING_TEXT_MESSAGE_END`     | Thinking  | Agent → UI    | End of agent's thinking process                        |
+| `TOOL_CALL_START`               | Tool      | Agent → UI    | Indicates an agent is about to execute a tool/action   |
+| `TOOL_CALL_ARGS`                | Tool      | Agent → UI    | Streams the arguments being passed to a tool           |
+| `TOOL_CALL_END`                 | Tool      | Agent → UI    | Signals that tool execution has completed              |
+| `TOOL_CALL_CHUNK`               | Tool      | Agent → UI    | Chunked tool call data for streaming                   |
+| `TOOL_CALL_RESULT`              | Tool      | Agent → UI    | Delivers the result of tool execution                  |
+| `THINKING_START`                | Thinking  | Agent → UI    | Agent starts thinking/reasoning process                |
+| `THINKING_END`                  | Thinking  | Agent → UI    | Agent completes thinking/reasoning process             |
+| `STATE_SNAPSHOT`                | State     | Agent → UI    | Complete snapshot of agent state                       |
+| `STATE_DELTA`                   | State     | Agent → UI    | Incremental updates to agent state (JSON Patch)        |
+| `MESSAGES_SNAPSHOT`             | State     | Agent → UI    | Complete snapshot of conversation messages             |
+| `RAW`                           | System    | Bidirectional | Raw event passthrough for external systems             |
+| `CUSTOM`                        | System    | Bidirectional | Custom application-specific events                     |
+| `RUN_STARTED`                   | Lifecycle | Agent → UI    | Agent run/session has begun                            |
+| `RUN_FINISHED`                  | Lifecycle | Agent → UI    | Agent run/session has completed successfully           |
+| `RUN_ERROR`                     | Lifecycle | Agent → UI    | Agent run/session has encountered an error             |
+| `STEP_STARTED`                  | Workflow  | Agent → UI    | A workflow step has started execution                  |
+| `STEP_FINISHED`                 | Workflow  | Agent → UI    | A workflow step has completed execution                |
 
 **🎯 Event Categories:**
 
-- **Message Events** (4) → Text streaming and conversation flow  
+- **Message Events** (4) → Text streaming and conversation flow
 - **Thinking Events** (5) → Agent reasoning and internal processes
 - **Tool Events** (5) → Function calls and agent actions
 - **Lifecycle Events** (3) → Run management and completion status
@@ -577,19 +590,19 @@ flowchart TB
         A[🤖 AI Agent<br/>LangGraph/CrewAI]
         B[🌐 Frontend App<br/>CopilotKit/Custom]
     end
-    
+
     subgraph "AG-UI Protocol Layer"
         C[⚙️ Event Processing<br/>~16 Event Types]
         D[🔄 Middleware Layer<br/>Format Translation]
     end
-    
+
     subgraph "Transport Options"
         E[📡 SSE<br/>Server-Sent Events<br/>✅ Primary]
         F[🔄 WebSockets<br/>Bidirectional<br/>✅ Real-time]
         G[🌐 HTTP<br/>Request-Response<br/>✅ Simple]
         H[🔗 Webhooks<br/>Server-to-Server<br/>✅ Async]
     end
-    
+
     A --> C
     C --> D
     D --> E
@@ -600,7 +613,7 @@ flowchart TB
     F --> B
     G --> B
     H --> B
-    
+
     style C fill:#E8F6F3,stroke:#1B5E4F
     style D fill:#E8F4FD,stroke:#2C5AA0
     style A fill:#FFF2CC,stroke:#B7950B
@@ -614,7 +627,7 @@ flowchart TB
 **🎯 Transport Selection Guide:**
 
 - **Server-Sent Events (SSE)** → Primary choice for streaming, simple and reliable
-- **WebSockets** → Best for bidirectional, low-latency real-time communication  
+- **WebSockets** → Best for bidirectional, low-latency real-time communication
 - **HTTP** → Traditional request-response for simple interactions
 - **Webhooks** → Server-to-server event delivery for async workflows
 
@@ -629,6 +642,7 @@ A complete step-by-step tutorial for creating an intelligent todo application th
 ## 🎯 What You'll Build
 
 By the end of this tutorial, you'll have:
+
 - A modern todo application with a beautiful UI
 - AI assistant that can add, remove, and manage todos through natural conversation
 - Persistent storage using localStorage
@@ -678,12 +692,16 @@ OPENAI_MODEL=gpt-4o-mini
 Create `src/app/api/copilotkit/route.ts`:
 
 ```typescript
-import { CopilotRuntime, OpenAIAdapter, copilotRuntimeNextJSAppRouterEndpoint } from '@copilotkit/runtime';
-import { NextRequest } from 'next/server';
+import {
+  CopilotRuntime,
+  OpenAIAdapter,
+  copilotRuntimeNextJSAppRouterEndpoint,
+} from "@copilotkit/runtime";
+import { NextRequest } from "next/server";
 
 // Create OpenAI adapter - supports tool calling
 const serviceAdapter = new OpenAIAdapter({
-  model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+  model: process.env.OPENAI_MODEL || "gpt-4o-mini",
 });
 
 // Create the CopilotRuntime
@@ -708,21 +726,17 @@ export const POST = async (req: NextRequest) => {
 Create `src/components/CopilotProvider.tsx`:
 
 ```typescript
-'use client';
+"use client";
 
-import { CopilotKit } from '@copilotkit/react-core';
-import '@copilotkit/react-ui/styles.css';
+import { CopilotKit } from "@copilotkit/react-core";
+import "@copilotkit/react-ui/styles.css";
 
 interface CopilotProviderProps {
   children: React.ReactNode;
 }
 
 export function CopilotProvider({ children }: CopilotProviderProps) {
-  return (
-    <CopilotKit runtimeUrl="/api/copilotkit">
-      {children}
-    </CopilotKit>
-  );
+  return <CopilotKit runtimeUrl="/api/copilotkit">{children}</CopilotKit>;
 }
 ```
 
@@ -762,9 +776,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <CopilotProvider>
-          {children}
-        </CopilotProvider>
+        <CopilotProvider>{children}</CopilotProvider>
       </body>
     </html>
   );
@@ -778,7 +790,7 @@ export default function RootLayout({
 Replace the content of `src/app/page.tsx`:
 
 ```typescript
-'use client';
+"use client";
 
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 import { CopilotPopup } from "@copilotkit/react-ui";
@@ -787,8 +799,8 @@ import { useState, useRef, useEffect } from "react";
 export default function Home() {
   // Initialize state with localStorage data
   const [todoList, setTodoList] = useState<string[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('ag-ui-todos');
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("ag-ui-todos");
       return saved ? JSON.parse(saved) : [];
     }
     return [];
@@ -799,15 +811,18 @@ export default function Home() {
   useEffect(() => {
     todoListRef.current = todoList;
     // Persist to localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ag-ui-todos', JSON.stringify(todoList));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ag-ui-todos", JSON.stringify(todoList));
     }
   }, [todoList]);
 
   // Make the todo list readable by the AI
   useCopilotReadable({
     description: "The current todo list with all todo items",
-    value: todoList.length === 0 ? "No todos currently in the list" : `Current todos: ${todoList.join(", ")}`,
+    value:
+      todoList.length === 0
+        ? "No todos currently in the list"
+        : `Current todos: ${todoList.join(", ")}`,
   });
 
   // Allow AI to add todos
@@ -825,7 +840,7 @@ export default function Home() {
     handler: async ({ todo }) => {
       console.log("🚀 ADD_TODO HANDLER CALLED with:", todo);
       console.log("🚀 Current todoList from ref:", todoListRef.current);
-      setTodoList(prevList => {
+      setTodoList((prevList) => {
         console.log("🚀 Previous state in setter:", prevList);
         const newList = [...prevList, todo];
         console.log("🚀 New state will be:", newList);
@@ -836,14 +851,14 @@ export default function Home() {
 
   // Allow AI to clear todos
   useCopilotAction({
-    name: "clear_todos", 
+    name: "clear_todos",
     description: "Clear all todo items from the list",
     handler: async () => {
       console.log("🧹 CLEAR_TODOS HANDLER CALLED");
       setTodoList([]);
       // Also clear from localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('ag-ui-todos');
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("ag-ui-todos");
       }
     },
   });
@@ -857,31 +872,38 @@ export default function Home() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold mb-4">Todo List</h2>
           <div className="mb-4 flex gap-2">
-            <button 
-              onClick={() => setTodoList(prev => [...prev, "Test todo"])}
+            <button
+              onClick={() => setTodoList((prev) => [...prev, "Test todo"])}
               className="px-3 py-1 bg-blue-500 text-white rounded text-xs"
             >
               Add Test Todo
             </button>
-            <button 
+            <button
               onClick={() => {
                 setTodoList([]);
-                if (typeof window !== 'undefined') {
-                  localStorage.removeItem('ag-ui-todos');
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem("ag-ui-todos");
                 }
               }}
               className="px-3 py-1 bg-red-500 text-white rounded text-xs"
             >
               Clear All
             </button>
-            <span className="text-xs text-gray-500">Current count: {todoList.length}</span>
+            <span className="text-xs text-gray-500">
+              Current count: {todoList.length}
+            </span>
           </div>
           {todoList.length === 0 ? (
-            <div className="text-gray-500 italic">No todos yet. Ask the AI assistant to add some!</div>
+            <div className="text-gray-500 italic">
+              No todos yet. Ask the AI assistant to add some!
+            </div>
           ) : (
             <ul className="space-y-2">
               {todoList.map((todo, index) => (
-                <li key={index} className="flex items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                <li
+                  key={index}
+                  className="flex items-center p-2 bg-gray-50 dark:bg-gray-700 rounded"
+                >
                   <span className="ml-2">{todo}</span>
                 </li>
               ))}
@@ -890,7 +912,9 @@ export default function Home() {
         </div>
 
         <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-3">Try asking the AI assistant:</h3>
+          <h3 className="text-xl font-semibold mb-3">
+            Try asking the AI assistant:
+          </h3>
           <ul className="space-y-2 text-sm">
             <li>• "Add some todos for a software project"</li>
             <li>• "Create a shopping list"</li>
@@ -898,16 +922,18 @@ export default function Home() {
             <li>• "What's on my todo list?"</li>
           </ul>
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            💡 Click the chat icon in the bottom right to interact with the AI assistant powered by OpenAI
+            💡 Click the chat icon in the bottom right to interact with the AI
+            assistant powered by OpenAI
           </div>
         </div>
       </main>
-      
+
       <CopilotPopup
         instructions="You are a helpful AI assistant that can help users manage their todo list. You can add new todos using the add_todo action, clear the entire list using clear_todos action, and read the current todos. IMPORTANT: Always use the provided actions to modify the todo list."
         labels={{
           title: "AI Todo Assistant",
-          initial: "Hi! I can help you manage your todos. Try saying 'add buy groceries to my list' or 'what's on my todo list?'",
+          initial:
+            "Hi! I can help you manage your todos. Try saying 'add buy groceries to my list' or 'what's on my todo list?'",
         }}
       />
     </div>
@@ -924,7 +950,10 @@ This hook makes data accessible to the AI:
 ```typescript
 useCopilotReadable({
   description: "The current todo list with all todo items",
-  value: todoList.length === 0 ? "No todos currently in the list" : `Current todos: ${todoList.join(", ")}`,
+  value:
+    todoList.length === 0
+      ? "No todos currently in the list"
+      : `Current todos: ${todoList.join(", ")}`,
 });
 ```
 
@@ -947,7 +976,7 @@ useCopilotAction({
     },
   ],
   handler: async ({ todo }) => {
-    setTodoList(prevList => [...prevList, todo]);
+    setTodoList((prevList) => [...prevList, todo]);
   },
 });
 ```
@@ -1001,13 +1030,15 @@ useCopilotAction({
   parameters: [
     {
       name: "todoIndex",
-      type: "number", 
+      type: "number",
       description: "The index of the todo item to remove (0-based)",
       required: true,
     },
   ],
   handler: async ({ todoIndex }) => {
-    setTodoList(prevList => prevList.filter((_, index) => index !== todoIndex));
+    setTodoList((prevList) =>
+      prevList.filter((_, index) => index !== todoIndex)
+    );
   },
 });
 ```
@@ -1020,7 +1051,7 @@ Extend your todo items to include priorities:
 interface TodoItem {
   id: string;
   text: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   completed: boolean;
 }
 ```
@@ -1111,6 +1142,7 @@ You've built a fully functional AI-powered todo application! The AI can now:
 ### Understanding the Architecture
 
 **🏗️ AG-UI Application Structure:**
+
 ```
 my-ai-assistant/
 ├── src/
@@ -1135,7 +1167,7 @@ import { BarChart, LineChart, PieChart } from "recharts";
 
 interface ChartData {
   id: string;
-  type: 'bar' | 'line' | 'pie';
+  type: "bar" | "line" | "pie";
   data: Array<{ name: string; value: number; [key: string]: any }>;
   title: string;
   config: {
@@ -1152,14 +1184,14 @@ export const DataVisualizationAgent = () => {
   // Simulate live data updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setLiveData(prev => [
+      setLiveData((prev) => [
         ...prev.slice(-50), // Keep last 50 data points
         {
           timestamp: new Date().toISOString(),
           sales: Math.floor(Math.random() * 1000) + 500,
           users: Math.floor(Math.random() * 200) + 100,
           revenue: Math.floor(Math.random() * 5000) + 2000,
-        }
+        },
       ]);
     }, 2000);
 
@@ -1168,14 +1200,19 @@ export const DataVisualizationAgent = () => {
 
   // Make live data available to agent
   useCopilotReadable({
-    description: "Live business metrics data including sales, users, and revenue",
-    value: { currentData: liveData.slice(-10), totalDataPoints: liveData.length },
+    description:
+      "Live business metrics data including sales, users, and revenue",
+    value: {
+      currentData: liveData.slice(-10),
+      totalDataPoints: liveData.length,
+    },
   });
 
   // Action to create charts from data
   useCopilotAction({
     name: "create_data_visualization",
-    description: "Create an interactive chart from the live data or provided dataset",
+    description:
+      "Create an interactive chart from the live data or provided dataset",
     parameters: [
       {
         name: "chartType",
@@ -1185,7 +1222,7 @@ export const DataVisualizationAgent = () => {
       },
       {
         name: "title",
-        type: "string", 
+        type: "string",
         description: "Title for the chart",
         required: true,
       },
@@ -1196,7 +1233,7 @@ export const DataVisualizationAgent = () => {
         required: true,
       },
       {
-        name: "yAxisKey", 
+        name: "yAxisKey",
         type: "string",
         description: "Key for Y-axis data (e.g., 'sales', 'users', 'revenue')",
         required: true,
@@ -1204,24 +1241,31 @@ export const DataVisualizationAgent = () => {
       {
         name: "dataSource",
         type: "string",
-        description: "Data source: 'live' for live data or 'custom' for provided data",
+        description:
+          "Data source: 'live' for live data or 'custom' for provided data",
         required: false,
       },
     ],
-    handler: async ({ chartType, title, xAxisKey, yAxisKey, dataSource = 'live' }) => {
+    handler: async ({
+      chartType,
+      title,
+      xAxisKey,
+      yAxisKey,
+      dataSource = "live",
+    }) => {
       const chartData: ChartData = {
         id: `chart-${Date.now()}`,
-        type: chartType as 'bar' | 'line' | 'pie',
+        type: chartType as "bar" | "line" | "pie",
         title,
-        data: dataSource === 'live' ? liveData.slice(-20) : [],
+        data: dataSource === "live" ? liveData.slice(-20) : [],
         config: {
           xAxisKey,
           yAxisKey,
-          colorScheme: ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c'],
+          colorScheme: ["#8884d8", "#82ca9d", "#ffc658", "#ff7c7c"],
         },
       };
 
-      setCharts(prev => [...prev, chartData]);
+      setCharts((prev) => [...prev, chartData]);
       return `Created ${chartType} chart "${title}" with ${chartData.data.length} data points`;
     },
   });
@@ -1250,17 +1294,25 @@ export const DataVisualizationAgent = () => {
       }
 
       const recentData = liveData.slice(-timeframe);
-      const values = recentData.map(d => d[metric]).filter(v => typeof v === 'number');
-      
+      const values = recentData
+        .map((d) => d[metric])
+        .filter((v) => typeof v === "number");
+
       if (values.length === 0) {
         return `No valid data found for metric: ${metric}`;
       }
 
       const average = values.reduce((a, b) => a + b, 0) / values.length;
-      const trend = values[values.length - 1] > values[0] ? 'increasing' : 'decreasing';
-      const change = ((values[values.length - 1] - values[0]) / values[0] * 100).toFixed(2);
+      const trend =
+        values[values.length - 1] > values[0] ? "increasing" : "decreasing";
+      const change = (
+        ((values[values.length - 1] - values[0]) / values[0]) *
+        100
+      ).toFixed(2);
 
-      return `Analysis for ${metric}: Average: ${average.toFixed(2)}, Trend: ${trend}, Change: ${change}%`;
+      return `Analysis for ${metric}: Average: ${average.toFixed(
+        2
+      )}, Trend: ${trend}, Change: ${change}%`;
     },
   });
 
@@ -1272,11 +1324,11 @@ export const DataVisualizationAgent = () => {
     };
 
     switch (chart.type) {
-      case 'bar':
+      case "bar":
         return <BarChart {...commonProps} />;
-      case 'line':
+      case "line":
         return <LineChart {...commonProps} />;
-      case 'pie':
+      case "pie":
         return <PieChart {...commonProps} />;
       default:
         return <div>Unsupported chart type</div>;
@@ -1286,7 +1338,7 @@ export const DataVisualizationAgent = () => {
   return (
     <div className="data-visualization-agent">
       <h3>Data Visualization Agent</h3>
-      
+
       <div className="live-metrics">
         <h4>Live Metrics ({liveData.length} data points)</h4>
         {liveData.slice(-1).map((data, index) => (
@@ -1299,11 +1351,15 @@ export const DataVisualizationAgent = () => {
       </div>
 
       <div className="charts-grid">
-        {charts.map(chart => (
+        {charts.map((chart) => (
           <div key={chart.id} className="chart-container">
             <h4>{chart.title}</h4>
             {renderChart(chart)}
-            <button onClick={() => setCharts(prev => prev.filter(c => c.id !== chart.id))}>
+            <button
+              onClick={() =>
+                setCharts((prev) => prev.filter((c) => c.id !== chart.id))
+              }
+            >
               Remove Chart
             </button>
           </div>
@@ -1319,6 +1375,7 @@ export const DataVisualizationAgent = () => {
 ```
 
 **🎯 Test it:** Try prompts like:
+
 - "Create a line chart showing sales trends over time"
 - "Analyze the revenue trends in the last 15 data points"
 - "Make a bar chart comparing all three metrics"
@@ -1329,32 +1386,32 @@ export const DataVisualizationAgent = () => {
 
 ```typescript
 export const collaborativeAgent = new AgentBuilder()
-  .withName('Collaborative Assistant')
+  .withName("Collaborative Assistant")
   .withTools([
     {
-      name: 'request_approval',
-      description: 'Request human approval for actions',
+      name: "request_approval",
+      description: "Request human approval for actions",
       parameters: {
-        type: 'object',
+        type: "object",
         properties: {
-          action: { type: 'string' },
-          reason: { type: 'string' },
-          options: { type: 'array', items: { type: 'string' } }
-        }
+          action: { type: "string" },
+          reason: { type: "string" },
+          options: { type: "array", items: { type: "string" } },
+        },
       },
       handler: async (params) => ({
-        type: 'ui_component',
+        type: "ui_component",
         component: {
-          type: 'approval_request',
+          type: "approval_request",
           props: {
             message: `I'd like to ${params.action}. ${params.reason}`,
             options: params.options,
-            onApprove: 'execute_action',
-            onReject: 'suggest_alternatives'
-          }
-        }
-      })
-    }
+            onApprove: "execute_action",
+            onReject: "suggest_alternatives",
+          },
+        },
+      }),
+    },
   ])
   .build();
 ```
@@ -1365,11 +1422,11 @@ export const collaborativeAgent = new AgentBuilder()
 
 ```typescript
 // src/components/CustomChart.tsx
-import { AgentUIComponent } from '@ag-ui/react';
+import { AgentUIComponent } from "@ag-ui/react";
 
 interface ChartProps {
   data: Array<{ name: string; value: number }>;
-  type: 'bar' | 'line' | 'pie';
+  type: "bar" | "line" | "pie";
 }
 
 export const CustomChart: AgentUIComponent<ChartProps> = (props) => {
@@ -1383,7 +1440,7 @@ export const CustomChart: AgentUIComponent<ChartProps> = (props) => {
 };
 
 // Register the component
-AgentUI.registerComponent('custom_chart', CustomChart);
+AgentUI.registerComponent("custom_chart", CustomChart);
 ```
 
 ### State Management Patterns
@@ -1391,26 +1448,23 @@ AgentUI.registerComponent('custom_chart', CustomChart);
 **🔄 Advanced State Synchronization:**
 
 ```typescript
-import { useAgentState } from '@ag-ui/react';
+import { useAgentState } from "@ag-ui/react";
 
 export const ProjectDashboard = () => {
-  const [projectState, updateProjectState] = useAgentState('project');
-  
+  const [projectState, updateProjectState] = useAgentState("project");
+
   // State automatically syncs with agent
   const handleTaskUpdate = (taskId: string, updates: Partial<Task>) => {
     updateProjectState({
-      type: 'UPDATE_TASK',
-      payload: { taskId, updates }
+      type: "UPDATE_TASK",
+      payload: { taskId, updates },
     });
   };
-  
+
   return (
     <div>
       <h2>{projectState.name}</h2>
-      <TaskList 
-        tasks={projectState.tasks} 
-        onUpdate={handleTaskUpdate}
-      />
+      <TaskList tasks={projectState.tasks} onUpdate={handleTaskUpdate} />
     </div>
   );
 };
@@ -1425,12 +1479,14 @@ export const ProjectDashboard = () => {
 **🎯 Build a Customer Support System**
 
 Create a system with multiple specialized agents:
+
 - **Triage Agent** → Categorizes incoming requests
 - **Technical Agent** → Handles technical issues
 - **Billing Agent** → Manages billing inquiries
 - **Escalation Agent** → Handles complex cases
 
 **🔍 Hints:**
+
 - Use agent delegation patterns
 - Implement handoff protocols
 - Create specialized UI components for each agent type
@@ -1440,20 +1496,22 @@ Create a system with multiple specialized agents:
 **🎯 Build a Live Data Dashboard**
 
 Create an agent that:
+
 - Connects to real-time data sources
 - Generates interactive charts and graphs
 - Provides natural language insights
 - Allows users to drill down into data
 
 **🔍 Starter Code:**
+
 ```typescript
 export const analyticsAgent = new AgentBuilder()
-  .withName('Analytics Assistant')
+  .withName("Analytics Assistant")
   .withTools([
-    'connect_to_database',
-    'generate_chart',
-    'provide_insights',
-    'create_drill_down'
+    "connect_to_database",
+    "generate_chart",
+    "provide_insights",
+    "create_drill_down",
   ])
   .build();
 ```
@@ -1463,6 +1521,7 @@ export const analyticsAgent = new AgentBuilder()
 **🎯 Build Dynamic Form Generation**
 
 Create an agent that:
+
 - Generates forms based on natural language descriptions
 - Validates input in real-time
 - Provides intelligent suggestions
@@ -1479,38 +1538,40 @@ Create an agent that:
 ### Authentication Patterns
 
 **🔒 OAuth 2.0 Integration:**
+
 ```typescript
-import { AgentBuilder, AuthProvider } from '@ag-ui/core';
+import { AgentBuilder, AuthProvider } from "@ag-ui/core";
 
 const authProvider = new AuthProvider({
-  type: 'oauth2',
+  type: "oauth2",
   clientId: process.env.OAUTH_CLIENT_ID,
   redirectUri: process.env.OAUTH_REDIRECT_URI,
-  scopes: ['read', 'write', 'admin']
+  scopes: ["read", "write", "admin"],
 });
 
 export const secureAgent = new AgentBuilder()
   .withAuth(authProvider)
-  .withSystemPrompt('You are a secure assistant with access to user data.')
+  .withSystemPrompt("You are a secure assistant with access to user data.")
   .build();
 ```
 
 ### Data Protection
 
 **🛡️ Input Sanitization:**
+
 ```typescript
-import { sanitizeInput, validateSchema } from '@ag-ui/security';
+import { sanitizeInput, validateSchema } from "@ag-ui/security";
 
 const safeToolHandler = async (params: any) => {
   // Sanitize all inputs
   const sanitized = sanitizeInput(params);
-  
+
   // Validate against schema
   const isValid = validateSchema(sanitized, parameterSchema);
   if (!isValid) {
-    throw new Error('Invalid parameters');
+    throw new Error("Invalid parameters");
   }
-  
+
   // Proceed with safe execution
   return handleTool(sanitized);
 };
@@ -1521,13 +1582,14 @@ const safeToolHandler = async (params: any) => {
 ### Streaming Optimization
 
 **⚡ Efficient Event Streaming:**
+
 ```typescript
 export const optimizedAgent = new AgentBuilder()
   .withStreamingConfig({
-    batchSize: 10,           // Batch events for efficiency
-    flushInterval: 100,      // Flush every 100ms
-    compression: 'gzip',     // Compress event streams
-    maxConcurrent: 5         // Limit concurrent streams
+    batchSize: 10, // Batch events for efficiency
+    flushInterval: 100, // Flush every 100ms
+    compression: "gzip", // Compress event streams
+    maxConcurrent: 5, // Limit concurrent streams
   })
   .build();
 ```
@@ -1535,18 +1597,19 @@ export const optimizedAgent = new AgentBuilder()
 ### Caching Strategies
 
 **💾 Intelligent Caching:**
+
 ```typescript
-import { CacheProvider } from '@ag-ui/cache';
+import { CacheProvider } from "@ag-ui/cache";
 
 const cache = new CacheProvider({
-  type: 'redis',
-  ttl: 3600,  // 1 hour
-  keyPrefix: 'agui:agent:'
+  type: "redis",
+  ttl: 3600, // 1 hour
+  keyPrefix: "agui:agent:",
 });
 
 export const cachedAgent = new AgentBuilder()
   .withCache(cache)
-  .withCacheStrategy('smart')  // Cache based on content similarity
+  .withCacheStrategy("smart") // Cache based on content similarity
   .build();
 ```
 
@@ -1555,30 +1618,32 @@ export const cachedAgent = new AgentBuilder()
 ### Agent Delegation
 
 **🤝 Coordinated Multi-Agent Systems:**
+
 ```typescript
 export const orchestratorAgent = new AgentBuilder()
-  .withName('Orchestrator')
+  .withName("Orchestrator")
   .withAgents([
-    { name: 'researcher', agent: researchAgent },
-    { name: 'analyst', agent: analysisAgent },
-    { name: 'writer', agent: writingAgent }
+    { name: "researcher", agent: researchAgent },
+    { name: "analyst", agent: analysisAgent },
+    { name: "writer", agent: writingAgent },
   ])
-  .withOrchestrationStrategy('pipeline')
+  .withOrchestrationStrategy("pipeline")
   .build();
 ```
 
 ### Workflow Management
 
 **📋 Complex Workflow Patterns:**
+
 ```typescript
 const workflowConfig = {
   steps: [
-    { agent: 'researcher', output: 'research_data' },
-    { agent: 'analyst', input: 'research_data', output: 'insights' },
-    { agent: 'writer', input: 'insights', output: 'final_report' }
+    { agent: "researcher", output: "research_data" },
+    { agent: "analyst", input: "research_data", output: "insights" },
+    { agent: "writer", input: "insights", output: "final_report" },
   ],
-  errorHandling: 'retry',
-  maxRetries: 3
+  errorHandling: "retry",
+  maxRetries: 3,
 };
 ```
 
@@ -1591,6 +1656,7 @@ const workflowConfig = {
 ### Common Issues and Solutions
 
 **❌ Agent not responding:**
+
 ```bash
 # Check agent health
 curl http://localhost:3000/api/health
@@ -1603,35 +1669,39 @@ npm run logs
 ```
 
 **❌ UI components not rendering:**
+
 ```typescript
 // Verify component registration
-import { AgentUI } from '@ag-ui/react';
+import { AgentUI } from "@ag-ui/react";
 console.log(AgentUI.getRegisteredComponents());
 
 // Check component props
-const isValidProps = AgentUI.validateProps('todo_list', props);
+const isValidProps = AgentUI.validateProps("todo_list", props);
 ```
 
 **❌ WebSocket connection issues:**
+
 ```typescript
 // Use fallback transport
 const config = {
   transport: {
-    primary: 'websocket',
-    fallback: 'sse'
-  }
+    primary: "websocket",
+    fallback: "sse",
+  },
 };
 ```
 
 ### Performance Troubleshooting
 
 **🐌 Slow agent responses:**
+
 - Check model response times
 - Optimize tool implementations
 - Use streaming for long operations
 - Implement caching for repeated queries
 
 **🐌 UI performance issues:**
+
 - Implement virtual scrolling for large datasets
 - Use React.memo for expensive components
 - Optimize event handling
@@ -1642,6 +1712,7 @@ const config = {
 ### [LangGraph](https://langchain-ai.github.io/langgraph/) Integration (CoAgents)
 
 **🔗 Resources:**
+
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [CopilotKit CoAgents Guide](https://docs.copilotkit.ai/coagents)
 - [LangGraph + CopilotKit Examples](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
@@ -1653,10 +1724,10 @@ import { useCoAgent } from "@copilotkit/react-core";
 export const LangGraphExample = () => {
   const { agentState } = useCoAgent({
     name: "travel_planner",
-    initialState: { 
+    initialState: {
       destination: "",
       budget: 0,
-      preferences: []
+      preferences: [],
     },
   });
 
@@ -1673,6 +1744,7 @@ export const LangGraphExample = () => {
 ### [CrewAI](https://github.com/crewAIInc/crewAI) Integration
 
 **🔗 Resources:**
+
 - [CrewAI Documentation](https://docs.crewai.com/)
 - [CrewAI Crews Guide](https://docs.copilotkit.ai/crewai-crews)
 - [CrewAI Flows Guide](https://docs.crewai.com/concepts/flows)
@@ -1687,7 +1759,7 @@ export const CrewAIExample = () => {
     name: "research_and_write",
     description: "Research topic and write article using CrewAI",
     parameters: [
-      { name: "topic", type: "string", description: "Research topic" }
+      { name: "topic", type: "string", description: "Research topic" },
     ],
     handler: async ({ topic }) => {
       // Triggers CrewAI workflow through AG-UI events
@@ -1699,9 +1771,10 @@ export const CrewAIExample = () => {
 };
 ```
 
-### [Mastra](https://mastra.ai/) Integration  
+### [Mastra](https://mastra.ai/) Integration
 
 **🔗 Resources:**
+
 - [Mastra Documentation](https://docs.mastra.ai/)
 - [AG-UI Integration Guide](https://docs.ag-ui.com/mastra)
 - [GitHub Repository](https://github.com/mastra-ai/mastra)
@@ -1713,14 +1786,14 @@ import { Observable } from "rxjs";
 // Mastra TypeScript agent with AG-UI protocol
 export class MastraAgent extends AbstractAgent {
   protected run(input: RunAgentInput): Observable<BaseEvent> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       // Emit AG-UI events from Mastra workflow
       observer.next({
         type: "RUN_STARTED",
         threadId: input.threadId,
         runId: input.runId,
       });
-      
+
       // Process with Mastra and stream results
       // ...
     });
@@ -1731,6 +1804,7 @@ export class MastraAgent extends AbstractAgent {
 ### [AG2](https://ag2ai.github.io/ag2/) Integration
 
 **🔗 Resources:**
+
 - [AG2 Documentation](https://ag2ai.github.io/ag2/docs/Getting-Started)
 - [GitHub Repository](https://github.com/ag2ai/ag2)
 - [AG-UI Integration](https://docs.ag-ui.com/ag2)
@@ -1747,7 +1821,7 @@ export const AG2Example = () => {
   });
 
   const aguiAdapter = new AGUIAdapter(agent);
-  
+
   return aguiAdapter.createReactComponent();
 };
 ```
@@ -1755,6 +1829,7 @@ export const AG2Example = () => {
 ### [Agno](https://github.com/agno-oss/agno) Integration
 
 **🔗 Resources:**
+
 - [Agno Documentation](https://github.com/agno-oss/agno)
 - [GitHub Repository](https://github.com/agno-oss/agno)
 - [Examples](https://github.com/agno-oss/agno/tree/main/examples)
@@ -1768,8 +1843,8 @@ export const AgnoExample = () => {
     agents: [
       { name: "planner", role: "planning" },
       { name: "executor", role: "execution" },
-      { name: "reviewer", role: "review" }
-    ]
+      { name: "reviewer", role: "review" },
+    ],
   });
 
   return workflow.createAGUIInterface();
@@ -1779,6 +1854,7 @@ export const AgnoExample = () => {
 ### [LlamaIndex](https://www.llamaindex.ai/) Integration
 
 **🔗 Resources:**
+
 - [LlamaIndex Documentation](https://docs.llamaindex.ai/)
 - [GitHub Repository](https://github.com/run-llama/llama_index)
 - [AG-UI RAG Examples](https://docs.ag-ui.com/llamaindex)
@@ -1793,7 +1869,7 @@ export const LlamaIndexExample = () => {
     name: "search_knowledge_base",
     description: "Search the knowledge base using LlamaIndex",
     parameters: [
-      { name: "query", type: "string", description: "Search query" }
+      { name: "query", type: "string", description: "Search query" },
     ],
     handler: async ({ query }) => {
       const index = await VectorStoreIndex.fromDocuments(documents);
@@ -1846,13 +1922,13 @@ export const LlamaIndexExample = () => {
 
 ```typescript
 class AgentBuilder {
-  withName(name: string): AgentBuilder
-  withDescription(description: string): AgentBuilder
-  withSystemPrompt(prompt: string): AgentBuilder
-  withTools(tools: Tool[]): AgentBuilder
-  withAuth(auth: AuthProvider): AgentBuilder
-  withConfig(config: AgentConfig): AgentBuilder
-  build(): Agent
+  withName(name: string): AgentBuilder;
+  withDescription(description: string): AgentBuilder;
+  withSystemPrompt(prompt: string): AgentBuilder;
+  withTools(tools: Tool[]): AgentBuilder;
+  withAuth(auth: AuthProvider): AgentBuilder;
+  withConfig(config: AgentConfig): AgentBuilder;
+  build(): Agent;
 }
 ```
 
@@ -1860,39 +1936,46 @@ class AgentBuilder {
 
 ```typescript
 interface AgentUIComponent<T = any> {
-  (props: T): JSX.Element
-  displayName?: string
-  propTypes?: Record<string, any>
+  (props: T): JSX.Element;
+  displayName?: string;
+  propTypes?: Record<string, any>;
 }
 
 // Built-in components
-'chat' | 'form' | 'table' | 'chart' | 'kanban' | 'timeline' | 'approval_request' | 'todo_list'
+"chat" |
+  "form" |
+  "table" |
+  "chart" |
+  "kanban" |
+  "timeline" |
+  "approval_request" |
+  "todo_list";
 ```
 
 ### Event Types
 
 ```typescript
 interface MessageEvent {
-  type: 'message'
-  content: string
-  role: 'user' | 'agent'
-  timestamp: number
-  metadata?: Record<string, any>
+  type: "message";
+  content: string;
+  role: "user" | "agent";
+  timestamp: number;
+  metadata?: Record<string, any>;
 }
 
 interface UIEvent {
-  type: 'ui_component'
+  type: "ui_component";
   component: {
-    type: string
-    props: Record<string, any>
-    actions?: Action[]
-  }
+    type: string;
+    props: Record<string, any>;
+    actions?: Action[];
+  };
 }
 
 interface StateEvent {
-  type: 'state_update'
-  patch: JsonPatch[]
-  version: number
+  type: "state_update";
+  patch: JsonPatch[];
+  version: number;
 }
 ```
 
@@ -1903,18 +1986,21 @@ interface StateEvent {
 ### Advanced Learning Paths
 
 **🚀 Intermediate Developer (You are here!)**
+
 - [ ] Build multi-agent systems
 - [ ] Implement custom UI components
 - [ ] Add real-time collaboration features
 - [ ] Optimize for production deployment
 
 **🏆 Advanced Developer**
+
 - [ ] Contribute to AG-UI protocol development
 - [ ] Build framework integrations
 - [ ] Create enterprise-grade solutions
 - [ ] Mentor other developers
 
 **🌟 AG-UI Expert**
+
 - [ ] Speak at conferences about AG-UI
 - [ ] Write technical blog posts
 - [ ] Lead open-source contributions
@@ -1923,6 +2009,7 @@ interface StateEvent {
 ### Upcoming Features
 
 **🔮 AG-UI Roadmap:**
+
 - **Voice Interactions** → Natural speech integration
 - **Mobile SDKs** → Native iOS/Android support
 - **Visual Agent Builder** → Drag-and-drop agent creation
@@ -1932,6 +2019,7 @@ interface StateEvent {
 ### Join the Community
 
 **🤝 How to Contribute:**
+
 1. **Star the Repository** → [ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui)
 2. **Join Discord** → Share your projects and get help
 3. **Submit Issues** → Report bugs and suggest features
@@ -1939,6 +2027,7 @@ interface StateEvent {
 5. **Write Tutorials** → Help others learn AG-UI
 
 **📅 Community Events:**
+
 - **Monthly Meetups** → Virtual presentations and demos
 - **Hackathons** → Build cool projects with AG-UI
 - **Conferences** → AG-UI talks at major tech events
@@ -1957,6 +2046,7 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 - ✅ Deploy production-ready AG-UI applications
 
 **🚀 Your Next Steps:**
+
 1. Build your first real-world AG-UI project
 2. Share it with the community
 3. Contribute back to the ecosystem
@@ -1969,18 +2059,21 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 ## 📊 Tutorial Metrics
 
 **📈 Learning Outcomes Achieved:**
+
 - [ ] Understanding of AG-UI protocol fundamentals
 - [ ] Hands-on experience with multiple implementation patterns
 - [ ] Knowledge of production deployment strategies
 - [ ] Familiarity with the AG-UI ecosystem
 
 **⏱️ Time Investment:**
+
 - **Quick Start:** 25 minutes
 - **Deep Dive:** 90 minutes
 - **Explorer Mode:** 2-4 hours
 - **Total Mastery:** 6-8 hours
 
 **🎯 Success Metrics:**
+
 - Built a working AI agent interface
 - Implemented interactive UI components
 - Understanding of event-driven architecture
@@ -1988,7 +2081,7 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 
 ---
 
-*This tutorial is maintained by the AG-UI community and based on verified information from official sources including the [AG-UI Protocol Repository](https://github.com/ag-ui-protocol/ag-ui), [Official Documentation](https://docs.ag-ui.com), and [CopilotKit](https://github.com/CopilotKit/CopilotKit). Found an issue? [Report it here](https://github.com/ag-ui-protocol/ag-ui/issues) | Want to contribute? [See our contribution guide](https://docs.ag-ui.com/development/contributing)*
+_This tutorial is maintained by the AG-UI community and based on verified information from official sources including the [AG-UI Protocol Repository](https://github.com/ag-ui-protocol/ag-ui), [Official Documentation](https://docs.ag-ui.com), and [CopilotKit](https://github.com/CopilotKit/CopilotKit). Found an issue? [Report it here](https://github.com/ag-ui-protocol/ag-ui/issues) | Want to contribute? [See our contribution guide](https://docs.ag-ui.com/development/contributing)_
 
 **📅 Last Updated:** June 28, 2025 | **Version:** 1.0.0 | **Status:** Community Verified ⭐
 
@@ -2008,27 +2101,32 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 **🤖 Supported Frameworks & Official Links:**
 
 - **🧩 [LangGraph](https://langchain-ai.github.io/langgraph/)** → Multi-agent orchestration framework
+
   - [Documentation](https://langchain-ai.github.io/langgraph/tutorials/)
   - [CopilotKit CoAgents](https://docs.copilotkit.ai/coagents)
   - [Examples](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
 
 - **👥 [CrewAI](https://github.com/crewAIInc/crewAI)** → Collaborative AI agent teams
+
   - [CrewAI Documentation](https://docs.crewai.com/)
   - [CrewAI Crews Guide](https://docs.copilotkit.ai/crewai-crews)
   - [CrewAI Flows Guide](https://docs.crewai.com/concepts/flows)
   - [AG-UI Integration](https://docs.copilotkit.ai/crewai-crews)
 
 - **⚡ [Mastra](https://mastra.ai/)** → TypeScript-first agent framework
+
   - [Mastra Documentation](https://docs.mastra.ai/)
   - [AG-UI Integration Guide](https://docs.ag-ui.com/mastra)
   - [GitHub Repository](https://github.com/mastra-ai/mastra)
 
 - **🔄 [AG2](https://ag2ai.github.io/ag2/)** → Open-source AgentOS
+
   - [AG2 Documentation](https://ag2ai.github.io/ag2/docs/Getting-Started)
   - [GitHub Repository](https://github.com/ag2ai/ag2)
   - [AG-UI Integration](https://docs.ag-ui.com/ag2)
 
 - **🤖 [Agno](https://github.com/agno-oss/agno)** → Multi-agent system orchestration
+
   - [Agno Documentation](https://github.com/agno-oss/agno)
   - [GitHub Repository](https://github.com/agno-oss/agno)
   - [Examples](https://github.com/agno-oss/agno/tree/main/examples)
@@ -2051,6 +2149,7 @@ If you've made it this far, you understand the transformative potential of AI ag
 As the author of this comprehensive guide and an AI/ML architect currently driving large-scale AI adoption at **DECATHLON** through **Capgemini Invent/Quantmetry**, I help organizations transform their ideas into production-ready AI agent systems.
 
 **🏆 What makes this different:**
+
 - **Real-world experience** building enterprise AI agents at scale
 - **Deep technical expertise** across all major AI frameworks (LangGraph, CrewAI, Mastra, AG2)
 - **Strategic guidance** on AI architecture, not just implementation
@@ -2059,16 +2158,19 @@ As the author of this comprehensive guide and an AI/ML architect currently drivi
 ### 💼 **How I Can Help Your Organization**
 
 **🚀 AI Agent Strategy & Architecture**
+
 - Assess your current AI readiness and identify high-impact opportunities
 - Design scalable multi-agent systems for your specific use cases
 - Create technical roadmaps for AI adoption across your organization
 
 **🔧 Implementation & Development**
+
 - Build production-ready AI agents using AG-UI and modern frameworks
 - Implement secure, scalable agent orchestration systems
 - Integrate AI agents seamlessly into your existing tech stack
 
 **📈 Organizational AI Transformation**
+
 - Guide leadership through AI adoption strategies
 - Train your development teams on modern AI patterns
 - Establish best practices for AI governance and ethics
@@ -2086,13 +2188,12 @@ As the author of this comprehensive guide and an AI/ML architect currently drivi
 
 **📧 Contact:** [raphael.mansuy@elitizon.com](mailto:raphael.mansuy@elitizon.com)  
 **🌐 Website:** [https://www.elitizon.com](https://www.elitizon.com)  
-**💼 LinkedIn:** [Connect with Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)  
+**💼 LinkedIn:** [Connect with Raphaël Mansuy](https://www.linkedin.com/in/raphaelmansuy/)
 
 **🚀 Current Focus:** AI/ML initiatives with DECATHLON • Investor at [QuantaLogic](https://www.quantalogic.app/) & [Student Central AI](https://www.studentcentral.ai/)
 
-*From tutorial to transformation. Let's build the future of AI agents together.*
+_From tutorial to transformation. Let's build the future of AI agents together._
 
 ---
 
 **⭐ Found this tutorial valuable?** Star the repository, share it with your team, and follow for more cutting-edge AI development content!
-
