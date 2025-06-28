@@ -29,32 +29,55 @@ Based on the latest MTEB (Massive Text Embedding Benchmark) leaderboard and indu
 
 ```mermaid
 flowchart TD
-    A[Data Sources] --> B[Embedding Models]
-    B --> C[Vector Representations]
-    C --> D[Retrieval Systems]
-    
-    A1[Text Documents] --> A
-    A2[Images] --> A
-    A3[Audio/Speech] --> A
-    A4[Code] --> A
-    
-    B1[Dense Models<br/>BERT, OpenAI] --> B
-    B2[Sparse Models<br/>BM25, SPLADE] --> B
-    B3[Multimodal<br/>CLIP, ALIGN] --> B
-    
-    C1[384-3072 dimensions] --> C
-    C2[Semantic vectors] --> C
-    C3[Compressed formats] --> C
-    
-    D1[Semantic Search] --> D
-    D2[Recommendation] --> D
-    D3[Classification] --> D
-    D4[Clustering] --> D
-    
-    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
-    style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
-    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    %% Data Sources
+    subgraph "Data Sources"
+        A1[Text Documents]
+        A2[Images]
+        A3[Audio/Speech]
+        A4[Code]
+    end
+    %% Embedding Models
+    subgraph "Embedding Models"
+        B1[Dense Models\nBERT, OpenAI]
+        B2[Sparse Models\nBM25, SPLADE]
+        B3[Multimodal\nCLIP, ALIGN]
+    end
+    %% Vector Representations
+    subgraph "Vector Representations"
+        C1[384-3072 dimensions]
+        C2[Semantic vectors]
+        C3[Compressed formats]
+    end
+    %% Retrieval Systems
+    subgraph "Retrieval Systems"
+        D1[Semantic Search]
+        D2[Recommendation]
+        D3[Classification]
+        D4[Clustering]
+    end
+
+    %% Connections
+    A1 --> B1
+    A2 --> B3
+    A3 --> B3
+    A4 --> B1
+    B1 --> C2
+    B2 --> C1
+    B3 --> C3
+    C1 --> D1
+    C2 --> D2
+    C3 --> D3
+    C2 --> D4
+
+    %% Styles
+    classDef source fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000;
+    classDef model fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000;
+    classDef vector fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000;
+    classDef retrieval fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000;
+    class A1,A2,A3,A4 source;
+    class B1,B2,B3 model;
+    class C1,C2,C3 vector;
+    class D1,D2,D3,D4 retrieval;
 ```
 
 ## Why Embeddings Matter for Retrieval-Intensive Systems
@@ -161,39 +184,41 @@ Systems using multiple vectors per item for fine-grained representation.
 **Limitations**: High computational and storage costs
 
 ```mermaid
-graph TD
-    A[Embedding Types] --> B[Sparse]
-    A --> C[Dense]
-    A --> D[Quantized]
-    A --> E[Binary]
-    A --> F[Variable-Dimension]
-    A --> G[Multi-Vector]
-    
-    B --> B1[High dimensions<br/>Mostly zeros]
+flowchart LR
+    subgraph "Embedding Types"
+        B[Sparse]
+        C[Dense]
+        D[Quantized]
+        E[Binary]
+        F[Variable-Dimension]
+        G[Multi-Vector]
+    end
+    B --> B1[High dimensions\nMostly zeros]
     B --> B2[Fast exact matching]
-    
-    C --> C1[Compact size<br/>Rich semantics]
+    C --> C1[Compact size\nRich semantics]
     C --> C2[Best general purpose]
-    
-    D --> D1[Compressed dense<br/>Lower precision]
+    D --> D1[Compressed dense\nLower precision]
     D --> D2[Memory efficient]
-    
-    E --> E1[Ultra compact<br/>Binary values]
+    E --> E1[Ultra compact\nBinary values]
     E --> E2[Fastest operations]
-    
-    F --> F1[Flexible size<br/>Task adaptive]
+    F --> F1[Flexible size\nTask adaptive]
     F --> F2[Resource aware]
-    
-    G --> G1[Multiple vectors<br/>Per item]
+    G --> G1[Multiple vectors\nPer item]
     G --> G2[Highest accuracy]
-    
-    style A fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
-    style B fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
-    style C fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-    style D fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-    style E fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000
-    style F fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
-    style G fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#000
+
+    %% Styles
+    classDef sparse fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000;
+    classDef dense fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000;
+    classDef quant fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000;
+    classDef binary fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000;
+    classDef var fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000;
+    classDef multi fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#000;
+    class B,B1,B2 sparse;
+    class C,C1,C2 dense;
+    class D,D1,D2 quant;
+    class E,E1,E2 binary;
+    class F,F1,F2 var;
+    class G,G1,G2 multi;
 ```
 
 ## Understanding Vector Similarity
