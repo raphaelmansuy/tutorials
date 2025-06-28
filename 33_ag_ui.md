@@ -65,10 +65,10 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 **Choose your path:**
 
-- 🚀 [Quick Start](#quick-start) (25 min) - Get a working AI agent UI immediately
-- 🔍 [Deep Dive](#deep-dive) (90 min) - Understand the protocol and build comprehensively
-- 🎮 [Explorer Mode](#explorer-mode) - Interactive challenges and customizations
-- 📚 [Reference Guide](#reference-guide) - Quick access to code snippets and configurations
+- 🚀 [Quick Start](#building-an-ai-powered-todo-app-with-copilotkit-and-openai) (25 min) - Get a working AI agent UI immediately
+- 🔍 [Deep Dive](#-deep-dive) (90 min) - Understand the protocol and build comprehensively
+- 🎮 [Explorer Mode](#-explorer-mode) - Interactive challenges and customizations
+- 📚 [Reference Guide](#-api-reference) - Quick access to code snippets and configurations
 
 ---
 
@@ -76,38 +76,38 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 ### Part I: Foundation (WHY)
 
-- [🎪 The 30-Second Demo](#the-30-second-demo)
-- [🔥 The AI Frontend Integration Problem](#the-ai-frontend-integration-problem)
-- [🌟 How AG-UI Solves This](#how-ag-ui-solves-this)
-- [🏗️ Where AG-UI Fits in the Agentic Stack](#where-ag-ui-fits-in-the-agentic-stack)
+- [🎪 The 30-Second Demo](#-the-30-second-demo)
+- [🔥 The AI Frontend Integration Problem](#-the-ai-frontend-integration-problem)
+- [🌟 How AG-UI Solves This](#-how-ag-ui-solves-this)
+- [🏗️ Where AG-UI Fits in the Agentic Stack](#️-where-ag-ui-fits-in-the-agentic-stack)
 
 ### Part II: Understanding (WHAT)
 
-- [🧠 Core Concepts & Mental Models](#core-concepts--mental-models)
-- [📡 The AG-UI Protocol Specification](#the-ag-ui-protocol-specification)
-- [🔄 Event-Driven Architecture Deep Dive](#event-driven-architecture-deep-dive)
-- [🎨 Generative UI Components](#generative-ui-components)
+- [🧠 Core Concepts & Mental Models](#-core-concepts--mental-models)
+- [📡 The AG-UI Protocol Specification](#-the-ag-ui-protocol-specification)
+- [🔄 Event-Driven Architecture Deep Dive](#-event-driven-communication)
+- [🎨 Generative UI Components](#-generative-ui-concept)
 
 ### Part III: Implementation (HOW)
 
-- [🚀 Quick Start: Your First AG-UI App](#quick-start)
-- [🔍 Deep Dive: Complete Implementation](#deep-dive)
-- [🎮 Explorer Mode: Interactive Challenges](#explorer-mode)
-- [🏗️ Production-Ready Patterns](#production-ready-patterns)
+- [🚀 Quick Start: Your First AG-UI App](#building-an-ai-powered-todo-app-with-copilotkit-and-openai)
+- [🔍 Deep Dive: Complete Implementation](#-deep-dive)
+- [🎮 Explorer Mode: Interactive Challenges](#-explorer-mode)
+- [🏗️ Production-Ready Patterns](#advanced-learning-paths)
 
 ### Part IV: Advanced Topics
 
-- [🔐 Security & Authentication](#security--authentication)
-- [📊 Performance & Optimization](#performance--optimization)
-- [🔄 Multi-Agent Orchestration](#multi-agent-orchestration)
-- [🌐 Deployment & Scaling](#deployment--scaling)
+- [🔐 Security & Authentication](#-security--authentication)
+- [📊 Performance & Optimization](#-performance--optimization)
+- [🔄 Multi-Agent Orchestration](#-multi-agent-orchestration)
+- [🌐 Deployment & Scaling](#upcoming-features)
 
 ### Part V: Reference & Resources
 
-- [🛠️ Troubleshooting Guide](#troubleshooting-guide)
-- [📚 Framework Integration Guides](#framework-integration-guides)
-- [🔗 Community & Resources](#community--resources)
-- [📖 API Reference](#api-reference)
+- [🛠️ Troubleshooting Guide](#️-troubleshooting-guide)
+- [📚 Framework Integration Guides](#-framework-integration-guides)
+- [🔗 Community & Resources](#-community--resources)
+- [📖 API Reference](#-api-reference)
 
 ---
 
