@@ -440,6 +440,44 @@ USER_INPUT           // User interactions from UI
 AGENT_RESPONSE       // Agent outputs to UI
 ```
 
+### 📋 Complete AG-UI Event Types Reference
+
+**📊 All 15 Official Event Types** (from AG-UI Protocol Specification):
+
+| Event Type | Category | Direction | Description |
+|------------|----------|-----------|-------------|
+| `TEXT_MESSAGE_START` | Message | Agent → UI | Signals the beginning of a text message from the agent |
+| `TEXT_MESSAGE_CONTENT` | Message | Agent → UI | Streams partial text content as the agent generates it |
+| `TEXT_MESSAGE_END` | Message | Agent → UI | Marks the completion of a text message |
+| `ACTION_EXECUTION_START` | Tool | Agent → UI | Indicates an agent is about to execute a tool/action |
+| `ACTION_EXECUTION_ARGS` | Tool | Agent → UI | Streams the arguments being passed to a tool |
+| `ACTION_EXECUTION_END` | Tool | Agent → UI | Signals that tool execution has completed |
+| `ACTION_EXECUTION_RESULT` | Tool | Agent → UI | Delivers the result of tool execution |
+| `AGENT_STATE_MESSAGE` | State | Agent → UI | Provides updates about the agent's internal state |
+| `META_EVENT` | System | Bidirectional | Handles protocol-level events (interrupts, errors) |
+| `RUN_STARTED` | Lifecycle | Agent → UI | Agent run/session has begun |
+| `RUN_FINISHED` | Lifecycle | Agent → UI | Agent run/session has completed successfully |
+| `RUN_ERROR` | Lifecycle | Agent → UI | Agent run/session has encountered an error |
+| `NODE_STARTED` | Workflow | Agent → UI | A workflow node has started execution |
+| `NODE_FINISHED` | Workflow | Agent → UI | A workflow node has completed execution |
+| `USER_INPUT` | Input | UI → Agent | User interaction sent to the agent |
+
+**🎯 Event Categories:**
+
+- **Message Events** (3) → Text streaming and conversation flow
+- **Tool Events** (4) → Function calls and agent actions
+- **Lifecycle Events** (3) → Run management and completion status
+- **State Events** (2) → Agent state synchronization
+- **System Events** (2) → Protocol management and workflow control
+- **Input Events** (1) → User interactions and commands
+
+**💡 Usage Patterns:**
+
+- **Streaming Text**: `TEXT_MESSAGE_START` → `TEXT_MESSAGE_CONTENT` (multiple) → `TEXT_MESSAGE_END`
+- **Tool Execution**: `ACTION_EXECUTION_START` → `ACTION_EXECUTION_ARGS` → `ACTION_EXECUTION_END` → `ACTION_EXECUTION_RESULT`
+- **Session Management**: `RUN_STARTED` → [work events] → `RUN_FINISHED`/`RUN_ERROR`
+- **Real-time Updates**: `AGENT_STATE_MESSAGE` for continuous state sync
+
 ### 🛠️ Transport Flexibility (Production Verified)
 
 **📡 Supported Transports:**
@@ -482,6 +520,7 @@ flowchart TB
 ```
 
 **🎯 Transport Selection Guide:**
+
 - **Server-Sent Events (SSE)** → Primary choice for streaming, simple and reliable
 - **WebSockets** → Best for bidirectional, low-latency real-time communication  
 - **HTTP** → Traditional request-response for simple interactions
