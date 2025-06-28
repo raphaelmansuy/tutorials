@@ -113,7 +113,6 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 ## 🎪 The 30-Second Demo
 
----
 
 <p align="center">
     <img src="./images/ag_ui_01.png" alt="AG-UI" width="1024"/>
@@ -2081,9 +2080,9 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 
 ---
 
-_This tutorial is maintained by the AG-UI community and based on verified information from official sources including the [AG-UI Protocol Repository](https://github.com/ag-ui-protocol/ag-ui), [Official Documentation](https://docs.ag-ui.com), and [CopilotKit](https://github.com/CopilotKit/CopilotKit). Found an issue? [Report it here](https://github.com/ag-ui-protocol/ag-ui/issues) | Want to contribute? [See our contribution guide](https://docs.ag-ui.com/development/contributing)_
+_This tutorial is maintained by **Raphaël MANSUY** and based on verified information from official sources including the [AG-UI Protocol Repository](https://github.com/ag-ui-protocol/ag-ui), [Official Documentation](https://docs.ag-ui.com), and [CopilotKit](https://github.com/CopilotKit/CopilotKit). Found an issue? [Contact Raphaël](mailto:raphael.mansuy@elitizon.com) | Want to contribute improvements? [Connect on LinkedIn](https://www.linkedin.com/in/raphaelmansuy/)_
 
-**📅 Last Updated:** June 28, 2025 | **Version:** 1.0.0 | **Status:** Community Verified ⭐
+**📅 Last Updated:** June 29, 2025 | **Version:** 1.0.0 | **Status:** Expert Verified ⭐
 
 ### Sources Verified
 
