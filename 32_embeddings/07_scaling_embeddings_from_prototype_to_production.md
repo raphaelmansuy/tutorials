@@ -475,10 +475,12 @@ print("100M vectors (1536-dim):", calculate_memory_requirements(100_000_000, 153
 | **GCP** | n2-highmem-8 | 64 | $0.476 | $114 |
 | **Azure** | E8s v5 | 64 | $0.504 | $121 |
 
-**Managed Vector DB Costs (Approximate):**
-- **Pinecone**: $0.096/1M vectors/month + query costs
-- **Weaviate Cloud**: $0.12/1M vectors/month + compute
-- **Qdrant Cloud**: $0.08/1M vectors/month + infrastructure
+**Managed Vector DB Costs (Approximate - as of Q2 2025):**
+- **Pinecone**: Starting at $70/month for s1 pods + query costs (pricing varies by pod type and usage)
+- **Weaviate Cloud**: Starting at $25/month + compute costs (contact for enterprise pricing)
+- **Qdrant Cloud**: Starting at $29/month for managed clusters + infrastructure costs
+
+*Note: Pricing is subject to change. Consult official vendor documentation for current rates.*
 
 ### Performance Tuning Guidelines
 
@@ -2062,3 +2064,47 @@ The principles, patterns, and practices outlined in this chapter provide a solid
 The future of search is semantic, contextual, and intelligent. By mastering the art and science of production vector systems, you're positioning yourself and your organization to deliver search experiences that truly understand and serve your users' needs. The journey from prototype to production may be complex, but the impact of getting it right—enabling users to find exactly what they're looking for, when they need it—makes every optimization worthwhile.
 
 Remember: great search is invisible to users but transformative for businesses. Your production embedding system is the foundation that makes this magic possible.
+
+## References
+
+| Topic | Source | URL | Date Accessed |
+|-------|--------|-----|---------------|
+| **FAISS Library** | Facebook AI Research | [GitHub](https://github.com/facebookresearch/faiss) | June 2025 |
+| **FAISS Documentation** | Facebook AI Research | [Official Site](https://faiss.ai/) | June 2025 |
+| **Weaviate Documentation** | Weaviate | [Developer Docs](https://weaviate.io/developers/weaviate) | June 2025 |
+| **Weaviate Pricing** | Weaviate Cloud | [Pricing Page](https://weaviate.io/pricing) | June 2025 |
+| **Qdrant Documentation** | Qdrant | [Documentation](https://qdrant.tech/documentation/) | June 2025 |
+| **Qdrant Pricing** | Qdrant Cloud | [Pricing Page](https://qdrant.tech/pricing/) | June 2025 |
+| **Milvus Documentation** | Milvus Project | [Documentation](https://milvus.io/docs) | June 2025 |
+| **OpenAI Embeddings API** | OpenAI | [API Docs](https://platform.openai.com/docs/guides/embeddings) | June 2025 |
+| **OpenAI Pricing** | OpenAI | [Pricing Page](https://openai.com/pricing) | June 2025 |
+| **AWS EC2 Pricing** | Amazon Web Services | [Pricing Calculator](https://aws.amazon.com/ec2/pricing/) | June 2025 |
+| **Pinecone Documentation** | Pinecone | [Developer Docs](https://docs.pinecone.io/) | June 2025 |
+| **Pinecone Pricing** | Pinecone | [Pricing Page](https://www.pinecone.io/pricing/) | June 2025 |
+| **PostgreSQL pgvector** | PostgreSQL | [GitHub Repository](https://github.com/pgvector/pgvector) | June 2025 |
+| **HNSW Algorithm Paper** | Malkov & Yashunin | [arXiv Paper](https://arxiv.org/abs/1603.09320) | Original 2016 |
+| **MTEB Leaderboard** | Hugging Face | [Leaderboard](https://huggingface.co/spaces/mteb/leaderboard) | June 2025 |
+| **Apache Kafka** | Apache Software Foundation | [Documentation](https://kafka.apache.org/documentation/) | June 2025 |
+| **Apache Airflow** | Apache Software Foundation | [Documentation](https://airflow.apache.org/docs/) | June 2025 |
+| **Kubernetes Documentation** | CNCF | [K8s Docs](https://kubernetes.io/docs/) | June 2025 |
+| **Prometheus Monitoring** | Prometheus | [Documentation](https://prometheus.io/docs/) | June 2025 |
+| **Google Cloud Pricing** | Google Cloud Platform | [Compute Pricing](https://cloud.google.com/compute/pricing) | June 2025 |
+| **Azure Pricing** | Microsoft Azure | [Pricing Calculator](https://azure.microsoft.com/en-us/pricing/) | June 2025 |
+| **ColBERT Model** | Stanford NLP | [GitHub Repository](https://github.com/stanford-futuredata/ColBERT) | June 2025 |
+| **Sentence Transformers** | Hugging Face | [Model Hub](https://huggingface.co/sentence-transformers) | June 2025 |
+| **Vector Database Comparison** | VectorDBBench | [Benchmark Suite](https://github.com/zilliztech/VectorDBBench) | June 2025 |
+
+### Technical Papers and Research
+
+| Paper Title | Authors | Publication | URL |
+|-------------|---------|-------------|-----|
+| "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs" | Yu. A. Malkov, D. A. Yashunin | IEEE Transactions on Pattern Analysis and Machine Intelligence | [arXiv](https://arxiv.org/abs/1603.09320) |
+| "Product Quantization for Nearest Neighbor Search" | Hervé Jégou, Matthijs Douze, Cordelia Schmid | IEEE Transactions on Pattern Analysis and Machine Intelligence | [HAL](https://hal.inria.fr/inria-00514462) |
+| "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT" | Omar Khattab, Matei Zaharia | SIGIR 2020 | [arXiv](https://arxiv.org/abs/2004.12832) |
+| "Massive Text Embedding Benchmark" | Niklas Muennighoff et al. | arXiv preprint | [arXiv](https://arxiv.org/abs/2210.07316) |
+
+### Note on Data Currency
+
+All pricing, benchmark scores, and technical specifications in this document reflect information available as of June 2025. Vector database pricing, cloud computing costs, and model performance metrics change frequently. For the most current information, please consult the official sources listed above.
+
+For critical production decisions, always verify current pricing and performance characteristics directly with service providers.
