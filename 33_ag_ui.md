@@ -622,201 +622,487 @@ flowchart TB
 
 # Part III: Implementation (HOW)
 
-## 🚀 Quick Start
+# Building an AI-Powered Todo App with CopilotKit and OpenAI
 
-### Prerequisites Check
+A complete step-by-step tutorial for creating an intelligent todo application that understands natural language and can manage tasks through AI conversation.
+
+## 🎯 What You'll Build
+
+By the end of this tutorial, you'll have:
+- A modern todo application with a beautiful UI
+- AI assistant that can add, remove, and manage todos through natural conversation
+- Persistent storage using localStorage
+- Full integration with OpenAI's GPT models
+- Real-time AI interaction using CopilotKit
+
+## 📋 Prerequisites
+
+- Node.js 18+ installed
+- Basic knowledge of React and TypeScript
+- An OpenAI API key (get one at [platform.openai.com](https://platform.openai.com))
+
+## 🚀 Step 1: Project Setup
+
+### 1.1 Create a New Next.js Project
 
 ```bash
-# Verify your environment
-node --version  # Should be 18+ 
-npm --version   # Should be 8+
-git --version   # Any recent version
-```
-
-**🎯 Goal:** Build a working AI agent interface in 25 minutes using CopilotKit (the primary AG-UI frontend framework)
-
-### Step 1: Create Your CopilotKit App (5 minutes)
-
-```bash
-# Create a new Next.js application with CopilotKit
-npx create-next-app@latest my-ai-assistant
+npx create-next-app@latest my-ai-assistant --typescript --tailwind --eslint --app --src-dir
 cd my-ai-assistant
-
-# Install CopilotKit dependencies
-npm install @copilotkit/react-core @copilotkit/react-ui
 ```
 
-**🔍 What's happening:**
-
-- Creates a React + Next.js project with CopilotKit integration
-- Installs core CopilotKit packages for AG-UI protocol support
-- Sets up development environment with hot reload and event streaming
-
-### Step 2: Configure Your AI Provider (5 minutes)
+### 1.2 Install CopilotKit Dependencies
 
 ```bash
-# Copy environment template
-cp .env.example .env.local
+npm install @copilotkit/react-core @copilotkit/react-ui @copilotkit/runtime @langchain/community
 ```
 
-**Edit `.env.local`:**
-```bash
-# Choose your AI provider
-OPENAI_API_KEY=your_openai_key_here
-# OR
-ANTHROPIC_API_KEY=your_anthropic_key_here
-# OR
-LOCAL_MODEL_URL=http://localhost:11434  # For Ollama
-```
+### 1.3 Set Up Environment Variables
 
-**🔍 Supported Providers & Frameworks:**
-
-- **[LangGraph](https://langchain-ai.github.io/langgraph/)** → ✅ Full AG-UI integration with CoAgents (verified)
-- **[CrewAI Crews](https://github.com/crewAIInc/crewAI)** → ✅ Multi-agent team support (verified)
-- **[CrewAI Flows](https://docs.crewai.com/concepts/flows)** → ✅ Sequential workflow support (verified)
-- **[Mastra](https://mastra.ai/)** → ✅ TypeScript agent framework (verified)
-- **[AG2](https://ag2ai.github.io/ag2/)** → ✅ Open-source AgentOS (verified)
-- **[Agno](https://github.com/agno-oss/agno)** → ✅ Multi-agent systems (verified)
-- **[LlamaIndex](https://www.llamaindex.ai/)** → ✅ RAG and knowledge integration (verified)
-- **Direct LLM** → ✅ OpenAI, Anthropic integration (verified)
-- **Local models** → ✅ Ollama, local deployment support (verified)
-- **[Pydantic AI](https://ai.pydantic.dev/)** → 🛠️ In Progress
-- **[Vercel AI SDK](https://sdk.vercel.ai/)** → 🛠️ In Progress
-
-### Step 3: Start Your First Agent (5 minutes)
+Create a `.env` file in your project root:
 
 ```bash
-# Start the development server
-npm run dev
+# AI Provider - Using OpenAI (recommended for tool calling support)
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4o-mini
+
+# Optional: CopilotKit Cloud (if using hosted service)
+# COPILOTKIT_API_KEY=your_copilotkit_api_key
 ```
 
-**🎯 Your first agent is now running at `http://localhost:3000`**
+⚠️ **Important**: Replace `your_openai_api_key_here` with your actual OpenAI API key.
 
-**✅ Checkpoint:** You should see a working chat interface with your AI agent. Try asking: "Create a simple todo list for me"
+## 🔧 Step 2: Configure the Backend API
 
-### Step 4: Add Interactive Components (10 minutes)
+### 2.1 Create the CopilotKit API Route
 
-**Edit `src/components/TodoAgent.tsx`:** (Using real CopilotKit AG-UI APIs)
+Create `src/app/api/copilotkit/route.ts`:
 
 ```typescript
-import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
-import { useState } from "react";
+import { CopilotRuntime, OpenAIAdapter, copilotRuntimeNextJSAppRouterEndpoint } from '@copilotkit/runtime';
+import { NextRequest } from 'next/server';
 
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+// Create OpenAI adapter - supports tool calling
+const serviceAdapter = new OpenAIAdapter({
+  model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+});
 
-export const TodoAgent = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+// Create the CopilotRuntime
+const runtime = new CopilotRuntime();
 
-  // Make tasks readable to the agent (provides context)
-  useCopilotReadable({
-    description: "Current todo list tasks",
-    value: tasks,
+// POST handler for CopilotKit runtime
+export const POST = async (req: NextRequest) => {
+  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+    runtime,
+    serviceAdapter,
+    endpoint: "/api/copilotkit",
   });
 
-  // Define action for agent to create todos (AG-UI tool integration)
+  return handleRequest(req);
+};
+```
+
+## 🎨 Step 3: Create the CopilotKit Provider
+
+### 3.1 Create the Provider Component
+
+Create `src/components/CopilotProvider.tsx`:
+
+```typescript
+'use client';
+
+import { CopilotKit } from '@copilotkit/react-core';
+import '@copilotkit/react-ui/styles.css';
+
+interface CopilotProviderProps {
+  children: React.ReactNode;
+}
+
+export function CopilotProvider({ children }: CopilotProviderProps) {
+  return (
+    <CopilotKit runtimeUrl="/api/copilotkit">
+      {children}
+    </CopilotKit>
+  );
+}
+```
+
+### 3.2 Update the Root Layout
+
+Update `src/app/layout.tsx`:
+
+```typescript
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { CopilotProvider } from "@/components/CopilotProvider";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "AI Todo Assistant",
+  description: "AG-UI powered todo app with CopilotKit and OpenAI",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <CopilotProvider>
+          {children}
+        </CopilotProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+## 🏗️ Step 4: Build the Main Todo Component
+
+### 4.1 Create the Main Page
+
+Replace the content of `src/app/page.tsx`:
+
+```typescript
+'use client';
+
+import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import { CopilotPopup } from "@copilotkit/react-ui";
+import { useState, useRef, useEffect } from "react";
+
+export default function Home() {
+  // Initialize state with localStorage data
+  const [todoList, setTodoList] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('ag-ui-todos');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+  const todoListRef = useRef(todoList);
+
+  // Keep ref in sync with state and persist to localStorage
+  useEffect(() => {
+    todoListRef.current = todoList;
+    // Persist to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ag-ui-todos', JSON.stringify(todoList));
+    }
+  }, [todoList]);
+
+  // Make the todo list readable by the AI
+  useCopilotReadable({
+    description: "The current todo list with all todo items",
+    value: todoList.length === 0 ? "No todos currently in the list" : `Current todos: ${todoList.join(", ")}`,
+  });
+
+  // Allow AI to add todos
   useCopilotAction({
-    name: "create_todo_list",
-    description: "Create an interactive todo list with multiple items",
+    name: "add_todo",
+    description: "Add a new todo item to the list",
     parameters: [
       {
-        name: "title",
+        name: "todo",
         type: "string",
-        description: "Title for the todo list",
-        required: true,
-      },
-      {
-        name: "items",
-        type: "string[]", 
-        description: "Array of todo items to create",
+        description: "The todo item to add",
         required: true,
       },
     ],
-    handler: async ({ title, items }) => {
-      const newTasks = items.map((item: string, index: number) => ({
-        id: `${Date.now()}-${index}`,
-        text: item,
-        completed: false,
-      }));
-      setTasks(newTasks);
-      return `Created todo list "${title}" with ${items.length} items`;
+    handler: async ({ todo }) => {
+      console.log("🚀 ADD_TODO HANDLER CALLED with:", todo);
+      console.log("🚀 Current todoList from ref:", todoListRef.current);
+      setTodoList(prevList => {
+        console.log("🚀 Previous state in setter:", prevList);
+        const newList = [...prevList, todo];
+        console.log("🚀 New state will be:", newList);
+        return newList;
+      });
     },
   });
 
-  // Additional action to update task status
+  // Allow AI to clear todos
   useCopilotAction({
-    name: "update_task_status",
-    description: "Mark a todo item as completed or pending",
-    parameters: [
-      {
-        name: "taskId",
-        type: "string",
-        description: "ID of the task to update",
-        required: true,
-      },
-      {
-        name: "completed",
-        type: "boolean",
-        description: "Whether the task is completed",
-        required: true,
-      },
-    ],
-    handler: async ({ taskId, completed }) => {
-      setTasks(prev => prev.map(task => 
-        task.id === taskId ? { ...task, completed } : task
-      ));
-      return `Task ${taskId} marked as ${completed ? 'completed' : 'pending'}`;
+    name: "clear_todos", 
+    description: "Clear all todo items from the list",
+    handler: async () => {
+      console.log("🧹 CLEAR_TODOS HANDLER CALLED");
+      setTodoList([]);
+      // Also clear from localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('ag-ui-todos');
+      }
     },
   });
 
   return (
-    <div className="todo-agent">
-      <h3>AI Todo Assistant</h3>
-      {tasks.length === 0 ? (
-        <p>No tasks yet. Ask me to create a todo list!</p>
-      ) : (
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id} className="task-item">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={(e) => {
-                    setTasks(tasks.map(t => 
-                      t.id === task.id 
-                        ? { ...t, completed: e.target.checked }
-                        : t
-                    ));
-                  }}
-                />
-                <span style={{ 
-                  textDecoration: task.completed ? 'line-through' : 'none' 
-                }}>
-                  {task.text}
-                </span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8 text-center">
+          AI Assistant with OpenAI
+        </h1>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Todo List</h2>
+          <div className="mb-4 flex gap-2">
+            <button 
+              onClick={() => setTodoList(prev => [...prev, "Test todo"])}
+              className="px-3 py-1 bg-blue-500 text-white rounded text-xs"
+            >
+              Add Test Todo
+            </button>
+            <button 
+              onClick={() => {
+                setTodoList([]);
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('ag-ui-todos');
+                }
+              }}
+              className="px-3 py-1 bg-red-500 text-white rounded text-xs"
+            >
+              Clear All
+            </button>
+            <span className="text-xs text-gray-500">Current count: {todoList.length}</span>
+          </div>
+          {todoList.length === 0 ? (
+            <div className="text-gray-500 italic">No todos yet. Ask the AI assistant to add some!</div>
+          ) : (
+            <ul className="space-y-2">
+              {todoList.map((todo, index) => (
+                <li key={index} className="flex items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                  <span className="ml-2">{todo}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-3">Try asking the AI assistant:</h3>
+          <ul className="space-y-2 text-sm">
+            <li>• "Add some todos for a software project"</li>
+            <li>• "Create a shopping list"</li>
+            <li>• "Clear all todos"</li>
+            <li>• "What's on my todo list?"</li>
+          </ul>
+          <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+            💡 Click the chat icon in the bottom right to interact with the AI assistant powered by OpenAI
+          </div>
+        </div>
+      </main>
+      
+      <CopilotPopup
+        instructions="You are a helpful AI assistant that can help users manage their todo list. You can add new todos using the add_todo action, clear the entire list using clear_todos action, and read the current todos. IMPORTANT: Always use the provided actions to modify the todo list."
+        labels={{
+          title: "AI Todo Assistant",
+          initial: "Hi! I can help you manage your todos. Try saying 'add buy groceries to my list' or 'what's on my todo list?'",
+        }}
+      />
     </div>
   );
-};
+}
 ```
 
-**🎯 Test it:** Ask your agent "Create a todo list for planning a vacation"
+## 🔄 Step 5: Understanding Key CopilotKit Concepts
 
-**✅ Success Criteria:**
+### 5.1 useCopilotReadable Hook
 
-- Your agent should generate an interactive todo list using AG-UI events
-- You can check/uncheck items with real-time state updates
-- The state is shared between agent and UI via AG-UI protocol
+This hook makes data accessible to the AI:
 
-**🎉 Quick Start Complete!** You now have a working AG-UI application with interactive components.
+```typescript
+useCopilotReadable({
+  description: "The current todo list with all todo items",
+  value: todoList.length === 0 ? "No todos currently in the list" : `Current todos: ${todoList.join(", ")}`,
+});
+```
+
+**Purpose**: Allows the AI to "see" the current state of your todo list and respond accurately to questions like "What's on my list?"
+
+### 5.2 useCopilotAction Hook
+
+This hook defines actions the AI can perform:
+
+```typescript
+useCopilotAction({
+  name: "add_todo",
+  description: "Add a new todo item to the list",
+  parameters: [
+    {
+      name: "todo",
+      type: "string",
+      description: "The todo item to add",
+      required: true,
+    },
+  ],
+  handler: async ({ todo }) => {
+    setTodoList(prevList => [...prevList, todo]);
+  },
+});
+```
+
+**Purpose**: Enables the AI to execute functions in your app when users make requests like "Add buy milk to my list"
+
+💡 **Debug Tip**: The console.log statements help you debug and track when AI actions are triggered. You can see these logs in your browser's developer console.
+
+### 5.3 CopilotPopup Component
+
+Provides the chat interface:
+
+```typescript
+<CopilotPopup
+  instructions="You are a helpful AI assistant..."
+  labels={{
+    title: "AI Todo Assistant",
+    initial: "Hi! I can help you manage your todos...",
+  }}
+/>
+```
+
+## 🚀 Step 6: Run and Test Your Application
+
+### 6.1 Start the Development Server
+
+```bash
+npm run dev
+```
+
+### 6.2 Test the Application
+
+1. Open [http://localhost:3001](http://localhost:3000) in your browser (Note: Next.js may use port 3001 if 3000 is busy)
+2. Click the chat icon in the bottom right corner
+3. Try these commands:
+   - "Add buy groceries to my list"
+   - "Create a todo for calling mom"
+   - "What's on my todo list?"
+   - "Clear all my todos"
+
+## 🎯 Step 7: Advanced Features (Optional Enhancements)
+
+### 7.1 Add Todo Removal Functionality
+
+Add this action to your component:
+
+```typescript
+useCopilotAction({
+  name: "remove_todo",
+  description: "Remove a specific todo item from the list",
+  parameters: [
+    {
+      name: "todoIndex",
+      type: "number", 
+      description: "The index of the todo item to remove (0-based)",
+      required: true,
+    },
+  ],
+  handler: async ({ todoIndex }) => {
+    setTodoList(prevList => prevList.filter((_, index) => index !== todoIndex));
+  },
+});
+```
+
+### 7.2 Add Priority Levels
+
+Extend your todo items to include priorities:
+
+```typescript
+interface TodoItem {
+  id: string;
+  text: string;
+  priority: 'low' | 'medium' | 'high';
+  completed: boolean;
+}
+```
+
+### 7.3 Add Due Dates
+
+Include date functionality:
+
+```typescript
+interface TodoItem {
+  id: string;
+  text: string;
+  dueDate?: Date;
+  completed: boolean;
+}
+```
+
+## 🛠️ Step 8: Troubleshooting Common Issues
+
+### Issue 1: "Tool calling not supported"
+
+**Solution**: Make sure you're using OpenAI models (not Ollama) as they have better tool calling support.
+
+### Issue 2: API Key Not Working
+
+**Solution**:
+
+- Verify your OpenAI API key is correct
+- Make sure it's in `.env` (or `.env.local`)
+- Restart your development server after adding the key
+
+### Issue 3: AI Not Responding
+
+**Solution**:
+
+- Check browser console for errors
+- Verify the `/api/copilotkit` route is working
+- Ensure you have sufficient OpenAI API credits
+
+## 📚 Key Learning Points
+
+### CopilotKit Architecture
+
+1. **Frontend**: React hooks (`useCopilotAction`, `useCopilotReadable`) define what AI can see and do
+2. **Backend**: API route handles communication with OpenAI
+3. **Provider**: Wraps your app to enable CopilotKit functionality
+
+### Best Practices
+
+1. **Clear Descriptions**: Write detailed descriptions for actions and readable data
+2. **Error Handling**: Always handle async operations properly
+3. **State Management**: Use refs for actions that need current state
+4. **Persistence**: Save important data to localStorage or a database
+
+## 🎉 Congratulations
+
+You've built a fully functional AI-powered todo application! The AI can now:
+
+- ✅ Read your current todos
+- ✅ Add new todos through natural language
+- ✅ Clear all todos when requested
+- ✅ Understand context and respond intelligently
+
+## 🚀 Next Steps
+
+- Deploy your app to Vercel or Netlify
+- Add user authentication
+- Connect to a real database (PostgreSQL, MongoDB)
+- Add more complex AI actions
+- Implement todo categories and tags
+- Add voice input functionality
+
+## 📖 Additional Resources
+
+- [CopilotKit Documentation](https://docs.copilotkit.ai/)
+- [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+---
+
+**Happy coding!** 🎯 You now have the foundation to build sophisticated AI-powered applications with CopilotKit.
 
 ---
 
