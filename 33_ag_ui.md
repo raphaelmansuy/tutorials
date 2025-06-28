@@ -267,8 +267,8 @@ flowchart LR
 graph TB
     subgraph "The Agentic Protocol Stack"
         A[📡 AG-UI Protocol<br/>🎨 Agent ↔ User Interface] --> B[🚀 Application Layer]
-        C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent Communication] --> B
-        D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool Integration] --> B
+        C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent (Google)] --> B
+        D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool (Anthropic)] --> B
         
         B --> E[🎯 Your AI Application]
     end
@@ -291,8 +291,8 @@ graph TB
 
 **🔗 Complementary Protocols:**
 
-- **MCP** (Model Context Protocol) → Gives agents access to tools and data
-- **A2A** (Agent-to-Agent) → Enables multi-agent collaboration
+- **MCP** (Model Context Protocol) → Gives agents access to tools and data (Anthropic)
+- **A2A** (Agent2Agent Protocol) → Enables multi-agent collaboration (Google Cloud, 50+ partners)
 - **AG-UI** → Brings agents into user-facing applications
 
 ```mermaid
@@ -346,7 +346,7 @@ flowchart LR
 ```
 
 **💡 The Power of Integration:**
-When combined, these protocols create a complete agentic ecosystem where agents can access tools (MCP), collaborate with other agents (A2A), and interact seamlessly with users (AG-UI).
+When combined, these protocols create a complete agentic ecosystem where agents can access tools (MCP), collaborate with other agents (A2A - Google's Agent2Agent protocol), and interact seamlessly with users (AG-UI).
 
 ---
 
@@ -475,7 +475,7 @@ RUN_ERROR        // Error during execution
 ```typescript
 // Text streaming
 TEXT_MESSAGE_START     // Start of message
-TEXT_MESSAGE_CHUNK     // Streaming text content
+TEXT_MESSAGE_CONTENT     // Streaming text content
 TEXT_MESSAGE_END       // End of message
 ```
 
@@ -483,8 +483,8 @@ TEXT_MESSAGE_END       // End of message
 
 ```typescript
 // Tool interactions
-TOOL_CALL_CHUNK        // Streaming tool calls
-TOOL_CALL_*           // Various tool execution events
+TOOL_CALL_START        // Streaming tool calls
+TOOL_CALL_ARGS        // Various tool execution events
 
 // State management
 STATE_UPDATE          // Bidirectional state sync
@@ -1589,6 +1589,8 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 - **AG-UI Protocol Repository:** 4.5k+ ⭐, actively maintained (verified June 28, 2025)
 - **Official Documentation:** [https://docs.ag-ui.com](https://docs.ag-ui.com) (verified)
 - **CopilotKit Integration:** 21.6k+ ⭐, primary frontend framework (verified)
+- **A2A Protocol:** [Google's Agent2Agent Protocol](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/) (official, 50+ partners, verified)
+- **MCP Protocol:** [Anthropic's Model Context Protocol](https://github.com/modelcontextprotocol) (official, verified)
 - **Community Examples:** Live demos and working integrations (verified)
 - **Framework Support:** LangGraph, CrewAI (Crews/Flows), Mastra, AG2, Agno, LlamaIndex (all verified)
 - **Event Types:** 22+ official event types from TypeScript/Python SDKs (verified)
