@@ -1,9 +1,36 @@
 # AG-UI Protocol: Building Interactive AI Agents in Frontend Applications
 
+```mermaid
+flowchart LR
+    Frontend[🖥️ Frontend App] --> AGUI[🔄 AG-UI Protocol]
+    AGUI --> Agent[🤖 AI Agent]
+    Agent --> Backend[🧠 AI Services]
+    
+    AGUI -.-> UI[🧩 Interactive UI]
+    UI -.-> Frontend
+    
+    classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef protocol fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    classDef interactive fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    
+    class Frontend,Agent,Backend main
+    class AGUI protocol
+    class UI interactive
+```
+
 ## Tutorial Information
 
-**Last updated:** January 15, 2025  
+**Last updated:** June 28, 2025  
 **Based on:** AG-UI Protocol (Latest)
+
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
+**Date**: June 28, 2025
+
+---
 
 ## 🚀 Why AG-UI Changes Everything for AI Frontend Development
 
@@ -34,7 +61,7 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 - AI/LLM API access (OpenAI, Anthropic, or local model)
 - Git for version control
 
-**📅 Last updated:** January 15, 2025
+**📅 Last updated:** June 28, 2025
 
 **Choose your path:**
 - 🚀 [Quick Start](#quick-start) (25 min) - Get a working AI agent UI immediately
@@ -1442,7 +1469,7 @@ export const AG2Example = () => {
 ### [Agno](https://github.com/agno-oss/agno) Integration
 
 **🔗 Resources:**
-- [Agno Documentation](https://docs.agno.ai/)
+- [Agno Documentation](https://github.com/agno-oss/agno)
 - [GitHub Repository](https://github.com/agno-oss/agno)
 - [Examples](https://github.com/agno-oss/agno/tree/main/examples)
 
@@ -1715,7 +1742,7 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
   - [AG-UI Integration](https://docs.ag-ui.com/ag2)
 
 - **🤖 [Agno](https://github.com/agno-oss/agno)** → Multi-agent system orchestration
-  - [Agno Documentation](https://docs.agno.ai/)
+  - [Agno Documentation](https://github.com/agno-oss/agno)
   - [GitHub Repository](https://github.com/agno-oss/agno)
   - [Examples](https://github.com/agno-oss/agno/tree/main/examples)
 
