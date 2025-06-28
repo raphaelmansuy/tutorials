@@ -1,4 +1,4 @@
-## Your Task
+# Your Task
 
 Review each content piece and suggest where Mermaid diagrams could enhance understanding. Provide clear, concise suggestions for diagrams that would visually clarify complex information.
 
@@ -22,3 +22,5 @@ When reviewing content, identify specific paragraphs or examples where complex c
 - **Meaningful color use:** Apply colors purposefully (e.g., similar elements share colors; use contrasting colors for different elements).
 
 > **Tip:** Focus on clarity and simplicity to maximize the effectiveness of each diagram.
+
+Strictly follow ./prompts/01_mermaid_rules.md for the Mermaid syntax and structure. Ensure all diagrams are well-formed and adhere to the specified guidelines.
