@@ -1174,7 +1174,7 @@ export class MastraAgent extends AbstractAgent {
 - **📖 Documentation:** [https://docs.ag-ui.com](https://docs.ag-ui.com)
 - **🎮 AG-UI Dojo (Interactive Examples):** [https://copilotkit-feature-viewer.vercel.app](https://copilotkit-feature-viewer.vercel.app)
 - **💬 Discord Community:** [https://discord.gg/6dffbvGU3D](https://discord.gg/6dffbvGU3D)
-- **� Main Repository:** [https://github.com/ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui)
+- **🌟 Main Repository:** [https://github.com/ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui)
 
 ### CopilotKit Resources (Primary Frontend Implementation)
 
@@ -1185,8 +1185,8 @@ export class MastraAgent extends AbstractAgent {
 ### Community Contributions
 
 - **🌟 Example Projects:** [GitHub Examples](https://github.com/ag-ui-protocol/ag-ui/tree/main/typescript-sdk/apps/dojo)
-- **� GitHub Discussions:** [AG-UI Protocol Discussions](https://github.com/orgs/ag-ui-protocol/discussions)
-- **� Integration Examples:** Multiple framework integrations in main repo
+- **💬 GitHub Discussions:** [AG-UI Protocol Discussions](https://github.com/orgs/ag-ui-protocol/discussions)
+- **🔗 Integration Examples:** Multiple framework integrations in main repo
 - **📝 Specification Discussions:** [Specification Repository](https://github.com/ag-ui-protocol/specification/discussions)
 
 ### Getting Help
