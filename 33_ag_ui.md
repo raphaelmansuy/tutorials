@@ -2,8 +2,8 @@
 
 ## Tutorial Information
 
-**Last updated:** June 28, 2025  
-**Based on:** AG-UI Protocol v1.0
+**Last updated:** January 15, 2025  
+**Based on:** AG-UI Protocol (Latest)
 
 ## 🚀 Why AG-UI Changes Everything for AI Frontend Development
 
@@ -34,7 +34,7 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 - AI/LLM API access (OpenAI, Anthropic, or local model)
 - Git for version control
 
-**📅 Last updated:** June 28, 2025
+**📅 Last updated:** January 15, 2025
 
 **Choose your path:**
 - 🚀 [Quick Start](#quick-start) (25 min) - Get a working AI agent UI immediately
@@ -92,13 +92,13 @@ Think of AG-UI as the HTTP protocol for AI interactions. Just as HTTP standardiz
 
 ### The Current Landscape
 
-**🏢 Enterprise Reality:** Companies are spending $100K-500K per AI integration project, with 70% of development time spent on frontend connectivity rather than AI logic.
+**🏢 Enterprise Reality:** Companies are spending significant resources on AI integration projects, with enterprise surveys showing that most development time is spent on frontend connectivity rather than AI logic.
 
-**📊 The Numbers:**
-- **6-12 weeks** average time to integrate AI agent with custom UI
+**📊 The Development Challenge:**
+- **6-12 weeks** typical time to integrate AI agent with custom UI
 - **3-5 developers** typically required for a complete implementation
-- **40-60%** of AI projects fail due to poor user experience
-- **$2M+** average cost of enterprise AI frontend development
+- **Significant project complexity** due to fragmented integration approaches
+- **High enterprise costs** for AI frontend development projects
 
 ### Common Pain Points
 
@@ -260,7 +260,7 @@ flowchart LR
     end
     
     subgraph "AG-UI Protocol"
-        H[Event Processing<br/>22+ Event Types]
+        H[Event Processing<br/>16 Event Types]
         I[Transport Layer<br/>SSE/WS/HTTP]
     end
     
