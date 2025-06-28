@@ -28,36 +28,42 @@ Here is a high-level view of a typical RAG pipeline for a customer support chatb
 
 ```mermaid
 flowchart TD
-    subgraph User Interaction
-        A[User asks: "My order hasn't arrived"] --> B{Query Pre-processing};
+    subgraph "User Interaction"
+        User[🙋 User Query]
+        Preproc[🛠️ Preprocessing]
+        User --> Preproc
+    end
+    subgraph "Retrieval Pipeline"
+        QEmbed[🔢 Query Embedding]
+        VectorSearch[🔍 Vector DB Search]
+        Retrieve[📄 Retrieve Documents]
+        Preproc --> QEmbed
+        QEmbed --> VectorSearch
+        VectorSearch --> Retrieve
+    end
+    subgraph "Generation Pipeline"
+        Prompt[✍️ Prompt Construction]
+        LLM[🤖 Language Model]
+        AnswerGen[📤 Answer Generation]
+        Retrieve --> Prompt
+        Prompt --> LLM
+        LLM --> AnswerGen
+    end
+    subgraph "Final Output"
+        Output[🏁 Final Answer]
+        AnswerGen --> Output
     end
 
-    subgraph Retrieval Pipeline
-        B --> C[Generate Query Embedding<br>Model: BGE-M3-large];
-        C --> D{Vector Database Search<br>Finds relevant documents};
-        D --> E[Retrieve Top-K Documents<br>e.g., Order status policies, shipping FAQs];
-    end
-
-    subgraph Generation Pipeline
-        E --> F[Construct Prompt<br>Context + Original Query];
-        F --> G[Large Language Model (LLM)<br>Model: GPT-4o / Gemini 1.5 Pro];
-        G --> H[Generate Final Answer];
-    end
-
-    subgraph Final Output
-        H --> I[Answer to User<br>"I see your order #XYZ is currently in transit..."];
-    end
-
-    %% Styling
-    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style E fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style F fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
-    style G fill:#fce4ec,stroke:#ad1457,stroke-width:2px
-    style H fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
-    style I fill:#e0f7fa,stroke:#006064,stroke-width:2px
+    %% Styles (see copilot-instructions.md)
+    style User fill:#E8F4FD,stroke:#2C5AA0
+    style Preproc fill:#E8F6F3,stroke:#1B5E4F
+    style QEmbed fill:#FFF2CC,stroke:#B7950B
+    style VectorSearch fill:#FEF9E7,stroke:#D68910
+    style Retrieve fill:#EAEDED,stroke:#566573
+    style Prompt fill:#E8F6F3,stroke:#1B5E4F
+    style LLM fill:#FADBD8,stroke:#A93226
+    style AnswerGen fill:#E1F5FE,stroke:#1976D2
+    style Output fill:#F4ECF7,stroke:#7D3C98
 ```
 
 ### State-of-the-Art (2024-2025)
@@ -228,30 +234,35 @@ A typical anomaly detection pipeline works as follows:
 
 ```mermaid
 flowchart LR
-    subgraph Data Ingestion
-        A[Streaming Data<br>Transactions, Logs, Sensor Readings] --> B{Feature Extraction};
+    subgraph "Data Ingestion"
+        Data[📥 Streaming Data: Transactions, Logs, Sensor Readings]
+        Feature[🔍 Feature Extraction]
+        Data --> Feature
+    end
+    subgraph "Embedding & Analysis"
+        Embedding[🔢 Generate Embeddings]
+        Clustering[🔎 Cluster (DBSCAN, Isolation Forest)]
+        Outliers[🚨 Identify Outliers]
+        Feature --> Embedding
+        Embedding --> Clustering
+        Clustering --> Outliers
+    end
+    subgraph "Action"
+        Alert[🚨 Alert System]
+        Review[👀 Human/Automated Review]
+        Outliers --> Alert
+        Alert --> Review
     end
 
-    subgraph Embedding & Analysis
-        B --> C[Generate Embeddings];
-        C --> D{Clustering Algorithm<br>e.g., DBSCAN, Isolation Forest};
-        D --> E[Identify Outliers<br>Points not belonging to any cluster];
-    end
-
-    subgraph Action
-        E --> F((Alert System));
-        F --> G[Human Review / Automated Action];
-    end
-
-    %% Styling
-    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style E fill:#fce4ec,stroke:#ad1457,stroke-width:2px
-    style F fill:#ffebee,stroke:#b71c1c,stroke-width:2px
-    style G fill:#e0f7fa,stroke:#006064,stroke-width:2px
-```
+    %% Styling (see copilot-instructions.md)
+    style Data fill:#E1F5FE,stroke:#1976D2
+    style Feature fill:#E8F6F3,stroke:#1B5E4F
+    style Embedding fill:#FFF2CC,stroke:#B7950B
+    style Clustering fill:#FEF9E7,stroke:#D68910
+    style Outliers fill:#FCE4EC,stroke:#AD1457
+    style Alert fill:#FFEBEE,stroke:#A93226
+    style Review fill:#E0F7FA,stroke:#006064
+```  
 
 ### Code Example: Detecting Anomalous Log Entries
 
@@ -315,39 +326,37 @@ Multimodal models like OpenAI's **CLIP** (Contrastive Language–Image Pre-train
 The architecture involves two encoders, one for each modality, that are trained to align their outputs.
 
 ```mermaid
-graph TD
-    subgraph Training
-        T[Text: "A photo of a cat"] --> TE(Text Encoder);
-        I[Image: (cat.jpg)] --> IE(Image Encoder);
-        TE --> TV[Text Embedding];
-        IE --> IV[Image Embedding];
-        
-        subgraph Contrastive Loss
-            TV -- Similarity --> IV;
-            TV -- Similarity --> IV_neg[Other Image Embeddings];
+flowchart TD
+    subgraph "Training Phase"
+        Txt[📝 Text Input: Photo of a cat] --> TxtEnc[🔤 Text Encoder]
+        Img[🖼️ Image Input: cat.jpg] --> ImgEnc[🧠 Image Encoder]
+        TxtEnc --> TxtEmb[🔢 Text Embedding]
+        ImgEnc --> ImgEmb[🔢 Image Embedding]
+        subgraph "Contrastive Loss"
+            TxtEmb -- Similarity --> ImgEmb
+            TxtEmb -- Similarity (Negative) --> ImgEmbNeg[Other Image Embeddings]
         end
     end
 
-    subgraph Inference: Text-to-Image Search
-        Query["Query: 'A running dog'"] --> QTE(Text Encoder);
-        QTE --> QTV[Query Embedding];
-        QTV --> Search{Vector Search<br>Against indexed image embeddings};
-        Search --> Results[Top-K Images];
+    subgraph "Inference: Text-to-Image Search"
+        Query[📝 Query: A running dog] --> QueryEnc[🔤 Text Encoder]
+        QueryEnc --> QueryEmb[🔢 Query Embedding]
+        QueryEmb --> VSearch{🔍 Vector Search: Find similar images}
+        VSearch --> Results[🖼️ Top-K Images]
     end
 
-    %% Styling
-    style T fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style I fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style TE fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style IE fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style TV fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style IV fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style Contrastive fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
-    style Query fill:#e0f7fa,stroke:#006064,stroke-width:2px
-    style QTE fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style QTV fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style Search fill:#fffde7,stroke:#f57f17,stroke-width:2px
-    style Results fill:#e0f7fa,stroke:#006064,stroke-width:2px
+    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef encoder fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef embedding fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef loss fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px;
+    classDef search fill:#fffde7,stroke:#f57f17,stroke-width:2px;
+    classDef result fill:#e0f7fa,stroke:#006064,stroke-width:2px;
+    class Txt,Img,Query input;
+    class TxtEnc,ImgEnc,QueryEnc encoder;
+    class TxtEmb,ImgEmb,QueryEmb embedding;
+    class ImgEmbNeg loss;
+    class VSearch search;
+    class Results result;
 ```
 
 ### State-of-the-Art (2024-2025)

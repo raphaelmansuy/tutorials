@@ -48,57 +48,49 @@ Here is a conceptual diagram of a typical vector database architecture:
 
 ```mermaid
 flowchart TD
-    subgraph "Client Application"
-        direction LR
-        SDK[SDK / API Client]
+    subgraph ClientLayer ["Client Layer"]
+        Client[🌐 API Client]
+    end
+    subgraph ControlPlane ["Control Plane"]
+        Gateway[🔀 API Gateway / Load Balancer]
+        Auth[🔐 Authentication & AuthZ]
+        Meta[📚 Metadata Store]
+        Gateway --> Auth
+        Gateway --> Meta
+    end
+    subgraph DataPlane ["Data Plane"]
+        subgraph ProcessingServices ["Processing Services"]
+            Ingest[🚚 Ingestion Service]
+            QuerySvc[🔍 Query Service]
+        end
+        
+        subgraph DistributedStorage ["Distributed Storage Layer"]
+            Shard1[🗄️ Shard 1<br/>Vector + Metadata<br/>+ HNSW Index]
+            Shard2[🗄️ Shard 2<br/>Vector + Metadata<br/>+ HNSW Index]
+            ShardN[🗄️ Shard N<br/>Vector + Metadata<br/>+ HNSW Index]
+        end
+        
+        %% Simplified connections within Data Plane
+        Ingest --> DistributedStorage
+        QuerySvc --> DistributedStorage
     end
 
-    subgraph "Vector Database Service"
-        direction TB
-        API_Gateway[API Gateway / Load Balancer]
+    %% Main client flow connections
+    Client --> Gateway
+    Gateway --> ProcessingServices
 
-        subgraph "Control Plane"
-            direction LR
-            Auth[Authentication & AuthZ]
-            Metadata_Store[Metadata Store e.g. for collections, schemas]
-        end
-
-        subgraph "Data Plane"
-            direction TB
-            Ingestion_Service[Ingestion Service]
-            Query_Service[Query Service]
-
-            subgraph "Distributed Storage & Indexing"
-                direction LR
-                Shard1[Shard 1<br/>- Vector Index<br/>- Metadata Store]
-                Shard2[Shard 2<br/>- Vector Index<br/>- Metadata Store]
-                ShardN[Shard N<br/>- Vector Index<br/>- Metadata Store]
-            end
-        end
-    end
-
-    SDK -- "gRPC / REST API" --> API_Gateway
-    API_Gateway --> Auth
-    API_Gateway -- "Write/Update Requests" --> Ingestion_Service
-    API_Gateway -- "Query Requests" --> Query_Service
-
-    Ingestion_Service -- "Distributes Data" --> Shard1
-    Ingestion_Service -- "Distributes Data" --> Shard2
-    Ingestion_Service -- "Distributes Data" --> ShardN
-
-    Query_Service -- "Scatter-Gather Query" --> Shard1
-    Query_Service -- "Scatter-Gather Query" --> Shard2
-    Query_Service -- "Scatter-Gather Query" --> ShardN
-
-    style SDK fill:#D6EAF8,stroke:#3498DB
-    style API_Gateway fill:#D1F2EB,stroke:#1ABC9C
-    style Ingestion_Service fill:#FCF3CF,stroke:#F1C40F
-    style Query_Service fill:#FDEDEC,stroke:#E74C3C
+    %% Styles (see copilot-instructions.md)
+    style Client fill:#E8F4FD,stroke:#2C5AA0
+    style Gateway fill:#E8F6F3,stroke:#1B5E4F
+    style Auth fill:#EAEDED,stroke:#95A5A6
+    style Meta fill:#EAEDED,stroke:#95A5A6
+    style Ingest fill:#FCF3CF,stroke:#F1C40F
+    style QuerySvc fill:#FDEDEC,stroke:#E74C3C
     style Shard1 fill:#E8DAEF,stroke:#8E44AD
     style Shard2 fill:#E8DAEF,stroke:#8E44AD
     style ShardN fill:#E8DAEF,stroke:#8E44AD
-    style Auth fill:#EAEDED,stroke:#95A5A6
-    style Metadata_Store fill:#EAEDED,stroke:#95A5A6
+    style ProcessingServices fill:#F0F8FF,stroke:#4682B4,stroke-width:2px
+    style DistributedStorage fill:#F5F5F5,stroke:#696969,stroke-width:2px
 ```
 
 **Key Components Explained:**
@@ -208,13 +200,13 @@ flowchart TD
     L0_Node3 --> L0_Node5
     L0_Node5 --> Result
 
-    %% Styling
-    style Layer2 fill:#FADBD8,stroke:#C0392B
-    style Layer1 fill:#D6EAF8,stroke:#2E86C1
-    style Layer0 fill:#D5F5E3,stroke:#229954
-    style Start fill:#F1C40F,stroke:#B7950B
-    style Result fill:#2ECC71,stroke:#28B463
-    style Query fill:#E8DAEF,stroke:#8E44AD
+    %% Styling - Professional Color Palette (High Contrast Pastels)
+    style Layer2 fill:#FADBD8,stroke:#A93226
+    style Layer1 fill:#E8F4FD,stroke:#2C5AA0
+    style Layer0 fill:#E8F6F3,stroke:#1B5E4F
+    style Start fill:#FFF2CC,stroke:#B7950B
+    style Result fill:#E8F6F3,stroke:#1B5E4F
+    style Query fill:#F4ECF7,stroke:#7D3C98
 ```
 
 ### The Trade-off Triangle: Recall, Speed, and Cost
@@ -268,28 +260,28 @@ Batch pipelines are often orchestrated using workflow management tools like **Ap
 flowchart TD
     subgraph "Data Sources"
         direction LR
-        DB[(Production DB)]
-        DataLake[/Data Lake/]
-        CMS[(Content Mgmt System)]
+        DB[🗄️ Production DB]
+        DataLake[📁 Data Lake]
+        CMS[📝 Content Mgmt System]
     end
 
     subgraph "Batch Processing Workflow - Airflow DAG"
         direction TB
-        A[Extract Data]
-        B[Clean & Preprocess]
-        C[Generate Embeddings]
-        D[Prepare for Ingestion]
-        E[Upsert to Vector DB]
+        A[📥 Extract Data]
+        B[🧹 Clean & Preprocess]
+        C[🔧 Generate Embeddings]
+        D[📦 Prepare for Ingestion]
+        E[💾 Upsert to Vector DB]
     end
 
     subgraph "Embedding Infrastructure"
         direction TB
-        ModelService[Embedding Model Service<br/>Hugging Face, OpenAI API]
+        ModelService[🤖 Embedding Model Service<br/>Hugging Face, OpenAI API]
     end
 
     subgraph "Vector Database"
         direction TB
-        VectorDB[(Vector DB)]
+        VectorDB[🗄️ Vector DB]
     end
 
     DB --> A
@@ -303,11 +295,17 @@ flowchart TD
     D --> E
     E -- "Batch Upsert" --> VectorDB
 
-    style A fill:#AED6F1,stroke:#3498DB
-    style B fill:#A9DFBF,stroke:#27AE60
-    style C fill:#F9E79F,stroke:#F1C40F
-    style D fill:#F5CBA7,stroke:#E67E22
-    style E fill:#FADBD8,stroke:#C0392B
+    %% Professional Color Palette (High Contrast Pastels)
+    style A fill:#E8F4FD,stroke:#2C5AA0
+    style B fill:#E8F6F3,stroke:#1B5E4F
+    style C fill:#FFF2CC,stroke:#B7950B
+    style D fill:#FADBD8,stroke:#A93226
+    style E fill:#F4ECF7,stroke:#7D3C98
+    style DB fill:#EAEDED,stroke:#566573
+    style DataLake fill:#EAEDED,stroke:#566573
+    style CMS fill:#EAEDED,stroke:#566573
+    style ModelService fill:#FEF9E7,stroke:#D68910
+    style VectorDB fill:#E1F5FE,stroke:#1976D2
 ```
 
 ### Real-Time Ingestion: Keeping Data Fresh
@@ -323,23 +321,23 @@ These pipelines are commonly built using message queues or event streams like **
 ```mermaid
 flowchart TD
     subgraph "Source System"
-        SourceDB[(Production DB)]
+        SourceDB[🗄️ Production DB]
     end
 
     subgraph "Change Data Capture - CDC"
-        CDC[CDC Service<br/>Debezium]
+        CDC[🔄 CDC Service<br/>Debezium]
     end
 
     subgraph "Event Stream"
-        Kafka[Message Queue<br/>Kafka, Kinesis]
+        Kafka[📡 Message Queue<br/>Kafka, Kinesis]
     end
 
     subgraph "Streaming Processor"
-        Processor[Event Consumer<br/>Flink, Spark Streaming, or custom microservice]
+        Processor[⚙️ Event Consumer<br/>Flink, Spark Streaming, or custom microservice]
     end
 
     subgraph "Vector Database"
-        VectorDB[(Vector DB)]
+        VectorDB[🗄️ Vector DB]
     end
 
     SourceDB -- "Database Transaction" --> CDC
@@ -347,11 +345,12 @@ flowchart TD
     Kafka -- "Consumes Event" --> Processor
     Processor -- "Generates Embedding & Upserts/Deletes" --> VectorDB
 
-    style SourceDB fill:#E8DAEF,stroke:#8E44AD
-    style CDC fill:#D4E6F1,stroke:#5DADE2
-    style Kafka fill:#D1F2EB,stroke:#1ABC9C
-    style Processor fill:#FCF3CF,stroke:#F1C40F
-    style VectorDB fill:#FDEDEC,stroke:#E74C3C
+    %% Professional Color Palette (High Contrast Pastels)
+    style SourceDB fill:#E8F4FD,stroke:#2C5AA0
+    style CDC fill:#E8F6F3,stroke:#1B5E4F
+    style Kafka fill:#FFF2CC,stroke:#B7950B
+    style Processor fill:#FADBD8,stroke:#A93226
+    style VectorDB fill:#F4ECF7,stroke:#7D3C98
 ```
 
 **Handling Updates and Deletes:**

@@ -10,40 +10,61 @@ Different retrieval tasks have different requirements for accuracy, speed, inter
 
 ```mermaid
 flowchart TD
-    A[Retrieval Task] --> B{Primary Requirement}
+    %% Main Task
+    Task[🔍 Retrieval Task]
+    Task --> Speed[⚡ Speed + Scale]
+    Task --> Accuracy[🏆 Accuracy]
+    Task --> Interpret[🔎 Interpretability]
+    Task --> Resources[💾 Resource Efficiency]
     
-    B --> C[Speed + Scale]
-    B --> D[Accuracy]
-    B --> E[Interpretability]
-    B --> F[Resource Efficiency]
+    %% Speed alternatives
+    Speed --> Sparse[🟦 Sparse Embeddings<br/>BM25, TF-IDF]
+    Speed --> Binary[⬛ Binary Embeddings<br/>Ultra-fast search]
     
-    C --> C1[Sparse Embeddings<br/>BM25, TF-IDF]
-    C --> C2[Binary Embeddings<br/>Ultra-fast search]
+    %% Accuracy alternatives
+    Accuracy --> Dense[🟩 Dense Embeddings<br/>BERT, OpenAI]
+    Accuracy --> Multi[🟧 Multi-Vector<br/>ColBERT]
     
-    D --> D1[Dense Embeddings<br/>BERT, OpenAI]
-    D --> D2[Multi-Vector<br/>ColBERT]
+    %% Interpretability alternatives
+    Interpret --> SPLADE[🔸 Neural Sparse<br/>SPLADE]
+    Interpret --> Traditional[🔹 Traditional Sparse<br/>BM25 + analysis]
     
-    E --> E1[Neural Sparse<br/>SPLADE]
-    E --> E2[Traditional Sparse<br/>BM25 + analysis]
+    %% Resource efficiency alternatives
+    Resources --> Quantized[📦 Quantized<br/>8-bit, 4-bit]
+    Resources --> Variable[🔀 Variable-Dimension<br/>Matryoshka]
     
-    F --> F1[Quantized<br/>8-bit, 4-bit]
-    F --> F2[Variable-Dimension<br/>Matryoshka]
+    %% Example use cases
+    Sparse --> DocumentSearch[📄 Document Search<br/>Legal, Academic]
+    Binary --> RealTime[📱 Real-time Apps<br/>Mobile, Edge]
+    Dense --> SemanticSearch[🛒 Semantic Search<br/>E-commerce, Q&A]
+    Multi --> Precision[🔬 High-precision<br/>Research, Analysis]
+    SPLADE --> Explainable[💡 Explainable AI<br/>Healthcare, Finance]
+    Traditional --> Archives[🏛️ Traditional IR<br/>Libraries, Archives]
+    Quantized --> WebSearch[🌐 Large-scale<br/>Web search]
+    Variable --> Adaptive[⚙️ Adaptive Systems<br/>Multi-tier architecture]
     
-    C1 --> G[Document Search<br/>Legal, Academic]
-    C2 --> H[Real-time Apps<br/>Mobile, Edge]
-    D1 --> I[Semantic Search<br/>E-commerce, Q&A]
-    D2 --> J[High-precision<br/>Research, Analysis]
-    E1 --> K[Explainable AI<br/>Healthcare, Finance]
-    E2 --> L[Traditional IR<br/>Libraries, Archives]
-    F1 --> M[Large-scale<br/>Web search]
-    F2 --> N[Adaptive Systems<br/>Multi-tier arch]
-    
-    style A fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
-    style B fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style C fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
-    style D fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-    style E fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
-    style F fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
+    %% Styles (see copilot-instructions.md)
+    style Task fill:#EAEDED,stroke:#566573
+    style Speed fill:#E8F4FD,stroke:#2C5AA0
+    style Accuracy fill:#FFF2CC,stroke:#B7950B
+    style Interpret fill:#E8F6F3,stroke:#1B5E4F
+    style Resources fill:#F4ECF7,stroke:#7D3C98
+    style Sparse fill:#FFF2CC,stroke:#B7950B
+    style Binary fill:#FADBD8,stroke:#A93226
+    style Dense fill:#E8F4FD,stroke:#2C5AA0
+    style Multi fill:#FADBD8,stroke:#A93226
+    style SPLADE fill:#E8F6F3,stroke:#1B5E4F
+    style Traditional fill:#F4ECF7,stroke:#7D3C98
+    style Quantized fill:#E1F5FE,stroke:#1976D2
+    style Variable fill:#EAEDED,stroke:#566573
+    style DocumentSearch fill:#E1F5FE,stroke:#1976D2
+    style RealTime fill:#FFF2CC,stroke:#B7950B
+    style SemanticSearch fill:#E1F5FE,stroke:#1976D2
+    style Precision fill:#FFF2CC,stroke:#B7950B
+    style Explainable fill:#E8F6F3,stroke:#1B5E4F
+    style Archives fill:#F4ECF7,stroke:#7D3C98
+    style WebSearch fill:#E1F5FE,stroke:#1976D2
+    style Adaptive fill:#F4ECF7,stroke:#7D3C98
 ```
 
 ## Task 1: Keyword-Based Document Search

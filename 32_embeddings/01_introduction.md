@@ -31,32 +31,30 @@ Based on the latest MTEB (Massive Text Embedding Benchmark) leaderboard and indu
 flowchart TD
     %% Data Sources
     subgraph "Data Sources"
-        A1[Text Documents]
-        A2[Images]
-        A3[Audio/Speech]
-        A4[Code]
+        A1[📄 Text Documents]
+        A2[🖼️ Images]
+        A3[🔊 Audio]
+        A4[💻 Code]
     end
     %% Embedding Models
     subgraph "Embedding Models"
-        B1[Dense Models\nBERT, OpenAI]
-        B2[Sparse Models\nBM25, SPLADE]
-        B3[Multimodal\nCLIP, ALIGN]
+        B1[⚙️ Dense Models<br/>BERT, OpenAI]
+        B2[⚙️ Sparse Models<br/>BM25, SPLADE]
+        B3[⚙️ Multimodal Models<br/>CLIP, ALIGN]
     end
     %% Vector Representations
     subgraph "Vector Representations"
-        C1[384-3072 dimensions]
-        C2[Semantic vectors]
-        C3[Compressed formats]
+        C1[🔢 384-3072 dims]
+        C2[🔢 Semantic Vectors]
+        C3[🔢 Compressed Formats]
     end
     %% Retrieval Systems
     subgraph "Retrieval Systems"
-        D1[Semantic Search]
-        D2[Recommendation]
-        D3[Classification]
-        D4[Clustering]
+        D1[🔍 Semantic Search]
+        D2[🎯 Recommendation]
+        D3[📊 Classification]
+        D4[🔗 Clustering]
     end
-
-    %% Connections
     A1 --> B1
     A2 --> B3
     A3 --> B3
@@ -68,8 +66,6 @@ flowchart TD
     C2 --> D2
     C3 --> D3
     C2 --> D4
-
-    %% Styles
     classDef source fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000;
     classDef model fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000;
     classDef vector fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000;
@@ -186,40 +182,32 @@ Systems using multiple vectors per item for fine-grained representation.
 ```mermaid
 flowchart LR
     subgraph "Embedding Types"
-        B[Sparse]
-        C[Dense]
-        D[Quantized]
-        E[Binary]
-        F[Variable-Dimension]
-        G[Multi-Vector]
+        Sparse[🟦 Sparse]
+        Dense[🟢 Dense]
+        Quantized[📦 Quantized]
+        Binary[🔢 Binary]
+        VarDim[🔀 Variable-Dimension]
+        MultiVec[🔁 Multi-Vector]
     end
-    B --> B1[High dimensions\nMostly zeros]
-    B --> B2[Fast exact matching]
-    C --> C1[Compact size\nRich semantics]
-    C --> C2[Best general purpose]
-    D --> D1[Compressed dense\nLower precision]
-    D --> D2[Memory efficient]
-    E --> E1[Ultra compact\nBinary values]
-    E --> E2[Fastest operations]
-    F --> F1[Flexible size\nTask adaptive]
-    F --> F2[Resource aware]
-    G --> G1[Multiple vectors\nPer item]
-    G --> G2[Highest accuracy]
+    Sparse --> SparseInfo1[🔹 High dims<br/>Mostly zeros]
+    Sparse --> SparseInfo2[🔹 Exact match<br/>Fast]
+    Dense --> DenseInfo1[🔹 Compact size<br/>Rich semantics]
+    Dense --> DenseInfo2[🔹 Versatile<br/>General purpose]
+    Quantized --> QuantInfo1[🔹 Compressed dense<br/>Lower precision]
+    Quantized --> QuantInfo2[🔹 Memory efficient]
+    Binary --> BinaryInfo1[🔹 Ultra compact<br/>Binary values]
+    Binary --> BinaryInfo2[🔹 Ultra-fast ops]
+    VarDim --> VarInfo1[🔹 Adaptive size<br/>Task aware]
+    VarDim --> VarInfo2[🔹 Resource efficient]
+    MultiVec --> MultiInfo1[🔹 Multiple vectors<br/>Per item]
+    MultiVec --> MultiInfo2[🔹 Highest accuracy]
 
     %% Styles
-    classDef sparse fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000;
-    classDef dense fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000;
-    classDef quant fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000;
-    classDef binary fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000;
-    classDef var fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000;
-    classDef multi fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#000;
-    class B,B1,B2 sparse;
-    class C,C1,C2 dense;
-    class D,D1,D2 quant;
-    class E,E1,E2 binary;
-    class F,F1,F2 var;
-    class G,G1,G2 multi;
-```
+    classDef type fill:#f0f4c3,stroke:#827717,stroke-width:2px,color:#000;
+    classDef info fill:#e8eaf6,stroke:#3949ab,stroke-width:1px,color:#000;
+    class Sparse,Dense,Quantized,Binary,VarDim,MultiVec type;
+    class SparseInfo1,SparseInfo2,DenseInfo1,DenseInfo2,QuantInfo1,QuantInfo2,BinaryInfo1,BinaryInfo2,VarInfo1,VarInfo2,MultiInfo1,MultiInfo2 info;
+``` 
 
 ## Understanding Vector Similarity
 

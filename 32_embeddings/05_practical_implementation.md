@@ -11,32 +11,53 @@ Moving from prototypes to production requires addressing scalability, reliabilit
 Every production embedding system requires these core components:
 
 ```mermaid
-graph TD
-    A[Client Applications] --> B[API Gateway]
-    B --> C[Search Service]
-    C --> D[Embedding Service]
-    C --> E[Vector Database]
-    C --> F[Metadata Store]
-    
-    G[Data Pipeline] --> H[Document Processor]
-    H --> I[Embedding Generator]
-    I --> E
-    I --> F
-    
-    J[Model Registry] --> D
-    J --> I
-    
-    K[Monitoring] --> C
-    K --> D
-    K --> E
-    
-    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
-    style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
-    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
-    style E fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
-    style F fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-```
+flowchart TD
+    subgraph "Client & API"
+        Client[🌐 Client App]
+        Gateway[🔀 API Gateway]
+        Client --> Gateway
+    end
+    subgraph "Core Services"
+        SearchSvc[🔍 Search Service]
+        EmbedSvc[✨ Embedding Service]
+        VectorDB[🗄️ Vector Database]
+        MetaStore[📚 Metadata Store]
+        Gateway --> SearchSvc
+        SearchSvc --> EmbedSvc
+        SearchSvc --> VectorDB
+        SearchSvc --> MetaStore
+    end
+    subgraph "Data Pipeline"
+        DataPipe[🔄 Data Pipeline]
+        DocProc[📄 Document Processor]
+        EmbedGen[🔢 Embedding Generator]
+        DataPipe --> DocProc
+        DocProc --> EmbedGen
+        EmbedGen --> VectorDB
+        EmbedGen --> MetaStore
+    end
+    subgraph "Platform Services"
+        ModelReg[🏷️ Model Registry]
+        Monitoring[📈 Monitoring]
+        ModelReg --> EmbedSvc
+        ModelReg --> EmbedGen
+        Monitoring --> SearchSvc
+        Monitoring --> EmbedSvc
+        Monitoring --> VectorDB
+    end
+    %% Styles (see copilot-instructions.md)
+    style Client fill:#E8F4FD,stroke:#2C5AA0
+    style Gateway fill:#E8F6F3,stroke:#1B5E4F
+    style SearchSvc fill:#FFF2CC,stroke:#B7950B
+    style EmbedSvc fill:#FADBD8,stroke:#A93226
+    style VectorDB fill:#F4ECF7,stroke:#7D3C98
+    style MetaStore fill:#EAEDED,stroke:#566573
+    style DataPipe fill:#E1F5FE,stroke:#1976D2
+    style DocProc fill:#FFF2CC,stroke:#B7950B
+    style EmbedGen fill:#FFE7C6,stroke:#D68910
+    style ModelReg fill:#FEF9E7,stroke:#D68910
+    style Monitoring fill:#EAEDED,stroke:#566573
+```  
 
 ### Scalable Embedding Service Architecture
 

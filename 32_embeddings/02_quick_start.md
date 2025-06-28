@@ -155,24 +155,41 @@ This is the power of embeddings – they capture semantic meaning in numerical f
 
 ```mermaid
 flowchart LR
-    A[Input Documents] --> B[Sentence Transformer]
-    B --> C[Document Embeddings]
-    C --> D[FAISS Index]
-    
-    E[Query Text] --> F[Same Model]
-    F --> G[Query Embedding]
-    G --> H[Similarity Search]
-    D --> H
-    H --> I[Ranked Results]
-    
-    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style E fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
-    style F fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
-    style D fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
-    style H fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
-    style I fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
-```
+    subgraph "Document Pipeline"
+        Docs[📄 Documents]
+        Model[🤖 Embed Model]
+        Embeds[🔢 Doc Embeddings]
+        Index[🗄️ FAISS Index]
+        Docs --> Model
+        Model --> Embeds
+        Embeds --> Index
+    end
+    subgraph "Query Pipeline"
+        Query[💬 Query]
+        QModel[🤖 Same Model]
+        QEmbed[🔢 Query Embed]
+        Search[🔍 Search]
+        Results[🏆 Results]
+        Query --> QModel
+        QModel --> QEmbed
+        QEmbed --> Search
+        Index --> Search
+        Search --> Results
+    end
+    %% Styles
+    classDef source fill:#E8F4FD,stroke:#2C5AA0,stroke-width:2px;
+    classDef service fill:#E8F6F3,stroke:#1B5E4F,stroke-width:2px;
+    classDef embed fill:#FFF2CC,stroke:#B7950B,stroke-width:2px;
+    classDef storage fill:#FADBD8,stroke:#A93226,stroke-width:2px;
+    classDef search fill:#FDEDEC,stroke:#C0392B,stroke-width:2px;
+    classDef result fill:#F4ECF7,stroke:#7D3C98,stroke-width:2px;
+    class Docs,Query source;
+    class Model,QModel service;
+    class Embeds,QEmbed embed;
+    class Index storage;
+    class Search search;
+    class Results result;
+``` 
 
 ### Key Components Explained
 

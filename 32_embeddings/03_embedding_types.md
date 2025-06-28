@@ -16,42 +16,68 @@ The six types we'll explore are:
 ## Understanding the Embedding Landscape
 
 Before diving into specifics, let's understand how these types relate to each other and the problems they solve:
-
 ```mermaid
-graph TD
-    A[Text Input] --> B{Embedding Strategy}
-    
-    B --> C[Sparse Embeddings]
-    B --> D[Dense Embeddings]
-    
-    C --> C1[BM25/TF-IDF<br/>Traditional IR]
-    C --> C2[SPLADE<br/>Neural Sparse]
-    
-    D --> D1[Standard Dense<br/>BERT, OpenAI]
-    D --> D2[Compressed Variants]
-    
-    D2 --> E[Quantized<br/>8-bit, 4-bit]
-    D2 --> F[Binary<br/>1-bit]
-    D2 --> G[Variable-Dim<br/>Matryoshka]
-    
-    D1 --> H[Multi-Vector<br/>ColBERT]
-    
-    C1 --> I[Fast Exact Match]
-    C2 --> J[Interpretable + Semantic]
-    D1 --> K[Best Accuracy]
-    E --> L[Memory Efficient]
-    F --> M[Ultra Fast]
-    G --> N[Adaptive]
-    H --> O[Highest Precision]
-    
-    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
-    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
-    style C fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
-    style D fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-    style E fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-    style F fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000
-    style G fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
-    style H fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#000
+flowchart TD
+    %% Input and Strategy
+    subgraph "Input"
+        Text[💬 Text Input]
+    end
+    subgraph "Embedding Strategy"
+        Strategy[🧩 Choose Strategy]
+    end
+    %% Sparse Path
+    subgraph "Sparse Embeddings"
+        Sparse[🟦 Sparse]
+        BM25[🔍 BM25/TF-IDF]
+        SPLADE[🧠 SPLADE]
+        Fast[⚡ Fast]
+        Interp[🔎 Interpretable]
+    end
+    %% Dense Path
+    subgraph "Dense Embeddings"
+        Dense[🟩 Dense]
+        StdDense[🔧 Standard]
+        Quant[🟨 Quantized]
+        Binary[🔢 Binary]
+        VarDim[🌀 Variable-Dim]
+        Multi[🧬 Multi-Vector]
+        Best[🏆 Top Accuracy]
+        MemEff[💾 Memory Efficient]
+        Ultra[⚡ Ultra Fast]
+        Adapt[🔄 Adaptive]
+        Precise[🎯 High Precision]
+    end
+    %% Connections
+    Text --> Strategy
+    Strategy --> Sparse
+    Strategy --> Dense
+    Sparse --> BM25
+    Sparse --> SPLADE
+    BM25 --> Fast
+    SPLADE --> Interp
+    Dense --> StdDense
+    StdDense --> Multi
+    StdDense --> Best
+    StdDense --> MemEff
+    StdDense --> Ultra
+    StdDense --> Adapt
+    StdDense --> Precise
+    StdDense --> Quant
+    Quant --> Binary
+    Quant --> VarDim
+    %% Styling
+    classDef input fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#222;
+    classDef strategy fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#222;
+    classDef sparse fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#222;
+    classDef dense fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#222;
+    classDef detail fill:#f8f9f9,stroke:#616a6b,stroke-width:1px,color:#222;
+    class Text input;
+    class Strategy strategy;
+    class Sparse sparse;
+    class Dense dense;
+    class BM25,SPLADE,Fast,Interp,Quant,Binary,VarDim,Multi,Best,MemEff,Ultra,Adapt,Precise detail;
+```
+``` 
 ```
 
 ## 1. Sparse Embeddings: The Foundation of Information Retrieval
@@ -931,16 +957,40 @@ This chapter explored three of the six core embedding types in detail:
 ### Performance Hierarchy
 
 ```mermaid
-graph LR
-    A[Accuracy] --> B[Dense > Sparse > Quantized]
-    C[Speed] --> D[Quantized > Sparse > Dense]
-    E[Memory] --> F[Quantized > Sparse > Dense]
-    G[Interpretability] --> H[Sparse > Quantized > Dense]
-    
-    style A fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-    style C fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-    style E fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
-    style G fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
+flowchart LR
+    subgraph "Performance Criteria"
+        Accuracy[🎯 Accuracy]
+        Speed[⚡ Speed]
+        Memory[💾 Memory]
+        Interpretability[🔍 Interpretability]
+    end
+
+    subgraph "Embedding Types"
+        Dense[🟦 Dense]
+        Sparse[🟩 Sparse]
+        Quantized[🟨 Quantized]
+    end
+
+    Accuracy -- Best: Dense, then Sparse, then Quantized --> Dense
+    Accuracy -- Next Best --> Sparse
+    Accuracy -- Least --> Quantized
+
+    Speed -- Best: Quantized, then Sparse, then Dense --> Quantized
+    Speed -- Next Best --> Sparse
+    Speed -- Least --> Dense
+
+    Memory -- Best: Quantized, then Sparse, then Dense --> Quantized
+    Memory -- Next Best --> Sparse
+    Memory -- Least --> Dense
+
+    Interpretability -- Best: Sparse, then Quantized, then Dense --> Sparse
+    Interpretability -- Next Best --> Quantized
+    Interpretability -- Least --> Dense
+
+    classDef criteria fill:#E8F6F3,stroke:#1B5E4F,stroke-width:2px,color:#000;
+    classDef type fill:#FFF2CC,stroke:#B7950B,stroke-width:2px,color:#000;
+    class Accuracy,Speed,Memory,Interpretability criteria;
+    class Dense,Sparse,Quantized type;
 ```
 
 ### What's Next
