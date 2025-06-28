@@ -149,7 +149,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph "Traditional Approach - Fragmented"
+    subgraph "Traditional - Fragmented"
         A1[🧩 LangGraph] --> B1[⚙️ Custom Integration<br/>6-12 weeks dev]
         A2[🤖 CrewAI] --> B2[🔄 Different Protocol<br/>Rebuild everything]
         A3[🤖 OpenAI] --> B3[🛠️ Custom Solution<br/>High maintenance]
@@ -267,8 +267,8 @@ flowchart LR
 graph TB
     subgraph "The Agentic Protocol Stack"
         A[📡 AG-UI Protocol<br/>🎨 Agent ↔ User Interface] --> B[🚀 Application Layer]
-        C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent (Google)] --> B
-        D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool (Anthropic)] --> B
+        C[🤝 A2A Protocol<br/>🤝 Agent ↔ Agent From Google] --> B
+        D[🛠️ MCP Protocol<br/>🛠️ Agent ↔ Tool From Anthropic] --> B
         
         B --> E[🎯 Your AI Application]
     end
@@ -644,17 +644,17 @@ LOCAL_MODEL_URL=http://localhost:11434  # For Ollama
 
 **🔍 Supported Providers & Frameworks:**
 
-- **LangGraph** → ✅ Full AG-UI integration with CoAgents (verified)
-- **CrewAI Crews** → ✅ Multi-agent team support (verified)
-- **CrewAI Flows** → ✅ Sequential workflow support (verified)
-- **Mastra** → ✅ TypeScript agent framework (verified)
-- **AG2** → ✅ Open-source AgentOS (verified)
-- **Agno** → ✅ Multi-agent systems (verified)
-- **LlamaIndex** → ✅ RAG and knowledge integration (verified)
+- **[LangGraph](https://langchain-ai.github.io/langgraph/)** → ✅ Full AG-UI integration with CoAgents (verified)
+- **[CrewAI Crews](https://github.com/crewAIInc/crewAI)** → ✅ Multi-agent team support (verified)
+- **[CrewAI Flows](https://docs.crewai.com/concepts/flows)** → ✅ Sequential workflow support (verified)
+- **[Mastra](https://mastra.ai/)** → ✅ TypeScript agent framework (verified)
+- **[AG2](https://ag2ai.github.io/ag2/)** → ✅ Open-source AgentOS (verified)
+- **[Agno](https://github.com/agno-oss/agno)** → ✅ Multi-agent systems (verified)
+- **[LlamaIndex](https://www.llamaindex.ai/)** → ✅ RAG and knowledge integration (verified)
 - **Direct LLM** → ✅ OpenAI, Anthropic integration (verified)
 - **Local models** → ✅ Ollama, local deployment support (verified)
-- **Pydantic AI** → 🛠️ In Progress
-- **Vercel AI SDK** → 🛠️ In Progress
+- **[Pydantic AI](https://ai.pydantic.dev/)** → 🛠️ In Progress
+- **[Vercel AI SDK](https://sdk.vercel.ai/)** → 🛠️ In Progress
 
 ### Step 3: Start Your First Agent (5 minutes)
 
@@ -1326,7 +1326,12 @@ const config = {
 
 ## 📚 Framework Integration Guides
 
-### LangGraph Integration (CoAgents)
+### [LangGraph](https://langchain-ai.github.io/langgraph/) Integration (CoAgents)
+
+**🔗 Resources:**
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [CopilotKit CoAgents Guide](https://docs.copilotkit.ai/coagents)
+- [LangGraph + CopilotKit Examples](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
 
 ```typescript
 import { useCoAgent } from "@copilotkit/react-core";
@@ -1352,7 +1357,13 @@ export const LangGraphExample = () => {
 };
 ```
 
-### CrewAI Integration
+### [CrewAI](https://github.com/crewAIInc/crewAI) Integration
+
+**🔗 Resources:**
+- [CrewAI Documentation](https://docs.crewai.com/)
+- [CrewAI Crews Guide](https://docs.copilotkit.ai/crewai-crews)
+- [CrewAI Flows Guide](https://docs.crewai.com/concepts/flows)
+- [AG-UI Integration](https://docs.copilotkit.ai/crewai-crews)
 
 ```typescript
 import { useCopilotAction } from "@copilotkit/react-core";
@@ -1375,7 +1386,12 @@ export const CrewAIExample = () => {
 };
 ```
 
-### Mastra Integration  
+### [Mastra](https://mastra.ai/) Integration  
+
+**🔗 Resources:**
+- [Mastra Documentation](https://docs.mastra.ai/)
+- [AG-UI Integration Guide](https://docs.ag-ui.com/mastra)
+- [GitHub Repository](https://github.com/mastra-ai/mastra)
 
 ```typescript
 import { AbstractAgent, RunAgentInput, BaseEvent } from "@ag-ui/client";
@@ -1397,6 +1413,85 @@ export class MastraAgent extends AbstractAgent {
     });
   }
 }
+```
+
+### [AG2](https://ag2ai.github.io/ag2/) Integration
+
+**🔗 Resources:**
+- [AG2 Documentation](https://ag2ai.github.io/ag2/docs/Getting-Started)
+- [GitHub Repository](https://github.com/ag2ai/ag2)
+- [AG-UI Integration](https://docs.ag-ui.com/ag2)
+
+```typescript
+import { AG2Agent } from "@ag2/core";
+import { AGUIAdapter } from "@ag-ui/ag2-adapter";
+
+// AG2 agent with AG-UI integration
+export const AG2Example = () => {
+  const agent = new AG2Agent({
+    name: "coordinator",
+    systemMessage: "You coordinate multiple agents",
+  });
+
+  const aguiAdapter = new AGUIAdapter(agent);
+  
+  return aguiAdapter.createReactComponent();
+};
+```
+
+### [Agno](https://github.com/agno-oss/agno) Integration
+
+**🔗 Resources:**
+- [Agno Documentation](https://docs.agno.ai/)
+- [GitHub Repository](https://github.com/agno-oss/agno)
+- [Examples](https://github.com/agno-oss/agno/tree/main/examples)
+
+```typescript
+import { AgnoWorkflow } from "@agno/core";
+
+// Agno multi-agent system with AG-UI
+export const AgnoExample = () => {
+  const workflow = new AgnoWorkflow({
+    agents: [
+      { name: "planner", role: "planning" },
+      { name: "executor", role: "execution" },
+      { name: "reviewer", role: "review" }
+    ]
+  });
+
+  return workflow.createAGUIInterface();
+};
+```
+
+### [LlamaIndex](https://www.llamaindex.ai/) Integration
+
+**🔗 Resources:**
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [GitHub Repository](https://github.com/run-llama/llama_index)
+- [AG-UI RAG Examples](https://docs.ag-ui.com/llamaindex)
+
+```typescript
+import { VectorStoreIndex, Document } from "llamaindex";
+import { useCopilotAction } from "@copilotkit/react-core";
+
+// LlamaIndex RAG with AG-UI
+export const LlamaIndexExample = () => {
+  useCopilotAction({
+    name: "search_knowledge_base",
+    description: "Search the knowledge base using LlamaIndex",
+    parameters: [
+      { name: "query", type: "string", description: "Search query" }
+    ],
+    handler: async ({ query }) => {
+      const index = await VectorStoreIndex.fromDocuments(documents);
+      const queryEngine = index.asQueryEngine();
+      const response = await queryEngine.query(query);
+      return response.toString();
+    },
+  });
+
+  return <div>Knowledge Base Assistant</div>;
+};
 ```
 
 ## 🔗 Community & Resources
@@ -1592,6 +1687,40 @@ You've completed the comprehensive AG-UI tutorial! You now have the knowledge an
 - **A2A Protocol:** [Google's Agent2Agent Protocol](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/) (official, 50+ partners, verified)
 - **MCP Protocol:** [Anthropic's Model Context Protocol](https://github.com/modelcontextprotocol) (official, verified)
 - **Community Examples:** Live demos and working integrations (verified)
-- **Framework Support:** LangGraph, CrewAI (Crews/Flows), Mastra, AG2, Agno, LlamaIndex (all verified)
+- **Framework Support:** [LangGraph](https://langchain-ai.github.io/langgraph/), [CrewAI Crews](https://github.com/crewAIInc/crewAI), [CrewAI Flows](https://docs.crewai.com/concepts/flows), [Mastra](https://mastra.ai/), [AG2](https://ag2ai.github.io/ag2/), [Agno](https://github.com/agno-oss/agno), [LlamaIndex](https://www.llamaindex.ai/) (all verified)
 - **Event Types:** 22+ official event types from TypeScript/Python SDKs (verified)
+
+### Agent Framework Resources
+
+**🤖 Supported Frameworks & Official Links:**
+
+- **🧩 [LangGraph](https://langchain-ai.github.io/langgraph/)** → Multi-agent orchestration framework
+  - [Documentation](https://langchain-ai.github.io/langgraph/tutorials/)
+  - [CopilotKit CoAgents](https://docs.copilotkit.ai/coagents)
+  - [Examples](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
+
+- **👥 [CrewAI](https://github.com/crewAIInc/crewAI)** → Collaborative AI agent teams
+  - [CrewAI Crews Documentation](https://docs.crewai.com/)
+  - [CrewAI Flows Guide](https://docs.crewai.com/concepts/flows)
+  - [AG-UI Integration](https://docs.copilotkit.ai/crewai-crews)
+
+- **⚡ [Mastra](https://mastra.ai/)** → TypeScript-first agent framework
+  - [Mastra Documentation](https://docs.mastra.ai/)
+  - [AG-UI Integration Guide](https://docs.ag-ui.com/mastra)
+  - [GitHub Repository](https://github.com/mastra-ai/mastra)
+
+- **🔄 [AG2](https://ag2ai.github.io/ag2/)** → Open-source AgentOS
+  - [AG2 Documentation](https://ag2ai.github.io/ag2/docs/Getting-Started)
+  - [GitHub Repository](https://github.com/ag2ai/ag2)
+  - [AG-UI Integration](https://docs.ag-ui.com/ag2)
+
+- **🤖 [Agno](https://github.com/agno-oss/agno)** → Multi-agent system orchestration
+  - [Agno Documentation](https://docs.agno.ai/)
+  - [GitHub Repository](https://github.com/agno-oss/agno)
+  - [Examples](https://github.com/agno-oss/agno/tree/main/examples)
+
+- **📚 [LlamaIndex](https://www.llamaindex.ai/)** → RAG and knowledge integration
+  - [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+  - [GitHub Repository](https://github.com/run-llama/llama_index)
+  - [AG-UI RAG Examples](https://docs.ag-ui.com/llamaindex)
 
