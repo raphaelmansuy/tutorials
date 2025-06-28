@@ -259,6 +259,7 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 | [📖 Intent-Based Development Using VSCode Copilot AI Agent](./17_intent_based_dev_vs_code_copilot.md) | Beginner to Advanced | 6-8 hours | English  | Master the revolutionary approach to software development using natural language and AI collaboration with VS Code Copilot Agent |
 | [📖 Modern Python Development Toolkit 2025](./23-modern-python-dev-toolkit.md) | Intermediate to Advanced | 2-4 hours | English  | Unified, high-performance Python dev workflow with UV, Ruff, Pyright, Taskipy, and pre-commit. Modern best practices, automation, and CI/CD. |
 | [📖 MCP 2025-06-18 Documentation: From Novice to Practitioner](./24-mcp.md) | Beginner to Advanced | 8-12 hours | English | Master the Model Context Protocol (MCP) 2025-06-18 specification for seamless AI integration with structured outputs, interactive elicitation, OAuth 2.1 security, and enterprise-grade development |
+| [📖 AG-UI Protocol: Building Interactive AI Agents in Frontend Applications](./33_ag_ui.md) | Beginner to Advanced | 6-10 hours | English | Master the AG-UI Protocol for creating intelligent frontend interfaces with real-time AI agent communication, streaming events, and production-ready implementation using CopilotKit and OpenAI |
 
 **What you'll learn:**
 
@@ -312,6 +313,21 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Progressive data collection workflows** with adaptive user interactions
 - **Multi-layer security validation** and audit trail management
 
+#### AG-UI Protocol for Interactive AI Agents
+
+- **AG-UI Protocol fundamentals** and architecture understanding
+- **Real-time event streaming** with 22+ official event types (TEXT_MESSAGE, TOOL_CALL, THINKING, etc.)
+- **CopilotKit integration** for production-ready AI agent interfaces
+- **Interactive AI agent development** with natural language conversation flows
+- **State management patterns** for complex agent workflows and data synchronization
+- **Custom UI components** for specialized agent interactions and visualizations
+- **Multi-agent orchestration** with delegation and workflow management
+- **Transport flexibility** (Server-Sent Events, WebSockets, HTTP, Webhooks)
+- **Production deployment patterns** with authentication, security, and monitoring
+- **Real-world implementations** including todo management, data visualization, and collaborative workflows
+- **Performance optimization** for streaming applications and event handling
+- **Enterprise integration** with existing systems and authentication providers
+
 **Key Features:**
 
 - From simple code completion to complete application generation
@@ -327,6 +343,10 @@ Leverage artificial intelligence to accelerate development workflow and boost pr
 - **Standardized AI integration** with MCP protocol for seamless data source connections
 - **Enterprise-grade security** with OAuth 2.1 and Resource Indicators implementation
 - **Production-ready MCP servers** with comprehensive monitoring and observability
+- **Interactive AI agent interfaces** with real-time event streaming and state management
+- **Frontend AI integration** using CopilotKit, OpenAI, and modern web frameworks
+- **Multi-transport support** for flexible deployment architectures
+- **Custom UI components** for specialized agent interactions and data visualization
 
 ---
 
@@ -342,6 +362,7 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 | [📖 Vertex AI Agent Engine for the Impatient](./22_google_vertex_agent_engine.md) | Advanced | 12-24 hours | English | Master enterprise-grade AI agent development and deployment with Vertex AI Agent Engine, featuring multi-agent systems, production-ready orchestration, and comprehensive business impact analysis |
 | [📖 Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide](./25-video-transcription-with-gemini-2-5.md) | Beginner to Advanced | 3-5 hours | English | Master AI-powered transcription using Gemini 2.5 with timestamps, speaker identification, batch processing, and production-ready workflows for both Vertex AI and Gemini API |
 | [📖 A2A Protocol for the Impatient: From Novice to Practitioner in Record Time](./28-a2a.md) | Beginner to Advanced | 8-12 hours | English | Master the Agent-to-Agent Protocol (A2A) - the Linux Foundation standard for AI agent communication, featuring multi-agent workflows, enterprise integration, and production-ready implementation |
+| [📖 Mastering Embedding Types and Applications for Retrieval-Intensive Systems](./32_embeddings/index.md) | Intermediate to Advanced | 8-12 hours | English | Comprehensive guide to six core embedding types (sparse, dense, quantized, binary, variable-dimension, multi-vector) with practical implementation for semantic search, recommendation systems, and production retrieval applications |
 
 **What you'll learn:**
 
@@ -383,6 +404,21 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Task lifecycle management** and state tracking
 - **Integration with Google ADK** and other enterprise AI frameworks
 
+#### Embeddings for Retrieval-Intensive Systems
+
+- **Six core embedding types** mastery: sparse, dense, quantized, binary, variable-dimension, and multi-vector embeddings
+- **Semantic search implementation** from 5-minute quick start to production-ready systems
+- **Vector database integration** with optimization techniques for large-scale retrieval
+- **Model selection and fine-tuning** strategies for domain-specific applications
+- **Performance optimization** including memory efficiency and query speed enhancement
+- **Real-world applications** including e-commerce search, document analysis, and recommendation systems
+- **Multimodal embeddings** for text-image-audio understanding and cross-modal retrieval
+- **Production deployment** patterns with monitoring, scaling, and maintenance considerations
+- **Bias mitigation** and ethical considerations in embedding-based systems
+- **Latest 2025 trends** including Matryoshka representations and real-time adaptation
+- **Hands-on implementations** with popular frameworks and vector databases
+- **Troubleshooting guides** for common issues in embedding-based applications
+
 **Key Features:**
 
 - From data engineering to model deployment
@@ -410,6 +446,9 @@ Advanced ML training with Google Cloud's Vertex AI platform and AI agent develop
 - **Comprehensive testing frameworks** and best practices for A2A agent development
 - **Enterprise integration** with existing AI agent frameworks and cloud services
 - **24-hour challenge** to build complete agent-to-agent communication systems
+- **Comprehensive embedding mastery** with six core types for retrieval-intensive applications
+- **Vector database optimization** for production-scale semantic search and recommendation systems
+- **Multimodal AI capabilities** supporting text, image, and audio embeddings for cross-modal retrieval
 
 ---
 
