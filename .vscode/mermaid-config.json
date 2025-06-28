@@ -1,0 +1,25 @@
+{
+  "mermaidDiagramGuidelines": {
+    "description": "Guidelines for creating Mermaid diagrams in this workspace",
+    "rules": [
+      "❌ Never use numbered list format in node labels (e.g., '1. Extract Data')",
+      "✅ Use descriptive labels without numbers (e.g., 'Extract Data')",
+      "❌ Avoid parentheses in node labels that might conflict with syntax",
+      "✅ Use alternative separators like dashes or line breaks",
+      "🔍 Always validate diagrams using mermaid-diagram-validator before committing",
+      "📚 See MERMAID_GUIDELINES.md for detailed best practices"
+    ],
+    "commonIssues": {
+      "numberedLists": "Mermaid interprets '1. ', '2. ' as markdown list syntax",
+      "parentheses": "Can conflict with node shape definitions",
+      "specialCharacters": "Characters like (), {}, [] have special meaning in Mermaid"
+    },
+    "validationWorkflow": [
+      "1. Write diagram",
+      "2. Validate syntax using tools",
+      "3. Preview diagram",
+      "4. Test rendering",
+      "5. Commit changes"
+    ]
+  }
+}

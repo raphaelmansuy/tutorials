@@ -71,7 +71,7 @@ poetry.lock
 .pyre/
 
 # VS Code
-.vscode/
+# .vscode/ must be included in version control
 
 # MacOS
 .DS_Store
