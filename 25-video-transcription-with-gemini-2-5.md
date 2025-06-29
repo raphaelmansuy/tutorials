@@ -28,7 +28,7 @@ By the end of this tutorial, you will be able to:
 | Section | Focus | Time | Difficulty |
 |---------|-------|------|------------|
 | [Quick Start](#quick-start-your-first-transcription) | Get transcribing immediately | 15 min | Beginner |
-| [Core Concepts](#understanding-gemini-25-for-transcription) | Understand the technology | 20 min | Beginner |
+| [Core Concepts](#2-understanding-gemini-25-for-transcription) | Understand the technology | 20 min | Beginner |
 | [Production Setup](#production-ready-error-handling) | Error handling & optimization | 45 min | Intermediate |
 | [Advanced Features](#performance-optimization-for-large-scale-transcription) | Batch processing & quality | 60 min | Advanced |
 
@@ -68,14 +68,16 @@ flowchart LR
 ### Key Features
 
 - **Supports Video & Audio:** Feed it almost any common format.
-- **Speaker Diarization:** Labels who said what (Speaker A, B, etc.).
+- **Speaker Diarization:** Labels who said what (Speaker A, B, etc.) through prompt engineering.
 - **Timecodes:** Pinpoints when each statement was made.
-- **Scalable:** Handles everything from short clips to marathon interviews.
+- **Scalable:** Handles everything from short clips to marathon interviews (up to 8.4 hours).
 - **Customizable Output:** Format transcripts to suit your workflow.
 
 > **What is Speaker Diarization?**
 >
-> Speaker diarization is the process of automatically determining "who spoke when" in an audio or video recording. It segments the transcript by speaker, labeling each section (e.g., Speaker A, Speaker B), which is essential for multi-speaker interviews, meetings, or podcasts.
+> Speaker diarization is the process of determining "who spoke when" in an audio or video recording. With Gemini 2.5, this is achieved through prompt engineering where you request the model to label speakers as "Speaker A, Speaker B," etc. The model uses audio cues to segment the transcript by speaker, which is essential for multi-speaker interviews, meetings, or podcasts.
+>
+> **Note:** This is prompt-based identification, not automatic speaker recognition by voice characteristics.
 
 > **Metaphor:**
 > If traditional transcription is like chiseling words into stone, Gemini 2.5 is a 3D printer—fast, precise, and adaptable.
@@ -90,7 +92,7 @@ Let's get you transcribing immediately with the simplest possible example. Choos
 
 ### 🎯 Choose Your Path
 
-**Option A: Gemini API (Easiest - No GCP Setup Required)**
+#### Option A: Gemini API (Easiest - No GCP Setup Required)
 
 Perfect for: Quick testing, prototypes, small projects
 Setup Time: 5 minutes
@@ -139,7 +141,7 @@ print("✅ Your transcript:")
 print(response.text)
 ```
 
-**Option B: Vertex AI (Production-Ready)**
+#### Option B: Vertex AI (Production-Ready)
 
 Perfect for: Enterprise use, existing GCP projects, production systems
 Setup Time: 10 minutes
@@ -207,7 +209,7 @@ print(response.text)
 - [ ] Speaker labels are showing (Speaker A, B, etc.)
 - [ ] No major errors in the output
 
-**🎯 Next Step:** Continue to [Setting Up Complete Environment](#setting-up-complete-environment) to understand the full setup, or jump to [Production Setup](#production-ready-error-handling) for robust implementation.
+**🎯 Next Step:** Continue to [Setting Up Complete Environment](#3-setting-up-complete-environment) to understand the full setup, or jump to [Production Setup](#production-ready-error-handling) for robust implementation.
 
 ---
 
@@ -336,11 +338,11 @@ gsutil ls gs://your-project-transcription-bucket/
 - **Gemini API**: Simple API key authentication
 
 **Supported Audio Formats:**
-Both support: WAV, MP3, M4A, AAC, FLAC, OGG, OPUS, WEBM
+Both support: WAV, MP3, M4A, AAC, FLAC, OGG, OPUS, WEBM, PCM
 
 **Audio Limits:**
 
-- Maximum length: ~9.5 hours per prompt (per latest official documentation)
+- Maximum length: ~8.4 hours per prompt (or up to 1 million tokens)
 - File size: Up to 20MB for inline data (Gemini API)
 
 **When to Choose What:**
@@ -657,7 +659,7 @@ MODEL_RECOMMENDATIONS = {
     "high_volume_batch": "gemini-2.5-flash-lite",
     "standard_quality": "gemini-2.5-flash",
     "complex_reasoning": "gemini-2.5-pro",
-    "real_time": "gemini-2.0-flash-live"  # For live transcription
+    "real_time": "gemini-2.0-flash-live-001"  # For live transcription
 }
 ```
 
@@ -668,9 +670,15 @@ class CostOptimizedProcessor:
     """Optimize processing costs through smart model selection"""
     
     MODEL_COSTS = {
-        "gemini-2.5-flash-lite": 0.075,  # per 1M tokens
-        "gemini-2.5-flash": 0.30,
-        "gemini-2.5-pro": 2.50
+        "gemini-2.5-flash-lite": 0.10,  # per 1M tokens (text/image/video input)
+        "gemini-2.5-flash": 0.30,       # per 1M tokens (text/image/video input)  
+        "gemini-2.5-pro": 1.25          # per 1M tokens (input, base rate)
+    }
+    
+    AUDIO_COSTS = {
+        "gemini-2.5-flash-lite": 0.50,  # per 1M tokens (audio input)
+        "gemini-2.5-flash": 1.00,       # per 1M tokens (audio input)
+        "gemini-2.5-pro": 1.25          # per 1M tokens (audio input)
     }
     
     def choose_optimal_model(self, audio_duration: float, complexity: str) -> str:
@@ -685,11 +693,11 @@ class CostOptimizedProcessor:
     
     def estimate_cost(self, audio_duration: float, model: str) -> float:
         """Estimate processing cost"""
-        # Rough estimation: 32 tokens per second of audio
-        estimated_tokens = audio_duration * 32
-        cost_per_million = self.MODEL_COSTS.get(model, 0.30)
+        # Current estimation: approximately 25-32 tokens per second of audio
+        estimated_tokens = audio_duration * 30  # Conservative middle estimate
+        audio_cost_per_million = self.AUDIO_COSTS.get(model, 1.00)
         
-        return (estimated_tokens / 1_000_000) * cost_per_million
+        return (estimated_tokens / 1_000_000) * audio_cost_per_million
 ```
 
 ---
@@ -829,7 +837,7 @@ safety_settings=[
 - **Legal/Medical:** Professional recordings containing sensitive terminology
 
 > **Important Note:**
-> Only disable safety filters when necessary and ensure you have proper content review processes in place.
+> Only disable safety filters when necessary for legitimate transcription purposes and ensure you have proper content review processes in place. For production systems, consider using more selective safety settings rather than disabling all filters.
 
 ### Audio Timestamp Configuration
 
@@ -845,39 +853,54 @@ generation_config=GenerationConfig(
 
 > **Important:** Without `audio_timestamp=True`, timestamp accuracy may be reduced.
 
+### Important Model Limitations
+
+**Key Limitations to Be Aware Of:**
+
+- **Non-speech sound recognition:** The models may make mistakes recognizing sounds that aren't speech (music, background noise, etc.)
+- **Audio-only timestamps:** You must configure the `audio_timestamp` parameter in `generation_config` for accurate timestamps
+- **Speaker diarization:** Current speaker identification is prompt-based (you request "Speaker A, Speaker B" format) rather than automatic AI recognition
+- **Processing time:** Large audio files may take several minutes to process
+- **File format constraints:** Audio is downsampled to 16 Kbps and combined to single channel during processing
+
 ### Token Usage and Pricing
 
 **Token Representation:**
 
-- Each second of audio = 32 tokens
-- 1 minute of audio = 1,920 tokens
-- Maximum audio length: 9.5 hours per prompt
+- Each second of audio = approximately 25-32 tokens (varies by model)
+- 1 minute of audio = approximately 1,500-1,920 tokens
+- Maximum audio length: 8.4 hours per prompt (or up to 1 million tokens)
 
 **Pricing (As of June 2025):**
 
-- **Gemini 2.5 Flash:** $0.30/1M tokens (text/image/video), $1.00/1M tokens (audio input)
+- **Gemini 2.5 Flash:** $0.30/1M tokens (text/image/video), $1.00/1M tokens (audio input), $2.50/1M tokens (output)
+- **Gemini 2.5 Flash-Lite:** $0.10/1M tokens (text/image/video), $0.50/1M tokens (audio), $0.40/1M tokens (output)
 - **Gemini 2.5 Pro:** $1.25-$2.50/1M tokens (input), $10.00-$15.00/1M tokens (output)
 
-> **Cost Estimation:** A 1-hour audio file ≈ 115,200 tokens, costing ~$0.12 for input processing with Gemini 2.5 Flash.
+> **Cost Estimation:** A 1-hour audio file ≈ 90,000-115,200 tokens, costing approximately $0.09-$0.12 for audio input processing with Gemini 2.5 Flash.
 
 ### Model Recommendations
 
 **For Transcription Tasks, Use:**
 
 1. **Gemini 2.5 Flash** - Best price-performance ratio for most transcription needs
-2. **Gemini 2.5 Flash-Lite** - Most cost-effective for high-volume, batch processing
-3. **Gemini 2.5 Pro** - Only for complex reasoning combined with transcription
+2. **Gemini 2.5 Flash-Lite** - Most cost-effective for high-volume processing (Preview status - may have rate limits)
+3. **Gemini 2.5 Pro** - For complex reasoning combined with transcription
 
 ### Multi-Language Support
 
-Gemini 2.5 supports transcription in 40+ languages:
+Gemini 2.5 supports transcription in 35+ languages:
 
 - English, Spanish, French, German, Italian, Portuguese
 - Chinese (Simplified/Traditional), Japanese, Korean
-- Arabic, Hindi, Russian, Dutch, Polish
-- And 30+ more languages
+- Arabic, Hindi, Russian, Dutch, Polish, Czech
+- Bulgarian, Croatian, Danish, Estonian, Finnish
+- Greek, Hebrew, Hungarian, Indonesian, Latvian
+- Lithuanian, Norwegian, Romanian, Serbian, Slovak
+- Slovenian, Swahili, Swedish, Thai, Turkish, Ukrainian, Vietnamese
+- And more languages (see official documentation for complete list)
 
-**Example: Spanish Transcription**
+#### Example: Spanish Transcription
 
 ```python
 prompt = """Transcribe this Spanish audio with the following requirements:
@@ -934,25 +957,25 @@ This tutorial transformed you from a transcription novice to a Gemini 2.5 expert
 
 ### 🚀 Your Next 30 Days
 
-**Week 1: Foundation**
+#### Week 1: Foundation
 
 - Set up both Vertex AI and Gemini API
 - Process 10 different audio files
 - Implement basic error handling
 
-**Week 2: Integration**
+#### Week 2: Integration
 
 - Build your first complete workflow
 - Add quality monitoring
 - Optimize costs and performance
 
-**Week 3: Advanced Features**
+#### Week 3: Advanced Features
 
 - Implement batch processing
 - Add multi-language support
 - Create custom prompts for your use case
 
-**Week 4: Production**
+#### Week 4: Production
 
 - Deploy to production environment
 - Document your solution
