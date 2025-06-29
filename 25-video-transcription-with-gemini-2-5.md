@@ -1,5 +1,32 @@
 # Transcribing Audio and Video with Gemini 2.5: A Comprehensive Guide
 
+```mermaid
+flowchart LR
+    A[🎤 Audio/Video Input]:::input --> B[🤖 Gemini 2.5]:::process
+    B --> C[📝 Transcript with Timestamps]:::output
+    B --> D[👥 Speaker Identification]:::output
+    B --> E[⚡ Real-time Processing]:::output
+    
+    F[💰 Traditional Transcription<br/>$25/hour × 200 hours<br/>= $60,000/year]:::cost --> G[💡 Gemini 2.5<br/>$23.04/month<br/>99.96% savings]:::savings
+    
+    classDef input fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#01579b
+    classDef process fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#4a148c
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    classDef cost fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c
+    classDef savings fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#1b5e20
+    
+%%{init: { 
+  'themeVariables': { 
+    'background': '#ffffff',
+    'primaryColor': '#7b1fa2',
+    'primaryTextColor': '#ffffff',
+    'primaryBorderColor': '#7b1fa2',
+    'lineColor': '#64748b',
+    'edgeLabelBackground': '#ffffff'
+  }
+}}%%
+```
+
 ## 🎯 **The $50,000 Problem That Takes 5 Minutes to Solve**
 
 Picture this: Your company records 200 hours of meetings, interviews, and calls every month. At 25/hour for manual transcription, you're burning **$60,000 annually** on grunt work that keeps your team from strategic thinking.
