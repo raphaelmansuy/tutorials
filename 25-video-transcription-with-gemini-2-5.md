@@ -2,7 +2,7 @@
 
 ## 🎯 **The $50,000 Problem That Takes 5 Minutes to Solve**
 
-Picture this: Your company records 200 hours of meetings, interviews, and calls every month. At $25/hour for manual transcription, you're burning **$60,000 annually** on grunt work that keeps your team from strategic thinking.
+Picture this: Your company records 200 hours of meetings, interviews, and calls every month. At 25/hour for manual transcription, you're burning **$60,000 annually** on grunt work that keeps your team from strategic thinking.
 
 **What if I told you that same workload could cost just $23.04 per month with Gemini 2.5?**
 
@@ -69,12 +69,28 @@ Think of Gemini 2.5 as your AI-powered transcriptionist—always on, never tired
 
 ```mermaid
 flowchart LR
-    A[Audio & Video Support]:::block --> B[Speaker Diarization]:::block
-    A --> C[Timecodes]:::block
-    A --> D[Scalable]:::block
-    A --> E[Customizable Output]:::block
-    classDef block fill:#e6f0fa,stroke:#7fa7d6,color:#3b4a5a;
-%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#7fa7d6', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#3b4a5a' }}}%%
+    A[Audio & Video Support]:::feature --> B[Speaker Diarization]:::feature
+    A --> C[Timecodes]:::feature
+    A --> D[Scalable]:::feature
+    A --> E[Customizable Output]:::feature
+    
+    classDef feature fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px,color:#0c4a6e,font-weight:600
+    classDef default color:#475569,stroke:#cbd5e1,stroke-width:1px
+    
+%%{init: { 
+  'themeVariables': { 
+    'background': '#ffffff', 
+    'primaryColor': '#0ea5e9', 
+    'primaryTextColor': '#0c4a6e',
+    'primaryBorderColor': '#0ea5e9',
+    'lineColor': '#64748b',
+    'edgeLabelBackground': '#ffffff',
+    'nodeTextColor': '#0c4a6e',
+    'mainBkg': '#f0f9ff',
+    'secondaryColor': '#e0f2fe',
+    'tertiaryColor': '#bae6fd'
+  }
+}}%%
 ```
 
 ### Key Features
@@ -231,14 +247,30 @@ Let's get you set up properly for production use—no shortcuts this time.
 
 ```mermaid
 flowchart LR
-    A[Install Python 3.8+]:::pastel --> B[Enable Vertex AI API]:::pastel
-    B --> C[Install Gemini 2.5 SDK]:::pastel
-    C --> D["Authenticate gcloud or API key"]:::pastel
-    D --> E[Create Cloud Storage Bucket]:::pastel
-    E --> F[Upload Audio/Video Files]:::pastel
-    F --> G[Ready for Transcription]:::pastel
-    classDef pastel fill:#e6f0fa,stroke:#7fa7d6,color:#3b4a5a;
-%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#7fa7d6', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#3b4a5a' }}}%%
+    A[Install Python 3.8+]:::setup --> B[Enable Vertex AI API]:::setup
+    B --> C[Install Gemini 2.5 SDK]:::setup
+    C --> D["Authenticate gcloud or API key"]:::auth
+    D --> E[Create Cloud Storage Bucket]:::storage
+    E --> F[Upload Audio/Video Files]:::storage
+    F --> G[Ready for Transcription]:::ready
+    
+    classDef setup fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#15803d,font-weight:600
+    classDef auth fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#92400e,font-weight:600
+    classDef storage fill:#fdf2f8,stroke:#ec4899,stroke-width:2px,color:#be185d,font-weight:600
+    classDef ready fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px,color:#6b21a8,font-weight:600
+    classDef default color:#475569,stroke:#cbd5e1,stroke-width:1px
+    
+%%{init: { 
+  'themeVariables': { 
+    'background': '#ffffff', 
+    'primaryColor': '#64748b', 
+    'primaryTextColor': '#334155',
+    'primaryBorderColor': '#94a3b8',
+    'lineColor': '#94a3b8',
+    'edgeLabelBackground': '#ffffff',
+    'nodeTextColor': '#334155'
+  }
+}}%%
 ```
 
 ### Minimum Requirements
