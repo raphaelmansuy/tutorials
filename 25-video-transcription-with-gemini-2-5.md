@@ -539,6 +539,366 @@ print(transcript)
 [00:00:18] Speaker B: I've been working in tech for over ten years...
 ```
 
+### ✅ Quick Start Success Checklist
+
+- [ ] Got a transcript with timestamps
+- [ ] Speaker labels are showing (Speaker A, B, etc.)
+- [ ] No major errors in the output
+
+**🎯 Next Step:** Continue to [Setting Up Complete Environment](#3-setting-up-complete-environment) to understand the full setup, or jump to [Production Setup](#production-ready-error-handling) for robust implementation.
+
+---
+
+## Audio Quality Preprocessing
+
+Before transcribing, ensure optimal audio quality:
+
+```python
+def validate_and_preprocess_audio(audio_path: str) -> dict:
+    """Validate and preprocess audio for optimal transcription"""
+    from pydub import AudioSegment
+    import os
+    
+    try:
+        audio = AudioSegment.from_file(audio_path)
+        
+        # Quality checks
+        quality_report = {
+            "duration_seconds": len(audio) / 1000,
+            "sample_rate": audio.frame_rate,
+            "channels": audio.channels,
+            "format": audio_path.split('.')[-1].lower(),
+            "file_size_mb": os.path.getsize(audio_path) / (1024 * 1024),
+            "recommendations": []
+        }
+        
+        # Check duration limits
+        if quality_report["duration_seconds"] > 34200:  # 9.5 hours in seconds
+            quality_report["recommendations"].append("⚠️  Audio exceeds 9.5 hour limit - consider splitting")
+        
+        # Check sample rate
+        if audio.frame_rate < 16000:
+            quality_report["recommendations"].append("📊 Low sample rate detected - consider upsampling")
+        
+        # Check if mono conversion needed
+        if audio.channels > 1:
+            quality_report["recommendations"].append("🔄 Stereo audio - will be converted to mono during processing")
+        
+        # Optimize for transcription
+        if quality_report["recommendations"]:
+            optimized_path = f"optimized_{os.path.basename(audio_path)}"
+            
+            # Convert to optimal format
+            optimized_audio = audio.set_frame_rate(16000).set_channels(1)
+            optimized_audio.export(
+                optimized_path,
+                format="mp3",
+                bitrate="128k"
+            )
+            
+            quality_report["optimized_file"] = optimized_path
+        
+        return quality_report
+        
+    except Exception as e:
+        return {"error": f"Audio processing failed: {str(e)}"}
+
+# Usage
+quality_info = validate_and_preprocess_audio("interview.wav")
+print(f"Audio quality report: {quality_info}")
+```
+
+**Supported Audio Formats & Optimization:**
+
+| Format | Transcription Quality | File Size | Recommendation |
+|--------|----------------------|-----------|----------------|
+| WAV (16kHz, mono) | Excellent | Large | ✅ Best for quality |
+| MP3 (128kbps) | Very Good | Medium | ✅ Best balance |
+| M4A/AAC | Very Good | Small | ✅ Good for mobile |
+| FLAC | Excellent | Large | ⚠️  Overkill for transcription |
+| OGG/OPUS | Good | Small | ✅ Good for web |
+
+---
+
+## 3. Setting Up: Complete Environment
+
+Let's get you set up properly for production use—no shortcuts this time.
+
+```mermaid
+flowchart LR
+    A[Install Python 3.8+]:::setup --> B[Enable Vertex AI API]:::setup
+    B --> C[Install Gemini 2.5 SDK]:::setup
+    C --> D["Authenticate gcloud or API key"]:::auth
+    D --> E[Create Cloud Storage Bucket]:::storage
+    E --> F[Upload Audio/Video Files]:::storage
+    F --> G[Ready for Transcription]:::ready
+    
+    classDef setup fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#15803d,font-weight:600
+    classDef auth fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#92400e,font-weight:600
+    classDef storage fill:#fdf2f8,stroke:#ec4899,stroke-width:2px,color:#be185d,font-weight:600
+    classDef ready fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px,color:#6b21a8,font-weight:600
+    classDef default color:#475569,stroke:#cbd5e1,stroke-width:1px
+    
+%%{init: { 
+  'themeVariables': { 
+    'background': '#ffffff', 
+    'primaryColor': '#64748b', 
+    'primaryTextColor': '#334155',
+    'primaryBorderColor': '#94a3b8',
+    'lineColor': '#94a3b8',
+    'edgeLabelBackground': '#ffffff',
+    'nodeTextColor': '#334155'
+  }
+}}%%
+```
+
+### Minimum Requirements
+
+- **Python 3.8+**
+- **Google Cloud account with Vertex AI enabled**
+- **Gemini 2.5 Python SDK installed**
+
+### Installation & Authentication
+
+**For Vertex AI:**
+
+```bash
+pip install google-cloud-aiplatform
+```
+
+**For Gemini API:**
+
+```bash
+pip install google-generativeai
+```
+
+**Authentication:**
+
+- **Vertex AI:** Use Google Cloud credentials
+
+  ```bash
+  gcloud auth application-default login
+  ```
+
+- **Gemini API:** Get an API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+
+  ```python
+  import google.generativeai as genai
+  genai.configure(api_key="your-api-key")
+  ```
+
+### First Run Checklist
+
+- [ ] Google Cloud project created
+- [ ] Vertex AI API enabled
+- [ ] Service account with necessary permissions
+- [ ] Cloud Storage bucket created for audio files
+
+> **Pro Tip:**
+> Use a dedicated service account for automation—never your personal credentials.
+
+### Quick Setup: Creating Your Storage Bucket
+
+For Vertex AI, your audio files need to be in Google Cloud Storage. Here's the fastest way:
+
+**Via Google Cloud Console:**
+
+1. Go to [Google Cloud Storage](https://console.cloud.google.com/storage)
+2. Click "Create Bucket"
+3. Choose a unique name (e.g., `your-project-transcription-bucket`)
+4. Select "Region" closest to you (e.g., `us-central1`)
+5. Use "Standard" storage class for active transcription work
+
+**Via Command Line:**
+
+```bash
+# Create bucket
+gsutil mb gs://your-project-transcription-bucket
+
+# Upload your audio file
+gsutil cp /path/to/your/interview.m4a gs://your-project-transcription-bucket/
+
+# Verify upload
+gsutil ls gs://your-project-transcription-bucket/
+```
+
+**Quick Upload Tips:**
+
+- Drag & drop files directly in the Cloud Console
+- Use `gsutil -m cp` for faster parallel uploads of multiple files
+- Keep file names simple (no spaces or special characters)
+
+**Common Pitfall:**
+
+- **Error:** "Permission denied"
+  **Fix:** Double-check IAM roles and API activation.
+
+---
+
+## 4. Understanding the Two Approaches
+
+### Vertex AI vs Gemini API: When to Use What
+
+| Feature                 | Vertex AI                      | Gemini API                              |
+| ----------------------- | ------------------------------ | --------------------------------------- |
+| **Use Case**            | Production/Enterprise          | Development/Prototyping                 |
+| **Authentication**      | Google Cloud IAM               | API Keys                                |
+| **File Handling**       | Direct Cloud Storage URIs      | Upload files via Files API              |
+| **Regional Deployment** | Yes (us-central1, etc.)        | Global endpoints                        |
+| **Enterprise Features** | Advanced safety, custom tuning | Basic features                          |
+| **Pricing**             | Enterprise SLAs                | More cost-effective for small workloads |
+
+### Key Differences Explained
+
+**File Handling:**
+
+- **Vertex AI**: Files must be in Google Cloud Storage (gs://). Direct URI access.
+- **Gemini API**: Local files uploaded via Files API. More flexible for development.
+
+**Authentication:**
+
+- **Vertex AI**: Uses Application Default Credentials (ADC) or service accounts
+- **Gemini API**: Simple API key authentication
+
+**Supported Audio Formats:**
+Both support: WAV, MP3, M4A, AAC, FLAC, OGG, OPUS, WEBM, PCM
+
+**Audio Limits:**
+
+- Maximum length: ~9.5 hours per prompt (or up to 1 million tokens)
+- File size: Up to 20MB for inline data (Gemini API)
+
+**When to Choose What:**
+
+- **Use Vertex AI** if you need enterprise features, are already on GCP, or require advanced safety controls
+- **Use Gemini API** if you want quick prototyping, simpler setup, or are building smaller applications
+
+---
+
+## 5. Complete Working Examples
+
+### Example 1: Vertex AI Production Function
+
+```python
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part, GenerationConfig
+
+def transcribe_audio_vertexai(project_id: str, location: str, audio_uri: str):
+    """Complete function to transcribe audio using Vertex AI"""
+    # Initialize Vertex AI
+    vertexai.init(project=project_id, location=location)
+
+    # Create the model
+    model = GenerativeModel("gemini-2.5-flash")  # Recommended for transcription
+
+    # Create parts
+    audio_part = Part.from_uri(
+        uri=audio_uri,
+        mime_type="audio/mp4"  # Adjust based on your file type
+    )
+
+    prompt = """Transcribe this audio file with the following requirements:
+    1. Include timestamps in [HH:MM:SS] format
+    2. Identify speakers as Speaker A, Speaker B, etc.
+    3. Format as: [timestamp] Speaker X: dialogue
+    4. If audio is unclear, mark as [inaudible]
+    """
+
+    # Generate content with proper configuration
+    response = model.generate_content(
+        [audio_part, prompt],
+        generation_config=GenerationConfig(
+            temperature=0,
+            max_output_tokens=8192,
+            audio_timestamp=True,  # Enable timestamp understanding
+        ),
+        safety_settings=[
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        ]
+    )
+
+    return response.text
+
+# Usage
+transcript = transcribe_audio_vertexai(
+    project_id="your-gcp-project-id",
+    location="us-central1",
+    audio_uri="gs://your-bucket/interview.m4a"
+)
+print(transcript)
+```
+
+### Example 2: Gemini API Function
+
+```python
+import google.generativeai as genai
+import time
+
+def transcribe_audio_gemini_api(api_key: str, audio_path: str):
+    """Complete function to transcribe audio using Gemini API"""
+    # Configure the API
+    genai.configure(api_key=api_key)
+
+    # Create the model
+    model = genai.GenerativeModel("gemini-2.5-flash")
+
+    # Upload file (required for Gemini API)
+    uploaded_file = genai.upload_file(
+        path=audio_path,
+        display_name="Interview Audio"
+    )
+
+    # Wait for processing
+    while uploaded_file.state.name == "PROCESSING":
+        time.sleep(2)
+        uploaded_file = genai.get_file(uploaded_file.name)
+
+    # Generate transcript
+    response = model.generate_content([
+        uploaded_file,
+        """Transcribe this audio file with the following requirements:
+        1. Include timestamps in [HH:MM:SS] format
+        2. Identify speakers as Speaker A, Speaker B, etc.
+        3. Format as: [timestamp] Speaker X: dialogue
+        4. If audio is unclear, mark as [inaudible]
+        """
+    ], safety_settings=[
+        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    ])
+
+    return response.text
+
+# Usage
+transcript = transcribe_audio_gemini_api(
+    api_key="your-api-key",
+    audio_path="path/to/local/interview.m4a"
+)
+print(transcript)
+```
+
+### Expected Output
+
+```text
+[00:00:01] Speaker A: Welcome to the interview.
+[00:00:03] Speaker B: Thank you for having me.
+[00:00:15] Speaker A: Let's start with your background.
+[00:00:18] Speaker B: I've been working in tech for over ten years...
+```
+
+### ✅ Quick Start Success Checklist
+
+- [ ] Got a transcript with timestamps
+- [ ] Speaker labels are showing (Speaker A, B, etc.)
+- [ ] No major errors in the output
+
+**🎯 Next Step:** Continue to [Setting Up Complete Environment](#3-setting-up-complete-environment) to understand the full setup, or jump to [Production Setup](#production-ready-error-handling) for robust implementation.
+
 ---
 
 ## 6. Handling Real-World Complexity
@@ -1253,147 +1613,3 @@ generation_config=GenerationConfig(
 **For Transcription Tasks, Use:**
 
 1. **Gemini 2.5 Flash** - Best price-performance ratio for most transcription needs
-2. **Gemini 2.5 Flash-Lite (Preview)** - Most cost-effective for high-volume processing (Note: Preview status with potential rate limits and changes)
-3. **Gemini 2.5 Pro** - For complex reasoning combined with transcription
-
-### Multi-Language Support
-
-Gemini 2.5 supports transcription in 35+ languages:
-
-- English, Spanish, French, German, Italian, Portuguese
-- Chinese (Simplified/Traditional), Japanese, Korean
-- Arabic, Hindi, Russian, Dutch, Polish, Czech
-- Bulgarian, Croatian, Danish, Estonian, Finnish
-- Greek, Hebrew, Hungarian, Indonesian, Latvian
-- Lithuanian, Norwegian, Romanian, Serbian, Slovak
-- Slovenian, Swahili, Swedish, Thai, Turkish, Ukrainian, Vietnamese
-- And more languages (see official documentation for complete list)
-
-#### Example: Spanish Transcription
-
-```python
-prompt = """Transcribe this Spanish audio with the following requirements:
-1. Include timestamps in [HH:MM:SS] format
-2. Identify speakers as Hablante A, Hablante B, etc.
-3. Maintain original language - do NOT translate to English
-4. Mark unclear speech as [inaudible]"""
-```
-
----
-
-## 10. Troubleshooting Guide
-
-### Common Issues and Solutions
-
-| Problem | Symptoms | Solution |
-|---------|----------|----------|
-| **Authentication Errors** | "Permission denied", "Invalid credentials" | Check service account permissions, verify API key |
-| **File Format Issues** | "Unsupported format", "Invalid MIME type" | Convert to supported format (MP3, WAV, M4A) |
-| **Rate Limiting** | "Quota exceeded", "Too many requests" | Implement exponential backoff, reduce concurrency |
-| **Poor Transcription Quality** | Missing words, incorrect timestamps | Improve audio quality, adjust prompts |
-| **Memory/Timeout Errors** | "Request timeout", "Memory exceeded" | Split large files, optimize batch size |
-
-### Quality Issues Checklist
-
-- [ ] Audio quality is clear (minimal background noise)
-- [ ] File format is supported and optimal
-- [ ] Speakers are clearly distinguishable
-- [ ] Prompt is specific and well-formatted
-- [ ] Appropriate model selected for use case
-- [ ] Safety settings configured correctly
-
-### Performance Optimization Checklist
-
-- [ ] Using appropriate model (Flash for most cases)
-- [ ] Implementing proper error handling
-- [ ] Batching requests efficiently
-- [ ] Monitoring costs and usage
-- [ ] Caching results when appropriate
-
----
-
-## 📋 Summary: Key Takeaways
-
-This tutorial transformed you from a transcription novice to a Gemini 2.5 expert. Here are the most important points to remember:
-
-### 🎯 Critical Success Factors
-
-1. **Model Selection Matters:** Use Flash for most cases, Flash-Lite for batch processing, Pro for complex analysis
-2. **Prompt Engineering is Key:** Specific, detailed prompts yield dramatically better results
-3. **Error Handling is Essential:** Production systems need robust retry logic and graceful degradation
-4. **Quality Monitoring:** Always track accuracy, costs, and performance metrics
-5. **Integration Thinking:** Design with your end workflow in mind from the start
-
-### 🚀 Your Next 30 Days
-
-#### Week 1: Foundation
-
-- Set up both Vertex AI and Gemini API
-- Process 10 different audio files
-- Implement basic error handling
-
-#### Week 2: Integration
-
-- Build your first complete workflow
-- Add quality monitoring
-- Optimize costs and performance
-
-#### Week 3: Advanced Features
-
-- Implement batch processing
-- Add multi-language support
-- Create custom prompts for your use case
-
-#### Week 4: Production
-
-- Deploy to production environment
-- Document your solution
-- Plan next iteration
-
-### 📚 Essential Resources for Continued Learning
-
-- [Gemini API Documentation](https://ai.google.dev/docs) - Stay updated with latest features
-- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs) - Enterprise deployment guides
-- [Google AI Community](https://discuss.ai.google.dev/) - Get help and share experiences
-
-### 💡 Final Pro Tips
-
-1. **Start Small:** Begin with clear, short audio files before tackling complex scenarios
-2. **Monitor Everything:** Track costs, quality, and performance from day one
-3. **Stay Updated:** Gemini models evolve rapidly - follow release notes
-4. **Build Community:** Share your learnings and learn from others
-5. **Practice Regularly:** The best way to master transcription is consistent use
-
----
-
-## 🙏 Thank You & Next Steps
-
-Congratulations on completing this comprehensive transcription tutorial! You now have the knowledge and tools to transform audio and video content into structured, actionable insights.
-
-**Your transcription journey doesn't end here - it begins!**
-
-Every audio file you process will make you more skilled at crafting better prompts and building more robust systems. Start with small projects, share your successes, and help others in the community.
-
-**🚀 Ready to revolutionize how you handle audio content? Fire up Gemini 2.5 and start building your transcription solutions today!**
-
----
-
-*This tutorial is part of our comprehensive AI implementation series. For more tutorials, examples, and resources, visit our [tutorial collection](../README.md).*
-
-## 📚 **References and Citations**
-
-- [Google AI Gemini API Documentation](https://ai.google.dev/gemini-api/docs) - Official API documentation
-- [Vertex AI Generative AI Pricing](https://cloud.google.com/vertex-ai/generative-ai/pricing) - Official pricing information  
-- [Gemini Audio Understanding Documentation](https://ai.google.dev/gemini-api/docs/audio) - Technical specifications for audio processing
-- [Gemini Model Versions and Lifecycle](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions) - Model availability and status
-
-## ⚠️ **Important Disclaimers**
-
-- **Pricing Information**: All pricing data is based on official Google documentation as of June 2025. Prices may change without notice. Always verify current pricing on official Google Cloud pricing pages.
-- **Performance Claims**: Audio speed optimization results may vary significantly based on audio quality, content complexity, speaker characteristics, and use case. Test thoroughly with your specific requirements.
-- **Model Availability**: Preview models (including Flash-Lite) may have restrictions, rate limits, or changes. Check official documentation for current status.
-- **Safety Settings**: Choose safety configurations appropriate for your use case and compliance requirements. Content filtering may affect transcription completeness.
-- **Production Use**: This tutorial provides examples for educational purposes. Implement appropriate error handling, monitoring, and security measures for production deployments.
-
-**Last Updated**: June 29, 2025  
-**Version**: 2.0 (Corrected pricing and technical specifications)
