@@ -563,4 +563,114 @@ If you encounter issues while following these tutorials:
 
 *Transform your career with enterprise-grade cloud and AI skills*
 
-_Last updated: June 2025_
+---
+
+## 🤝 Connect & Community Hub
+
+### 👨‍💻 **About the Author**
+
+This repository has been developed with ❤️ by **Raphaël MANSUY** - a passionate technologist and AI expert with decades of experience transforming businesses through cloud and AI technologies.
+
+**Raphaël's Background:**
+
+- 🚀 **CTO & Founder** - Running [Elitizon](https://www.elitizon.com/) startup studio in Hong Kong
+- 🤖 **AI Pioneer** - Founder of [QuantaLogic](https://www.quantalogic.app/) AI Platform
+- 📚 **Published Author** - [The Definitive Guide to Data Integration](https://www.packtpub.com/en-us/product/the-definitive-guide-to-data-integration-9781837631919)
+- 🎯 **Board Member** - French Tech Board Member & Technical Advisor
+- 👨‍💻 **Lifelong Developer** - Coding since age 14, passionate about DataEngineering, DataScience & AI
+
+### 🌐 **Join Our Growing Community**
+
+**Connect with 10,000+ AI developers, cloud architects, and tech innovators worldwide:**
+
+#### **📱 Follow & Connect**
+
+| Platform | Link | What You'll Get |
+|----------|------|-----------------|
+| 🔗 **LinkedIn** | [raphaelmansuy](https://www.linkedin.com/in/raphaelmansuy/) | Professional insights & industry updates |
+| 🐦 **Twitter/X** | [@raphaelmansuy](https://twitter.com/raphaelmansuy) | Daily AI tips & tech discussions |
+| 📧 **Newsletter** | [Exponential AI](https://exponentialai.substack.com/) | Weekly AI breakthroughs & analysis |
+| 📝 **Medium** | [@raphael.mansuy](https://medium.com/@raphael.mansuy) | In-depth AI & Data Engineering articles |
+| 💬 **Consultation** | [Book a Session](https://topmate.io/raphael_mansuy) | 1-on-1 technical guidance |
+
+#### **🚀 Explore More Projects**
+
+**Check out Raphaël's other innovative projects:**
+
+- 🏛️ **[Digital Palace](https://github.com/raphaelmansuy/digital_palace)** - Personal knowledge management system & AI insights
+- 🔧 **[Code2Prompt](https://github.com/raphaelmansuy/code2prompt)** - Transform codebases into LLM-ready prompts (850+ ⭐)
+- 🤖 **[QuantaLogic](https://github.com/quantalogic/quantalogic)** - ReAct coding agent framework (425+ ⭐)
+- 🧠 **[Iteration of Thought](https://github.com/raphaelmansuy/iteration_of_tought)** - Advanced AI reasoning implementation
+- 📚 **[Course Generator](https://github.com/raphaelmansuy/course_generator)** - AI-powered educational content creation
+
+### 💬 **Community Support & Discussions**
+
+#### **🎓 Learning Support**
+
+- **🆘 Need Help?** Open an issue in this repository with detailed questions
+- **💡 Share Ideas** Contribute improvements via pull requests
+- **📚 Study Groups** Connect with other learners in the community
+- **🔧 Technical Issues** Get help from experienced developers
+
+#### **🤝 Professional Network**
+
+- **🏢 Enterprise Consulting** Available for cloud migration projects
+- **📈 Business Strategy** AI adoption and digital transformation guidance
+- **🎤 Speaking Engagements** Conference talks and workshops
+- **🎯 Mentorship** Career guidance for aspiring cloud architects and AI engineers
+
+### 🌟 **Ways to Support This Project**
+
+#### **🎯 Immediate Actions**
+
+- ⭐ **Star this repository** if you find it valuable
+- 🔄 **Share with colleagues** and on social media
+- 📢 **Spread the word** about your learning success stories
+- 💼 **Recommend to teams** looking for cloud/AI training
+
+#### **🚀 Get Involved**
+
+- 📝 **Contribute tutorials** based on your expertise
+- 🐛 **Report issues** or suggest improvements
+- 💡 **Submit new ideas** for tutorials or learning paths
+- 🎨 **Improve documentation** and user experience
+
+#### **💎 Premium Support**
+
+- 🔍 **Code Reviews** - Get expert feedback on your cloud projects
+- 🎯 **Custom Training** - Tailored workshops for your team
+- 📊 **Architecture Consulting** - Enterprise-grade solution design
+- 🚀 **Implementation Support** - Hands-on project assistance
+
+### 📈 **Community Growth & Impact**
+
+**Join an emerging ecosystem of learners and innovators - we're just getting started!**
+
+[![GitHub stars](https://img.shields.io/github/stars/raphaelmansuy/tutorials?style=social)](https://github.com/raphaelmansuy/tutorials/stargazers)
+
+| Metric | Current Status | Growth Potential |
+|--------|---------------|------------------|
+| 🌟 **Community Interest** | [![GitHub stars](https://img.shields.io/github/stars/raphaelmansuy/tutorials)](https://github.com/raphaelmansuy/tutorials) | 📈 Just launched - growing daily |  
+| 📚 **Tutorial Collection** | 30+ comprehensive guides | 🚀 Expanding with new content weekly |
+| 🌍 **Global Accessibility** | Available worldwide | 🌐 Reaching developers in every timezone |
+| 💼 **Career Impact Focus** | Enterprise-grade training | 📊 Designed for measurable skill transformation |
+
+### 🎯 **Ready to Transform Your Career?**
+
+#### 🚀 Start Your Journey Today
+
+Choose your path above and begin your transformation from cloud beginner to enterprise architect and AI specialist.
+
+#### 💡 Questions? Need guidance?
+
+[📧 Contact Raphaël](mailto:raphael.mansuy@gmail.com) | [💬 Book Consultation](https://topmate.io/raphael_mansuy) | [🔗 Connect on LinkedIn](https://www.linkedin.com/in/raphaelmansuy/)
+
+---
+
+**"Technology is best when it brings people together."** - Matt Mullenweg
+
+*Let's build the future of cloud and AI together!*
+
+---
+
+Last updated: June 2025
