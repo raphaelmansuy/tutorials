@@ -4,9 +4,9 @@
 
 Picture this: Your company records 200 hours of meetings, interviews, and calls every month. At $25/hour for manual transcription, you're burning **$60,000 annually** on grunt work that keeps your team from strategic thinking.
 
-**What if I told you that same workload could cost just $10.80 per month with Gemini 2.5?**
+**What if I told you that same workload could cost just $23.04 per month with Gemini 2.5?**
 
-That's not a typo. With the cost optimization techniques in this guide, you'll process 200 hours of audio for **99.98% less** than traditional methods—while getting better accuracy, timestamps, and speaker identification.
+That's not a typo. With the cost optimization techniques in this guide, you'll process 200 hours of audio for **99.96% less** than traditional methods—while getting better accuracy, timestamps, and speaker identification.
 
 **The kicker?** You can have your first transcript running in under 15 minutes, even if you've never touched an AI API before.
 
@@ -82,7 +82,7 @@ flowchart LR
 - **Supports Video & Audio:** Feed it almost any common format.
 - **Speaker Diarization:** Labels who said what (Speaker A, B, etc.) through prompt engineering.
 - **Timecodes:** Pinpoints when each statement was made.
-- **Scalable:** Handles everything from short clips to marathon interviews (up to 8.4 hours).
+- **Scalable:** Handles everything from short clips to marathon interviews (up to 9.5 hours).
 - **Customizable Output:** Format transcripts to suit your workflow.
 
 > **What is Speaker Diarization?**
@@ -354,7 +354,7 @@ Both support: WAV, MP3, M4A, AAC, FLAC, OGG, OPUS, WEBM, PCM
 
 **Audio Limits:**
 
-- Maximum length: ~8.4 hours per prompt (or up to 1 million tokens)
+- Maximum length: ~9.5 hours per prompt (or up to 1 million tokens)
 - File size: Up to 20MB for inline data (Gemini API)
 
 **When to Choose What:**
@@ -402,10 +402,10 @@ def transcribe_audio_vertexai(project_id: str, location: str, audio_uri: str):
             audio_timestamp=True,  # Enable timestamp understanding
         ),
         safety_settings=[
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
         ]
     )
 
@@ -455,10 +455,10 @@ def transcribe_audio_gemini_api(api_key: str, audio_path: str):
         4. If audio is unclear, mark as [inaudible]
         """
     ], safety_settings=[
-        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
     ])
 
     return response.text
@@ -581,10 +581,10 @@ def robust_transcribe_audio(
                     audio_timestamp=True,
                 ),
                 safety_settings=[
-                    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-                    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
                 ]
             )
 
@@ -705,35 +705,37 @@ class CostOptimizedProcessor:
     
     def estimate_cost(self, audio_duration: float, model: str) -> float:
         """Estimate processing cost"""
-        # Current estimation: approximately 25-32 tokens per second of audio
-        estimated_tokens = audio_duration * 30  # Conservative middle estimate
+        # Current estimation: 32 tokens per second of audio (official rate)
+        estimated_tokens = audio_duration * 32  # Using official token rate
         audio_cost_per_million = self.AUDIO_COSTS.get(model, 1.00)
         
         return (estimated_tokens / 1_000_000) * audio_cost_per_million
 ```
 
-## 💡 The Tutorial's Greatest Asset: Game-Changing 2x Speed Cost Optimization
+## 💡 The Tutorial's Greatest Asset: Audio Speed Optimization
 
-> **🚀 Revolutionary Discovery:** Cut your transcription costs in half with this simple audio preprocessing technique that could save you thousands annually!
+> **⚡ Cost-Saving Technique:** Cut your transcription costs in half with this audio preprocessing technique that could save you thousands annually!
 
-### The Breakthrough That Changes Everything
+### The Speed Optimization Technique
 
-Here's the brilliant cost optimization discovery that makes this tutorial invaluable: **speeding up audio files by 2x before transcription can reduce your costs by 50% with minimal quality impact**. Since Gemini's token usage is roughly proportional to audio duration, shorter audio = fewer tokens = lower costs.
+Here's a cost optimization technique that can significantly reduce your transcription costs: **speeding up audio files by 2x before transcription can reduce your costs by 50% with minimal quality impact**. Since Gemini's token usage is roughly proportional to audio duration, shorter audio = fewer tokens = lower costs.
 
-**Why This is Tutorial Gold:**
+**Why This Technique Works:**
 
 - ✅ **Immediate ROI** - Instant 50% cost reduction on every transcription
-- ✅ **Scalable Impact** - Savings multiply with volume (think $648+ annually)
-- ✅ **Quality Maintained** - 95-98% accuracy retention on clear audio
-- ✅ **Easy Implementation** - Add 3 lines of code to existing workflows
+- ✅ **Scalable Impact** - Savings multiply with volume (potential $691+ annually)
+- ✅ **Quality Maintained** - Minimal accuracy loss on clear audio*
+- ✅ **Easy Implementation** - Add a few lines of code to existing workflows
 
-#### The Magic Behind 2x Speed Transcription
+*Results may vary based on audio quality and content complexity
+
+#### The Science Behind 2x Speed Transcription
 
 **Why This Works:**
 
-- **Token Economics:** Audio processing costs are based on duration (~30 tokens per second)
+- **Token Economics:** Audio processing costs are based on duration (32 tokens per second)
 - **AI Resilience:** Gemini 2.5's advanced audio processing handles sped-up speech remarkably well
-- **Quality Retention:** Extensive testing shows minimal accuracy loss at 2x speed
+- **Quality Retention:** Testing shows minimal accuracy loss at 2x speed
 - **Massive Savings:** Immediate 50% cost reduction on all audio processing
 
 #### Complete Implementation
@@ -868,7 +870,7 @@ class SpeedOptimizedTranscriber:
     
     def _estimate_cost_saved(self, original_duration: float) -> float:
         """Estimate cost savings in dollars"""
-        tokens_saved = (original_duration / 2) * 30  # 30 tokens per second saved
+        tokens_saved = (original_duration / 2) * 32  # 32 tokens per second saved
         cost_per_token = 1.00 / 1_000_000  # $1.00 per 1M tokens for Flash
         return tokens_saved * cost_per_token
 
@@ -942,7 +944,7 @@ sudo apt update && sudo apt install ffmpeg
 ```python
 # Original cost calculation
 original_hours = 100
-tokens_per_hour = 30 * 3600  # 30 tokens/second × 3600 seconds
+tokens_per_hour = 32 * 3600  # 32 tokens/second × 3600 seconds (official rate)
 original_tokens = original_hours * tokens_per_hour
 original_cost = (original_tokens / 1_000_000) * 1.00  # $1.00 per 1M tokens
 
@@ -955,19 +957,21 @@ print(f"Monthly savings: ${original_cost - optimized_cost:.2f}")
 print(f"Annual savings: ${(original_cost - optimized_cost) * 12:.2f}")
 
 # Output:
-# Original monthly cost: $108.00
-# Optimized monthly cost: $54.00  
-# Monthly savings: $54.00
-# Annual savings: $648.00
+# Original monthly cost: $115.20
+# Optimized monthly cost: $57.60  
+# Monthly savings: $57.60
+# Annual savings: $691.20
 ```
 
 #### Quality Testing Results
 
-**Extensive testing shows:**
+**Quality Testing Results:**
 
-- **2x Speed:** 95-98% accuracy retention on clear audio
-- **1.5x Speed:** 98-99% accuracy retention (conservative option)
-- **2.5x Speed:** 90-95% accuracy (aggressive optimization)
+- **2x Speed:** 95-98% accuracy retention on clear audio*
+- **1.5x Speed:** 98-99% accuracy retention (conservative option)*
+- **2.5x Speed:** 90-95% accuracy (aggressive optimization)*
+
+*Note: These are general estimates. Actual accuracy may vary based on audio quality, content complexity, and speaker characteristics. Always test with your specific use case.
 
 **Recommendation:** Start with 2x speed for optimal cost-quality balance.
 
@@ -991,9 +995,9 @@ class ProductionTranscriber:
             return self._standard_transcribe(audio_path)
 ```
 
-> **💡 Pro Tip:** This technique works because Gemini 2.5's advanced audio processing can handle the temporal compression while maintaining semantic understanding. The AI "hears" the sped-up speech but still extracts the meaning accurately.
+> **💡 Important Note:** This technique works because Gemini 2.5's advanced audio processing can handle the temporal compression while maintaining semantic understanding. However, results will vary based on audio quality, speaker clarity, and content complexity. Always test with your specific use cases before implementing in production.
 
-> **🎯 Bottom Line:** For high-volume transcription projects, this single optimization can save thousands of dollars annually while maintaining professional-quality results.
+> **🎯 Bottom Line:** For high-volume transcription projects, this optimization can provide significant cost savings while maintaining reasonable quality results. Test thoroughly to ensure it meets your accuracy requirements.
 
 ---
 
@@ -1117,6 +1121,15 @@ class TranscriptionQualityAnalyzer:
 When transcribing audio/video content, you might encounter content that triggers Gemini's safety filters:
 
 ```python
+# Recommended balanced approach - allows most legitimate content
+safety_settings=[
+    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+]
+
+# For sensitive content that needs full transcription (use with caution)
 safety_settings=[
     {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
     {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
@@ -1132,7 +1145,7 @@ safety_settings=[
 - **Legal/Medical:** Professional recordings containing sensitive terminology
 
 > **Important Note:**
-> Only disable safety filters when necessary for legitimate transcription purposes and ensure you have proper content review processes in place. For production systems, consider using more selective safety settings rather than disabling all filters.
+> Use appropriate safety settings for your use case. Only disable safety filters when absolutely necessary for legitimate transcription purposes and ensure you have proper content review processes in place. For most production systems, use balanced safety settings rather than disabling all filters.
 
 ### Audio Timestamp Configuration
 
@@ -1162,24 +1175,26 @@ generation_config=GenerationConfig(
 
 **Token Representation:**
 
-- Each second of audio = approximately 25-32 tokens (varies by model)
-- 1 minute of audio = approximately 1,500-1,920 tokens
-- Maximum audio length: 8.4 hours per prompt (or up to 1 million tokens)
+- Each second of audio = 32 tokens (official rate from Google documentation)
+- 1 minute of audio = 1,920 tokens  
+- Maximum audio length: 9.5 hours per prompt (or up to 1 million tokens)
 
 **Pricing (As of June 2025):**
 
 - **Gemini 2.5 Flash:** $0.30/1M tokens (text/image/video), $1.00/1M tokens (audio input), $2.50/1M tokens (output)
-- **Gemini 2.5 Flash-Lite:** $0.10/1M tokens (text/image/video), $0.50/1M tokens (audio), $0.40/1M tokens (output)
+- **Gemini 2.5 Flash-Lite (Preview):** $0.10/1M tokens (text/image/video), $0.50/1M tokens (audio), $0.40/1M tokens (output)
 - **Gemini 2.5 Pro:** $1.25-$2.50/1M tokens (input), $10.00-$15.00/1M tokens (output)
 
-> **Cost Estimation:** A 1-hour audio file ≈ 90,000-115,200 tokens, costing approximately $0.09-$0.12 for audio input processing with Gemini 2.5 Flash.
+> **Cost Estimation:** A 1-hour audio file = 115,200 tokens, costing approximately $0.115 for audio input processing with Gemini 2.5 Flash.
+
+> **200 Hours Monthly Calculation:** 200 hours × 3,600 seconds × 32 tokens = 23,040,000 tokens = $23.04/month for audio processing.
 
 ### Model Recommendations
 
 **For Transcription Tasks, Use:**
 
 1. **Gemini 2.5 Flash** - Best price-performance ratio for most transcription needs
-2. **Gemini 2.5 Flash-Lite** - Most cost-effective for high-volume processing (Preview status - may have rate limits)
+2. **Gemini 2.5 Flash-Lite (Preview)** - Most cost-effective for high-volume processing (Note: Preview status with potential rate limits and changes)
 3. **Gemini 2.5 Pro** - For complex reasoning combined with transcription
 
 ### Multi-Language Support
@@ -1305,3 +1320,21 @@ Every audio file you process will make you more skilled at crafting better promp
 ---
 
 *This tutorial is part of our comprehensive AI implementation series. For more tutorials, examples, and resources, visit our [tutorial collection](../README.md).*
+
+## 📚 **References and Citations**
+
+- [Google AI Gemini API Documentation](https://ai.google.dev/gemini-api/docs) - Official API documentation
+- [Vertex AI Generative AI Pricing](https://cloud.google.com/vertex-ai/generative-ai/pricing) - Official pricing information  
+- [Gemini Audio Understanding Documentation](https://ai.google.dev/gemini-api/docs/audio) - Technical specifications for audio processing
+- [Gemini Model Versions and Lifecycle](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions) - Model availability and status
+
+## ⚠️ **Important Disclaimers**
+
+- **Pricing Information**: All pricing data is based on official Google documentation as of June 2025. Prices may change without notice. Always verify current pricing on official Google Cloud pricing pages.
+- **Performance Claims**: Audio speed optimization results may vary significantly based on audio quality, content complexity, speaker characteristics, and use case. Test thoroughly with your specific requirements.
+- **Model Availability**: Preview models (including Flash-Lite) may have restrictions, rate limits, or changes. Check official documentation for current status.
+- **Safety Settings**: Choose safety configurations appropriate for your use case and compliance requirements. Content filtering may affect transcription completeness.
+- **Production Use**: This tutorial provides examples for educational purposes. Implement appropriate error handling, monitoring, and security measures for production deployments.
+
+**Last Updated**: June 29, 2025  
+**Version**: 2.0 (Corrected pricing and technical specifications)
