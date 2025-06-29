@@ -154,6 +154,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 
 - [Kubernetes for Absolute Beginners](./01_kubernetes_beginner.md) (2-3 hours)
 - [Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md) (3-4 hours)
+- [Transcribing Audio/Video with Gemini 2.5](./25-video-transcription-with-gemini-2-5.md) (3-5 hours)
 - [Amazon Q Developer](./16_amazon_q.md) (4-6 hours)
 - [GCP Crash Course](./04_gcp_crash_course.md) (4-6 hours)
 - [GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md) (6-8 hours)
@@ -544,6 +545,8 @@ graph LR
 | **Advanced AI** (ADK, Agent Engine) | $20-80 USD | ⚠️ Production workloads |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
+
+> **🚀 Featured Cost Savings:** The [Video Transcription with Gemini 2.5](./25-video-transcription-with-gemini-2-5.md) tutorial includes advanced optimization techniques that can reduce transcription costs by up to 50% while maintaining quality - potentially saving $691+ annually for high-volume processing!
 
 ---
 
