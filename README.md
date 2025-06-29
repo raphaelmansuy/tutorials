@@ -1,4 +1,4 @@
-# ☁️ Cloud Architect Academy: From Zero to AI Hero 🚀
+# ☁️ Cloud AI/Architect Academy: From Zero to AI Hero 🚀
 
 > **"Democratizing enterprise-grade cloud and AI knowledge for the next generation of technology leaders"**
 
@@ -38,6 +38,7 @@ This project provides a **complete learning pathway** with production-ready trai
 - **🏗️ Infrastructure as Code**: Advanced Terraform, AWS CDK TypeScript, and scalable architecture patterns
 
 ```mermaid
+%%{init: {'mindmap': {'themeVariables': {'primaryColor': '#6b7280', 'primaryTextColor': '#22223b', 'primaryBorderColor': '#6b7280', 'lineColor': '#6b7280'}}}}%%
 mindmap
   root((Enterprise Cloud & AI Hub))
     Cloud Platforms
@@ -56,7 +57,6 @@ mindmap
       Authentication & Security
       Cloud Migration
       SaaS Development
-%%{init: { 'themeVariables': { 'background': '#f8fafc', 'primaryColor': '#6b7280', 'edgeLabelBackground':'#f8fafc', 'nodeTextColor':'#22223b' }}}%%
 ```
 
 ### 🎓 What Makes This Training Unique
