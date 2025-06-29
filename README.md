@@ -1,8 +1,20 @@
-# Enterprise Cloud & AI Development Hub 🚀
+# ☁️ Cloud Architect Academy: From Zero to AI Hero 🚀
+
+> **"Democratizing enterprise-grade cloud and AI knowledge for the next generation of technology leaders"**
+
+## 🎯 **Our Mission**
+
+**Empowering 1 million developers worldwide** to master cloud computing and AI technologies through hands-on, production-ready learning experiences. We believe that cutting-edge technical skills should be accessible to everyone—from complete beginners taking their first steps into the cloud, to seasoned professionals architecting the future of enterprise AI.
+
+### 👨‍💻 **Meet Your Guide: Raphaël MANSUY**
+
+This academy is crafted by **Raphaël MANSUY**, a visionary technologist with 20+ years of transforming businesses through cloud and AI innovation. As CTO of [Elitizon](https://www.elitizon.com/) and founder of the [QuantaLogic](https://www.quantalogic.app/) AI platform, Raphaël has guided Fortune 500 companies through digital transformation journeys and now shares this expertise with the global developer community.
+
+---
 
 Welcome to your **comprehensive enterprise training ecosystem** for modern cloud computing, DevOps, and AI development! This repository delivers hands-on, production-ready tutorials that transform developers into cloud architects and AI engineers—spanning from fundamental containerization to cutting-edge multi-agent AI systems and enterprise-scale cloud architecture.
 
-## 🌟 What Makes This Training Hub Unique
+## 🌟 What Makes Cloud Architect Academy Unique
 
 - **🎯 Accelerated Learning Paths**: 24-hour challenges for rapid, hands-on skill mastery
 - **💼 Business Impact Focus**: Measurable ROI analysis and competitive market insights  
