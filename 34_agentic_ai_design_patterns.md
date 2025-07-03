@@ -1,12 +1,5 @@
 # The Architecture of Autonomous AI: Essential Design Patterns for Agentic Systems with Context Engineering
 
-**Author**: Raphaël MANSUY  
-**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
-**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
-**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
-**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
-**Date**: July 2025
-
 ---
 
 The landscape of artificial intelligence is transforming rapidly as we move beyond static models toward dynamic, autonomous agents. These agentic AI systems represent a fundamental shift in how we conceptualize and deploy AI—from passive responders to active problem-solvers that can reason, plan, and execute complex tasks independently. This guide explores ten core design patterns that form the backbone of modern agentic AI architecture, with special focus on the critical aspect of context engineering that makes these patterns effective.
@@ -45,6 +38,17 @@ flowchart TB
 ```
 
 These characteristics enable AI agents to tackle real-world problems that require more than simple text generation.
+
+---
+
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
+**Date**: July 2025
+
+---
 
 ## The Critical Role of Context Engineering
 
