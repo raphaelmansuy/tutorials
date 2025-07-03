@@ -17,7 +17,7 @@ Welcome to your **comprehensive enterprise training ecosystem** for modern cloud
 ## 🌟 What Makes Cloud Architect Academy Unique
 
 - **🎯 Accelerated Learning Paths**: 24-hour challenges for rapid, hands-on skill mastery
-- **💼 Business Impact Focus**: Measurable ROI analysis and competitive market insights  
+- **💼 Business Impact Focus**: Measurable ROI analysis and competitive market insights
 - **🔧 Multi-Framework Support**: Flexible implementation options for maximum adoption
 
 **Ready to transform your career?** Whether you're taking your first steps into cloud computing or architecting enterprise-grade AI solutions for Fortune 500 companies—this hub provides your complete learning pathway to success.
@@ -43,7 +43,7 @@ mindmap
   root((Enterprise Cloud & AI Hub))
     Cloud Platforms
       GCP Enterprise
-      AWS Solutions  
+      AWS Solutions
       Multi-Cloud Architecture
     AI & Machine Learning
       Vertex AI Production
@@ -87,12 +87,14 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 **What you'll achieve:** Deploy your first application to the cloud in under 4 hours
 
 **Recommended Path:**
+
 1. [Install Google Cloud CLI](#-cloud-tools--setup) (30-45 min)
 2. [Create Your First GCP Storage](#-storage--data-management) (1-2 hours)
 3. [Kubernetes Basics](#-container-orchestration) (2-3 hours)
 
 **Time Investment:** 2-4 hours/week for 2-3 weeks
 **Cost:** $0-5 USD (mostly free tier)
+
 </details>
 
 <details>
@@ -101,6 +103,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 **What you'll achieve:** Build production-ready applications with CI/CD automation
 
 **Recommended Path:**
+
 1. [GCP Crash Course for AWS Users](#-cloud-platforms--migration) (4-6 hours)
 2. [AI-Powered Development with Amazon Q](#-ai-powered-developer-tools) (4-6 hours)
 3. [Deploy Applications to Cloud Platforms](#-application-deployment--saas-development) (3-4 hours)
@@ -108,6 +111,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 
 **Time Investment:** 5-10 hours/week for 3-4 weeks
 **Cost:** $5-25 USD
+
 </details>
 
 <details>
@@ -116,6 +120,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 **What you'll achieve:** Master AI agent development and enterprise architecture
 
 **Recommended Path:**
+
 1. [Complete ML Production Pipeline](#-artificial-intelligence--machine-learning) (6-8 hours)
 2. [Enterprise AI Agent Development](#-artificial-intelligence--machine-learning) (40-60 hours)
 3. [Multi-Agent System Orchestration](#-artificial-intelligence--machine-learning) (12-24 hours)
@@ -123,18 +128,19 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 
 **Time Investment:** 10-20 hours/week for 6-8 weeks
 **Cost:** $20-80 USD
+
 </details>
 
 ### � Step 2: Choose by Career Goal
 
-| **I Want To...** | **Recommended Path** | **Time** | **Level** |
-|-------------------|---------------------|----------|-----------|
-| 🚀 **Deploy my first app** | [Quick Deployment Track](#quick-deployment-track) | 4-6 hours | Beginner |
-| 🤖 **Build AI applications** | [AI Developer Track](#ai-developer-track) | 20-40 hours | Intermediate-Advanced |
-| 🔄 **Automate my workflow** | [DevOps Automation Track](#devops-automation-track) | 15-25 hours | Intermediate |
-| 🏢 **Lead enterprise migration** | [Enterprise Architecture Track](#enterprise-architecture-track) | 40-80 hours | Advanced |
-| 👨‍💻 **Accelerate development** | [AI-Powered Developer Track](#ai-powered-developer-track) | 12-20 hours | Intermediate |
-| 🏗️ **Build production SaaS** | [SaaS Architecture Track](#saas-architecture-track) | 30-50 hours | Advanced |
+| **I Want To...**                 | **Recommended Path**                                            | **Time**    | **Level**             |
+| -------------------------------- | --------------------------------------------------------------- | ----------- | --------------------- |
+| 🚀 **Deploy my first app**       | [Quick Deployment Track](#quick-deployment-track)               | 4-6 hours   | Beginner              |
+| 🤖 **Build AI applications**     | [AI Developer Track](#ai-developer-track)                       | 20-40 hours | Intermediate-Advanced |
+| 🔄 **Automate my workflow**      | [DevOps Automation Track](#devops-automation-track)             | 15-25 hours | Intermediate          |
+| 🏢 **Lead enterprise migration** | [Enterprise Architecture Track](#enterprise-architecture-track) | 40-80 hours | Advanced              |
+| 👨‍💻 **Accelerate development**    | [AI-Powered Developer Track](#ai-powered-developer-track)       | 12-20 hours | Intermediate          |
+| 🏗️ **Build production SaaS**     | [SaaS Architecture Track](#saas-architecture-track)             | 30-50 hours | Advanced              |
 
 ### ⏱️ Step 3: Choose by Time Available
 
@@ -147,6 +153,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 - [Modern Python Development Toolkit](./23-modern-python-dev-toolkit.md) (2-4 hours)
 
 **Perfect for:** Busy professionals, quick skill building
+
 </details>
 
 <details>
@@ -161,6 +168,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 - [Intent-Based Development](./17_intent_based_dev_vs_code_copilot.md) (6-8 hours)
 
 **Perfect for:** Hands-on learners, weekend warriors
+
 </details>
 
 <details>
@@ -173,27 +181,32 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 - [Google Agent Development Kit (ADK)](./07_agent/index.md) (40-60 hours)
 
 **Perfect for:** Career transitions, skill specialization
+
 </details>
 
 <details>
 <summary><strong>🎯 Learning Sprints</strong> (Week-long commitments) - Intensive growth</summary>
 
 **Week 1: Cloud Foundations**
+
 - Days 1-2: CLI Setup + Storage
 - Days 3-4: GCP Crash Course
 - Days 5-7: First Deployment + Practice
 
 **Week 2: AI-Powered Development**
+
 - Days 1-2: Amazon Q Developer
 - Days 3-5: Intent-Based Development
 - Days 6-7: Real project implementation
 
 **Week 3: Enterprise AI**
+
 - Days 1-3: Vertex AI Complete
 - Days 4-5: AI Agent Development
 - Days 6-7: Production deployment
 
 **Perfect for:** Bootcamp-style learning, career pivots
+
 </details>
 
 ### 🎯 Step 4: Pick Your First Tutorial
@@ -201,7 +214,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 Based on your selections above, here are your personalized recommendations:
 
 **🔰 New to Cloud?** → Start with [Install Google Cloud CLI](./03_how_to_install_google_cloud.md)
-**🚀 Have Experience?** → Jump to [GCP Crash Course](./04_gcp_crash_course.md) 
+**🚀 Have Experience?** → Jump to [GCP Crash Course](./04_gcp_crash_course.md)
 **🤖 Want AI Focus?** → Begin with [Amazon Q Developer](./16_amazon_q.md)
 **⚡ Need Quick Win?** → Try [Modern Python Toolkit](./23-modern-python-dev-toolkit.md)
 
@@ -221,12 +234,13 @@ Based on your selections above, here are your personalized recommendations:
 <summary><strong>🔰 Foundation Achievements</strong> (Beginner Level)</summary>
 
 - [ ] 🔧 **Cloud Tools Master** - Completed CLI installation and setup
-- [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutions  
+- [ ] 💾 **Storage Architect** - Set up and managed cloud storage solutions
 - [ ] 📦 **Container Orchestrator** - Deployed first Kubernetes application
 - [ ] 🚀 **First Deployment** - Successfully deployed application to cloud
 
 **Unlock Requirement:** Complete any 3 foundation tutorials
 **Next Level:** Intermediate Achievements unlocked!
+
 </details>
 
 <details>
@@ -239,6 +253,7 @@ Based on your selections above, here are your personalized recommendations:
 
 **Unlock Requirement:** Complete Foundation level + 2 intermediate tutorials
 **Next Level:** Advanced Achievements unlocked!
+
 </details>
 
 <details>
@@ -252,6 +267,7 @@ Based on your selections above, here are your personalized recommendations:
 
 **Unlock Requirement:** Complete Intermediate level + 2 advanced tutorials
 **Next Level:** Enterprise Master unlocked!
+
 </details>
 
 <details>
@@ -264,6 +280,7 @@ Based on your selections above, here are your personalized recommendations:
 
 **Unlock Requirement:** Complete Advanced level + 3 enterprise tutorials
 **Reward:** Industry recognition & career advancement opportunities!
+
 </details>
 
 ### 📈 Smart Recommendations
@@ -271,103 +288,111 @@ Based on your selections above, here are your personalized recommendations:
 Based on your progress, here are your next suggested tutorials:
 
 **🎯 Immediate Next Steps:**
+
 - Complete your current tutorial
 - Review and practice concepts
 - Plan your next learning milestone
 
 **🚀 Suggested Progression:**
+
 - [Your recommendations will appear here based on completed tutorials]
 
 **💡 Pro Tips:**
+
 - Set aside dedicated learning time each week
 - Practice with real projects between tutorials
 - Join the community discussions for support
-
 
 ---
 
 ## 📚 Tutorials by Outcome
 
 ### 🎯 **Get Your First App Live** (Beginner Success)
-*Perfect for newcomers who want to see immediate results*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | 30-45 min | Beginner | Development environment setup |
-| [📖 Create GCP Storage Bucket](./02_create_gcp_bucket_en.md) | 1-2 hours | Beginner | Cloud storage for your apps |
-| [📖 Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md) | 3-4 hours | Beginner-Advanced | Live web application |
+_Perfect for newcomers who want to see immediate results_
+
+| Tutorial                                                           | Duration  | Level             | What You'll Build             |
+| ------------------------------------------------------------------ | --------- | ----------------- | ----------------------------- |
+| [📖 Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | 30-45 min | Beginner          | Development environment setup |
+| [📖 Create GCP Storage Bucket](./02_create_gcp_bucket_en.md)       | 1-2 hours | Beginner          | Cloud storage for your apps   |
+| [📖 Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md)           | 3-4 hours | Beginner-Advanced | Live web application          |
 
 **🎉 End Result:** A production-ready web application running on Google Cloud
 **💰 Cost:** $0-5 USD | **⏱️ Total Time:** 4-6 hours
 
 ### 🔄 **Automate Your Development Workflow** (Productivity Boost)
-*Perfect for developers who want to work smarter, not harder*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 Amazon Q for the Impatient](./16_amazon_q.md) | 4-6 hours | Beginner-Advanced | AI-powered code generation |
-| [📖 Intent-Based Development with VS Code Copilot](./17_intent_based_dev_vs_code_copilot.md) | 6-8 hours | Beginner-Advanced | Natural language programming |
-| [📖 GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md) | 6-8 hours | Beginner-Advanced | Automated deployment pipeline |
-| [📖 Modern Python Development Toolkit](./23-modern-python-dev-toolkit.md) | 2-4 hours | Intermediate-Advanced | Optimized Python workflow |
+_Perfect for developers who want to work smarter, not harder_
+
+| Tutorial                                                                                     | Duration  | Level                 | What You'll Build             |
+| -------------------------------------------------------------------------------------------- | --------- | --------------------- | ----------------------------- |
+| [📖 Amazon Q for the Impatient](./16_amazon_q.md)                                            | 4-6 hours | Beginner-Advanced     | AI-powered code generation    |
+| [📖 Intent-Based Development with VS Code Copilot](./17_intent_based_dev_vs_code_copilot.md) | 6-8 hours | Beginner-Advanced     | Natural language programming  |
+| [📖 GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md)                                     | 6-8 hours | Beginner-Advanced     | Automated deployment pipeline |
+| [📖 Modern Python Development Toolkit](./23-modern-python-dev-toolkit.md)                    | 2-4 hours | Intermediate-Advanced | Optimized Python workflow     |
 
 **🎉 End Result:** AI-accelerated development with fully automated deployments
 **💰 Cost:** $10-30 USD | **⏱️ Total Time:** 18-26 hours
 
 ### 🤖 **Build AI-Powered Applications** (Cutting Edge)
-*Perfect for developers ready to integrate AI into their applications*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 Vertex AI Crash Course](./05_vertex_ai.md) | 6-8 hours | Advanced | Complete ML pipeline |
-| [📖 Google Agent Development Kit (ADK)](./07_agent/index.md) | 40-60 hours | Advanced | Intelligent AI agents |
-| [📖 Vertex AI Agent Engine](./22_google_vertex_agent_engine.md) | 12-24 hours | Advanced | Enterprise AI agent platform |
-| [📖 Transcribing Audio/Video with Gemini 2.5](./25-video-transcription-with-gemini-2-5.md) | 3-5 hours | Beginner-Advanced | AI transcription service |
-| [📖 A2A Protocol](./28-a2a.md) | 8-12 hours | Beginner-Advanced | Agent-to-agent communication |
-| [📖 MCP 2025-06-18 Documentation](./24-mcp.md) | 8-12 hours | Beginner-Advanced | AI integration protocols |
+_Perfect for developers ready to integrate AI into their applications_
+
+| Tutorial                                                                                   | Duration    | Level             | What You'll Build            |
+| ------------------------------------------------------------------------------------------ | ----------- | ----------------- | ---------------------------- |
+| [📖 Vertex AI Crash Course](./05_vertex_ai.md)                                             | 6-8 hours   | Advanced          | Complete ML pipeline         |
+| [📖 Google Agent Development Kit (ADK)](./07_agent/index.md)                               | 40-60 hours | Advanced          | Intelligent AI agents        |
+| [📖 Vertex AI Agent Engine](./22_google_vertex_agent_engine.md)                            | 12-24 hours | Advanced          | Enterprise AI agent platform |
+| [📖 Transcribing Audio/Video with Gemini 2.5](./25-video-transcription-with-gemini-2-5.md) | 3-5 hours   | Beginner-Advanced | AI transcription service     |
+| [📖 A2A Protocol](./28-a2a.md)                                                             | 8-12 hours  | Beginner-Advanced | Agent-to-agent communication |
+| [📖 MCP 2025-06-18 Documentation](./24-mcp.md)                                             | 8-12 hours  | Beginner-Advanced | AI integration protocols     |
 
 **🎉 End Result:** Production-ready AI applications with intelligent agents
 **💰 Cost:** $30-80 USD | **⏱️ Total Time:** 77-111 hours
 
 ### 🏢 **Scale to Enterprise Production** (Business Ready)
-*Perfect for teams and organizations ready for enterprise-grade solutions*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 GCP Crash Course for AWS Professionals](./04_gcp_crash_course.md) | 4-6 hours | Intermediate | Multi-cloud expertise |
-| [📖 AWS ECS Fargate SaaS Development](./14_developing_a_saas_using_aws_and_ecs_fargate.md) | 24 hours | Intermediate-Advanced | Complete SaaS platform |
-| [📖 OAuth2 Authentication](./11_oauth2.md) | 2-3 hours | Intermediate | Enterprise authentication |
-| [📖 OpenID Connect (OIDC)](./12_oidc_connect.md) | 2-3 hours | Intermediate | Identity management |
-| [📖 Apigee API Management](./10_apigee.md) | 3-4 hours | Intermediate | Enterprise API platform |
-| [📖 HAProxy to AWS Migration](./13_migration_from_haproxy_to_aws_managed_services.md) | 8-12 hours | Advanced | Infrastructure transformation |
+_Perfect for teams and organizations ready for enterprise-grade solutions_
+
+| Tutorial                                                                                   | Duration   | Level                 | What You'll Build             |
+| ------------------------------------------------------------------------------------------ | ---------- | --------------------- | ----------------------------- |
+| [📖 GCP Crash Course for AWS Professionals](./04_gcp_crash_course.md)                      | 4-6 hours  | Intermediate          | Multi-cloud expertise         |
+| [📖 AWS ECS Fargate SaaS Development](./14_developing_a_saas_using_aws_and_ecs_fargate.md) | 24 hours   | Intermediate-Advanced | Complete SaaS platform        |
+| [📖 OAuth2 Authentication](./11_oauth2.md)                                                 | 2-3 hours  | Intermediate          | Enterprise authentication     |
+| [📖 OpenID Connect (OIDC)](./12_oidc_connect.md)                                           | 2-3 hours  | Intermediate          | Identity management           |
+| [📖 Apigee API Management](./10_apigee.md)                                                 | 3-4 hours  | Intermediate          | Enterprise API platform       |
+| [📖 HAProxy to AWS Migration](./13_migration_from_haproxy_to_aws_managed_services.md)      | 8-12 hours | Advanced              | Infrastructure transformation |
 
 **🎉 End Result:** Enterprise-grade cloud architecture with security and scalability
 **💰 Cost:** $25-75 USD | **⏱️ Total Time:** 43-52 hours
 
 ### 🔧 **Master Essential Cloud Skills** (Foundation Building)
-*Perfect for building solid cloud computing fundamentals*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 Kubernetes for Absolute Beginners](./01_kubernetes_beginner.md) | 2-3 hours | Beginner | Container orchestration |
-| [📖 Google Cloud SQL for Postgres](./19_google_cloud_sql.md) | 3-5 hours | Beginner-Intermediate | Cloud database |
-| [📖 Google Cloud IAM](./20_google_iam.md) | 2-3 hours | Intermediate | Identity and access management |
-| [📖 Google Cloud Run](./21_google_cloud_run.md) | 2-3 hours | Intermediate | Serverless containers |
-| [📖 Terraform Foundations](./18_terraform.md) | 4-6 hours | Intermediate | Infrastructure as Code |
+_Perfect for building solid cloud computing fundamentals_
+
+| Tutorial                                                            | Duration  | Level                 | What You'll Build              |
+| ------------------------------------------------------------------- | --------- | --------------------- | ------------------------------ |
+| [📖 Kubernetes for Absolute Beginners](./01_kubernetes_beginner.md) | 2-3 hours | Beginner              | Container orchestration        |
+| [📖 Google Cloud SQL for Postgres](./19_google_cloud_sql.md)        | 3-5 hours | Beginner-Intermediate | Cloud database                 |
+| [📖 Google Cloud IAM](./20_google_iam.md)                           | 2-3 hours | Intermediate          | Identity and access management |
+| [📖 Google Cloud Run](./21_google_cloud_run.md)                     | 2-3 hours | Intermediate          | Serverless containers          |
+| [📖 Terraform Foundations](./18_terraform.md)                       | 4-6 hours | Intermediate          | Infrastructure as Code         |
 
 **🎉 End Result:** Solid foundation in cloud computing essentials
 **💰 Cost:** $5-20 USD | **⏱️ Total Time:** 13-20 hours
 
 ### 🧪 **Advanced Specializations** (Expert Level)
-*Perfect for deep diving into specific technologies and methodologies*
 
-| Tutorial | Duration | Level | What You'll Build |
-|----------|----------|-------|-------------------|
-| [📖 Bruno for API Testing](./26-bruno.md) | 2-4 hours | Beginner-Advanced | API testing automation |
-| [📖 AG-UI Protocol](./33_ag_ui.md) | 6-10 hours | Beginner-Advanced | Interactive AI interfaces |
-| [📖 Vertex AI Observability](./31_observability_llm_adk_vertex.md) | 2-4 hours | Intermediate-Advanced | Production monitoring |
-| [📖 Mastering Embedding Types](./32_embeddings/index.md) | 8-12 hours | Intermediate-Advanced | Semantic search systems |
-| [📖 Context Engineering](./32_context_engineering/README.md) | 4-6 hours | Intermediate-Advanced | AI context optimization |
-| [📖 Prompt Engineering for Diagrams](./27_promp_for_diagrams/prompts_for_diagram.md) | 1-2 hours | Beginner-Advanced | AI diagram generation |
+_Perfect for deep diving into specific technologies and methodologies_
+
+| Tutorial                                                                             | Duration   | Level                 | What You'll Build         |
+| ------------------------------------------------------------------------------------ | ---------- | --------------------- | ------------------------- |
+| [📖 Bruno for API Testing](./26-bruno.md)                                            | 2-4 hours  | Beginner-Advanced     | API testing automation    |
+| [📖 AG-UI Protocol](./33_ag_ui.md)                                                   | 6-10 hours | Beginner-Advanced     | Interactive AI interfaces |
+| [📖 Vertex AI Observability](./31_observability_llm_adk_vertex.md)                   | 2-4 hours  | Intermediate-Advanced | Production monitoring     |
+| [📖 Mastering Embedding Types](./32_embeddings/index.md)                             | 8-12 hours | Intermediate-Advanced | Semantic search systems   |
+| [📖 Context Engineering](./32_context_engineering/README.md)                         | 4-6 hours  | Intermediate-Advanced | AI context optimization   |
+| [📖 Prompt Engineering for Diagrams](./27_promp_for_diagrams/prompts_for_diagram.md) | 1-2 hours  | Beginner-Advanced     | AI diagram generation     |
 
 **🎉 End Result:** Specialized expertise in cutting-edge technologies
 **💰 Cost:** $10-40 USD | **⏱️ Total Time:** 23-38 hours
@@ -378,14 +403,14 @@ Based on your progress, here are your next suggested tutorials:
 
 For users who prefer traditional structured paths, here are curated sequences:
 
-| Path | Focus | Duration | Description |
-|------|-------|----------|-------------|
-| **Cloud Beginner → Professional** | Foundation Building | 15-20 hours | CLI → Kubernetes → Storage → GCP Course → Deployment |
-| **AWS → GCP Migration** | Platform Transition | 8-12 hours | CLI → GCP Course → Deployment → ML (optional) |
-| **ML/AI Specialization** | Artificial Intelligence | 60-90 hours | CLI → Storage → GCP → Vertex AI → AI Agents → Production |
-| **DevOps & Containers** | Automation Focus | 20-30 hours | CLI → Kubernetes → Amazon Q → CI/CD → Deployment |
-| **AI-Powered Development** | Modern Workflows | 25-35 hours | Amazon Q → Copilot → CLI → GCP → CI/CD → Vertex AI |
-| **Enterprise Architecture** | Large-Scale Systems | 50-80 hours | CLI → GCP → Authentication → SaaS → Migration → API Management |
+| Path                              | Focus                   | Duration    | Description                                                    |
+| --------------------------------- | ----------------------- | ----------- | -------------------------------------------------------------- |
+| **Cloud Beginner → Professional** | Foundation Building     | 15-20 hours | CLI → Kubernetes → Storage → GCP Course → Deployment           |
+| **AWS → GCP Migration**           | Platform Transition     | 8-12 hours  | CLI → GCP Course → Deployment → ML (optional)                  |
+| **ML/AI Specialization**          | Artificial Intelligence | 60-90 hours | CLI → Storage → GCP → Vertex AI → AI Agents → Production       |
+| **DevOps & Containers**           | Automation Focus        | 20-30 hours | CLI → Kubernetes → Amazon Q → CI/CD → Deployment               |
+| **AI-Powered Development**        | Modern Workflows        | 25-35 hours | Amazon Q → Copilot → CLI → GCP → CI/CD → Vertex AI             |
+| **Enterprise Architecture**       | Large-Scale Systems     | 50-80 hours | CLI → GCP → Authentication → SaaS → Migration → API Management |
 
 **💡 Pro Tip:** These paths can be mixed and matched based on your specific goals and time availability.
 
@@ -394,7 +419,8 @@ For users who prefer traditional structured paths, here are curated sequences:
 ## 🗺️ Comprehensive Learning Tracks
 
 ### Quick Deployment Track
-*Perfect for: Getting your first app live quickly*
+
+_Perfect for: Getting your first app live quickly_
 **Time:** 4-6 hours | **Level:** Beginner | **Cost:** $0-5
 
 ```mermaid
@@ -405,25 +431,28 @@ graph LR
 ```
 
 **Path:**
+
 1. [Install Google Cloud CLI](./03_how_to_install_google_cloud.md) → Set up your environment
-2. [Create GCP Storage Bucket](./02_create_gcp_bucket_en.md) → Learn cloud storage basics  
+2. [Create GCP Storage Bucket](./02_create_gcp_bucket_en.md) → Learn cloud storage basics
 3. [Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md) → Get your app live
 
 **What You'll Build:** A production-ready web application deployed to Google Cloud
 
-### AI Developer Track  
-*Perfect for: Building intelligent applications*
+### AI Developer Track
+
+_Perfect for: Building intelligent applications_
 **Time:** 20-40 hours | **Level:** Intermediate-Advanced | **Cost:** $10-50
 
 ```mermaid
 graph LR
     A[Amazon Q<br/>4-6 hours] --> B[VS Code Copilot<br/>6-8 hours]
-    B --> C[Vertex AI<br/>6-8 hours] 
+    B --> C[Vertex AI<br/>6-8 hours]
     C --> D[AI Agents<br/>12-24 hours]
     D --> E[🤖 AI App!]
 ```
 
 **Path:**
+
 1. [Amazon Q Developer](./16_amazon_q.md) → AI-powered coding
 2. [Intent-Based Development](./17_intent_based_dev_vs_code_copilot.md) → Natural language programming
 3. [Vertex AI Crash Course](./05_vertex_ai.md) → Machine learning platform
@@ -432,7 +461,8 @@ graph LR
 **What You'll Build:** Intelligent AI-powered applications with natural language interfaces
 
 ### DevOps Automation Track
-*Perfect for: Streamlining development workflows*  
+
+_Perfect for: Streamlining development workflows_  
 **Time:** 15-25 hours | **Level:** Intermediate | **Cost:** $5-25
 
 ```mermaid
@@ -444,6 +474,7 @@ graph LR
 ```
 
 **Path:**
+
 1. [Install Google Cloud CLI](./03_how_to_install_google_cloud.md) → Development environment
 2. [GCP Crash Course](./04_gcp_crash_course.md) → Cloud platform mastery
 3. [GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md) → Automation pipelines
@@ -452,7 +483,8 @@ graph LR
 **What You'll Build:** Fully automated CI/CD pipeline with cloud deployment
 
 ### Enterprise Architecture Track
-*Perfect for: Leading large-scale cloud transformations*
+
+_Perfect for: Leading large-scale cloud transformations_
 **Time:** 40-80 hours | **Level:** Advanced | **Cost:** $20-80
 
 ```mermaid
@@ -464,6 +496,7 @@ graph LR
 ```
 
 **Path:**
+
 1. [GCP Crash Course](./04_gcp_crash_course.md) → Multi-cloud expertise
 2. [AWS ECS Fargate SaaS Development](./14_developing_a_saas_using_aws_and_ecs_fargate.md) → Enterprise SaaS
 3. [Vertex AI Agent Engine](./22_google_vertex_agent_engine.md) → AI integration
@@ -472,7 +505,8 @@ graph LR
 **What You'll Build:** Complete enterprise-grade cloud architecture with AI capabilities
 
 ### AI-Powered Developer Track
-*Perfect for: Accelerating development with AI tools*
+
+_Perfect for: Accelerating development with AI tools_
 **Time:** 12-20 hours | **Level:** Intermediate | **Cost:** $10-30
 
 ```mermaid
@@ -484,6 +518,7 @@ graph LR
 ```
 
 **Path:**
+
 1. [Amazon Q Developer](./16_amazon_q.md) → AI code generation
 2. [Intent-Based Development](./17_intent_based_dev_vs_code_copilot.md) → Natural language coding
 3. [MCP 2025-06-18 Documentation](./24-mcp.md) → AI integration protocols
@@ -492,7 +527,8 @@ graph LR
 **What You'll Build:** AI-accelerated development workflow with intelligent code generation
 
 ### SaaS Architecture Track
-*Perfect for: Building production-ready SaaS platforms*
+
+_Perfect for: Building production-ready SaaS platforms_
 **Time:** 30-50 hours | **Level:** Advanced | **Cost:** $15-60
 
 ```mermaid
@@ -504,6 +540,7 @@ graph LR
 ```
 
 **Path:**
+
 1. [GCP Crash Course](./04_gcp_crash_course.md) → Cloud platform foundation
 2. [OAuth2 Authentication](./11_oauth2.md) + [OpenID Connect](./12_oidc_connect.md) → Security
 3. [AWS ECS Fargate SaaS Development](./14_developing_a_saas_using_aws_and_ecs_fargate.md) → Core platform
@@ -536,13 +573,13 @@ graph LR
 
 ## 💰 Cost Estimates
 
-| Tutorial Category | Estimated Cost | Free Tier Coverage |
-|-------------------|----------------|-------------------|
-| **Quick Wins** (CLI, Storage, Python) | $0-5 USD | ✅ Completely covered |
-| **Weekend Projects** (Kubernetes, Deployment) | $0-15 USD | ✅ Mostly covered |
-| **AI Development** (Amazon Q, Copilot, Vertex AI) | $10-40 USD | ⚠️ Some paid features |
-| **Enterprise Projects** (SaaS, Migration) | $15-60 USD | ⚠️ Multiple services |
-| **Advanced AI** (ADK, Agent Engine) | $20-80 USD | ⚠️ Production workloads |
+| Tutorial Category                                 | Estimated Cost | Free Tier Coverage      |
+| ------------------------------------------------- | -------------- | ----------------------- |
+| **Quick Wins** (CLI, Storage, Python)             | $0-5 USD       | ✅ Completely covered   |
+| **Weekend Projects** (Kubernetes, Deployment)     | $0-15 USD      | ✅ Mostly covered       |
+| **AI Development** (Amazon Q, Copilot, Vertex AI) | $10-40 USD     | ⚠️ Some paid features   |
+| **Enterprise Projects** (SaaS, Migration)         | $15-60 USD     | ⚠️ Multiple services    |
+| **Advanced AI** (ADK, Agent Engine)               | $20-80 USD     | ⚠️ Production workloads |
 
 > **💡 Cost Tip:** All tutorials include detailed cleanup instructions to minimize costs. Most can be completed within free tier limits.
 
@@ -553,7 +590,7 @@ graph LR
 ## 🚦 Getting Started
 
 1. **Choose your learning approach** from the options above
-2. **Set up prerequisites** for your chosen tutorials  
+2. **Set up prerequisites** for your chosen tutorials
 3. **Follow the tutorials** at your own pace
 4. **Track your progress** using our achievement system
 5. **Clean up resources** after each tutorial to avoid unnecessary costs
@@ -576,7 +613,7 @@ If you encounter issues while following these tutorials:
 
 **Happy Learning! 🎓**
 
-*Transform your career with enterprise-grade cloud and AI skills*
+_Transform your career with enterprise-grade cloud and AI skills_
 
 ---
 
@@ -600,13 +637,13 @@ This repository has been developed with ❤️ by **Raphaël MANSUY** - a passio
 
 #### **📱 Follow & Connect**
 
-| Platform | Link | What You'll Get |
-|----------|------|-----------------|
-| 🔗 **LinkedIn** | [raphaelmansuy](https://www.linkedin.com/in/raphaelmansuy/) | Professional insights & industry updates |
-| 🐦 **Twitter/X** | [@raphaelmansuy](https://twitter.com/raphaelmansuy) | Daily AI tips & tech discussions |
-| 📧 **Newsletter** | [Exponential AI](https://exponentialai.substack.com/) | Weekly AI breakthroughs & analysis |
-| 📝 **Medium** | [@raphael.mansuy](https://medium.com/@raphael.mansuy) | In-depth AI & Data Engineering articles |
-| 💬 **Consultation** | [Book a Session](https://topmate.io/raphael_mansuy) | 1-on-1 technical guidance |
+| Platform            | Link                                                        | What You'll Get                          |
+| ------------------- | ----------------------------------------------------------- | ---------------------------------------- |
+| 🔗 **LinkedIn**     | [raphaelmansuy](https://www.linkedin.com/in/raphaelmansuy/) | Professional insights & industry updates |
+| 🐦 **Twitter/X**    | [@raphaelmansuy](https://twitter.com/raphaelmansuy)         | Daily AI tips & tech discussions         |
+| 📧 **Newsletter**   | [Exponential AI](https://exponentialai.substack.com/)       | Weekly AI breakthroughs & analysis       |
+| 📝 **Medium**       | [@raphael.mansuy](https://medium.com/@raphael.mansuy)       | In-depth AI & Data Engineering articles  |
+| 💬 **Consultation** | [Book a Session](https://topmate.io/raphael_mansuy)         | 1-on-1 technical guidance                |
 
 #### **🚀 Explore More Projects**
 
@@ -663,12 +700,12 @@ This repository has been developed with ❤️ by **Raphaël MANSUY** - a passio
 
 [![GitHub stars](https://img.shields.io/github/stars/raphaelmansuy/tutorials?style=social)](https://github.com/raphaelmansuy/tutorials/stargazers)
 
-| Metric | Current Status | Growth Potential |
-|--------|---------------|------------------|
-| 🌟 **Community Interest** | [![GitHub stars](https://img.shields.io/github/stars/raphaelmansuy/tutorials)](https://github.com/raphaelmansuy/tutorials) | 📈 Just launched - growing daily |  
-| 📚 **Tutorial Collection** | 30+ comprehensive guides | 🚀 Expanding with new content weekly |
-| 🌍 **Global Accessibility** | Available worldwide | 🌐 Reaching developers in every timezone |
-| 💼 **Career Impact Focus** | Enterprise-grade training | 📊 Designed for measurable skill transformation |
+| Metric                      | Current Status                                                                                                             | Growth Potential                                |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| 🌟 **Community Interest**   | [![GitHub stars](https://img.shields.io/github/stars/raphaelmansuy/tutorials)](https://github.com/raphaelmansuy/tutorials) | 📈 Just launched - growing daily                |
+| 📚 **Tutorial Collection**  | 30+ comprehensive guides                                                                                                   | 🚀 Expanding with new content weekly            |
+| 🌍 **Global Accessibility** | Available worldwide                                                                                                        | 🌐 Reaching developers in every timezone        |
+| 💼 **Career Impact Focus**  | Enterprise-grade training                                                                                                  | 📊 Designed for measurable skill transformation |
 
 ### 🎯 **Ready to Transform Your Career?**
 
@@ -684,7 +721,7 @@ Choose your path above and begin your transformation from cloud beginner to ente
 
 **"Technology is best when it brings people together."** - Matt Mullenweg
 
-*Let's build the future of cloud and AI together!*
+_Let's build the future of cloud and AI together!_
 
 ---
 
