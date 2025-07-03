@@ -1,5 +1,14 @@
 # The Architecture of Autonomous AI: Essential Design Patterns for Agentic Systems with Context Engineering
 
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
+**Date**: July 2025
+
+---
+
 The landscape of artificial intelligence is transforming rapidly as we move beyond static models toward dynamic, autonomous agents. These agentic AI systems represent a fundamental shift in how we conceptualize and deploy AI—from passive responders to active problem-solvers that can reason, plan, and execute complex tasks independently. This guide explores ten core design patterns that form the backbone of modern agentic AI architecture, with special focus on the critical aspect of context engineering that makes these patterns effective.
 
 ## What Makes AI "Agentic"?
@@ -9,6 +18,31 @@ Before diving into patterns, it's crucial to understand what distinguishes agent
 1. **Autonomy**: The ability to make decisions and take actions without constant human intervention
 2. **Goal-oriented behavior**: Working toward specific objectives through planning and execution
 3. **Environmental interaction**: Engaging with tools, APIs, and other systems to accomplish tasks
+
+```mermaid
+flowchart TB
+    subgraph Agentic ["What Makes AI 'Agentic'?"]
+        A[Traditional AI<br/>Static Responses] --> B{Agentic AI<br/>Transform}
+        B --> C[Autonomy<br/>Independent Decision Making]
+        B --> D[Goal-Oriented<br/>Planning & Execution]
+        B --> E[Environmental Interaction<br/>Tools, APIs, Systems]
+        
+        C --> F[Makes decisions without<br/>constant human intervention]
+        D --> G[Works toward specific<br/>objectives through planning]
+        E --> H[Engages with external<br/>tools and systems]
+        
+        F --> I[Real-World Problem Solving]
+        G --> I
+        H --> I
+    end
+    
+    style A fill:#FFE6E6,stroke:#D32F2F,stroke-width:2px,color:#B71C1C
+    style B fill:#E3F2FD,stroke:#1976D2,stroke-width:3px,color:#0D47A1
+    style C fill:#E8F5E8,stroke:#4CAF50,stroke-width:2px,color:#1B5E20
+    style D fill:#FFF3E0,stroke:#FF9800,stroke-width:2px,color:#E65100
+    style E fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px,color:#4A148C
+    style I fill:#FFFDE7,stroke:#F9A825,stroke-width:3px,color:#F57F17
+```
 
 These characteristics enable AI agents to tackle real-world problems that require more than simple text generation.
 
@@ -1682,6 +1716,21 @@ As we advance toward more sophisticated AI systems, these patterns will evolve a
 - **Ethical Governance**: Built-in patterns for ensuring responsible AI behavior
 - **Cross-Domain Integration**: Agents that seamlessly operate across different knowledge domains
 - **Adaptive Context Engineering**: Systems that optimize their own context handling
+
+---
+
+### Expert Consultation
+
+For enterprise implementations requiring specialized architecture guidance:
+
+**Raphaël MANSUY** - Context Engineering Architect
+
+- **Contact**: [LinkedIn](https://www.linkedin.com/in/raphaelmansuy/) | [Website](https://www.elitizon.com)
+- **Expertise**: AI Architecture, Enterprise Context Systems, Large-Scale AI Transformations
+- **Current Role**: Leading AI/ML initiatives at DECATHLON through Capgemini Invent/Quantmetry
+- **Investment Portfolio**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)
+
+
 
 ## Conclusion
 

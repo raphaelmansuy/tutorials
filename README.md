@@ -393,6 +393,7 @@ _Perfect for deep diving into specific technologies and methodologies_
 | [📖 Mastering Embedding Types](./32_embeddings/index.md)                             | 8-12 hours | Intermediate-Advanced | Semantic search systems   |
 | [📖 Context Engineering](./32_context_engineering/README.md)                         | 4-6 hours  | Intermediate-Advanced | AI context optimization   |
 | [📖 Prompt Engineering for Diagrams](./27_promp_for_diagrams/prompts_for_diagram.md) | 1-2 hours  | Beginner-Advanced     | AI diagram generation     |
+| [📖 Agentic AI Design Patterns](./34_agentic_ai_design_patterns.md)                  | 8-12 hours | Advanced              | Agentic system architecture |
 
 **🎉 End Result:** Specialized expertise in cutting-edge technologies
 **💰 Cost:** $10-40 USD | **⏱️ Total Time:** 23-38 hours
