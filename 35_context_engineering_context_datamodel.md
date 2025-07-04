@@ -8,6 +8,31 @@
 
 **Core Framework**: The four-layer architecture (Structured Data, Dynamic Context, Memory Systems, Relevance Engine) provides a practical blueprint for implementing context-aware AI systems that scale from prototype to production. Real-world case studies demonstrate successful implementations across financial services, e-commerce, project management, and healthcare domains.
 
+```mermaid
+graph LR
+    A[Layer 1: Structured Data<br/>• User Profiles<br/>• Configuration<br/>• Business Rules] --> B[Layer 2: Dynamic Context<br/>• Session State<br/>• Real-time Data<br/>• Conversation Flow]
+    
+    B --> C[Layer 3: Memory Systems<br/>• Vector Databases<br/>• External APIs<br/>• Historical Analytics]
+    
+    C --> D[Layer 4: Relevance Engine<br/>• Adaptive Scoring<br/>• ML-based Selection<br/>• Performance Optimization]
+
+    style A fill:#E8F4FD,stroke:#1565C0,color:#000,stroke-width:3px
+    style B fill:#E8F5E8,stroke:#2E7D32,color:#000,stroke-width:3px
+    style C fill:#FFF3E0,stroke:#EF6C00,color:#000,stroke-width:3px
+    style D fill:#F3E5F5,stroke:#6A1B9A,color:#000,stroke-width:3px
+```
+
+```mermaid
+flowchart LR
+    P1[🔨 Prototype<br/>Layers 1 + 2<br/>Basic functionality] --> P2[🚀 MVP<br/>Add Layer 3<br/>Enhanced capabilities]
+    
+    P2 --> P3[⚡ Production<br/>Full Layer 4<br/>Intelligent scaling]
+
+    style P1 fill:#FFF8E1,stroke:#FFB300,color:#000,stroke-width:2px
+    style P2 fill:#FCE4EC,stroke:#E91E63,color:#000,stroke-width:2px
+    style P3 fill:#F1F8E9,stroke:#689F38,color:#000,stroke-width:2px
+```
+
 ## Introduction
 
 Modern AI agents face a fundamental challenge that distinguishes them from traditional AI systems: they must maintain awareness across extended interactions while making decisions with limited computational resources. Consider a customer service agent helping with a complex technical issue. It needs to remember the customer's purchase history, track the current troubleshooting state, access relevant knowledge bases, and maintain awareness of previous failed solutions—all while operating within the constraints of finite context windows and processing capabilities.
