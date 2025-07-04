@@ -22,6 +22,17 @@ Think of it as teaching a brilliant but literal-minded expert exactly what you n
 
 At its core, prompt engineering involves three elements: understanding AI capabilities and limitations, structuring requests for optimal comprehension, and iterating based on results. It's less about technical complexity and more about strategic communication.
 
+---
+
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Working on AI/ML initiatives with DECATHLON, driving large-scale AI adoption and organizational transformation.**
+**Date**: July 2025
+
+---
+
 **How:** This Tutorial's Promise
 
 This tutorial provides a comprehensive journey from basic daily tasks to advanced business applications. You'll master 15+ core techniques through 50+ practical examples, progressing from personal productivity gains to professional competitive advantages.
@@ -1177,3 +1188,14 @@ The future belongs to those who can effectively collaborate with AI systems. You
 - Questions about implementation
 - Team training opportunities
 - Custom prompt development services
+
+### Expert Consultation
+
+For enterprise implementations requiring specialized architecture guidance:
+
+**Raphaël MANSUY** - Context Engineering Architect
+
+- **Contact**: [LinkedIn](https://www.linkedin.com/in/raphaelmansuy/) | [Website](https://www.elitizon.com)
+- **Expertise**: AI Architecture, Enterprise Context Systems, Large-Scale AI Transformations
+- **Current Role**: Leading AI/ML initiatives at DECATHLON through Capgemini Invent/Quantmetry
+- **Investment Portfolio**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)
