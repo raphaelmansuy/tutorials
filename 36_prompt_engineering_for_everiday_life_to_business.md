@@ -50,11 +50,11 @@
 
 **Why:** The Hidden Multiplier Effect
 
-Imagine two people using the same AI tool. Person A types "Write me an email" and gets a generic, robotic response they can't use. Person B crafts a precise prompt and receives a polished, persuasive email that lands them a new client worth $50,000. The difference? Prompt engineering.
+Imagine two people using the same AI tool. Person A types "Write me an email" and gets a generic, robotic response they can't use. Person B crafts a precise prompt and receives a polished, persuasive email that lands them a new client worth \$50,000. The difference? Prompt engineering.
 
 This isn't theory. Poor prompting wastes time, delivers mediocre results, and leaves you frustrated with AI. Effective prompting transforms AI from a glorified search engine into your personal expert consultant, creative partner, and productivity multiplier.
 
-**The ROI Math:** Instead of spending 20 hours per week on routine tasks like email responses, research, and content creation, you invest 2 hours learning prompt engineering and reclaim 18 hours for strategic thinking. That's the difference between earning $20/hour for task execution and $200/hour for strategic leadership.
+**The ROI Math:** Instead of spending 20 hours per week on routine tasks like email responses, research, and content creation, you invest 2 hours learning prompt engineering and reclaim 18 hours for strategic thinking. That's the difference between earning \$20/hour for task execution and \$200/hour for strategic leadership.
 
 **Real Business Impact:** Organizations mastering advanced prompting techniques see dramatic improvements in content quality, research efficiency, and decision-making speed. Early adopters gain competitive advantages that become harder to replicate as the market matures.
 
@@ -151,7 +151,7 @@ Random prompting produces random results. When you type "Help me with my diet," 
 
 Structured prompts eliminate ambiguity and guide AI toward precisely what you need. They provide context, define roles, specify formats, and set success criteria. This structure doesn't limit creativity—it channels it toward your specific objectives.
 
-Professional consultants charge $300/hour partly because they ask the right questions and structure their analysis systematically. Effective prompts embed this professional approach, giving you access to consultant-level thinking at AI speeds.
+Professional consultants charge \$300/hour partly because they ask the right questions and structure their analysis systematically. Effective prompts embed this professional approach, giving you access to consultant-level thinking at AI speeds.
 
 **What:** The PRECISE Framework
 
@@ -194,7 +194,7 @@ Before submitting any prompt, verify:
 **Result:** Generic advice about eating vegetables and exercising that provides no actionable value.
 
 **Good Example:**
-"As a certified nutritionist with expertise in sustainable weight loss for busy professionals, create a 7-day meal plan for a 30-year-old office worker with a sedentary lifestyle who wants to lose 10 pounds over 8 weeks. Requirements: Each meal under 30 minutes prep time, total weekly budget under $50, include calorie counts and macronutrient breakdowns. Format as a shopping list organized by store section, plus a daily meal schedule with prep instructions. Success criteria: Meals should average 1,400 calories daily, provide at least 25g protein per meal, and include variety to prevent boredom."
+"As a certified nutritionist with expertise in sustainable weight loss for busy professionals, create a 7-day meal plan for a 30-year-old office worker with a sedentary lifestyle who wants to lose 10 pounds over 8 weeks. Requirements: Each meal under 30 minutes prep time, total weekly budget under \$50, include calorie counts and macronutrient breakdowns. Format as a shopping list organized by store section, plus a daily meal schedule with prep instructions. Success criteria: Meals should average 1,400 calories daily, provide at least 25g protein per meal, and include variety to prevent boredom."
 
 **Result:** A comprehensive, actionable plan you can implement immediately.
 
@@ -230,7 +230,7 @@ This technique transforms AI from a general assistant into a specialist consulta
 
 **What:** Role Definition Strategies
 
-Effective roles combine three elements: professional expertise, experience level, and thinking style. "As a marketing manager" is weak. "As a growth marketing manager with 8 years experience scaling SaaS companies from startup to $10M ARR, specializing in conversion optimization and retention strategies" provides rich context for superior responses.
+Effective roles combine three elements: professional expertise, experience level, and thinking style. "As a marketing manager" is weak. "As a growth marketing manager with 8 years experience scaling SaaS companies from startup to \$10M ARR, specializing in conversion optimization and retention strategies" provides rich context for superior responses.
 
 Include specific credentials, years of experience, industry focus, and notable achievements when relevant. The more specific the role, the more targeted and valuable the advice becomes.
 
@@ -239,19 +239,19 @@ Consider personality traits and thinking styles that match your needs. Do you wa
 **How:** 10+ Examples
 
 **1. Personal Finance:**
-"As a certified financial planner with 20 years experience helping young professionals build wealth, specializing in debt elimination and retirement planning for people earning $50-100K annually, analyze my financial situation and provide a 5-year wealth-building strategy. I'm 28, earn $75K, have $25K student debt, $5K credit card debt, and $10K in savings."
+"As a certified financial planner with 20 years experience helping young professionals build wealth, specializing in debt elimination and retirement planning for people earning \$50-100K annually, analyze my financial situation and provide a 5-year wealth-building strategy. I'm 28, earn \$75K, have \$25K student debt, \$5K credit card debt, and \$10K in savings."
 
 **2. Career Coaching:**
 "As an executive recruiter who's placed 500+ candidates in technology companies, with deep expertise in career transitions from consulting to tech product management, review my resume and provide specific recommendations for pivoting from management consulting to a product manager role at a Series B startup. Focus on highlighting transferable skills and addressing potential concerns."
 
 **3. Business Strategy:**
-"As a management consultant who's helped 100+ startups scale from $1M to $10M revenue, with expertise in operational efficiency and team scaling, analyze our current bottlenecks and provide a 6-month roadmap for handling 3x growth without proportional increases in overhead costs."
+"As a management consultant who's helped 100+ startups scale from \$1M to \$10M revenue, with expertise in operational efficiency and team scaling, analyze our current bottlenecks and provide a 6-month roadmap for handling 3x growth without proportional increases in overhead costs."
 
 **4. Investment Analysis:**
-"As a portfolio manager with 15 years experience in growth investing, who's managed $500M+ in assets with focus on technology companies, analyze Tesla's current valuation and provide a detailed investment thesis including 3 bullish scenarios, 3 bearish scenarios, and price targets for each."
+"As a portfolio manager with 15 years experience in growth investing, who's managed \$500M+ in assets with focus on technology companies, analyze Tesla's current valuation and provide a detailed investment thesis including 3 bullish scenarios, 3 bearish scenarios, and price targets for each."
 
 **5. Home Improvement:**
-"As a general contractor with 15 years experience in DIY home projects, specializing in weekend renovations under $500 that dramatically improve home value, suggest 3 projects I can complete in one weekend that will have the biggest impact on my 1970s ranch-style home's curb appeal and market value."
+"As a general contractor with 15 years experience in DIY home projects, specializing in weekend renovations under \$500 that dramatically improve home value, suggest 3 projects I can complete in one weekend that will have the biggest impact on my 1970s ranch-style home's curb appeal and market value."
 
 **💡 Pro Tip:** The more specific your role definition, the more targeted and valuable the advice becomes. Include years of experience, specialization areas, and relevant credentials.
 
@@ -303,7 +303,7 @@ This approach works particularly well for decisions involving multiple stakehold
 "Help me systematically evaluate whether to buy a home in today's market. Step 1: Calculate my true budget including down payment, closing costs, monthly payments, maintenance, and opportunity cost of not investing the money elsewhere. Step 2: Define my must-haves versus nice-to-haves for location, size, condition, and features. Step 3: Research current market conditions, price trends, and inventory levels in my target areas. Step 4: Analyze the rent vs. buy calculation specific to my situation and local market. Step 5: Evaluate my job stability, family plans, and likelihood of relocating within 5 years. Step 6: Create a timeline and action plan if buying makes sense, or alternative strategies if renting is better."
 
 **3. Business Investment Analysis:**
-"I'm evaluating whether to invest $50K to expand my e-commerce business into a new product category. Guide me through this analysis: Phase 1: Validate market demand through competitor analysis, search volume data, and customer surveys. Phase 2: Develop a realistic business plan including product sourcing, pricing strategy, and marketing approach. Phase 3: Calculate detailed financial projections including revenue forecasts, cost structure, and break-even analysis. Phase 4: Assess risks including competition, market saturation, supply chain issues, and capital requirements. Phase 5: Compare this opportunity to alternative investments of the same $50K. Phase 6: Create an implementation timeline with specific milestones and decision points for continuing or pivoting."
+"I'm evaluating whether to invest \$50K to expand my e-commerce business into a new product category. Guide me through this analysis: Phase 1: Validate market demand through competitor analysis, search volume data, and customer surveys. Phase 2: Develop a realistic business plan including product sourcing, pricing strategy, and marketing approach. Phase 3: Calculate detailed financial projections including revenue forecasts, cost structure, and break-even analysis. Phase 4: Assess risks including competition, market saturation, supply chain issues, and capital requirements. Phase 5: Compare this opportunity to alternative investments of the same \$50K. Phase 6: Create an implementation timeline with specific milestones and decision points for continuing or pivoting."
 
 **4. Relationship Conflict Resolution:**
 "My business partner and I disagree about hiring our first employee versus outsourcing work. Walk me through conflict resolution: Step 1: Identify the core issue beyond surface disagreements—what underlying concerns and values are driving each position? Step 2: Understand each person's perspective including their reasoning, concerns, and desired outcomes. Step 3: Find common ground by identifying shared goals and values we both prioritize. Step 4: Generate alternative solutions that address both parties' core concerns rather than just splitting the difference. Step 5: Evaluate each alternative against our shared criteria for business success. Step 6: Propose a win-win solution with clear implementation steps and success metrics."
@@ -312,7 +312,7 @@ This approach works particularly well for decisions involving multiple stakehold
 "I want to transition from finance to data science within 2 years while working full-time. Create a systematic learning plan: First, assess my current quantitative skills, programming knowledge, and relevant experience. Then, research specific data science roles I'm targeting to understand required technical skills, tools, and experience levels. Next, identify the skill gaps and prioritize them by importance and learning difficulty. After that, choose optimal learning methods for each skill considering my time constraints and learning style. Then create a realistic study schedule that balances progress with sustainability. Finally, develop a portfolio strategy and networking plan to demonstrate capabilities and build industry connections."
 
 **6. Budget Optimization Process:**
-"My expenses exceed income by $800 monthly. Guide me through systematic budget optimization: Step 1: Track and categorize all expenses for 30 days to understand actual spending patterns. Step 2: Separate needs from wants and identify which expenses directly support my goals versus lifestyle inflation. Step 3: Research cost-cutting opportunities in each category, prioritizing high-impact changes that don't significantly reduce quality of life. Step 4: Evaluate income enhancement options including skill development, side projects, or career advancement. Step 5: Create implementation priorities based on effort required versus financial impact. Step 6: Establish monitoring systems and adjustment triggers to maintain the optimized budget long-term."
+"My expenses exceed income by \$800 monthly. Guide me through systematic budget optimization: Step 1: Track and categorize all expenses for 30 days to understand actual spending patterns. Step 2: Separate needs from wants and identify which expenses directly support my goals versus lifestyle inflation. Step 3: Research cost-cutting opportunities in each category, prioritizing high-impact changes that don't significantly reduce quality of life. Step 4: Evaluate income enhancement options including skill development, side projects, or career advancement. Step 5: Create implementation priorities based on effort required versus financial impact. Step 6: Establish monitoring systems and adjustment triggers to maintain the optimized budget long-term."
 
 **7. Product Launch Strategy:**
 "I'm launching a new software tool for small businesses. Structure my go-to-market approach: Phase 1: Define the ideal customer profile based on problem severity, budget availability, and buying process. Phase 2: Develop positioning and messaging that differentiates from existing solutions and resonates with target customers. Phase 3: Choose marketing channels based on where target customers seek solutions and our budget constraints. Phase 4: Create a content strategy that educates prospects and builds trust in our expertise. Phase 5: Design a sales process that efficiently qualifies leads and converts them to customers. Phase 6: Plan post-launch optimization based on customer feedback and performance metrics."
@@ -391,14 +391,14 @@ Now create a social media post for this company milestone: [Insert specific achi
 ```text
 Example 1 - Career Change Analysis:
 "Should I leave my corporate marketing role to start a consulting business? Let me analyze systematically:
-1. Current situation: $85K salary, good benefits, limited growth, moderate job satisfaction
-2. Consulting opportunity: Potential for $120K+ income, complete autonomy, but income uncertainty
+1. Current situation: \$85K salary, good benefits, limited growth, moderate job satisfaction
+2. Consulting opportunity: Potential for \$120K+ income, complete autonomy, but income uncertainty
 3. Financial analysis: Need 6-month cash reserve, gradual transition possible
 4. Risk assessment: Medium-high risk but aligned with long-term goals
 5. Decision: Transition gradually over 6 months, starting with weekend clients"
 
 Example 2 - Investment Decision:
-"Should I invest $10K in index funds or use it for a rental property down payment?
+"Should I invest \$10K in index funds or use it for a rental property down payment?
 1. Index funds: Historical 10% return, high liquidity, low maintenance
 2. Rental property: Potential 15% return, tax benefits, but requires active management
 3. Personal situation: Limited time for property management, prefer passive income
@@ -433,7 +433,7 @@ Few-shot learning typically improves output quality by 50-70% on first attempt a
 
 **Why:** Boundaries Create Better Results
 
-Constraints force creativity and ensure practical applicability. When you tell AI to "plan a vacation," the response could range from a weekend camping trip to a month-long European tour. When you specify "$2,000 budget, 5 days, family-friendly, warm weather destination in November," AI delivers focused, actionable recommendations.
+Constraints force creativity and ensure practical applicability. When you tell AI to "plan a vacation," the response could range from a weekend camping trip to a month-long European tour. When you specify "\$2,000 budget, 5 days, family-friendly, warm weather destination in November," AI delivers focused, actionable recommendations.
 
 Constraints mirror real-world limitations and decision-making contexts. Every business decision involves budget limits, time constraints, resource availability, and regulatory requirements. By building these constraints into your prompts, you get solutions that are immediately implementable rather than theoretically optimal.
 
@@ -445,12 +445,12 @@ Effective constraints fall into several categories: resource limitations (time, 
 
 Consider both hard constraints (non-negotiable limits) and soft constraints (preferences that can be traded off against other benefits). Hard constraints must be respected; soft constraints help guide prioritization when trade-offs are necessary.
 
-Be specific about constraint reasoning when helpful. Instead of just "under $500," explain "under $500 because that's our quarterly training budget allocation." This context helps AI understand the constraint's importance and suggest creative alternatives if needed.
+Be specific about constraint reasoning when helpful. Instead of just "under \$500," explain "under \$500 because that's our quarterly training budget allocation." This context helps AI understand the constraint's importance and suggest creative alternatives if needed.
 
 **How:** 10+ Constraint Examples
 
 **1. Meal Planning with Multiple Constraints:**
-"Create a weekly meal plan with these requirements: $50 total budget for family of 4, 30 minutes maximum prep time per meal, no nuts due to allergy, vegetarian options 3 days per week, must include at least 25g protein per serving, prefer one-pot meals for easy cleanup, grocery store ingredients only (no specialty shops), include 2 make-ahead options for busy weekdays."
+"Create a weekly meal plan with these requirements: \$50 total budget for family of 4, 30 minutes maximum prep time per meal, no nuts due to allergy, vegetarian options 3 days per week, must include at least 25g protein per serving, prefer one-pot meals for easy cleanup, grocery store ingredients only (no specialty shops), include 2 make-ahead options for busy weekdays."
 
 **2. Home Workout Design:**
 "Design a 4-week fitness program with these constraints: 20 minutes maximum per session, no equipment (apartment living), noise restrictions (downstairs neighbors), beginner fitness level, bad knees (no jumping), available 6 AM before work, measurable progress tracking, adaptable for travel days."
@@ -459,25 +459,25 @@ Be specific about constraint reasoning when helpful. Instead of just "under $500
 "Create a presentation for board meeting with these parameters: exactly 10 slides, 15-minute delivery time, non-technical audience (include 2 engineers, 6 business people), focus on ROI and market opportunity, must address regulatory concerns, include competitive analysis, professional template compatible with PowerPoint 2019, accessible color scheme for colorblind attendee."
 
 **4. Travel Planning:**
-"Plan a vacation with these constraints: $3,000 total budget including flights from Denver, 7 days in March, traveling with 65-year-old parent (limited walking), warm weather destination, English-speaking or tourist-friendly, cultural attractions preferred over adventure activities, must include travel insurance, prefer direct flights, accommodation needs two beds."
+"Plan a vacation with these constraints: \$3,000 total budget including flights from Denver, 7 days in March, traveling with 65-year-old parent (limited walking), warm weather destination, English-speaking or tourist-friendly, cultural attractions preferred over adventure activities, must include travel insurance, prefer direct flights, accommodation needs two beds."
 
 **5. Room Redesign Project:**
-"Redesign my home office with these limitations: $800 budget, rental property (no painting or permanent fixtures), 10x12 foot room with poor natural light, must accommodate video calls with professional background, storage for files and supplies, ergonomic setup for 8+ hour workdays, minimize visual clutter, work with existing brown desk."
+"Redesign my home office with these limitations: \$800 budget, rental property (no painting or permanent fixtures), 10x12 foot room with poor natural light, must accommodate video calls with professional background, storage for files and supplies, ergonomic setup for 8+ hour workdays, minimize visual clutter, work with existing brown desk."
 
 **6. Skill Learning Plan:**
 "Create a plan to learn data visualization with these constraints: 5 hours per week maximum, free resources only (no paid courses), complete basic proficiency in 3 months, focus on business applications not academic theory, compatible with Mac computer, must result in portfolio pieces for job applications, prefer video learning over reading."
 
 **7. Marketing Campaign:**
-"Design a customer acquisition campaign with these parameters: $2,000 monthly budget, B2B software target audience, LinkedIn and Google Ads only, 90-day timeline, must generate minimum 50 qualified leads monthly, focus on mid-market companies (100-500 employees), technology sector, content must be compliant with GDPR, track ROI to demonstrate effectiveness."
+"Design a customer acquisition campaign with these parameters: \$2,000 monthly budget, B2B software target audience, LinkedIn and Google Ads only, 90-day timeline, must generate minimum 50 qualified leads monthly, focus on mid-market companies (100-500 employees), technology sector, content must be compliant with GDPR, track ROI to demonstrate effectiveness."
 
 **8. Date Planning:**
-"Plan a third date with these constraints: $75 budget, both vegetarian, Saturday afternoon in downtown Seattle, indoor backup plan for rain, 3-4 hour duration, something unique but not too adventurous, public transportation accessible, allows for conversation, ends near her apartment in Capitol Hill for easy commute home."
+"Plan a third date with these constraints: \$75 budget, both vegetarian, Saturday afternoon in downtown Seattle, indoor backup plan for rain, 3-4 hour duration, something unique but not too adventurous, public transportation accessible, allows for conversation, ends near her apartment in Capitol Hill for easy commute home."
 
 **9. Gift Selection:**
-"Find a birthday gift with these requirements: $40-60 budget, 30-year-old female recipient who loves cooking and sustainability, ships within 3 days (birthday is next week), supports small business or ethical brands, not kitchen gadgets (she has everything), packaging suitable for wrapping, available online with good return policy."
+"Find a birthday gift with these requirements: \$40-60 budget, 30-year-old female recipient who loves cooking and sustainability, ships within 3 days (birthday is next week), supports small business or ethical brands, not kitchen gadgets (she has everything), packaging suitable for wrapping, available online with good return policy."
 
 **10. Investment Strategy:**
-"Create an investment plan with these constraints: $500 monthly contribution, 28 years old with 35-year timeline, moderate risk tolerance, prefer index funds over individual stocks, tax-advantaged accounts maxed first, socially responsible investing preferred, low fees priority, simple portfolio requiring minimal maintenance, compatible with Vanguard platform."
+"Create an investment plan with these constraints: \$500 monthly contribution, 28 years old with 35-year timeline, moderate risk tolerance, prefer index funds over individual stocks, tax-advantaged accounts maxed first, socially responsible investing preferred, low fees priority, simple portfolio requiring minimal maintenance, compatible with Vanguard platform."
 
 ```mermaid
 graph TD
@@ -527,9 +527,9 @@ Create a car buying decision matrix with these columns and evaluate 3 specific v
 
 | Vehicle | Reliability Score (1-10) | Total Cost (5 years) | Features Score (1-10) | Practicality Score (1-10) | Overall Score | Recommendation |
 |---------|-------------------------|---------------------|---------------------|--------------------------|---------------|----------------|
-| Honda Civic | 9 | $28,000 | 7 | 8 | 8.0 | Strong practical choice |
-| Toyota Camry | 9 | $32,000 | 8 | 9 | 8.5 | Best overall value |
-| BMW 3 Series | 7 | $45,000 | 9 | 7 | 7.0 | Premium option if budget allows |
+| Honda Civic | 9 | \$28,000 | 7 | 8 | 8.0 | Strong practical choice |
+| Toyota Camry | 9 | \$32,000 | 8 | 9 | 8.5 | Best overall value |
+| BMW 3 Series | 7 | \$45,000 | 9 | 7 | 7.0 | Premium option if budget allows |
 
 Include specific reasoning for each score and final recommendation based on my priorities: reliability (40%), cost (30%), features (20%), practicality (10%).
 ```
@@ -810,7 +810,7 @@ Document successful prompt patterns for reuse. When you develop an effective pro
 **Result:** Targeted analysis with specific recommendations
 
 **Attempt 4 (Complete Framework):**
-"As a B2B sales consultant specializing in SaaS startups, analyze my sales process and provide prioritized improvement recommendations. Context: Project management software for 10-50 employee businesses, current metrics: 60% demo-to-trial conversion, 15% trial-to-paid conversion, 4-month average sales cycle, $200 monthly price point. Format your analysis as: 1) Biggest bottleneck identification, 2) Three specific improvement tactics with expected impact, 3) Implementation timeline, 4) Success metrics to track."
+"As a B2B sales consultant specializing in SaaS startups, analyze my sales process and provide prioritized improvement recommendations. Context: Project management software for 10-50 employee businesses, current metrics: 60% demo-to-trial conversion, 15% trial-to-paid conversion, 4-month average sales cycle, \$200 monthly price point. Format your analysis as: 1) Biggest bottleneck identification, 2) Three specific improvement tactics with expected impact, 3) Implementation timeline, 4) Success metrics to track."
 
 **Result:** Comprehensive strategic analysis with actionable implementation plan
 
@@ -2559,7 +2559,7 @@ Multi-step workflows typically improve project success rates by 80% compared to 
 
 **2. The Context Vacuum**
 ❌ **Bad**: "Help me negotiate a better salary"
-✅ **Good**: "I'm a software engineer with 3 years experience, currently earning $75K in Austin. My performance review was excellent, and I've taken on team lead responsibilities. Help me negotiate a $85K salary increase."
+✅ **Good**: "I'm a software engineer with 3 years experience, currently earning \$75K in Austin. My performance review was excellent, and I've taken on team lead responsibilities. Help me negotiate a \$85K salary increase."
 
 **3. The Format Failure**
 ❌ **Bad**: "Give me ideas for improving team productivity"
@@ -2571,7 +2571,7 @@ Multi-step workflows typically improve project success rates by 80% compared to 
 
 **5. The Constraint Confusion**
 ❌ **Bad**: "Plan a team building event" (too open-ended)
-✅ **Good**: "Plan a team building event for 12 remote employees, $50/person budget, 2-hour virtual format, focused on communication skills"
+✅ **Good**: "Plan a team building event for 12 remote employees, \$50/person budget, 2-hour virtual format, focused on communication skills"
 
 ### Troubleshooting Guide
 
