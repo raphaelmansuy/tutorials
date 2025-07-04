@@ -423,6 +423,27 @@ Whether you’re building chatbots, multi-agent systems, or enterprise AI platfo
 
 ---
 
+## ✨ Prompt Engineering: The Multiplier for Everyday Life & Business
+
+Prompt engineering is the art and science of communicating with AI to get exactly the results you want—faster, better, and with less effort. Mastering prompt engineering transforms AI from a generic tool into your personal expert, creative partner, and productivity multiplier.
+
+### 📚 Key Tutorial
+
+- [Prompt Engineering Mastery: From Everyday Life to Business Excellence](./36_prompt_engineering_for_everiday_life_to_business.md) — Learn the PRECISE framework, 9+ core techniques, and 70+ practical examples for maximizing AI value in daily work and business.
+
+**Why focus on prompt engineering?**
+
+> "The difference between mediocre and world-class AI results is not the model—it's the prompt."
+
+**What you'll gain:**
+- 50-80% reduction in AI revision cycles
+- 300-500% improvement in output quality
+- Immediate ROI in time saved and business impact
+
+Whether you're writing emails, building business strategies, or automating workflows, prompt engineering is the essential skill for the AI-powered era. Start with the dedicated tutorial above to unlock the full potential of AI in your daily life and work.
+
+---
+
 ## 🤖 AI Agents: Building the Next Generation of Intelligent Systems
 
 AI agents are at the heart of modern automation, decision-making, and user interaction. Mastering AI agent development empowers you to:
