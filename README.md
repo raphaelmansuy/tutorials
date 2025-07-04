@@ -4,11 +4,11 @@
 
 ## 🎯 **Our Mission**
 
-**Empowering 1 million developers worldwide** to master cloud computing and AI technologies through hands-on, production-ready learning experiences. We believe that cutting-edge technical skills should be accessible to everyone—from complete beginners taking their first steps into the cloud, to seasoned professionals architecting the future of enterprise AI.
+**Empowerin developers worldwide** to master cloud computing and AI technologies through hands-on, production-ready learning experiences. We believe that cutting-edge technical skills should be accessible to everyone—from complete beginners taking their first steps into the cloud, to seasoned professionals architecting the future of enterprise AI.
 
 ### 👨‍💻 **Meet Your Guide: Raphaël MANSUY**
 
-This academy is crafted by **Raphaël MANSUY**, a visionary technologist with 20+ years of transforming businesses through cloud and AI innovation. As CTO of [Elitizon](https://www.elitizon.com/) and founder of the [QuantaLogic](https://www.quantalogic.app/) AI platform, Raphaël has guided Fortune 500 companies through digital transformation journeys and now shares this expertise with the global developer community.
+Meet **Raphaël MANSUY**—your guide on this journey. With hands-on experience leading cloud and AI projects at startups and global enterprises, Raphaël is passionate about making advanced technology accessible to all developers. As CTO of [Elitizon](https://www.elitizon.com/) and founder of [QuantaLogic](https://www.quantalogic.app/), he brings practical insights and a collaborative approach to help you master real-world cloud and AI skills.
 
 ---
 
@@ -131,7 +131,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 
 </details>
 
-### � Step 2: Choose by Career Goal
+### ✅ Step 2: Choose by Career Goal
 
 | **I Want To...**                 | **Recommended Path**                                            | **Time**    | **Level**             |
 | -------------------------------- | --------------------------------------------------------------- | ----------- | --------------------- |
@@ -394,9 +394,57 @@ _Perfect for deep diving into specific technologies and methodologies_
 | [📖 Context Engineering](./32_context_engineering/README.md)                         | 4-6 hours  | Intermediate-Advanced | AI context optimization   |
 | [📖 Prompt Engineering for Diagrams](./27_promp_for_diagrams/prompts_for_diagram.md) | 1-2 hours  | Beginner-Advanced     | AI diagram generation     |
 | [📖 Agentic AI Design Patterns](./34_agentic_ai_design_patterns.md)                  | 8-12 hours | Advanced              | Agentic system architecture<br>→ <a href="https://cloud.google.com/blog/products/ai-machine-learning/unlock-ai-agent-collaboration-convert-adk-agents-for-a2a/?hl=en" target="_blank">Unlock AI Agent Collaboration: Convert ADK Agents for A2A (Google Cloud Blog)</a> |
+| [📖 Data Context Modeling: Context Engineering](./35_context_engineering_context_datamodel.md) | 4-6 hours  | Intermediate-Advanced | AI context optimization   |
 
 **🎉 End Result:** Specialized expertise in cutting-edge technologies
 **💰 Cost:** $10-40 USD | **⏱️ Total Time:** 23-38 hours
+
+---
+
+## 🧠 Context Engineering: The Next Frontier in AI & Cloud
+
+Context Engineering is rapidly becoming a core discipline for building intelligent, adaptive, and enterprise-ready AI systems. Mastering context engineering enables you to design agents and applications that:
+
+- Maintain situational awareness across long, complex interactions
+- Optimize information flow for accuracy, speed, and efficiency
+- Implement advanced memory, retrieval, and relevance mechanisms
+- Balance privacy, scalability, and business impact in real-world deployments
+
+### 📚 Key Tutorials
+
+- [Context Engineering: Principles & Patterns](./32_context_engineering/README.md) — Start here for a practical overview and foundational concepts
+- [Data Context Modeling: A Key Sub-Discipline of Context Engineering for AI Agents](./35_context_engineering_context_datamodel.md) — Deep dive into advanced architectures, real-world case studies, and implementation checklists
+
+**Why focus on context?**
+
+> "The most successful AI agents excel not because they have better models, but because they have better context."
+
+Whether you’re building chatbots, multi-agent systems, or enterprise AI platforms, context engineering is the skill that will set you apart. Explore the tutorials above to future-proof your AI and cloud expertise.
+
+---
+
+## 🤖 AI Agents: Building the Next Generation of Intelligent Systems
+
+AI agents are at the heart of modern automation, decision-making, and user interaction. Mastering AI agent development empowers you to:
+
+- Design autonomous systems that reason, plan, and act in complex environments
+- Orchestrate multi-agent collaboration for advanced workflows and business processes
+- Integrate with cloud platforms, APIs, and enterprise data for real-world impact
+- Apply agentic design patterns for scalable, maintainable, and explainable AI
+
+### 📚 Key Tutorials
+
+- [Google Agent Development Kit (ADK)](./07_agent/index.md) — Build production-ready AI agents from scratch
+- [Agentic AI Design Patterns](./34_agentic_ai_design_patterns.md) — Architect robust, reusable agent systems
+- [Vertex AI Agent Engine](./22_google_vertex_agent_engine.md) — Deploy and manage enterprise-scale agent platforms
+- [A2A Protocol Mastery](./28-a2a.md) — Enable agent-to-agent communication and orchestration
+- [MCP 2025-06-18 Documentation](./24-mcp.md) — Integrate agents with modern AI protocols
+
+**Why focus on agents?**
+
+> "AI agents are the building blocks of tomorrow’s intelligent applications—capable of learning, adapting, and collaborating at scale."
+
+Whether you’re automating business processes, building conversational assistants, or orchestrating multi-agent systems, these tutorials will accelerate your journey to becoming an AI agent developer and architect.
 
 ---
 
@@ -551,27 +599,6 @@ graph LR
 
 ---
 
-## 🛠️ Prerequisites
-
-### **General Requirements**
-
-- Computer with **8GB+ RAM** and **10GB+ free disk space**
-- Stable internet connection
-- Credit card for cloud provider signup (most tutorials use free tiers)
-
-### **Software Requirements**
-
-- Terminal/Command Line access
-- Web browser
-- Text editor or IDE
-
-### **Cloud Accounts Needed**
-
-- **Google Cloud Platform** account (free tier available)
-- **AWS** account (for Kubernetes, SaaS development, and HAProxy migration tutorials, free tier available)
-
----
-
 ## 💰 Cost Estimates
 
 | Tutorial Category                                 | Estimated Cost | Free Tier Coverage      |
@@ -656,7 +683,7 @@ This repository has been developed with ❤️ by **Raphaël MANSUY** - a passio
 - 🧠 **[Iteration of Thought](https://github.com/raphaelmansuy/iteration_of_tought)** - Advanced AI reasoning implementation
 - 📚 **[Course Generator](https://github.com/raphaelmansuy/course_generator)** - AI-powered educational content creation
 
-### 💬 **Community Support & Discussions**
+### 💬 **Community Support & Discussions
 
 #### **🎓 Learning Support**
 
