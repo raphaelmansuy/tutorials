@@ -16,9 +16,54 @@ Last quarter, three major enterprises discovered the same shocking truth about t
 
 **Company C (SaaS Platform)**: Their AI assistant answered the same questions repeatedly for the same users, consuming 3.2x more API tokens than necessary. Monthly waste: $45,000 in compute costs alone.
 
-### The Core Problem: AI Amnesia is Killing Business Value
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#fff3e0", "primaryTextColor": "#e65100", "primaryBorderColor": "#ff9800", "lineColor": "#ff9800", "tertiaryColor": "#ffebee", "background": "#fff", "secondaryColor": "#f3e5f5", "fontFamily": "Inter, system-ui, sans-serif"}}}%%
+flowchart LR
+    A["`**💸 The $2.3M Context Problem**
+    Annual Enterprise Impact`"] --> B["`**Company A**
+    Financial Services`"]
+    
+    A --> C["`**Company B**
+    E-commerce`"]
+    
+    A --> D["`**Company C**
+    SaaS Platform`"]
+    
+    B --> E["`**$2.16M** Annual Loss
+    67% escalation rate
+    $180K/month support costs`"]
+    
+    C --> F["`**$850K** Revenue Loss
+    34% higher abandonment
+    Lost sales from frustration`"]
+    
+    D --> G["`**$540K** API Waste
+    3.2x token consumption
+    $45K/month compute costs`"]
+    
+    E --> H["`**💰 Total Impact**
+    $3.55M Annual Loss
+    Across 3 Companies`"]
+    
+    F --> H
+    G --> H
+    
+    H --> I["`**🎯 The Solution**
+    Context Engineering
+    85% cost reduction possible`"]
+    
+    style A fill:#fff3e0,stroke:#ff9800,stroke-width:4px
+    style B fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style C fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    style D fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style E fill:#ffebee,stroke:#f44336,stroke-width:3px
+    style F fill:#ffebee,stroke:#f44336,stroke-width:3px
+    style G fill:#ffebee,stroke:#f44336,stroke-width:3px
+    style H fill:#ffebee,stroke:#f44336,stroke-width:4px
+    style I fill:#e8f5e8,stroke:#4caf50,stroke-width:4px
+```
 
-**The Technical Reality**: Most AI agents are stateless—they literally forget everything between interactions, forcing users to repeat context, preferences, and history every single time.
+### The Core Problem: AI Amnesia is Killing Business Value
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#e1f5fe", "primaryTextColor": "#0d47a1", "primaryBorderColor": "#1976d2", "lineColor": "#1976d2", "tertiaryColor": "#f3e5f5", "background": "#fff", "secondaryColor": "#fff3e0", "fontFamily": "Inter, system-ui, sans-serif"}}}%%
@@ -44,6 +89,10 @@ flowchart LR
     style B fill:#ffebee,stroke:#f44336,stroke-width:2px
     style E fill:#fff3e0,stroke:#ff9800,stroke-width:2px
 ```
+
+
+**The Technical Reality**: Most AI agents are stateless—they literally forget everything between interactions, forcing users to repeat context, preferences, and history every single time.
+
 
 **The Business Impact**: This isn't just poor UX—it's measurable business damage:
 
@@ -468,7 +517,7 @@ The operational strategies above aren't just technical conveniences—they're th
 Organizations typically evolve through four stages of context engineering sophistication:
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#e8f5e8", "primaryTextColor": "#2e7d32", "primaryBorderColor": "#4caf50", "lineColor": "#4caf50", "tertiaryColor": "#f3e5f5", "background": "#fff", "secondaryColor": "#fff3e0", "fontFamily": "Inter, system-ui, sans-serif"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#e8f5e8", "primaryTextColor": "#2e7d32", "primaryBorderColor": "#4caf50", "lineColor": "#4caf50", "tertiaryColor": "#fff3e0", "background": "#fff", "secondaryColor": "#e3f2fd", "fontFamily": "Inter, system-ui, sans-serif"}}}%%
 graph TD
     A["`**🟢 Stage 1: Write Context**
     Basic Memory Persistence
