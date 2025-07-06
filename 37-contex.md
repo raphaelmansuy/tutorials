@@ -488,50 +488,29 @@ class ContextRetriever:
         )
 ```
 
-### Memory Management Strategies
+### Tactical Implementation Patterns
 
-#### Context Prioritization
+These battle-tested patterns ensure your context engineering delivers exceptional customer experiences:
 
-Not all context is equally valuable. Implement a scoring system:
+**Scratchpads & Memory Systems**: For long customer journeys spanning weeks or months
+- *Example*: Insurance claim tracking that remembers every document, interaction, and decision across a 3-month process
+- *Customer Impact*: "They knew exactly where we left off, even though it's been 6 weeks"
 
-```python
-def calculate_context_score(context_item):
-    score = 0
+**RAG & Semantic Search**: For intelligent knowledge retrieval from vast product catalogs  
+- *Example*: Financial advisor AI that surfaces relevant investment options based on customer's risk profile and past discussions
+- *Customer Impact*: 3x improvement in recommendation accuracy and relevance
 
-    # Recency weight
-    score += recency_weight(context_item.timestamp)
+**Hierarchical Summarization**: For complex multi-session interactions
+- *Example*: Technical support that compresses 10 troubleshooting sessions into key insights while preserving critical details
+- *Customer Impact*: "They understood my entire technical history without making me repeat everything"
 
-    # Frequency weight
-    score += frequency_weight(context_item.access_count)
+**State Objects**: For managing context across specialized teams
+- *Example*: E-commerce support that maintains shopping context when transferring between sales, technical, and billing teams
+- *Customer Impact*: Seamless handoffs that feel like talking to one knowledgeable person
 
-    # Relevance weight
-    score += relevance_weight(context_item.topic_similarity)
-
-    # Emotional weight
-    score += emotional_weight(context_item.sentiment_intensity)
-
-    # Relationship weight
-    score += relationship_weight(context_item.relationship_strength)
-
-    return score
-```
-
-#### Context Decay and Refresh
-
-```python
-class ContextManager:
-    def __init__(self):
-        self.decay_rates = {
-            'preferences': 0.95,  # Very slow decay
-            'behavioral_patterns': 0.9,  # Slow decay
-            'conversation_history': 0.8,  # Moderate decay
-            'temporary_context': 0.5  # Fast decay
-        }
-
-    def update_context_relevance(self, context_store):
-        for category, decay_rate in self.decay_rates.items():
-            context_store.apply_decay(category, decay_rate)
-```
+**Tool Selection via RAG**: For complex product ecosystems with hundreds of options
+- *Example*: SaaS platform that intelligently selects relevant features and integrations based on customer's usage patterns
+- *Customer Impact*: "They showed me exactly what I needed, not everything they offer"
 
 ---
 
@@ -665,6 +644,30 @@ def calculate_context_engineering_roi(implementation_cost, monthly_savings):
 - Bias detection algorithms
 - Regular context diversity audits
 - User feedback integration
+
+### Technical Context Pitfalls
+
+Beyond user experience concerns, these technical pitfalls can sabotage your context engineering efforts:
+
+**Context Poisoning**: When hallucinations contaminate your memory systems
+- *Warning Sign*: AI "remembers" conversations that never happened or false customer preferences
+- *Prevention*: Implement confidence scoring and human validation loops for stored context
+
+**Context Distraction**: When excessive information overwhelms the model's focus
+- *Warning Sign*: AI provides technically correct but irrelevant responses to simple questions
+- *Prevention*: Use strict relevance filtering and token budget management
+
+**Context Confusion**: When contradictory information creates inconsistent responses  
+- *Warning Sign*: AI gives different answers to the same question in one conversation
+- *Prevention*: Implement conflict detection and resolution in context retrieval
+
+**Context Clash**: When different context sources provide conflicting information
+- *Warning Sign*: AI switches personality or knowledge base mid-conversation
+- *Prevention*: Establish context source hierarchy and consistency checks
+
+**Memory Selection Issues**: When irrelevant memories surface at inappropriate times
+- *Warning Sign*: AI mentions personal details during professional interactions or vice versa
+- *Prevention*: Context-aware relevance scoring with relationship-appropriate filters
 
 ---
 
