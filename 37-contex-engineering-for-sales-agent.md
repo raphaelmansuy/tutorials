@@ -8,13 +8,6 @@
 
 ### The Reality Behind AI's Biggest Limitation
 
-Last quarter, three major enterprises discovered the same shocking truth about their AI implementations:
-
-**Company A (Financial Services)**: Their AI chatbot handled 50,000+ customer inquiries monthly, but 67% required human escalation because the AI couldn't remember previous conversations. Cost impact: $180,000/month in unnecessary support overhead.
-
-**Company B (E-commerce)**: Customers abandoned 34% more support sessions when dealing with their AI versus human agents. The reason? Every interaction started from zero. Annual revenue impact: $850,000 in lost sales.
-
-**Company C (SaaS Platform)**: Their AI assistant answered the same questions repeatedly for the same users, consuming 3.2x more API tokens than necessary. Monthly waste: $45,000 in compute costs alone.
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#fff3e0", "primaryTextColor": "#e65100", "primaryBorderColor": "#ff9800", "lineColor": "#ff9800", "tertiaryColor": "#ffebee", "background": "#fff", "secondaryColor": "#f3e5f5", "fontFamily": "Inter, system-ui, sans-serif"}}}%%
@@ -62,6 +55,14 @@ flowchart LR
     style H fill:#ffebee,stroke:#f44336,stroke-width:4px
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:4px
 ```
+
+Last quarter, three major enterprises discovered the same shocking truth about their AI implementations:
+
+**Company A (Financial Services)**: Their AI chatbot handled 50,000+ customer inquiries monthly, but 67% required human escalation because the AI couldn't remember previous conversations. Cost impact: $180,000/month in unnecessary support overhead.
+
+**Company B (E-commerce)**: Customers abandoned 34% more support sessions when dealing with their AI versus human agents. The reason? Every interaction started from zero. Annual revenue impact: $850,000 in lost sales.
+
+**Company C (SaaS Platform)**: Their AI assistant answered the same questions repeatedly for the same users, consuming 3.2x more API tokens than necessary. Monthly waste: $45,000 in compute costs alone.
 
 ### The Core Problem: AI Amnesia is Killing Business Value
 
