@@ -395,6 +395,7 @@ _Perfect for deep diving into specific technologies and methodologies_
 | [📖 Prompt Engineering for Diagrams](./27_promp_for_diagrams/prompts_for_diagram.md) | 1-2 hours  | Beginner-Advanced     | AI diagram generation     |
 | [📖 Agentic AI Design Patterns](./34_agentic_ai_design_patterns.md)                  | 8-12 hours | Advanced              | Agentic system architecture<br>→ <a href="https://cloud.google.com/blog/products/ai-machine-learning/unlock-ai-agent-collaboration-convert-adk-agents-for-a2a/?hl=en" target="_blank">Unlock AI Agent Collaboration: Convert ADK Agents for A2A (Google Cloud Blog)</a> |
 | [📖 Data Context Modeling: Context Engineering](./35_context_engineering_context_datamodel.md) | 4-6 hours  | Intermediate-Advanced | AI context optimization   |
+| [📖 Context Engineering for Sales Agents](./37-contex-engineering-for-sales-agent.md) | 8-12 hours | Advanced-Executive    | Enterprise-grade AI sales agent context, frameworks, and production code |
 
 **🎉 End Result:** Specialized expertise in cutting-edge technologies
 **💰 Cost:** $10-40 USD | **⏱️ Total Time:** 23-38 hours
