@@ -7,23 +7,20 @@ Whether you're a risk manager, AI practitioner, or business leader, this guide w
 ## Table of Contents
 
 1. [Understanding the Risk Landscape](#understanding-the-risk-landscape)
-2. [Real-World Examples and Case Studies](#real-world-examples-and-case-studies)
-3. [Fairness Risks](#fairness-risks)
-4. [Explainability Challenges](#explainability-challenges)
-5. [Controllability Issues](#controllability-issues)
-6. [Safety Concerns](#safety-concerns)
-7. [Privacy & Security](#privacy--security)
-8. [Governance Framework](#governance-framework)
-9. [Transparency Requirements](#transparency-requirements)
-10. [Veracity & Robustness](#veracity--robustness)
-11. [Recommended Tools and Technologies](#recommended-tools-and-technologies)
-12. [Regulatory Compliance Mapping](#regulatory-compliance-mapping)
-13. [Quick Start Guide (30-Day Implementation)](#quick-start-guide-30-day-implementation)
-14. [Implementation Roadmap](#implementation-roadmap)
-15. [Key Performance Indicators (KPIs)](#key-performance-indicators-kpis)
-11. [Real-World Examples and Case Studies](#real-world-examples-and-case-studies)
-12. [Regulatory Compliance Mapping](#regulatory-compliance-mapping)
-13. [Quick Start Guide](#quick-start-guide)
+2. [Fairness Risks](#1-fairness-risks)
+3. [Explainability Challenges](#2-explainability-challenges)
+4. [Controllability Issues](#3-controllability-issues)
+5. [Safety Concerns](#4-safety-concerns)
+6. [Privacy & Security](#5-privacy--security)
+7. [Governance Framework](#6-governance-framework)
+8. [Transparency Requirements](#7-transparency-requirements)
+9. [Veracity & Robustness](#8-veracity--robustness)
+10. [Implementation Roadmap](#implementation-roadmap)
+11. [Key Performance Indicators (KPIs)](#key-performance-indicators-kpis)
+12. [Recommended Tools and Technologies](#recommended-tools-and-technologies)
+13. [Real-World Examples and Case Studies](#real-world-examples-and-case-studies)
+14. [Regulatory Compliance Mapping](#regulatory-compliance-mapping)
+15. [Quick Start Guide (30-Day Implementation)](#quick-start-guide-30-day-implementation)
 
 ## Understanding the Risk Landscape
 
@@ -120,6 +117,40 @@ graph TD
 - **Brand Protection**: AI failures can damage reputation and customer trust
 - **Operational Continuity**: Unmanaged risks can disrupt business operations
 - **Ethical Responsibility**: Organizations have a duty to deploy AI responsibly
+
+## Key Concepts and Principles
+
+### Risk Management Fundamentals
+
+**📊 Risk Assessment Matrix**
+
+| Risk Level | Likelihood | Impact | Response Strategy |
+|------------|------------|---------|-------------------|
+| Critical | High | High | Immediate mitigation required |
+| High | Medium-High | High-Medium | Proactive controls needed |
+| Medium | Medium | Medium | Regular monitoring |
+| Low | Low | Low | Acceptance with documentation |
+
+**🔄 Continuous Improvement Cycle**
+
+1. **Identify** → Discover new risks and vulnerabilities
+2. **Assess** → Evaluate probability and business impact  
+3. **Mitigate** → Implement controls and safeguards
+4. **Monitor** → Track effectiveness and emerging risks
+5. **Review** → Update strategies based on lessons learned
+
+### AI-Specific Risk Categories
+
+The eight interconnected risk categories form a comprehensive framework for managing AI systems:
+
+- **🎯 Fairness**: Preventing bias and discrimination
+- **🔍 Explainability**: Ensuring transparent decision-making
+- **⚙️ Controllability**: Maintaining human oversight
+- **🛡️ Safety**: Protecting against harmful outputs
+- **🔒 Privacy & Security**: Safeguarding sensitive data
+- **📋 Governance**: Establishing proper oversight
+- **📊 Transparency**: Providing clear documentation
+- **✅ Veracity**: Ensuring accuracy and reliability
 
 ## 1. Fairness Risks
 
@@ -691,7 +722,7 @@ graph TD
     classDef healthcare fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
     classDef finance fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
     classDef ecommerce fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
-    classDef results fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#2E2E2E
+    classDef results fill:#FCE4EC,stroke:#C2185B,stroke-width:3px,color:#2E2E2E
     
     class A,B,C,D,E,F,G process
     class B1,C1,F1 healthcare
@@ -881,7 +912,7 @@ graph TD
     classDef assessment fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
     classDef policy fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
     classDef technical fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
-    classDef validation fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#2E2E2E
+    classDef validation fill:#FCE4EC,stroke:#C2185B,stroke-width:3px,color:#2E2E2E
     classDef main fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
     
     class A main
