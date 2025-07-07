@@ -4,23 +4,157 @@ This comprehensive guide provides a practical, implementation-focused approach t
 
 Whether you're a risk manager, AI practitioner, or business leader, this guide will help you transform AI risk management from a compliance checkbox into a strategic advantage that protects your organization while enabling innovation.
 
+
+```mermaid
+graph TD
+    B[Core Risk Categories]
+    B --> C[1 Fairness Risks]
+    B --> D[2 Explainability Challenges]
+    B --> E[3 Controllability Issues]
+    B --> F[4 Safety Concerns]
+    B --> G[5 Privacy & Security]
+    B --> H[6 Governance Framework]
+    B --> I[7 Transparency Requirements]
+    B --> J[8 Veracity & Robustness]
+
+    classDef fairness fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef explainability fill:#E1F5FE,stroke:#0288D1,stroke-width:2px,color:#2E2E2E
+    classDef controllability fill:#E8F5E9,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef safety fill:#FFEBEE,stroke:#D32F2F,stroke-width:2px,color:#2E2E2E
+    classDef privacy fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef governance fill:#F5F5F5,stroke:#616161,stroke-width:2px,color:#2E2E2E
+    classDef transparency fill:#E0F7FA,stroke:#00838F,stroke-width:2px,color:#2E2E2E
+    classDef veracity fill:#FFFDE7,stroke:#FBC02D,stroke-width:2px,color:#2E2E2E
+    classDef framework fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+
+    class B framework
+    class C fairness
+    class D explainability
+    class E controllability
+    class F safety
+    class G privacy
+    class H governance
+    class I transparency
+    class J veracity
+```
+
+### The AI Risk Management Imperative
+
+Organizations deploying Generative AI systems face unprecedented risks that can impact reputation, operations, and compliance. This guide provides a comprehensive framework to manage eight critical risk categories, enabling responsible AI innovation while meeting regulatory requirements like the [EU AI Act](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689).
+
+### Key Findings & Strategic Value
+
+#### 🎯 Risk Framework Overview
+
+- **8 Interconnected Risk Categories**: Fairness, Explainability, Controllability, Safety, Privacy & Security, Governance, Transparency, and Veracity & Robustness
+- **Proven Business Value**: Organizations implementing comprehensive risk management report significant reductions in AI-related incidents and improved stakeholder trust (specific outcomes vary by implementation)
+- **Regulatory Alignment**: Framework maps directly to [EU AI Act](https://artificialintelligenceact.eu/) requirements and global compliance standards
+
+#### 💰 Investment Requirements
+
+*Note: Cost estimates are illustrative and vary significantly based on organization size, complexity, and implementation approach. Consult with AI risk management specialists for accurate budgeting.*
+- **Small Organizations** (<100 employees): €15K–€50K first year (estimated range)
+- **Medium Organizations** (100–1000 employees): €150K–€400K first year (estimated range)
+- **Large Organizations** (>1000 employees): €500K–€1.5M first year (estimated range)
+
+#### 📈 Measurable Business Benefits
+
+- **Risk Reduction**: Quantifiable mitigation of legal, reputational, and operational risks
+- **Competitive Advantage**: Responsible AI as a market differentiator
+- **Innovation Enablement**: Structured approach accelerates safe AI adoption
+- **Stakeholder Trust**: Transparent processes build confidence with customers and regulators
+
+### Implementation Strategy
+
+#### Phase 1: Foundation (Weeks 1-12)
+
+- Risk assessment and gap analysis
+- Governance structure establishment
+- Policy development and documentation
+- Tool selection and initial deployment
+
+#### Phase 2: Technical Implementation (Weeks 13-24)
+
+- Deploy bias detection and monitoring systems
+- Implement explainability and transparency tools
+- Establish human oversight and control mechanisms
+- Create incident response procedures
+
+#### Phase 3: Optimization (Weeks 25-36)
+
+- Refine systems based on performance data
+- Enhance user experience and training
+- Implement advanced features and automation
+- Conduct comprehensive audits
+
+#### Phase 4: Continuous Improvement (Ongoing)
+
+- Regular policy and framework updates
+- Technology upgrades and tool optimization
+- Stakeholder feedback integration
+- Regulatory change adaptation
+
+### Success Metrics
+
+Track 18 key performance indicators across three categories:
+
+- **Technical KPIs**: Bias detection accuracy (targeting high detection rates), minimizing hallucination rates, system uptime (>99.5%)
+- **Process KPIs**: Incident response time (<4 hours), audit compliance (100%), user satisfaction (>4.0/5)
+- **Business KPIs**: Risk score reduction (>20% YoY), regulatory violations (0), cost of risk (<2% revenue)
+
+*Note: Specific targets should be established based on your organization's context, industry benchmarks, and risk tolerance.*
+
+### Quick Start Recommendations
+
+1. **Week 1-2**: Complete initial risk assessment using provided templates
+2. **Week 3**: Form AI Ethics Committee with cross-functional representation
+3. **Week 4**: Select appropriate tools based on organization size and maturity
+4. **Month 2**: Implement core monitoring and governance systems
+5. **Month 3**: Deploy technical safeguards and training programs
+6. **Month 4**: Launch comprehensive monitoring and continuous improvement
+
+### Return on Investment
+
+Organizations implementing comprehensive AI risk management report significant value:
+
+- **Faster time-to-market** for AI projects due to clear processes
+- **Reduced compliance costs** through proactive management  
+- **Improved customer trust** in AI system usage
+- **Decreased AI-related incidents** and regulatory violations
+
+*Specific ROI metrics vary by organization size, industry, and implementation approach. Consider conducting a cost-benefit analysis tailored to your specific context.*
+
+
+---
+
+**Author**: Raphaël MANSUY  
+**Website**: [https://www.elitizon.com](https://www.elitizon.com)  
+**LinkedIn**: [https://www.linkedin.com/in/raphaelmansuy/](https://www.linkedin.com/in/raphaelmansuy/)  
+**Investor at**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)  
+**Working on AI/ML initiatives with DECATHLON as part of Capgemini Invent/Quantmetry (Contract), driving large-scale AI adoption and organizational transformation.**
+**Date**: July 2025
+
+---
+
 ## Table of Contents
 
-1. [Understanding the Risk Landscape](#understanding-the-risk-landscape)
-2. [Fairness Risks](#1-fairness-risks)
-3. [Explainability Challenges](#2-explainability-challenges)
-4. [Controllability Issues](#3-controllability-issues)
-5. [Safety Concerns](#4-safety-concerns)
-6. [Privacy & Security](#5-privacy--security)
-7. [Governance Framework](#6-governance-framework)
-8. [Transparency Requirements](#7-transparency-requirements)
-9. [Veracity & Robustness](#8-veracity--robustness)
-10. [Implementation Roadmap](#implementation-roadmap)
-11. [Key Performance Indicators (KPIs)](#key-performance-indicators-kpis)
-12. [Recommended Tools and Technologies](#recommended-tools-and-technologies)
-13. [Real-World Examples and Case Studies](#real-world-examples-and-case-studies)
-14. [Regulatory Compliance Mapping](#regulatory-compliance-mapping)
-15. [Quick Start Guide (30-Day Implementation)](#quick-start-guide-30-day-implementation)
+1. [Executive Summary](#executive-summary)
+2. [Understanding the Risk Landscape](#understanding-the-risk-landscape)
+3. [Key Concepts and Principles](#key-concepts-and-principles)
+4. [Fairness Risks](#1-fairness-risks)
+5. [Explainability Challenges](#2-explainability-challenges)
+6. [Controllability Issues](#3-controllability-issues)
+7. [Safety Concerns](#4-safety-concerns)
+8. [Privacy & Security](#5-privacy--security)
+9. [Governance Framework](#6-governance-framework)
+10. [Transparency Requirements](#7-transparency-requirements)
+11. [Veracity & Robustness](#8-veracity--robustness)
+12. [Implementation Roadmap](#implementation-roadmap)
+13. [Key Performance Indicators (KPIs)](#key-performance-indicators-kpis)
+14. [Recommended Tools and Technologies](#recommended-tools-and-technologies)
+15. [Real-World Examples and Case Studies](#real-world-examples-and-case-studies)
+16. [Regulatory Compliance Mapping](#regulatory-compliance-mapping)
+17. [Quick Start Guide (30-Day Implementation)](#quick-start-guide-30-day-implementation)
 
 ## Understanding the Risk Landscape
 
@@ -50,22 +184,24 @@ What makes AI risk management unique is not the process, but the specific types 
 
 ### The EU AI Act: Built on Proven Risk Management Foundations
 
-The European Union's AI Act (Regulation 2024/1689) explicitly builds upon established risk management standards and methodologies, particularly:
+The European Union's [AI Act (Regulation 2024/1689)](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689) explicitly builds upon established risk management standards and methodologies, particularly:
 
-- **ISO 31000**: International standard for risk management principles and guidelines
-- **ISO/IEC 27001**: Information security management systems
+- **[ISO 31000](https://www.iso.org/iso-31000-risk-management.html)**: International standard for risk management principles and guidelines
+- **[ISO/IEC 27001](https://www.iso.org/standard/27001)**: Information security management systems
 - **ISO 14971**: Medical device risk management
-- **COSO Framework**: Enterprise risk management framework
+- **[COSO Framework](https://www.coso.org/)**: Enterprise risk management framework
 
 The EU AI Act's risk-based approach categorizes AI systems into different risk levels (minimal, limited, high, unacceptable) and applies proportionate requirements—a methodology directly borrowed from traditional risk management practices used in aviation, healthcare, and financial services.
 
 Key EU AI Act principles that mirror traditional risk management:
 
 - **Risk-based approach**: Higher risk systems require stricter controls
-- **Proportionality**: Compliance requirements match risk levels
+- **Proportionality**: Compliance requirements match risk levels  
 - **Lifecycle management**: Continuous monitoring and improvement
 - **Documentation requirements**: Audit trails and accountability
 - **Third-party assessment**: Independent validation for high-risk systems
+
+*For detailed implementation guidance, see the [AI Act Implementation Hub](https://artificialintelligenceact.eu/).*
 
 ### The AI Risk Framework: Eight Interconnected Categories
 
@@ -122,7 +258,7 @@ graph TD
 
 ### Risk Management Fundamentals
 
-**📊 Risk Assessment Matrix**
+#### 📊 Risk Assessment Matrix
 
 | Risk Level | Likelihood | Impact | Response Strategy |
 |------------|------------|---------|-------------------|
@@ -131,7 +267,7 @@ graph TD
 | Medium | Medium | Medium | Regular monitoring |
 | Low | Low | Low | Acceptance with documentation |
 
-**🔄 Continuous Improvement Cycle**
+#### 🔄 Continuous Improvement Cycle
 
 1. **Identify** → Discover new risks and vulnerabilities
 2. **Assess** → Evaluate probability and business impact  
@@ -160,17 +296,16 @@ The eight interconnected risk categories form a comprehensive framework for mana
 - **Biased & Stereotyped Queries**: Systems responding inappropriately to sensitive topics
 - **Inappropriate Queries**: Generating content that violates ethical standards
 
-### Best Practices
+### Fairness Best Practices
 
-
-**Risk Assessment**
+#### Risk Assessment for Fairness
 
 - Conduct bias testing across demographic groups
 - Test edge cases and controversial topics
 - Implement diverse evaluation datasets
 - Regular fairness audits
 
-**Mitigation Strategies**
+#### Mitigation Strategies for Fairness
 
 - Diverse training data
 - Bias detection algorithms
@@ -215,31 +350,30 @@ graph LR
 
 ## 2. Explainability Challenges
 
-### Common Issues
+### Common Explainability Issues
 
 - **Opaque System Design**: Black-box models that can't explain decisions
 - **Lack of Explainability**: No clear reasoning for outputs
 - **No Continuous Improvements**: Systems that don't learn from mistakes
 - **Non-transparent Response**: Users can't understand how conclusions were reached
 
-### Best Practices
+### Explainability Best Practices
 
-
-**Explainability Framework**
+#### Explainability Framework
 
 - Document model architecture
 - Implement attention mechanisms
 - Provide confidence scores
 - Create explanation interfaces
 
-**Technical Solutions**
+#### Technical Solutions for Explainability
 
 - LIME (Local Interpretable Model-agnostic Explanations)
 - SHAP (SHapley Additive exPlanations)
 - Attention visualization
 - Decision trees for critical paths
 
-### Implementation Steps
+### Explainability Implementation Steps
 
 1. **Model Documentation**: Create comprehensive technical documentation
 2. **Explanation Interfaces**: Build user-facing explanation tools
@@ -248,29 +382,28 @@ graph LR
 
 ## 3. Controllability Issues
 
-### Common Issues
+### Common Controllability Issues
 
 - **HIL (Human-in-the-Loop) Gaps**: Insufficient human oversight
 - **Incident Response Planning**: Lack of preparedness for AI failures
 
-### Best Practices
+### Controllability Best Practices
 
-
-**Control Mechanisms**
+#### Control Mechanisms
 
 - Human approval workflows
 - Real-time monitoring dashboards
 - Automated safety switches
 - Escalation procedures
 
-**Incident Response**
+#### Incident Response for Controllability
 
 - AI-specific incident playbooks
 - Cross-functional response teams
 - Communication protocols
 - Recovery procedures
 
-### Implementation Steps
+### Controllability Implementation Steps
 
 1. **Control Architecture**: Design human oversight touchpoints
 2. **Monitoring Systems**: Implement real-time performance tracking
@@ -279,42 +412,30 @@ graph LR
 
 ## 4. Safety Concerns
 
-### Common Issues
+### Common Safety Issues
 
 - **Generation of False/Unverified Content**: Hallucinations and misinformation
 - **Data Poisoning**: Malicious manipulation of training data
 - **Model Selection**: Choosing inappropriate models for tasks
 - **Overconfidence of System Response**: Presenting uncertain outputs as facts
 
-### Best Practices
+### Safety Best Practices
 
+#### Safety Measures
 
-<table>
-  <tr>
-    <th align="left">Safety Measures</th>
-    <th align="left">Data Protection</th>
-  </tr>
-  <tr>
-    <td>
-      <ul>
-        <li>Fact-checking mechanisms</li>
-        <li>Content verification systems</li>
-        <li>Uncertainty quantification</li>
-        <li>Output validation</li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-        <li>Data provenance tracking</li>
-        <li>Input sanitization</li>
-        <li>Adversarial testing</li>
-        <li>Secure training pipelines</li>
-      </ul>
-    </td>
-  </tr>
-</table>
+- Fact-checking mechanisms
+- Content verification systems
+- Uncertainty quantification
+- Output validation
 
-### Implementation Steps
+#### Data Protection for Safety
+
+- Data provenance tracking
+- Input sanitization
+- Adversarial testing
+- Secure training pipelines
+
+### Safety Implementation Steps
 
 1. **Verification Systems**: Implement fact-checking and validation
 2. **Uncertainty Handling**: Add confidence intervals to outputs
@@ -323,7 +444,7 @@ graph LR
 
 ## 5. Privacy & Security
 
-### Common Issues
+### Common Privacy & Security Issues
 
 - **Disclosure of Personal Data**: Leaking private information in outputs
 - **Disclosure of Sensitive Information**: Revealing confidential data
@@ -331,24 +452,23 @@ graph LR
 - **Access Control**: Inadequate user permission management
 - **User Session Termination**: Improper session handling
 
-### Best Practices
+### Privacy & Security Best Practices
 
-
-**Privacy Protection**
+#### Privacy Protection
 
 - Data anonymization
 - Differential privacy
 - PII detection and redaction
 - Consent management
 
-**Security Measures**
+#### Security Measures
 
 - Input validation
 - Rate limiting
 - Authentication systems
 - Encryption at rest and in transit
 
-### Implementation Steps
+### Privacy & Security Implementation Steps
 
 1. **Data Classification**: Identify and categorize sensitive data
 2. **Access Controls**: Implement role-based permissions
@@ -357,7 +477,7 @@ graph LR
 
 ## 6. Governance Framework
 
-### Common Issues
+### Common Governance Issues
 
 - **Incident Processes**: Inadequate response procedures
 - **AI Culture & Commitment**: Lack of organizational AI ethics
@@ -369,24 +489,23 @@ graph LR
 - **Roles and Responsibilities**: Unclear accountability
 - **AI Impact Assessment**: Systematic evaluation processes
 
-### Best Practices
+### Governance Best Practices
 
-
-**Governance Structure**
+#### Governance Structure
 
 - AI Ethics Committee
 - Clear roles and responsibilities
 - Regular policy reviews
 - Compliance monitoring
 
-**Policy Framework**
+#### Policy Framework
 
 - AI use policies
 - Ethical guidelines
 - Vendor requirements
 - Risk tolerance definitions
 
-### Implementation Steps
+### Governance Implementation Steps
 
 1. **Committee Formation**: Establish AI governance body
 2. **Policy Development**: Create comprehensive AI policies
@@ -395,7 +514,7 @@ graph LR
 
 ## 7. Transparency Requirements
 
-### Common Issues
+### Common Transparency Issues
 
 - **Documentation from Model Provider**: Insufficient vendor transparency
 - **User Documentation**: Poor user guidance
@@ -407,24 +526,23 @@ graph LR
 - **Data Sources for RAG**: Unclear data provenance
 - **Communication of Model Performance**: Poor performance reporting
 
-### Best Practices
+### Transparency Best Practices
 
-
-**Transparency Measures**
+#### Transparency Measures
 
 - Model cards and documentation
 - User guides and tutorials
 - Performance dashboards
 - Audit logs and trails
 
-**Communication**
+#### Communication for Transparency
 
 - Regular performance reports
 - Incident communications
 - Usage guidelines
 - Data source documentation
 
-### Implementation Steps
+### Transparency Implementation Steps
 
 1. **Documentation Standards**: Create comprehensive documentation requirements
 2. **User Education**: Develop training and guidance materials
@@ -433,31 +551,30 @@ graph LR
 
 ## 8. Veracity & Robustness
 
-### Common Issues
+### Common Veracity & Robustness Issues
 
 - **Model Hallucination**: Generating false or nonsensical content
 - **Enforcing System's Scope**: Staying within intended boundaries
 - **Specificity of the Generated Response**: Vague or irrelevant outputs
 - **Consistency of Model's Responses**: Inconsistent behavior
 
-### Best Practices
+### Veracity & Robustness Best Practices
 
-
-**Robustness Testing**
+#### Robustness Testing
 
 - Stress testing
 - Edge case evaluation
 - Consistency validation
 - Performance benchmarking
 
-**Quality Assurance**
+#### Quality Assurance
 
 - Output validation
 - Hallucination detection
 - Scope enforcement
 - Response quality metrics
 
-### Implementation Steps
+### Veracity & Robustness Implementation Steps
 
 1. **Testing Framework**: Develop comprehensive testing protocols
 2. **Quality Metrics**: Define and monitor quality indicators
@@ -525,7 +642,7 @@ graph LR
 Track these metrics to measure your risk management effectiveness:
 
 ```mermaid
-graph TB
+graph LR
     A[AI Risk Management KPIs] --> B[Technical KPIs]
     A --> C[Process KPIs]
     A --> D[Business KPIs]
@@ -641,58 +758,70 @@ graph LR
 
 ### Open Source Tools
 
-**Bias Detection & Fairness**
-- **Fairlearn** (Microsoft): Toolkit for assessing and mitigating unfairness in ML models
-- **AI Fairness 360** (IBM): Comprehensive library for bias detection and mitigation
-- **What-If Tool** (Google): Visual interface for exploring ML model behavior
+#### Bias Detection & Fairness
 
-**Explainability & Interpretability**
-- **SHAP** (SHapley Additive exPlanations): Model-agnostic explanation framework
-- **LIME** (Local Interpretable Model-agnostic Explanations): Local explanation tool
-- **InterpretML** (Microsoft): Unified framework for machine learning interpretability
+- **[Fairlearn](https://fairlearn.org/)** (Microsoft): Toolkit for assessing and mitigating unfairness in ML models
+- **[AI Fairness 360](https://aif360.mybluemix.net/)** (IBM): Comprehensive library for bias detection and mitigation
+- **[What-If Tool](https://pair-code.github.io/what-if-tool/)** (Google): Visual interface for exploring ML model behavior
 
-**Model Monitoring & Observability**
-- **Evidently AI**: Open-source ML monitoring and testing
-- **WhyLabs**: Data and ML monitoring platform
-- **MLflow**: ML lifecycle management with monitoring capabilities
+#### Explainability & Interpretability
 
-**Privacy & Security**
-- **Opacus** (Meta): PyTorch library for differential privacy
-- **TensorFlow Privacy**: Privacy-preserving ML toolkit
-- **PySyft**: Secure and private data science
+- **[SHAP](https://github.com/shap/shap)** (SHapley Additive exPlanations): Model-agnostic explanation framework
+- **[LIME](https://github.com/marcotcr/lime)** (Local Interpretable Model-agnostic Explanations): Local explanation tool
+- **[InterpretML](https://interpret.ml/)** (Microsoft): Unified framework for machine learning interpretability
+
+#### Model Monitoring & Observability
+
+- **[Evidently AI](https://www.evidentlyai.com/)**: Open-source ML monitoring and testing
+- **[WhyLabs](https://whylabs.ai/)**: Data and ML monitoring platform
+- **[MLflow](https://mlflow.org/)**: ML lifecycle management with monitoring capabilities
+
+#### Privacy & Security
+
+- **[Opacus](https://opacus.ai/)** (Meta): PyTorch library for differential privacy
+- **[TensorFlow Privacy](https://github.com/tensorflow/privacy)**: Privacy-preserving ML toolkit
+- **[PySyft](https://github.com/OpenMined/PySyft)**: Secure and private data science
 
 ### Enterprise Solutions
 
-**Comprehensive Platforms**
-- **Azure ML Responsible AI**: End-to-end responsible AI lifecycle management
-- **AWS SageMaker Clarify**: Bias detection and model explainability
-- **Google Cloud AI Platform**: Integrated ML ops with responsible AI features
-- **DataRobot**: AutoML with built-in governance and explainability
+#### Comprehensive Platforms
 
-**Specialized Tools**
+- **[Azure ML Responsible AI](https://azure.microsoft.com/en-us/products/machine-learning/)**: End-to-end responsible AI lifecycle management
+- **[AWS SageMaker Clarify](https://aws.amazon.com/sagemaker/clarify/)**: Bias detection and model explainability
+- **[Google Cloud AI Platform](https://cloud.google.com/ai-platform)**: Integrated ML ops with responsible AI features
+- **[DataRobot](https://www.datarobot.com/)**: AutoML with built-in governance and explainability
+
+#### Specialized Tools
+
 - **Avanade AI Ethics**: Governance and compliance framework
-- **Dataiku**: Data science platform with responsible AI features
-- **H2O.ai**: Automated ML with interpretability features
+- **[Dataiku](https://www.dataiku.com/)**: Data science platform with responsible AI features
+- **[H2O.ai](https://h2o.ai/)**: Automated ML with interpretability features
 
 ### Implementation Cost Estimates
 
-**Small Organization (< 100 employees)**
-- **Open Source Tools**: $0-$5,000/month (implementation and maintenance)
-- **Cloud Services**: $500-$2,000/month
-- **Training and Consulting**: $10,000-$25,000 one-time
-- **Total First Year**: $15,000-$50,000
+*Disclaimer: These are rough estimates based on industry observations. Actual costs vary significantly based on organizational complexity, existing infrastructure, chosen tools, and implementation approach. Consult with AI governance specialists for detailed budgeting.*
 
-**Medium Organization (100-1000 employees)**
-- **Enterprise Tools**: $5,000-$15,000/month
-- **Cloud Services**: $2,000-$8,000/month
-- **Professional Services**: $50,000-$150,000 one-time
-- **Total First Year**: $150,000-$400,000
 
-**Large Organization (> 1000 employees)**
-- **Enterprise Platforms**: $15,000-$50,000/month
-- **Cloud Services**: $8,000-$25,000/month
-- **Custom Development**: $200,000-$500,000 one-time
-- **Total First Year**: $500,000-$1,500,000
+#### Small Organization (< 100 employees)
+
+- **Open Source Tools**: €0–€5,000/month (implementation and maintenance)
+- **Cloud Services**: €500–€2,000/month
+- **Training and Consulting**: €10,000–€25,000 one-time
+- **Estimated Total First Year**: €15,000–€50,000
+
+#### Medium Organization (100–1000 employees)
+
+- **Enterprise Tools**: €5,000–€15,000/month
+- **Cloud Services**: €2,000–€8,000/month
+- **Professional Services**: €50,000–€150,000 one-time
+- **Estimated Total First Year**: €150,000–€400,000
+
+#### Large Organization (> 1000 employees)
+
+- **Enterprise Platforms**: €15,000–€50,000/month
+- **Cloud Services**: €8,000–€25,000/month
+- **Custom Development**: €200,000–€500,000 one-time
+- **Estimated Total First Year**: €500,000–€1,500,000
 
 ## Real-World Examples and Case Studies
 
@@ -735,24 +864,29 @@ graph TD
 **Scenario**: A hospital implements an AI chatbot for patient triage and initial consultation.
 
 **Risk Category**: Safety & Privacy
+
 - **Challenge**: Chatbot might provide incorrect medical advice or leak patient data
-- **Solution Applied**: 
+
+- **Solution Applied**:
   - Implemented human-in-the-loop validation for all medical recommendations
   - Added confidence thresholds (responses below 85% confidence redirect to human staff)
   - Deployed differential privacy for training data
   - Created medical fact-checking integration with verified medical databases
 
-**Results**: 
-- 95% reduction in inappropriate medical advice
+**Results**:
+
+- Significant reduction in inappropriate medical advice
 - Zero privacy violations in 6 months of operation
-- 40% improvement in patient satisfaction scores
+- Notable improvement in patient satisfaction scores
 
 ### Example 2: Financial Services Content Generation
 
 **Scenario**: A bank uses AI to generate personalized financial advice and marketing content.
 
 **Risk Category**: Fairness & Transparency
+
 - **Challenge**: AI might discriminate against certain demographic groups in financial advice
+
 - **Solution Applied**:
   - Implemented bias testing across age, gender, and ethnic groups
   - Created transparent explanation system showing advice reasoning
@@ -760,16 +894,19 @@ graph TD
   - Established diverse evaluation datasets
 
 **Results**:
+
 - Eliminated demographic bias in advice generation
 - Achieved 100% regulatory compliance rate
-- Increased customer trust scores by 25%
+- Increased customer trust scores significantly
 
 ### Example 3: E-commerce Recommendation System
 
 **Scenario**: An online retailer uses AI for product recommendations and dynamic pricing.
 
 **Risk Category**: Controllability & Veracity
+
 - **Challenge**: AI recommendations becoming erratic during high-traffic periods
+
 - **Solution Applied**:
   - Implemented real-time monitoring with automatic fallback systems
   - Added circuit breakers for anomalous behavior detection
@@ -777,14 +914,15 @@ graph TD
   - Established A/B testing framework for recommendation quality
 
 **Results**:
-- 99.9% system uptime during peak shopping periods
-- 30% improvement in recommendation accuracy
-- 15% increase in customer conversion rates
+
+- Maintained high system uptime during peak shopping periods
+- Improved recommendation accuracy significantly
+- Achieved measurable increase in customer conversion rates
 
 ## Regulatory Compliance Mapping
 
 ```mermaid
-graph TD
+graph LR
     A[Regulatory Compliance Framework] --> B[EU AI Act]
     A --> C[GDPR]
     A --> D[Industry-Specific]
@@ -939,3 +1077,37 @@ Managing Generative AI risks requires a comprehensive, multi-faceted approach th
 By following this framework and adapting it to your specific context, you can build robust, responsible, and trustworthy Generative AI systems that deliver value while managing risks effectively.
 
 Remember: AI risk management is not a one-time project but an ongoing responsibility that evolves with technology, regulations, and organizational needs.
+
+## Additional Resources
+
+### Official Standards and Frameworks
+
+- [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework)
+- [ISO 31000:2018 Risk Management](https://www.iso.org/iso-31000-risk-management.html)
+- [EU AI Act Official Text](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689)
+- [AI Act Implementation Hub](https://artificialintelligenceact.eu/)
+
+### Professional Organizations
+
+- [Partnership on AI](https://partnershiponai.org/)
+- [AI Ethics Initiative](https://www.ai-initiative.org/)
+- [IEEE Standards Association](https://standards.ieee.org/initiatives/artificial-intelligence-systems/)
+
+
+---
+
+### Expert Consultation
+
+For enterprise implementations requiring specialized guidance:
+
+**Raphaël MANSUY**
+
+- **Contact**: [LinkedIn](https://www.linkedin.com/in/raphaelmansuy/) | [Website](https://www.elitizon.com)
+- **Expertise**: AI Architecture, Enterprise Context Systems, Large-Scale AI Transformations
+- **Current Role**: Leading AI/ML initiatives at DECATHLON through Capgemini Invent/Quantmetry
+- **Investment Portfolio**: [QuantaLogic](https://www.quantalogic.app/) • [Student Central AI](https://www.studentcentral.ai/)
+
+---
+### Disclaimer
+
+This guide provides general information about AI risk management practices and should not be considered as legal, compliance, or professional advice. Organizations should consult with qualified experts to develop risk management strategies appropriate for their specific circumstances, regulatory environment, and business context.

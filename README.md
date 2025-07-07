@@ -381,7 +381,6 @@ _Perfect for building solid cloud computing fundamentals_
 **🎉 End Result:** Solid foundation in cloud computing essentials
 **💰 Cost:** $5-20 USD | **⏱️ Total Time:** 13-20 hours
 
-### 🧪 **Advanced Specializations** (Expert Level)
 
 _Perfect for deep diving into specific technologies and methodologies_
 
@@ -399,6 +398,17 @@ _Perfect for deep diving into specific technologies and methodologies_
 
 **🎉 End Result:** Specialized expertise in cutting-edge technologies
 **💰 Cost:** $10-40 USD | **⏱️ Total Time:** 23-38 hours
+
+### 🛡️ **AI Risk Management** (Governance & Compliance)
+
+_Essential for organizations and professionals seeking to manage, govern, and deploy AI responsibly_
+
+| Tutorial                                                                                 | Duration   | Level                 | What You'll Build                |
+| ---------------------------------------------------------------------------------------- | ---------- | --------------------- | -------------------------------- |
+| [📖 AI Risk Management: Best Practices & Implementation](./38-ai-risk-management.md)      | 8-12 hours | Intermediate-Advanced | Comprehensive AI risk framework, compliance mapping, and implementation strategies |
+
+**🎉 End Result:** Responsible, compliant, and trustworthy AI systems
+**💰 Cost:** $10-30 USD | **⏱️ Total Time:** 8-12 hours
 
 ---
 
