@@ -27,6 +27,46 @@ Based on the comprehensive risk framework shown in the image, this tutorial will
 
 Generative AI systems present unique challenges that require a comprehensive risk management approach. The eight categories shown represent interconnected areas where failures can have significant business, ethical, and legal consequences.
 
+```mermaid
+graph TD
+    A[AI Risk Management Framework] --> B[Core Risk Categories]
+    B --> C[1 Fairness Risks]
+    B --> D[2 Explainability Challenges]
+    B --> E[3 Controllability Issues]
+    B --> F[4 Safety Concerns]
+    B --> G[5 Privacy & Security]
+    B --> H[6 Governance Framework]
+    B --> I[7 Transparency Requirements]
+    B --> J[8 Veracity & Robustness]
+    
+    C --> K[Business Impact]
+    D --> K
+    E --> K
+    F --> K
+    G --> L[Regulatory Compliance]
+    H --> L
+    I --> L
+    J --> L
+    
+    K --> M[Brand Protection]
+    K --> N[Operational Continuity]
+    L --> O[Legal Requirements]
+    L --> P[Ethical Responsibility]
+    
+    classDef riskCategory fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef impact fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef compliance fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef outcome fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef framework fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+    
+    class A framework
+    class B framework
+    class C,D,E,F,G,H,I,J riskCategory
+    class K impact
+    class L compliance
+    class M,N,O,P outcome
+```
+
 ### Why This Matters
 
 - **Regulatory Compliance**: Emerging AI regulations require proactive risk management
@@ -64,6 +104,35 @@ Mitigation Strategies:
 2. **Data Auditing**: Review training data for representation gaps
 3. **Monitoring Systems**: Implement real-time bias detection
 4. **Feedback Loops**: Create mechanisms for users to report biased outputs
+
+```mermaid
+graph LR
+    A[Common Issues] --> B[Best Practices] --> C[Implementation Steps]
+    
+    A --> A1[Racism<br/>Bias & Stereotypes<br/>Inappropriate Queries]
+    B --> B1[Risk Assessment<br/>Mitigation Strategies<br/>Monitoring Systems]
+    C --> C1[Baseline Assessment<br/>Data Auditing<br/>Feedback Loops]
+    
+    A1 --> D[Impact: Discrimination<br/>Legal Risk<br/>Brand Damage]
+    B1 --> E[Solution: Diverse Data<br/>Bias Detection<br/>Human Oversight]
+    C1 --> F[Outcome: Fair AI<br/>Compliance<br/>Trust Building]
+    
+    classDef issue fill:#FFEBEE,stroke:#D32F2F,stroke-width:2px,color:#2E2E2E
+    classDef practice fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef implementation fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef impact fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef solution fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef outcome fill:#E0F2F1,stroke:#00695C,stroke-width:2px,color:#2E2E2E
+    classDef process fill:#F5F5F5,stroke:#616161,stroke-width:2px,color:#2E2E2E
+    
+    class A,B,C process
+    class A1 issue
+    class B1 practice
+    class C1 implementation
+    class D impact
+    class E solution
+    class F outcome
+```
 
 ## 2. Explainability Challenges
 
@@ -300,67 +369,178 @@ Quality Assurance:
 
 ## Implementation Roadmap
 
-### Phase 1: Assessment (Weeks 1-4)
+```mermaid
+gantt
+    title AI Risk Management Implementation Timeline
+    dateFormat  X
+    axisFormat %s
+    
+    section Phase 1: Assessment
+    Risk Assessment    :done, phase1a, 0, 4
+    Gap Analysis      :done, phase1b, 0, 4
+    Team Assembly     :done, phase1c, 2, 4
+    
+    section Phase 2: Foundation
+    Governance Setup  :active, phase2a, 4, 12
+    Policy Development :active, phase2b, 5, 12
+    Basic Monitoring  :phase2c, 8, 12
+    
+    section Phase 3: Technical Implementation
+    Deploy Safeguards :phase3a, 12, 24
+    Monitoring Systems :phase3b, 13, 24
+    Transparency Tools :phase3c, 16, 24
+    
+    section Phase 4: Optimization
+    Refine Systems    :phase4a, 24, 36
+    User Experience  :phase4b, 25, 36
+    Advanced Features :phase4c, 28, 36
+    
+    section Phase 5: Continuous Improvement
+    Regular Reviews   :phase5a, 36, 52
+    Policy Updates    :phase5b, 36, 52
+    Technology Upgrades :phase5c, 40, 52
+```
 
-- Conduct comprehensive risk assessment
-- Identify current gaps and vulnerabilities
-- Prioritize risks based on impact and likelihood
-- Assemble cross-functional team
-
-### Phase 2: Foundation (Weeks 5-12)
-
-- Develop governance framework
-- Create policies and procedures
-- Implement basic monitoring systems
-- Establish incident response processes
-
-### Phase 3: Technical Implementation (Weeks 13-24)
-
-- Deploy technical safeguards
-- Implement monitoring and logging
-- Create explanation and transparency tools
-- Establish testing and validation processes
-
-### Phase 4: Optimization (Weeks 25-36)
-
-- Refine monitoring and detection systems
-- Enhance user experience and documentation
-- Implement advanced features (explainability, fairness tools)
-- Conduct comprehensive audits
-
-### Phase 5: Continuous Improvement (Ongoing)
-
-- Regular risk assessments
-- Policy updates based on new regulations
-- Technology upgrades and improvements
-- Stakeholder feedback integration
+```mermaid
+graph LR
+    A[Week 1-4<br/>Assessment] --> B[Week 5-12<br/>Foundation]
+    B --> C[Week 13-24<br/>Technical Implementation]
+    C --> D[Week 25-36<br/>Optimization]
+    D --> E[Ongoing<br/>Continuous Improvement]
+    
+    A --> A1[Risk Assessment<br/>Gap Analysis<br/>Team Assembly]
+    B --> B1[Governance Setup<br/>Policy Development<br/>Basic Monitoring]
+    C --> C1[Deploy Safeguards<br/>Monitoring Systems<br/>Transparency Tools]
+    D --> D1[Refine Systems<br/>User Experience<br/>Advanced Features]
+    E --> E1[Regular Reviews<br/>Policy Updates<br/>Technology Upgrades]
+    
+    classDef phase fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef activities fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef ongoing fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    
+    class A,B,C,D phase
+    class E ongoing
+    class A1,B1,C1,D1,E1 activities
+```
 
 ## Key Performance Indicators (KPIs)
 
 Track these metrics to measure your risk management effectiveness:
 
-### Technical KPIs
+```mermaid
+graph TB
+    A[AI Risk Management KPIs] --> B[Technical KPIs]
+    A --> C[Process KPIs]
+    A --> D[Business KPIs]
+    
+    B --> B1[Bias Detection Rate<br/>📊 % of biased outputs caught]
+    B --> B2[Hallucination Rate<br/>📊 Frequency of false content]
+    B --> B3[System Uptime<br/>📊 Availability metrics]
+    B --> B4[Response Time<br/>📊 Performance metrics]
+    
+    C --> C1[Incident Response Time<br/>⏱️ Speed of resolution]
+    C --> C2[Audit Compliance<br/>✅ Governance adherence]
+    C --> C3[User Satisfaction<br/>😊 Transparency feedback]
+    C --> C4[Training Completion<br/>📚 Staff education levels]
+    
+    D --> D1[Risk Reduction<br/>📉 Quantified mitigation]
+    D --> D2[Regulatory Compliance<br/>⚖️ Legal adherence]
+    D --> D3[Cost of Risk<br/>💰 Financial impact]
+    D --> D4[Stakeholder Trust<br/>🤝 Confidence levels]
+    
+    classDef main fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+    classDef category fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef technical fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef process fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef business fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    
+    class A main
+    class B,C,D category
+    class B1,B2,B3,B4 technical
+    class C1,C2,C3,C4 process
+    class D1,D2,D3,D4 business
+```
 
-- **Bias Detection Rate**: Percentage of biased outputs caught
-- **Hallucination Rate**: Frequency of false content generation
-- **System Uptime**: Availability and reliability metrics
-- **Response Time**: Performance under normal and stress conditions
-
-### Process KPIs
-
-- **Incident Response Time**: Speed of issue resolution
-- **Audit Compliance**: Adherence to governance requirements
-- **User Satisfaction**: Feedback on transparency and usability
-- **Training Completion**: Staff education and awareness levels
-
-### Business KPIs
-
-- **Risk Reduction**: Quantified risk mitigation
-- **Regulatory Compliance**: Adherence to applicable regulations
-- **Cost of Risk**: Financial impact of risk events
-- **Stakeholder Trust**: Confidence in AI systems
+```mermaid
+graph LR
+    A[Measurement Cycle] --> B[Data Collection]
+    B --> C[Analysis & Reporting]
+    C --> D[Action Planning]
+    D --> E[Implementation]
+    E --> F[Monitoring]
+    F --> A
+    
+    B --> B1[Automated Metrics<br/>Real-time dashboards]
+    B --> B2[Manual Assessments<br/>Periodic reviews]
+    
+    C --> C1[Monthly Reports<br/>Trend analysis]
+    C --> C2[Quarterly Reviews<br/>Strategic assessment]
+    
+    D --> D1[Improvement Plans<br/>Risk mitigation]
+    D --> D2[Resource Allocation<br/>Investment decisions]
+    
+    classDef cycle fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef activity fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef detail fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    
+    class A,B,C,D,E,F cycle
+    class B1,B2,C1,C2,D1,D2 detail
+```
 
 ## Recommended Tools and Technologies
+
+```mermaid
+graph TD
+    A[Tool Selection Process] --> B{Organization Size}
+    B -->|< 100 employees| C[Small Organization]
+    B -->|100-1000 employees| D[Medium Organization]
+    B -->|> 1000 employees| E[Large Organization]
+    
+    C --> F[Open Source Priority]
+    D --> G[Hybrid Approach]
+    E --> H[Enterprise Platforms]
+    
+    F --> I[Fairlearn + SHAP<br/>Evidently AI<br/>TensorFlow Privacy]
+    G --> J[Azure ML Responsible AI<br/>AWS SageMaker Clarify<br/>Open Source Tools]
+    H --> K[DataRobot<br/>Comprehensive Platforms<br/>Custom Development]
+    
+    I --> L[$15K-$50K/year]
+    J --> M[$150K-$400K/year]
+    K --> N[$500K-$1.5M/year]
+    
+    classDef process fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef size fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef approach fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef tools fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef cost fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#2E2E2E
+    
+    class A process
+    class B process
+    class C,D,E size
+    class F,G,H approach
+    class I,J,K tools
+    class L,M,N cost
+```
+
+```mermaid
+graph LR
+    A[Risk Category] --> B{Tool Type Needed}
+    B -->|Bias Detection| C[Fairlearn<br/>AI Fairness 360<br/>What-If Tool]
+    B -->|Explainability| D[SHAP<br/>LIME<br/>InterpretML]
+    B -->|Monitoring| E[Evidently AI<br/>WhyLabs<br/>MLflow]
+    B -->|Privacy| F[Opacus<br/>TensorFlow Privacy<br/>PySyft]
+    B -->|Enterprise| G[Azure ML<br/>AWS SageMaker<br/>DataRobot]
+    
+    classDef category fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef decision fill:#F5F5F5,stroke:#616161,stroke-width:2px,color:#2E2E2E
+    classDef openSource fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef enterprise fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    
+    class A category
+    class B decision
+    class C,D,E,F openSource
+    class G enterprise
+```
 
 ### Open Source Tools
 
@@ -419,6 +599,40 @@ Track these metrics to measure your risk management effectiveness:
 
 ## Real-World Examples and Case Studies
 
+```mermaid
+graph TD
+    A[Risk Identification] --> B[Risk Assessment]
+    B --> C[Solution Design]
+    C --> D[Implementation]
+    D --> E[Monitoring]
+    E --> F[Results Measurement]
+    F --> G[Continuous Improvement]
+    G --> A
+    
+    B --> B1[Healthcare: Safety & Privacy<br/>85% confidence threshold]
+    B --> B2[Finance: Fairness & Transparency<br/>Bias testing framework]
+    B --> B3[E-commerce: Controllability<br/>Real-time monitoring]
+    
+    C --> C1[Human-in-the-loop<br/>Differential privacy<br/>Fact-checking integration]
+    C --> C2[Bias detection<br/>Explanation systems<br/>Compliance checks]
+    C --> C3[Circuit breakers<br/>Fallback systems<br/>A/B testing]
+    
+    F --> F1[95% reduction errors<br/>Zero privacy violations<br/>40% satisfaction ↑]
+    F --> F2[Eliminated bias<br/>100% compliance<br/>25% trust ↑]
+    F --> F3[99.9% uptime<br/>30% accuracy ↑<br/>15% conversion ↑]
+    
+    classDef process fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef healthcare fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef finance fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef ecommerce fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef results fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#2E2E2E
+    
+    class A,B,C,D,E,F,G process
+    class B1,C1,F1 healthcare
+    class B2,C2,F2 finance
+    class B3,C3,F3 ecommerce
+```
+
 ### Example 1: Healthcare AI Chatbot Risk Management
 
 **Scenario**: A hospital implements an AI chatbot for patient triage and initial consultation.
@@ -472,128 +686,148 @@ Track these metrics to measure your risk management effectiveness:
 
 ## Regulatory Compliance Mapping
 
-### EU AI Act Compliance
+```mermaid
+graph TD
+    A[Regulatory Compliance Framework] --> B[EU AI Act]
+    A --> C[GDPR]
+    A --> D[Industry-Specific]
+    
+    B --> B1[High-Risk AI Systems<br/>📋 Risk Management]
+    B --> B2[Data Governance<br/>📊 Article 10]
+    B --> B3[Transparency<br/>🔍 Article 13]
+    B --> B4[Human Oversight<br/>👥 Article 14]
+    B --> B5[Accuracy & Robustness<br/>✅ Article 15]
+    
+    C --> C1[Privacy by Design<br/>🛡️ Data Protection]
+    C --> C2[Impact Assessments<br/>📋 DPIA Requirements]
+    C --> C3[Data Subject Rights<br/>⚖️ Automated Decisions]
+    C --> C4[Consent Management<br/>📝 Training Data]
+    
+    D --> D1[Healthcare<br/>🏥 HIPAA, FDA]
+    D --> D2[Financial<br/>💰 PCI DSS, SOX]
+    D --> D3[Government<br/>🏛️ Public Sector]
+    
+    B1 --> E[AI Risk Framework<br/>8 Categories]
+    B2 --> E
+    B3 --> E
+    B4 --> E
+    B5 --> E
+    C1 --> E
+    C2 --> E
+    C3 --> E
+    C4 --> E
+    
+    classDef main fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+    classDef regulation fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef euai fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef gdpr fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef industry fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef framework fill:#FCE4EC,stroke:#C2185B,stroke-width:3px,color:#2E2E2E
+    
+    class A main
+    class B,C,D regulation
+    class B1,B2,B3,B4,B5 euai
+    class C1,C2,C3,C4 gdpr
+    class D1,D2,D3 industry
+    class E framework
+```
 
-**High-Risk AI Systems Requirements**
-- **Risk Management System**: Maps to all 8 risk categories in this framework
-- **Data Governance**: Aligns with Privacy & Security and Veracity sections
-- **Transparency**: Direct mapping to Transparency Requirements section
-- **Human Oversight**: Covered in Controllability Issues section
-- **Accuracy & Robustness**: Mapped to Veracity & Robustness section
-
-**Compliance Checklist**:
-- [ ] Risk assessment documentation per Article 9
-- [ ] Data governance procedures per Article 10
-- [ ] Technical documentation per Article 11
-- [ ] Automatic logging per Article 12
-- [ ] Transparency obligations per Article 13
-- [ ] Human oversight measures per Article 14
-- [ ] Accuracy and robustness testing per Article 15
-
-### GDPR Integration
-
-**Privacy by Design Requirements**
-- **Data Protection Impact Assessments**: Integrate with AI risk assessment
-- **Privacy Engineering**: Implement differential privacy and federated learning
-- **Data Subject Rights**: Ensure explainability for automated decision-making
-- **Consent Management**: Track and manage training data consent
-
-### Industry-Specific Adaptations
-
-#### Healthcare (HIPAA, FDA)
-- **Additional Requirements**: 
-  - Clinical validation for medical AI systems
-  - Adverse event reporting mechanisms
-  - Patient safety monitoring
-  - Medical device regulations (FDA 510(k) if applicable)
-
-**Implementation Additions**:
-- Medical expert review panels
-- Clinical trial integration
-- Patient safety databases
-- Regulatory submission processes
-
-#### Financial Services (PCI DSS, SOX, GDPR)
-- **Additional Requirements**:
-  - Financial advice liability management
-  - Anti-money laundering compliance
-  - Credit decision fairness (Fair Credit Reporting Act)
-  - Market manipulation prevention
-
-**Implementation Additions**:
-- Financial regulatory reporting
-- Credit scoring bias testing
-- Market surveillance systems
-- Fraud detection governance
-
-#### Government & Public Sector
-- **Additional Requirements**:
-  - Constitutional rights protection
-  - Public accountability measures
-  - Algorithmic impact assessments
-  - Public participation in AI governance
-
-**Implementation Additions**:
-- Public consultation processes
-- Algorithmic auditing requirements
-- Civil rights compliance
-- Public transparency reporting
+```mermaid
+graph LR
+    A[Compliance Checklist] --> B[Risk Assessment<br/>📋 Article 9]
+    A --> C[Data Governance<br/>📊 Article 10]
+    A --> D[Technical Documentation<br/>📄 Article 11]
+    A --> E[Automatic Logging<br/>📝 Article 12]
+    A --> F[Transparency<br/>🔍 Article 13]
+    A --> G[Human Oversight<br/>👥 Article 14]
+    A --> H[Accuracy Testing<br/>✅ Article 15]
+    
+    B --> I[✅ Completed]
+    C --> J[🔄 In Progress]
+    D --> K[📋 Required]
+    E --> L[✅ Completed]
+    F --> M[🔄 In Progress]
+    G --> N[📋 Required]
+    H --> O[✅ Completed]
+    
+    classDef main fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+    classDef requirement fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef completed fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef inProgress fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef required fill:#FFEBEE,stroke:#D32F2F,stroke-width:2px,color:#2E2E2E
+    
+    class A main
+    class B,C,D,E,F,G,H requirement
+    class I,L,O completed
+    class J,M inProgress
+    class K,N required
+```
 
 ## Quick Start Guide (30-Day Implementation)
 
-### Week 1: Assessment & Planning
-**Day 1-2: Initial Assessment**
-- Complete risk assessment using provided framework
-- Identify current AI systems and their risk levels
-- Prioritize high-risk areas for immediate attention
+```mermaid
+gantt
+    title 30-Day AI Risk Management Quick Start
+    dateFormat  X
+    axisFormat Day %s
+    
+    section Week 1: Assessment
+    Initial Assessment    :done, w1a, 1, 3
+    Team Assembly        :done, w1b, 3, 6
+    Tool Selection       :done, w1c, 6, 8
+    
+    section Week 2: Policy
+    Policy Development   :active, w2a, 8, 11
+    Documentation       :active, w2b, 11, 15
+    
+    section Week 3: Technical
+    Monitoring Setup    :w3a, 15, 18
+    Safety Measures     :w3b, 18, 22
+    
+    section Week 4: Validation
+    Testing            :w4a, 22, 25
+    Training           :w4b, 25, 29
+    Go-Live            :milestone, w4c, 29, 31
+```
 
-**Day 3-5: Team Assembly**
-- Form AI governance committee
-- Assign risk category owners
-- Establish communication protocols
-
-**Day 6-7: Tool Selection**
-- Choose appropriate tools from recommended list
-- Set up initial monitoring dashboards
-- Begin procurement process for enterprise tools
-
-### Week 2: Policy & Governance
-**Day 8-10: Policy Development**
-- Draft AI use policies based on framework
-- Create incident response procedures
-- Establish approval workflows
-
-**Day 11-14: Documentation**
-- Document existing AI systems
-- Create model cards and technical documentation
-- Establish audit trail requirements
-
-### Week 3: Technical Implementation
-**Day 15-17: Monitoring Setup**
-- Deploy bias detection tools
-- Implement basic logging and monitoring
-- Set up alert systems
-
-**Day 18-21: Safety Measures**
-- Implement human-in-the-loop systems
-- Deploy fact-checking mechanisms
-- Create automated safety switches
-
-### Week 4: Testing & Validation
-**Day 22-24: Testing**
-- Conduct bias testing across demographics
-- Perform adversarial testing
-- Validate explanation systems
-
-**Day 25-28: Training**
-- Train staff on new procedures
-- Conduct tabletop exercises
-- Test incident response plans
-
-**Day 29-30: Go-Live**
-- Activate monitoring systems
-- Begin regular reporting
-- Schedule first formal review
+```mermaid
+graph TD
+    A[30-Day Implementation] --> B[Week 1: Assessment & Planning]
+    A --> C[Week 2: Policy & Governance]
+    A --> D[Week 3: Technical Implementation]
+    A --> E[Week 4: Testing & Validation]
+    
+    B --> B1[Day 1-2: Initial Assessment<br/>• Risk assessment<br/>• System identification<br/>• Priority areas]
+    B --> B2[Day 3-5: Team Assembly<br/>• Form governance committee<br/>• Assign owners<br/>• Communication protocols]
+    B --> B3[Day 6-7: Tool Selection<br/>• Choose tools<br/>• Setup dashboards<br/>• Begin procurement]
+    
+    C --> C1[Day 8-10: Policy Development<br/>• Draft AI policies<br/>• Incident procedures<br/>• Approval workflows]
+    C --> C2[Day 11-14: Documentation<br/>• System documentation<br/>• Model cards<br/>• Audit trails]
+    
+    D --> D1[Day 15-17: Monitoring Setup<br/>• Deploy bias detection<br/>• Logging systems<br/>• Alert configuration]
+    D --> D2[Day 18-21: Safety Measures<br/>• Human-in-the-loop<br/>• Fact-checking<br/>• Safety switches]
+    
+    E --> E1[Day 22-24: Testing<br/>• Bias testing<br/>• Adversarial testing<br/>• Explanation validation]
+    E --> E2[Day 25-28: Training<br/>• Staff procedures<br/>• Tabletop exercises<br/>• Response testing]
+    E --> E3[Day 29-30: Go-Live<br/>• Activate monitoring<br/>• Begin reporting<br/>• Schedule reviews]
+    
+    classDef week fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#2E2E2E
+    classDef assessment fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#2E2E2E
+    classDef policy fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#2E2E2E
+    classDef technical fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#2E2E2E
+    classDef validation fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#2E2E2E
+    classDef main fill:#F5F5F5,stroke:#616161,stroke-width:3px,color:#2E2E2E
+    
+    class A main
+    class B week
+    class C week
+    class D week
+    class E week
+    class B1,B2,B3 assessment
+    class C1,C2 policy
+    class D1,D2 technical
+    class E1,E2,E3 validation
+```
 
 ## Conclusion
 
