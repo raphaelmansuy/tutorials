@@ -1026,7 +1026,7 @@ gantt
 ```
 
 ```mermaid
-graph TD
+graph LR
     A[30-Day Implementation] --> B[Week 1: Assessment & Planning]
     A --> C[Week 2: Policy & Governance]
     A --> D[Week 3: Technical Implementation]
