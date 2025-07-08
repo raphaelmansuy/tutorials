@@ -2,7 +2,31 @@
 
 ## 1. Introduction
 
-Imagine you’re running an online bookstore with a chatbot that helps customers find books. It’s powered by generative AI, answering questions like “What’s a good mystery novel?” with ease. But one day, it suggests a nonexistent book, uses offensive language, or accidentally shares a customer’s email. These mishaps can damage your reputation, violate laws, or worse. Amazon Bedrock Guardrails are your safety net, ensuring your AI stays helpful, safe, and compliant.
+Imagine you’re running an online bookstore with a chatbot that helps customers find books. It’s powered by generative AI, answering questions like “What’s a good mystery novel?” with ease. But one day, it suggeTest the Guardrail using the `ApplyGuardrail` API to simulate user inputs.
+
+```python
+try:
+    # Test Guardrail
+    test_input = {
+        'guardrailIdentifier': guardrail_id,
+        'guardrailVersion': 'DRAFT',
+        'source': 'INPUT',
+        'content': [
+            {
+                'text': {
+                    'text': 'What\'s the price of this book? Damn, it better be cheap!'
+                }
+            }
+        ]
+    }
+    
+    response = bedrock.apply_guardrail(**test_input)
+    print("📊 Guardrail Test Results:")
+    print(json.dumps(response, indent=2))
+    
+except ClientError as e:
+    print(f"❌ Guardrail test failed: {e}")
+```ok, uses offensive language, or accidentally shares a customer’s email. These mishaps can damage your reputation, violate laws, or worse. Amazon Bedrock Guardrails are your safety net, ensuring your AI stays helpful, safe, and compliant.
 
 This tutorial explains why Guardrails are essential, what they do, and how to implement them with practical code examples. Using the Richard Feynman technique, we’ll break down complex concepts as if explaining to a curious beginner. Whether you’re a developer, data scientist, or business owner, this guide will help you build responsible AI applications.
 
@@ -243,9 +267,14 @@ Use the `boto3` client to create a Guardrail programmatically.
 ```python
 import boto3
 import json
+from botocore.exceptions import ClientError
 
-# Initialize Bedrock client
-bedrock = boto3.client('bedrock', region_name='us-east-1')
+# Initialize Bedrock client (add error handling for region issues)
+try:
+    bedrock = boto3.client('bedrock', region_name='us-east-1')
+except Exception as e:
+    print(f"❌ Failed to initialize Bedrock client: {e}")
+    exit(1)
 
 # Define Guardrail configuration
 guardrail_config = {
@@ -282,12 +311,23 @@ guardrail_config = {
     'blockedOutputsMessaging': 'Sorry, I can’t respond to that due to policy restrictions.'
 }
 
-# Create Guardrail
-response = bedrock.create_guardrail(**guardrail_config)
-
-# Output Guardrail ID
-guardrail_id = response['guardrailId']
-print(f"Guardrail created with ID: {guardrail_id}")
+# Create Guardrail with error handling
+try:
+    response = bedrock.create_guardrail(**guardrail_config)
+    
+    # Output Guardrail ID  
+    guardrail_id = response['guardrailId']
+    print(f"✅ Guardrail created successfully with ID: {guardrail_id}")
+    
+except ClientError as e:
+    error_code = e.response['Error']['Code']
+    if error_code == 'AccessDeniedException':
+        print("❌ Access denied. Check your IAM permissions for Bedrock.")
+    elif error_code == 'ValidationException':
+        print("❌ Invalid configuration. Check your guardrail parameters.")
+    else:
+        print(f"❌ Error creating guardrail: {e}")
+    exit(1)
 ```
 
 - **Explanation**:
@@ -359,22 +399,26 @@ print(json.dumps(response, indent=2))
 Apply the Guardrail when invoking a foundation model (e.g., Anthropic Claude).
 
 ```python
-# Invoke model with Guardrail
-model_input = {
-    'modelId': 'anthropic.claude-v2',
-    'contentType': 'application/json',
-    'accept': 'application/json',
-    'body': json.dumps({
-        'prompt': 'Tell me about book prices.',
-        'max_tokens_to_sample': 100
-    }),
-    'guardrailIdentifier': guardrail_id,
-    'guardrailVersion': 'DRAFT'
-}
-
-response = bedrock.invoke_model(**model_input)
-result = json.loads(response['body'].read())
-print(json.dumps(result, indent=2))
+try:
+    # Invoke model with Guardrail
+    model_input = {
+        'modelId': 'anthropic.claude-v2',
+        'contentType': 'application/json',
+        'accept': 'application/json',
+        'body': json.dumps({
+            'prompt': 'Tell me about book prices.',
+            'max_tokens_to_sample': 100
+        }),
+        'guardrailIdentifier': guardrail_id,
+        'guardrailVersion': 'DRAFT'
+    }
+    
+    response = bedrock.invoke_model(**model_input)
+    result = json.loads(response['body'].read())
+    print(json.dumps(result, indent=2))
+    
+except ClientError as e:
+    print(f"❌ Model invocation failed: {e}")
 ```
 
 - **Expected Output**: The response will be blocked with the message “Sorry, I can’t respond to that due to policy restrictions” because it violates the denied topic.
@@ -406,42 +450,47 @@ Use the versioned Guardrail in production API calls.
 
 #### Use Case 1: Chat Application with Content Filtering
 
-**Scenario**: A customer support chatbot for a bookstore.
-**Goal**: Block harmful content and profanity.
+**Scenario**: A customer support chatbot for a bookstore.  
+**Goal**: Block harmful content and profanity.  
 **Code**:
 
 ```python
-# Create Guardrail for chat app
-chat_guardrail = {
-    'name': 'ChatGuardrail',
-    'description': 'Guardrail for bookstore chatbot.',
-    'contentPolicyConfig': {
-        'filters': [
-            {'type': 'HATE', 'threshold': 'MEDIUM'},
-            {'type': 'INSULTS', 'threshold': 'MEDIUM'},
-            {'type': 'SEXUAL', 'threshold': 'HIGH'},
-            {'type': 'VIOLENCE', 'threshold': 'HIGH'}
-        ]
-    },
-    'wordPolicyConfig': {
-        'managedWordLists': ['PROFANITY']
-    },
-    'blockedInputMessaging': 'Input not allowed.',
-    'blockedOutputsMessaging': 'Response not allowed.'
-}
-
-response = bedrock.create_guardrail(**chat_guardrail)
-guardrail_id = response['guardrailId']
-
-# Test with harmful input
-test_input = {
-    'guardrailIdentifier': guardrail_id,
-    'guardrailVersion': 'DRAFT',
-    'source': 'INPUT',
-    'content': [{'text': {'text': 'This service is stupid!'}}]
-}
-response = bedrock.apply_guardrail(**test_input)
-print(json.dumps(response, indent=2))
+try:
+    # Create Guardrail for chat app
+    chat_guardrail = {
+        'name': 'ChatGuardrail',
+        'description': 'Guardrail for bookstore chatbot.',
+        'contentPolicyConfig': {
+            'filters': [
+                {'type': 'HATE', 'threshold': 'MEDIUM'},
+                {'type': 'INSULTS', 'threshold': 'MEDIUM'},
+                {'type': 'SEXUAL', 'threshold': 'HIGH'},
+                {'type': 'VIOLENCE', 'threshold': 'HIGH'}
+            ]
+        },
+        'wordPolicyConfig': {
+            'managedWordLists': ['PROFANITY']
+        },
+        'blockedInputMessaging': 'Input not allowed.',
+        'blockedOutputsMessaging': 'Response not allowed.'
+    }
+    
+    response = bedrock.create_guardrail(**chat_guardrail)
+    guardrail_id = response['guardrailId']
+    
+    # Test with harmful input
+    test_input = {
+        'guardrailIdentifier': guardrail_id,
+        'guardrailVersion': 'DRAFT',
+        'source': 'INPUT',
+        'content': [{'text': {'text': 'This service is stupid!'}}]
+    }
+    response = bedrock.apply_guardrail(**test_input)
+    print("🔍 Chat Guardrail Test:")
+    print(json.dumps(response, indent=2))
+    
+except ClientError as e:
+    print(f"❌ Chat guardrail creation failed: {e}")
 ```
 
 - **Outcome**: Blocks insults and profanity, ensuring polite interactions.
@@ -529,6 +578,92 @@ print(json.dumps(response, indent=2))
 
 - **Outcome**: Anonymizes account numbers and blocks investment advice.
 
+### 4.5 Troubleshooting Common Issues
+
+When implementing Guardrails, you might encounter these common issues:
+
+#### **Permission Errors**
+```python
+# Common IAM permission error
+ClientError: An error occurred (AccessDeniedException) when calling the CreateGuardrail operation
+
+# Solution: Ensure your IAM role has these permissions:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:CreateGuardrail",
+                "bedrock:GetGuardrail",
+                "bedrock:ApplyGuardrail",
+                "bedrock:InvokeModel",
+                "bedrock:CreateGuardrailVersion"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+#### **Regional Availability**
+```python
+# Error: Bedrock not available in region
+# Solution: Use supported regions
+SUPPORTED_REGIONS = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1']
+bedrock = boto3.client('bedrock', region_name='us-east-1')
+```
+
+#### **Rate Limiting**
+```python
+import time
+from botocore.exceptions import ClientError
+
+def create_guardrail_with_retry(config, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            return bedrock.create_guardrail(**config)
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ThrottlingException':
+                wait_time = 2 ** attempt  # Exponential backoff
+                time.sleep(wait_time)
+                continue
+            raise e
+    raise Exception("Max retries exceeded")
+```
+
+### 4.6 Cost Considerations
+
+Understanding AWS Bedrock Guardrails pricing helps optimize your implementation:
+
+**💰 Pricing Factors:**
+
+- **Model Invocations**: Charged per request to foundation models
+- **Guardrail Evaluations**: Additional cost per guardrail check
+- **CloudWatch Monitoring**: Storage and query costs for metrics
+
+**🎯 Cost Optimization Tips:**
+
+```python
+# 1. Use guardrail versioning to avoid recreation costs
+# 2. Implement response caching for repeated patterns
+# 3. Monitor thresholds to balance safety vs. cost
+# 4. Use CloudWatch metrics to track usage patterns
+
+import time
+from functools import lru_cache
+
+@lru_cache(maxsize=1000)
+def cached_guardrail_check(text_hash):
+    """Cache guardrail responses for identical inputs"""
+    return bedrock.apply_guardrail(
+        guardrailIdentifier=guardrail_id,
+        guardrailVersion='1',
+        source='INPUT',
+        content=[{'text': {'text': text}}]
+    )
+```
+
 ## 5. Advanced Topics
 
 ### 5.1 Automating Guardrail Application with AWS Lambda
@@ -587,6 +722,9 @@ Restrict Guardrail usage with IAM policies:
 Track Guardrail interventions:
 
 ```python
+import boto3
+from datetime import datetime, timedelta
+
 cloudwatch = boto3.client('cloudwatch')
 response = cloudwatch.get_metric_data(
     MetricDataQueries=[
