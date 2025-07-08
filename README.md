@@ -346,6 +346,8 @@ _Perfect for developers ready to integrate AI into their applications_
 | [📖 Transcribing Audio/Video with Gemini 2.5](./25-video-transcription-with-gemini-2-5.md) | 3-5 hours   | Beginner-Advanced | AI transcription service     |
 | [📖 A2A Protocol](./28-a2a.md)                                                             | 8-12 hours  | Beginner-Advanced | Agent-to-agent communication |
 | [📖 MCP 2025-06-18 Documentation](./24-mcp.md)                                             | 8-12 hours  | Beginner-Advanced | AI integration protocols     |
+| [📖 LLM Documentation Mastery](./41-llm-documentation-mastery.md)                       | 4-8 hours  | Intermediate-Advanced | AI-optimized knowledge systems |
+| [📖 Documentation for GenAI](./39-documentation-for-genai.md)                           | 2-4 hours  | Intermediate          | LLM-friendly content strategy  |
 
 **🎉 End Result:** Production-ready AI applications with intelligent agents
 **💰 Cost:** $30-80 USD | **⏱️ Total Time:** 77-111 hours
