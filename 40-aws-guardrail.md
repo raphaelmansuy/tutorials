@@ -26,7 +26,9 @@ try:
     
 except ClientError as e:
     print(f"❌ Guardrail test failed: {e}")
-```ok, uses offensive language, or accidentally shares a customer’s email. These mishaps can damage your reputation, violate laws, or worse. Amazon Bedrock Guardrails are your safety net, ensuring your AI stays helpful, safe, and compliant.
+```
+
+ok, uses offensive language, or accidentally shares a customer’s email. These mishaps can damage your reputation, violate laws, or worse. Amazon Bedrock Guardrails are your safety net, ensuring your AI stays helpful, safe, and compliant.
 
 This tutorial explains why Guardrails are essential, what they do, and how to implement them with practical code examples. Using the Richard Feynman technique, we’ll break down complex concepts as if explaining to a curious beginner. Whether you’re a developer, data scientist, or business owner, this guide will help you build responsible AI applications.
 
