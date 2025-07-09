@@ -166,6 +166,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 - [GCP Crash Course](./04_gcp_crash_course.md) (4-6 hours)
 - [GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md) (6-8 hours)
 - [Intent-Based Development](./17_intent_based_dev_vs_code_copilot.md) (6-8 hours)
+- [GitLab CI/CD Multi-Arch Docker to AWS ECR](./42-gitlab-docker.md) | 30-60 min | Intermediate | Build and push multi-architecture Docker images to AWS ECR using a production-ready GitLab pipeline
 
 **Perfect for:** Hands-on learners, weekend warriors
 
@@ -313,7 +314,6 @@ _Perfect for newcomers who want to see immediate results_
 
 | Tutorial                                                           | Duration  | Level             | What You'll Build             |
 | ------------------------------------------------------------------ | --------- | ----------------- | ----------------------------- |
-| [📖 Build Your First Actionable Tutorial](./41-how-to-create-the-best-tutorial.md) | 20 min | Beginner | A real, step-by-step tutorial you can reuse |
 | [📖 Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | 30-45 min | Beginner          | Development environment setup |
 | [📖 Create GCP Storage Bucket](./02_create_gcp_bucket_en.md)       | 1-2 hours | Beginner          | Cloud storage for your apps   |
 | [📖 Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md)           | 3-4 hours | Beginner-Advanced | Live web application          |
@@ -331,6 +331,7 @@ _Perfect for developers who want to work smarter, not harder_
 | [📖 Intent-Based Development with VS Code Copilot](./17_intent_based_dev_vs_code_copilot.md) | 6-8 hours | Beginner-Advanced     | Natural language programming  |
 | [📖 GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md)                                     | 6-8 hours | Beginner-Advanced     | Automated deployment pipeline |
 | [📖 Modern Python Development Toolkit](./23-modern-python-dev-toolkit.md)                    | 2-4 hours | Intermediate-Advanced | Optimized Python workflow     |
+| [📖 GitLab CI/CD Multi-Arch Docker to AWS ECR](./42-gitlab-docker.md)                       | 30-60 min | Intermediate          | Build and push multi-architecture Docker images to AWS ECR using a production-ready GitLab pipeline |
 
 **🎉 End Result:** AI-accelerated development with fully automated deployments
 **💰 Cost:** $10-30 USD | **⏱️ Total Time:** 18-26 hours
@@ -598,6 +599,7 @@ Start your journey with confidence—whether you’re new to the cloud or aiming
 - [GCP Crash Course](./04_gcp_crash_course.md) (4-6 hours)
 - [GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md) (6-8 hours)
 - [Intent-Based Development](./17_intent_based_dev_vs_code_copilot.md) (6-8 hours)
+- [GitLab CI/CD Multi-Arch Docker to AWS ECR](./42-gitlab-docker.md) | 30-60 min | Intermediate | Build and push multi-architecture Docker images to AWS ECR using a production-ready GitLab pipeline
 
 **Perfect for:** Hands-on learners, weekend warriors
 
@@ -762,6 +764,7 @@ _Perfect for developers who want to work smarter, not harder_
 | [📖 Intent-Based Development with VS Code Copilot](./17_intent_based_dev_vs_code_copilot.md) | 6-8 hours | Beginner-Advanced     | Natural language programming  |
 | [📖 GitLab CI/CD with AWS ECR](./15_ci_cd_gitlab_ecr.md)                                     | 6-8 hours | Beginner-Advanced     | Automated deployment pipeline |
 | [📖 Modern Python Development Toolkit](./23-modern-python-dev-toolkit.md)                    | 2-4 hours | Intermediate-Advanced | Optimized Python workflow     |
+| [📖 GitLab CI/CD Multi-Arch Docker to AWS ECR](./42-gitlab-docker.md)                       | 30-60 min | Intermediate          | Build and push multi-architecture Docker images to AWS ECR using a production-ready GitLab pipeline |
 
 **🎉 End Result:** AI-accelerated development with fully automated deployments
 **💰 Cost:** $10-30 USD | **⏱️ Total Time:** 18-26 hours
