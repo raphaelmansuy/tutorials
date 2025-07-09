@@ -128,7 +128,7 @@ You're trying to run `npm install` or `node app.js` but getting "command not fou
 **🔧 Prerequisites:** Computer with internet connection
 ```
 
-<sub>**Why this works:** Starts with a real problem and promises a concrete outcome—so readers know exactly what they'll get.</sub>
+*Why this works: Starts with a real problem and promises a concrete outcome—so readers know exactly what they'll get.*
 
 ### 🎯 Progress: 2/6 steps complete | ⏱️ 5 minutes elapsed
 
@@ -158,8 +158,11 @@ flowchart TD
 
 *This diagram summarizes the three key steps for installing Node.js, using pastel colors for clarity and a professional look.*
 
+
+
 ### Step 1: Download Node.js
-**🎯 Progress: 1/3 steps | ⏱️ 2 minutes remaining**
+
+> 🎯 Progress: 1/3 steps | ⏱️ 2 minutes remaining
 
 1. Go to [nodejs.org](https://nodejs.org)
 2. Click the green "LTS" download button
@@ -167,8 +170,11 @@ flowchart TD
 
 **✅ Success Check:** You should see a `.msi` (Windows) or `.pkg` (Mac) file in your Downloads folder
 
-### Step 2: Install Node.js  
-**🎯 Progress: 2/3 steps | ⏱️ 1 minute remaining**
+
+
+### Step 2: Install Node.js
+
+> 🎯 Progress: 2/3 steps | ⏱️ 1 minute remaining
 
 1. Double-click the downloaded installer
 2. Click "Next" through all prompts (defaults are fine)
@@ -176,12 +182,16 @@ flowchart TD
 
 **✅ Success Check:** Installation should complete without errors
 
+
+
 ### Step 3: Verify Installation
-**🎯 Progress: 3/3 steps | ⏱️ 30 seconds remaining**
+
+> 🎯 Progress: 3/3 steps | ⏱️ 30 seconds remaining
 
 1. Open Terminal (Mac) or Command Prompt (Windows)
 2. Type `node --version` and press Enter
 3. Type `npm --version` and press Enter
+
 
 **✅ Success Check:** You should see version numbers like:
 
@@ -194,7 +204,7 @@ v18.17.0
 
 ```markdown
 
-<sub>**Why this works:** Progress is visible and every step has a quick success check—so users never feel lost.</sub>
+*Why this works: Progress is visible and every step has a quick success check—so users never feel lost.*
 
 ### 🎯 Progress: 3/6 steps complete | ⏱️ 10 minutes elapsed
 
@@ -224,7 +234,7 @@ Ready to build something? Try these:
 - **[Deploy to Production](deploy-nodejs-app.md)** (15 minutes)
 ```
 
-<sub>**Why this works:** Celebrates success and gives readers a reason to keep going.</sub>
+*Why this works: Celebrates success and gives readers a reason to keep going.*
 
 ### 🎯 Progress: 4/6 steps complete | ⏱️ 12 minutes elapsed
 
@@ -270,23 +280,27 @@ flowchart TD
 
 *This decision tree helps users quickly find the right troubleshooting step, with pastel colors for clarity and calm.*
 
+
 ### "Command not found" after installation
 
 **Problem:** Terminal doesn't recognize `node` command  
 **Solution:** Restart your terminal and try again
+
 
 ### Permission errors during installation
 
 **Problem:** "Access denied" or permission errors  
 **Solution:** Right-click installer and "Run as Administrator" (Windows) or use `sudo` (Mac)
 
+
 ### Still having issues?
 
 - **Check our FAQ:** [common-nodejs-issues.md](common-nodejs-issues.md)
 - **Get help:** (Add your real support link here)
-```
 
-<sub>**Why this works:** Anticipates common problems and provides quick solutions—no dead ends.</sub>
+```markdown
+
+*Why this works: Anticipates common problems and provides quick solutions—no dead ends.*
 
 ### 🎯 Progress: 5/6 steps complete | ⏱️ 15 minutes elapsed
 
@@ -430,7 +444,9 @@ flowchart TD
 *This checklist diagram visually reinforces the key quality checks before and after publishing, using pastel colors for clarity and motivation.*
 
 
+
 **Before Publishing (must-have):**
+
 - [ ] **Title promises a specific, valuable result**
 - [ ] **Opening paragraph confirms the outcome**  
 - [ ] **Each step has a clear success check**
@@ -441,7 +457,9 @@ flowchart TD
 - [ ] Clear error recovery instructions
 
 
+
 **After Publishing:**
+
 - [ ] Test with someone from target audience
 - [ ] All instructions actually work
 - [ ] Links and references are valid
