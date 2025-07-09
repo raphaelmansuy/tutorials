@@ -313,6 +313,7 @@ _Perfect for newcomers who want to see immediate results_
 
 | Tutorial                                                           | Duration  | Level             | What You'll Build             |
 | ------------------------------------------------------------------ | --------- | ----------------- | ----------------------------- |
+| [📖 Build Your First Actionable Tutorial](./41-how-to-create-the-best-tutorial.md) | 20 min | Beginner | A real, step-by-step tutorial you can reuse |
 | [📖 Install Google Cloud CLI](./03_how_to_install_google_cloud.md) | 30-45 min | Beginner          | Development environment setup |
 | [📖 Create GCP Storage Bucket](./02_create_gcp_bucket_en.md)       | 1-2 hours | Beginner          | Cloud storage for your apps   |
 | [📖 Deploy Next.js to GCP](./06_deploy_nextjs_to_gcp.md)           | 3-4 hours | Beginner-Advanced | Live web application          |
