@@ -1,4 +1,7 @@
+
 # Build Your First Actionable Tutorial: From Broken to Brilliant in 20 Minutes
+
+> **TL;DR:** This guide shows you how to create tutorials people actually finish—fast. You'll build a real, actionable example (install Node.js), get a reusable template, and a quality checklist. Skip to the template at the end if you're in a hurry.
 
 > **Your readers abandon tutorials because they're boring information dumps. Let's fix that by building a working example together.**
 
@@ -125,7 +128,7 @@ You're trying to run `npm install` or `node app.js` but getting "command not fou
 **🔧 Prerequisites:** Computer with internet connection
 ```
 
-**Why this works:** We started with a specific problem (command not found) and promised a concrete outcome.
+<sub>**Why this works:** Starts with a real problem and promises a concrete outcome—so readers know exactly what they'll get.</sub>
 
 ### 🎯 Progress: 2/6 steps complete | ⏱️ 5 minutes elapsed
 
@@ -191,7 +194,7 @@ v18.17.0
 
 ```markdown
 
-**Why this works:** Clear progress indicators and immediate verification at each step.
+<sub>**Why this works:** Progress is visible and every step has a quick success check—so users never feel lost.</sub>
 
 ### 🎯 Progress: 3/6 steps complete | ⏱️ 10 minutes elapsed
 
@@ -221,7 +224,7 @@ Ready to build something? Try these:
 - **[Deploy to Production](deploy-nodejs-app.md)** (15 minutes)
 ```
 
-**Why this works:** Celebrates success and provides clear next steps.
+<sub>**Why this works:** Celebrates success and gives readers a reason to keep going.</sub>
 
 ### 🎯 Progress: 4/6 steps complete | ⏱️ 12 minutes elapsed
 
@@ -280,10 +283,10 @@ flowchart TD
 ### Still having issues?
 
 - **Check our FAQ:** [common-nodejs-issues.md](common-nodejs-issues.md)
-- **Get help:** Post in our [community forum](forum-link.com) with your error message
+- **Get help:** (Add your real support link here)
 ```
 
-**Why this works:** Anticipates common problems and provides quick solutions.
+<sub>**Why this works:** Anticipates common problems and provides quick solutions—no dead ends.</sub>
 
 ### 🎯 Progress: 5/6 steps complete | ⏱️ 15 minutes elapsed
 
@@ -426,19 +429,19 @@ flowchart TD
 
 *This checklist diagram visually reinforces the key quality checks before and after publishing, using pastel colors for clarity and motivation.*
 
-**Before Publishing:**
 
-- [ ] Title promises specific, valuable result
-- [ ] Opening paragraph confirms the outcome  
-- [ ] Time estimate is realistic
-- [ ] Each step has success confirmation
-- [ ] Progress tracking every few minutes
-- [ ] Clear error recovery instructions
-- [ ] Celebrates completion
+**Before Publishing (must-have):**
+- [ ] **Title promises a specific, valuable result**
+- [ ] **Opening paragraph confirms the outcome**  
+- [ ] **Each step has a clear success check**
+- [ ] **Progress tracking every few minutes**
+- [ ] **Celebrates completion**
 - [ ] Provides logical next steps
+- [ ] Time estimate is realistic
+- [ ] Clear error recovery instructions
+
 
 **After Publishing:**
-
 - [ ] Test with someone from target audience
 - [ ] All instructions actually work
 - [ ] Links and references are valid
