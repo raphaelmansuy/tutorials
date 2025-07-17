@@ -66,43 +66,100 @@ Amazon Bedrock AgentCore is a set of enterprise-grade services that enables deve
 
 ### 🏗️ **Architecture Overview**
 
+#### **Core AgentCore Services**
+
 ```mermaid
 graph TB
-    subgraph "Amazon Bedrock AgentCore"
-        RT[Runtime Service]
-        MEM[Memory Service]
-        ID[Identity Service]
-        GW[Gateway Service]
-        OBS[Observability Service]
+    subgraph "Amazon Bedrock AgentCore Services"
+        RT["🚀 Runtime Service<br/>Agent Execution"]
+        MEM["💾 Memory Service<br/>Session Storage"]
+        ID["🔐 Identity Service<br/>Authentication"]
+        GW["🌐 Gateway Service<br/>API Integration"]
+        OBS["📊 Observability Service<br/>Monitoring"]
     end
     
-    subgraph "Your Application"
-        AGENT[AI Agent]
-        TOOLS[Custom Tools]
-        LAMBDA[Lambda Functions]
+    classDef coreService fill:#E8F4FD,stroke:#2E86AB,stroke-width:2px,color:#1A365D
+    classDef coreServiceText color:#1A365D
+    
+    class RT,MEM,ID,GW,OBS coreService
+```
+
+#### **Agent Application Layer**
+
+```mermaid
+graph LR
+    subgraph "Your AI Agent Application"
+        AGENT["🤖 AI Agent<br/>Main Logic"]
+        TOOLS["🔧 Custom Tools<br/>Business Logic"]
+        LAMBDA["⚡ Lambda Functions<br/>External Integrations"]
     end
     
+    AGENT --> TOOLS
+    AGENT --> LAMBDA
+    
+    classDef appLayer fill:#F0F9E8,stroke:#38A169,stroke-width:2px,color:#2D3748
+    
+    class AGENT,TOOLS,LAMBDA appLayer
+```
+
+#### **External Services Integration**
+
+```mermaid
+graph TB
     subgraph "External Services"
-        CRM[CRM Systems]
-        API[Third-party APIs]
-        S3[AWS S3]
-        DDB[DynamoDB]
+        CRM["🏢 CRM Systems<br/>Customer Data"]
+        API["🔗 Third-party APIs<br/>External Services"]
+        S3["🗂️ AWS S3<br/>File Storage"]
+        DDB["🗄️ DynamoDB<br/>Database"]
+        CW["📈 CloudWatch<br/>Metrics & Logs"]
     end
     
-    AGENT --> RT
+    classDef external fill:#FFF5E6,stroke:#D69E2E,stroke-width:2px,color:#744210
+    
+    class CRM,API,S3,DDB,CW external
+```
+
+#### **Complete System Flow**
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        USER["👤 User Request"]
+    end
+    
+    subgraph "AgentCore Services"
+        RT["🚀 Runtime"]
+        MEM["💾 Memory"]
+        ID["🔐 Identity"]
+        GW["🌐 Gateway"]
+        OBS["📊 Observability"]
+    end
+    
+    subgraph "Application Layer"
+        AGENT["🤖 AI Agent"]
+    end
+    
+    subgraph "External Layer"
+        EXT["🔗 External APIs"]
+    end
+    
+    USER --> ID
+    ID --> RT
+    RT --> AGENT
     AGENT --> MEM
-    AGENT --> ID
     AGENT --> GW
+    GW --> EXT
     RT --> OBS
     
-    GW --> LAMBDA
-    GW --> CRM
-    GW --> API
+    classDef client fill:#F7E6FF,stroke:#805AD5,stroke-width:2px,color:#553C9A
+    classDef core fill:#E8F4FD,stroke:#2E86AB,stroke-width:2px,color:#1A365D
+    classDef app fill:#F0F9E8,stroke:#38A169,stroke-width:2px,color:#2D3748
+    classDef ext fill:#FFF5E6,stroke:#D69E2E,stroke-width:2px,color:#744210
     
-    MEM --> DDB
-    ID --> S3
-    
-    OBS --> CloudWatch[CloudWatch]
+    class USER client
+    class RT,MEM,ID,GW,OBS core
+    class AGENT app
+    class EXT ext
 ```
 
 ---
@@ -1493,18 +1550,17 @@ def publish_custom_metric(metric_name, value, unit='Count'):
         print(f"Error publishing metric: {str(e)}")
         return False
 
-# Example usage
+*# Example usage
 if __name__ == "__main__":
     # Publish custom metrics
     publish_custom_metric('OrderLookupLatency', 150.5, 'Milliseconds')
     publish_custom_metric('TicketCreationSuccess', 1, 'Count')
-```
                 'Value': value,
                 'Unit': unit,
                 'Timestamp': datetime.now()
             }
         ]
-    )
+    )*
 ```
 
 ---
