@@ -124,24 +124,28 @@ pip install --upgrade pip
 ### 📦 **Install Dependencies**
 
 ```bash
-# Install AgentCore SDK and toolkit
+# Install AgentCore SDK and toolkit (now available on PyPI)
 pip install bedrock-agentcore bedrock-agentcore-starter-toolkit
 
 # Install additional dependencies
-pip install boto3 strands-agents jupyter notebook
+pip install boto3 strands-agents strands-agents-tools jupyter notebook
+
+# For better package management (recommended)
+pip install uv
 ```
 
 ### ✅ **Verify Installation**
 
 ```bash
-# Check AgentCore CLI
-agentcore --version
-
 # Verify AWS credentials
 aws sts get-caller-identity
 
 # Test Bedrock access
 aws bedrock list-foundation-models --region us-east-1
+
+# Verify Python packages
+python -c "import bedrock_agentcore; print('AgentCore SDK installed')"
+python -c "import strands; print('Strands Agents installed')"
 ```
 
 ---
@@ -153,307 +157,909 @@ aws bedrock list-foundation-models --region us-east-1
 Create `my_agent.py` with a simple customer support agent:
 
 ```python
-import strands
-from bedrock_agentcore import Runtime
+from strands import Agent, tool
+from strands.models import BedrockModel
+from bedrock_agentcore.runtime import BedrockAgentCoreApp
 import json
 
-# Initialize runtime with sandbox for isolation
-runtime = Runtime(sandbox=True)
+# Initialize the AgentCore app
+app = BedrockAgentCoreApp()
 
-def handle_query(input_text: str) -> str:
-    """
-    Handle customer support queries
-    """
-    # Simulate agent reasoning (replace with actual LLM call)
-    if "order" in input_text.lower():
-        return f"I'll help you with your order inquiry: {input_text}"
-    elif "refund" in input_text.lower():
-        return f"I'll process your refund request: {input_text}"
+# Create custom tools
+@tool
+def get_order_status(order_id: str) -> str:
+    """Get the status of an order by order ID"""
+    # Simulate order lookup
+    orders = {
+        "123": "shipped",
+        "456": "processing", 
+        "789": "delivered"
+    }
+    return f"Order {order_id} status: {orders.get(order_id, 'not found')}"
+
+@tool
+def calculate_refund(order_total: float, days_since_purchase: int) -> str:
+    """Calculate refund amount based on policy"""
+    if days_since_purchase <= 30:
+        refund_amount = order_total
     else:
-        return f"I understand you need help with: {input_text}"
+        refund_amount = order_total * 0.5
+    return f"Refund amount: ${refund_amount:.2f}"
 
-# Create agent with basic handler
-agent = strands.Agent(handle_query)
+# Create the Bedrock model
+model = BedrockModel(
+    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    temperature=0.7
+)
 
-# Agent entrypoint for AgentCore
-def lambda_handler(event, context):
+# Create the agent with tools
+agent = Agent(
+    model=model,
+    tools=[get_order_status, calculate_refund]
+)
+
+# AgentCore entrypoint
+@app.entrypoint
+def customer_support_agent(payload):
     """
-    AWS Lambda handler for AgentCore
+    Main entrypoint for the customer support agent
     """
-    try:
-        input_data = json.loads(event.get('body', '{}'))
-        query = input_data.get('input', '')
-        
-        # Process with agent
-        response = agent.process(query)
-        
-        return {
-            'statusCode': 200,
-            'body': json.dumps({'output': response})
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
+    user_input = payload.get("prompt", "")
+    
+    # Process the query with the agent
+    response = agent(user_input)
+    
+    return response
 ```
 
 ### 🔧 **Configure the Agent**
 
-```bash
-# Configure agent with IAM role
-agentcore configure \
-    --entrypoint my_agent.py \
-    --execution-role-arn arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_ROLE_NAME
+Create a `requirements.txt` file:
 
-# Replace YOUR_ACCOUNT_ID and YOUR_ROLE_NAME with your details
+```txt
+strands-agents
+strands-agents-tools
+bedrock-agentcore
+bedrock-agentcore-starter-toolkit
+boto3
 ```
 
 ### 🧪 **Test Locally**
 
-```bash
-# Launch agent locally
-agentcore launch --local
+You can test your agent locally before deploying:
 
-# Test with sample payload
-agentcore invoke --local '{"input": "What is my order status?"}'
-
-# Expected output: {"output": "I'll help you with your order inquiry: What is my order status?"}
+```python
+# Test the agent locally
+if __name__ == "__main__":
+    # Test payload
+    test_payload = {"prompt": "What is the status of order 123?"}
+    
+    # Run the agent
+    response = customer_support_agent(test_payload)
+    print(f"Response: {response}")
 ```
 
 ---
 
 ## ☁️ **Step 3: Deploy to AWS Cloud**
 
-### 🚀 **Deploy Agent**
+### 🚀 **Deploy Agent using AgentCore Runtime**
 
-```bash
-# Deploy to AWS
-agentcore launch
+```python
+import sys
+import os
+import time
+import json
+import boto3
+from bedrock_agentcore_starter_toolkit import Runtime
+from boto3.session import Session
 
-# Check deployment status
-agentcore status
+# Set up AWS session
+boto_session = Session()
+region = boto_session.region_name
 
-# Note the endpoint URL from the output
+# Create IAM role for AgentCore (helper function)
+def create_agentcore_role(agent_name):
+    """Create IAM role for AgentCore runtime"""
+    import boto3
+    
+    iam = boto3.client('iam')
+    
+    # Trust policy for AgentCore
+    trust_policy = {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "bedrock.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+            }
+        ]
+    }
+    
+    # Create role
+    role_name = f"AgentCore-{agent_name}-Role"
+    
+    try:
+        response = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=json.dumps(trust_policy),
+            Description=f"Role for AgentCore agent {agent_name}"
+        )
+        
+        # Attach basic policies
+        iam.attach_role_policy(
+            RoleName=role_name,
+            PolicyArn='arn:aws:iam::aws:policy/AmazonBedrockFullAccess'
+        )
+        
+        return response
+        
+    except iam.exceptions.EntityAlreadyExistsException:
+        return iam.get_role(RoleName=role_name)
+
+# Initialize AgentCore Runtime
+agent_name = "customer-support-agent"
+agentcore_iam_role = create_agentcore_role(agent_name)
+agentcore_runtime = Runtime()
+
+# Configure the agent
+response = agentcore_runtime.configure(
+    entrypoint="my_agent.py",
+    execution_role=agentcore_iam_role['Role']['Arn'],
+    auto_create_ecr=True,
+    requirements_file="requirements.txt",
+    region=region,
+    agent_name=agent_name
+)
+
+print(f"Configuration response: {response}")
 ```
 
-### 🧪 **Test Cloud Deployment**
+### 🧪 **Launch and Test**
 
-```bash
-# Invoke remotely (replace <ENDPOINT> with actual URL)
-agentcore invoke --endpoint <ENDPOINT> '{"input": "Help with refund."}'
+```python
+# Launch the agent
+launch_result = agentcore_runtime.launch()
+print(f"Launch result: {launch_result}")
 
-# Expected output: {"output": "I'll process your refund request: Help with refund."}
+# Wait for deployment to complete
+status_response = agentcore_runtime.status()
+status = status_response.endpoint['status']
+end_status = ['READY', 'CREATE_FAILED', 'DELETE_FAILED', 'UPDATE_FAILED']
+
+while status not in end_status:
+    time.sleep(10)
+    status_response = agentcore_runtime.status()
+    status = status_response.endpoint['status']
+    print(f"Status: {status}")
+
+if status == 'READY':
+    print("Agent is ready for invocation!")
+    
+    # Test the deployed agent
+    invoke_response = agentcore_runtime.invoke({
+        "prompt": "What is the status of order 123?"
+    })
+    
+    print(f"Response: {invoke_response}")
 ```
 
 ---
 
 ## 🔧 **Step 4: Enhanced Customer Support Agent**
 
-### 🛠️ **Add CRM Integration Tool**
+### 🛠️ **Using boto3 for Direct AgentCore API Access**
 
-Create `crm_lambda.py` for external system integration:
+You can also use the AgentCore services directly via boto3:
 
 ```python
-import json
 import boto3
+import json
+
+# Initialize AgentCore clients
+region = 'us-east-1'  # Your AWS region
+agentcore_client = boto3.client('bedrock-agentcore', region_name=region)
+agentcore_control_client = boto3.client('bedrock-agentcore-control', region_name=region)
+
+# Example: Invoke agent using boto3
+def invoke_agent_with_boto3(agent_arn, payload):
+    """Invoke AgentCore agent using boto3"""
+    try:
+        response = agentcore_client.invoke_agent_runtime(
+            agentRuntimeArn=agent_arn,
+            qualifier="DEFAULT",
+            payload=json.dumps(payload)
+        )
+        
+        # Handle streaming response
+        if "text/event-stream" in response.get("contentType", ""):
+            # Process event stream
+            event_stream = response['body']
+            events = []
+            
+            try:
+                for event in event_stream:
+                    if 'chunk' in event:
+                        chunk = event['chunk']
+                        if 'bytes' in chunk:
+                            events.append(chunk['bytes'])
+            except Exception as e:
+                events = [f"Error reading EventStream: {e}"]
+                
+            return events
+        else:
+            return response.get('body', '')
+            
+    except Exception as e:
+        return f"Error invoking agent: {str(e)}"
+
+# Example usage
+if __name__ == "__main__":
+    # Replace with your actual agent ARN
+    agent_arn = "arn:aws:bedrock:us-east-1:123456789012:agent-runtime/ABCDEFGHIJ"
+    
+    # Test payload
+    test_payload = {"prompt": "What is the status of order 123?"}
+    
+    # Invoke agent
+    result = invoke_agent_with_boto3(agent_arn, test_payload)
+    print(f"Agent response: {result}")
+```
+
+### 🔧 **Advanced Agent with Multiple Services**
+
+Here's an enhanced agent that uses multiple AgentCore services:
+
+```python
+from strands import Agent, tool
+from strands.models import BedrockModel
+from bedrock_agentcore.runtime import BedrockAgentCoreApp
+import boto3
+import json
+import uuid
 from datetime import datetime
 
-def lambda_handler(event, context):
+# Initialize the AgentCore app
+app = BedrockAgentCoreApp()
+
+# Initialize AWS clients for additional services
+dynamodb = boto3.resource('dynamodb')
+s3 = boto3.client('s3')
+
+# Enhanced tools with real functionality
+@tool
+def get_order_details(order_id: str) -> dict:
+    """Get detailed order information from database"""
+    try:
+        # In a real implementation, this would query your database
+        order_data = {
+            "123": {
+                "status": "shipped",
+                "tracking": "TRK123456",
+                "items": ["Widget A", "Widget B"],
+                "total": 99.99,
+                "purchase_date": "2024-01-15"
+            },
+            "456": {
+                "status": "processing",
+                "estimated_delivery": "2024-01-20",
+                "items": ["Gadget C"],
+                "total": 49.99,
+                "purchase_date": "2024-01-18"
+            }
+        }
+        
+        return order_data.get(order_id, {"error": "Order not found"})
+        
+    except Exception as e:
+        return {"error": f"Database error: {str(e)}"}
+
+@tool
+def create_support_ticket(issue_description: str, customer_email: str) -> str:
+    """Create a support ticket for the customer"""
+    try:
+        ticket_id = str(uuid.uuid4())[:8]
+        
+        # In a real implementation, this would save to your ticketing system
+        ticket_data = {
+            "ticket_id": ticket_id,
+            "description": issue_description,
+            "customer_email": customer_email,
+            "created_at": datetime.now().isoformat(),
+            "status": "open"
+        }
+        
+        return f"Support ticket {ticket_id} created successfully. We'll respond within 24 hours."
+        
+    except Exception as e:
+        return f"Error creating ticket: {str(e)}"
+
+@tool
+def check_return_policy(days_since_purchase: int) -> str:
+    """Check if item is eligible for return based on purchase date"""
+    if days_since_purchase <= 30:
+        return "Item is eligible for full return/refund"
+    elif days_since_purchase <= 60:
+        return "Item is eligible for store credit only"
+    else:
+        return "Item is outside return window"
+
+# Create the enhanced agent
+model = BedrockModel(
+    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    temperature=0.7,
+    max_tokens=1000
+)
+
+agent = Agent(
+    model=model,
+    tools=[get_order_details, create_support_ticket, check_return_policy],
+    system_prompt="""You are a helpful customer support agent. You have access to tools to:
+    1. Look up order details
+    2. Create support tickets
+    3. Check return policies
+    
+    Always be polite and helpful. If you need more information, ask clarifying questions.
     """
-    Simulate CRM system integration
+)
+
+# Enhanced entrypoint with session management
+@app.entrypoint
+def enhanced_support_agent(payload):
     """
-    order_id = event.get('order_id')
+    Enhanced customer support agent with session management
+    """
+    user_input = payload.get("prompt", "")
+    session_id = payload.get("session_id", str(uuid.uuid4()))
+    user_id = payload.get("user_id", "anonymous")
     
-    # Simulate database lookup
-    orders = {
-        "123": {"status": "shipped", "tracking": "TRK123456"},
-        "456": {"status": "processing", "estimated": "2024-01-20"},
-        "789": {"status": "delivered", "date": "2024-01-15"}
-    }
+    # Add session context to the prompt
+    context = f"Session ID: {session_id}, User ID: {user_id}\n"
+    enhanced_input = context + user_input
     
-    order_info = orders.get(str(order_id), {"status": "not found"})
+    # Process with the agent
+    response = agent(enhanced_input)
     
+    # Return response with metadata
     return {
-        'statusCode': 200,
-        'body': json.dumps({
-            'order_id': order_id,
-            'order_info': order_info,
-            'timestamp': datetime.now().isoformat()
-        })
+        "response": response,
+        "session_id": session_id,
+        "user_id": user_id,
+        "timestamp": datetime.now().isoformat()
     }
-```
-
-### 📦 **Deploy CRM Lambda**
-
-```bash
-# Create deployment package
-zip crm_lambda.zip crm_lambda.py
-
-# Deploy to AWS Lambda
-aws lambda create-function \
-    --function-name crm-lookup \
-    --runtime python3.10 \
-    --role arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_ROLE_NAME \
-    --handler crm_lambda.lambda_handler \
-    --zip-file fileb://crm_lambda.zip
-```
-
-### 🔧 **Enhanced Agent with Tools**
-
-Update `my_agent.py` with advanced capabilities:
-
-```python
-import strands
-from bedrock_agentcore import Runtime, Gateway, Memory, Identity
-import json
-import boto3
-
-# Initialize AgentCore services
-runtime = Runtime(sandbox=True)
-gateway = Gateway()
-memory = Memory(type='session')
-identity = Identity(provider='cognito')
-
-# Configure CRM tool
-@strands.tool
-def get_order_status(order_id: str) -> dict:
-    """
-    Retrieve order status from CRM system
-    """
-    try:
-        # Use Gateway to invoke Lambda
-        response = gateway.invoke('crm-lookup', {'order_id': order_id})
-        return json.loads(response['body'])
-    except Exception as e:
-        return {'error': f'Failed to lookup order: {str(e)}'}
-
-@strands.tool
-def store_preference(preference_type: str, value: str) -> str:
-    """
-    Store user preference in memory
-    """
-    memory.store(preference_type, value)
-    return f"Preference stored: {preference_type} = {value}"
-
-@strands.tool
-def get_preference(preference_type: str) -> str:
-    """
-    Retrieve user preference from memory
-    """
-    return memory.retrieve(preference_type, default="not set")
-
-class CustomerSupportAgent:
-    def __init__(self):
-        self.tools = [get_order_status, store_preference, get_preference]
-        
-    def process_query(self, input_text: str, user_id: str = None) -> str:
-        """
-        Process customer support query with context
-        """
-        # Get user preferences
-        notification_pref = get_preference("notification_method")
-        
-        # Analyze query intent
-        if "order" in input_text.lower():
-            # Extract order ID (simple regex for demo)
-            import re
-            order_match = re.search(r'\b\d{3}\b', input_text)
-            if order_match:
-                order_id = order_match.group()
-                order_info = get_order_status(order_id)
-                
-                response = f"Order {order_id} status: {order_info.get('order_info', {}).get('status', 'unknown')}"
-                
-                if notification_pref != "not set":
-                    response += f" (Will notify via {notification_pref})"
-                
-                return response
-            else:
-                return "Please provide your order ID (3 digits) to check status."
-                
-        elif "preference" in input_text.lower():
-            if "email" in input_text.lower():
-                store_preference("notification_method", "email")
-                return "Email notifications enabled for future updates."
-            elif "sms" in input_text.lower():
-                store_preference("notification_method", "sms")
-                return "SMS notifications enabled for future updates."
-            else:
-                current = get_preference("notification_method")
-                return f"Current notification preference: {current}"
-                
-        elif "refund" in input_text.lower():
-            return "I'll process your refund request. Please provide your order ID."
-            
-        else:
-            return f"I understand you need help with: {input_text}. How can I assist you further?"
-
-# Initialize agent
-agent = CustomerSupportAgent()
-
-def lambda_handler(event, context):
-    """
-    Enhanced AWS Lambda handler
-    """
-    try:
-        input_data = json.loads(event.get('body', '{}'))
-        query = input_data.get('input', '')
-        user_id = input_data.get('user_id', 'anonymous')
-        
-        # Process with enhanced agent
-        response = agent.process_query(query, user_id)
-        
-        return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'output': response,
-                'user_id': user_id,
-                'timestamp': json.dumps(datetime.now().isoformat())
-            })
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
 ```
 
 ---
 
-## 🔧 **Step 5: Configure Advanced Features**
+## � **Step 5: Deploy to AgentCore Runtime**
+
+### 🛠️ **Using the Starter Toolkit for Deployment**
+
+The `bedrock-agentcore-starter-toolkit` provides deployment utilities:
+
+```python
+# deployment_script.py
+from bedrock_agentcore_starter_toolkit import deploy_agent
+import json
+
+def deploy_customer_support_agent():
+    """Deploy the customer support agent to AgentCore Runtime"""
+    
+    # Configuration for deployment
+    deployment_config = {
+        "agent_name": "customer-support-agent",
+        "agent_description": "Customer support agent with order lookup and ticketing",
+        "runtime_config": {
+            "memory_size": 512,
+            "timeout": 300,
+            "environment": "production"
+        },
+        "model_config": {
+            "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+            "temperature": 0.7,
+            "max_tokens": 1000
+        }
+    }
+    
+    # Deploy using the starter toolkit
+    try:
+        deployment_result = deploy_agent(
+            agent_path="./customer_support_agent.py",
+            config=deployment_config,
+            region="us-east-1"
+        )
+        
+        print(f"Deployment successful!")
+        print(f"Agent ARN: {deployment_result['agent_arn']}")
+        print(f"Runtime URL: {deployment_result['runtime_url']}")
+        
+        return deployment_result
+        
+    except Exception as e:
+        print(f"Deployment failed: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    result = deploy_customer_support_agent()
+    if result:
+        print("\nDeployment completed successfully!")
+        print(f"Test your agent at: {result['runtime_url']}")
+```
+
+### �🔧 **Manual Deployment Using boto3**
+
+For more control over the deployment process:
+
+```python
+# manual_deployment.py
+import boto3
+import json
+import time
+
+def deploy_agent_manually():
+    """Deploy agent using boto3 AgentCore clients"""
+    
+    # Initialize clients
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    
+    # Create agent configuration
+    agent_config = {
+        "agentName": "customer-support-agent",
+        "agentDescription": "Enhanced customer support agent with tools",
+        "runtimeConfig": {
+            "memorySize": 512,
+            "timeout": 300,
+            "environment": {
+                "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+                "LOG_LEVEL": "INFO"
+            }
+        },
+        "modelConfig": {
+            "modelId": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+            "temperature": 0.7,
+            "maxTokens": 1000
+        }
+    }
+    
+    try:
+        # Create the agent
+        create_response = agentcore_control.create_agent_runtime(
+            agentName=agent_config["agentName"],
+            agentDescription=agent_config["agentDescription"],
+            runtimeConfig=agent_config["runtimeConfig"],
+            modelConfig=agent_config["modelConfig"]
+        )
+        
+        agent_arn = create_response['agentRuntimeArn']
+        print(f"Agent created with ARN: {agent_arn}")
+        
+        # Wait for deployment to complete
+        print("Waiting for deployment to complete...")
+        while True:
+            status_response = agentcore_control.get_agent_runtime(
+                agentRuntimeArn=agent_arn
+            )
+            
+            status = status_response['agentRuntime']['status']
+            print(f"Current status: {status}")
+            
+            if status == 'ACTIVE':
+                print("Agent deployment completed successfully!")
+                break
+            elif status == 'FAILED':
+                print("Agent deployment failed!")
+                print(f"Error: {status_response['agentRuntime'].get('failureReason', 'Unknown error')}")
+                return None
+            
+            time.sleep(10)  # Wait 10 seconds before checking again
+            
+        return {
+            'agent_arn': agent_arn,
+            'status': status,
+            'runtime_url': status_response['agentRuntime'].get('endpointUrl')
+        }
+        
+    except Exception as e:
+        print(f"Deployment error: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    result = deploy_agent_manually()
+    if result:
+        print(f"\nDeployment successful!")
+        print(f"Agent ARN: {result['agent_arn']}")
+        print(f"Runtime URL: {result['runtime_url']}")
+```
+
+### 🧪 **Testing the Deployed Agent**
+
+```python
+# test_deployed_agent.py
+import boto3
+import json
+from datetime import datetime
+
+def test_deployed_agent(agent_arn):
+    """Test the deployed agent with sample queries"""
+    
+    # Initialize AgentCore client
+    agentcore = boto3.client('bedrock-agentcore')
+    
+    # Test cases
+    test_cases = [
+        {
+            "name": "Order Status Check",
+            "payload": {
+                "prompt": "What is the status of order 123?",
+                "session_id": "test-session-1",
+                "user_id": "test-user"
+            }
+        },
+        {
+            "name": "Support Ticket Creation",
+            "payload": {
+                "prompt": "I need help with a defective product, my email is customer@example.com",
+                "session_id": "test-session-2",
+                "user_id": "test-user"
+            }
+        },
+        {
+            "name": "Return Policy Check",
+            "payload": {
+                "prompt": "I bought an item 45 days ago, can I return it?",
+                "session_id": "test-session-3",
+                "user_id": "test-user"
+            }
+        }
+    ]
+    
+    # Execute tests
+    for test_case in test_cases:
+        print(f"\n{'='*50}")
+        print(f"Test: {test_case['name']}")
+        print(f"{'='*50}")
+        
+        try:
+            # Invoke the agent
+            response = agentcore.invoke_agent_runtime(
+                agentRuntimeArn=agent_arn,
+                qualifier="DEFAULT",
+                payload=json.dumps(test_case['payload'])
+            )
+            
+            # Process response
+            if "text/event-stream" in response.get("contentType", ""):
+                # Handle streaming response
+                event_stream = response['body']
+                full_response = ""
+                
+                for event in event_stream:
+                    if 'chunk' in event:
+                        chunk = event['chunk']
+                        if 'bytes' in chunk:
+                            full_response += chunk['bytes'].decode('utf-8')
+                
+                print(f"Response: {full_response}")
+            else:
+                print(f"Response: {response.get('body', 'No response body')}")
+                
+        except Exception as e:
+            print(f"Test failed: {str(e)}")
+        
+        print(f"Timestamp: {datetime.now().isoformat()}")
+
+if __name__ == "__main__":
+    # Replace with your actual agent ARN
+    agent_arn = "arn:aws:bedrock:us-east-1:123456789012:agent-runtime/ABCDEFGHIJ"
+    test_deployed_agent(agent_arn)
+```
+
+---
+
+## 🔧 **Step 6: Configure Advanced Features**
 
 ### 💾 **Enable Memory Service**
 
-```bash
-# Configure persistent memory
-agentcore configure \
-    --add-memory \
-    --type session \
-    --retention 7d
+Configure persistent memory using the AgentCore Memory service:
+
+```python
+# memory_config.py
+import boto3
+from bedrock_agentcore_starter_toolkit import configure_memory
+
+def setup_memory_service():
+    """Configure AgentCore Memory service for session persistence"""
+    
+    # Initialize clients
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    
+    # Memory configuration
+    memory_config = {
+        "memoryType": "session",
+        "retentionDays": 7,
+        "encryptionConfig": {
+            "kmsKeyId": "arn:aws:kms:us-east-1:123456789012:key/abcd1234-5678-90ab-cdef-EXAMPLE11111"
+        },
+        "storageConfig": {
+            "s3BucketName": "my-agentcore-memory-bucket",
+            "s3KeyPrefix": "agent-memory/"
+        }
+    }
+    
+    try:
+        # Configure memory service
+        response = agentcore_control.configure_memory_service(
+            memoryConfig=memory_config
+        )
+        
+        print(f"Memory service configured successfully!")
+        print(f"Memory service ARN: {response['memoryServiceArn']}")
+        
+        return response
+        
+    except Exception as e:
+        print(f"Memory configuration failed: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    setup_memory_service()
 ```
 
 ### 🔐 **Setup Identity and Access Controls**
 
-```bash
-# Configure identity service
-agentcore configure \
-    --add-identity \
-    --provider cognito \
-    --scopes read:orders
+Configure identity and access controls using AWS Cognito:
+
+```python
+# identity_config.py
+import boto3
+import json
+
+def setup_identity_service():
+    """Configure identity service for agent authentication"""
+    
+    # Initialize clients
+    cognito_client = boto3.client('cognito-idp')
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    
+    # Create user pool for agent authentication
+    try:
+        # Create Cognito User Pool
+        user_pool_response = cognito_client.create_user_pool(
+            PoolName='agentcore-users',
+            Policies={
+                'PasswordPolicy': {
+                    'MinimumLength': 8,
+                    'RequireUppercase': True,
+                    'RequireLowercase': True,
+                    'RequireNumbers': True,
+                    'RequireSymbols': True
+                }
+            },
+            Schema=[
+                {
+                    'Name': 'email',
+                    'AttributeDataType': 'String',
+                    'Mutable': True,
+                    'Required': True
+                }
+            ]
+        )
+        
+        user_pool_id = user_pool_response['UserPool']['Id']
+        
+        # Create app client
+        app_client_response = cognito_client.create_user_pool_client(
+            UserPoolId=user_pool_id,
+            ClientName='agentcore-client',
+            GenerateSecret=True,
+            ExplicitAuthFlows=['ADMIN_NO_SRP_AUTH']
+        )
+        
+        client_id = app_client_response['UserPoolClient']['ClientId']
+        
+        # Configure identity service with AgentCore
+        identity_config = {
+            "identityProvider": "cognito",
+            "cognitoConfig": {
+                "userPoolId": user_pool_id,
+                "clientId": client_id,
+                "region": "us-east-1"
+            },
+            "authorizationConfig": {
+                "defaultRole": "agent-user",
+                "scopes": ["read:orders", "create:tickets"]
+            }
+        }
+        
+        agentcore_response = agentcore_control.configure_identity_service(
+            identityConfig=identity_config
+        )
+        
+        print(f"Identity service configured successfully!")
+        print(f"User Pool ID: {user_pool_id}")
+        print(f"Client ID: {client_id}")
+        print(f"Identity Service ARN: {agentcore_response['identityServiceArn']}")
+        
+        return {
+            'user_pool_id': user_pool_id,
+            'client_id': client_id,
+            'identity_service_arn': agentcore_response['identityServiceArn']
+        }
+        
+    except Exception as e:
+        print(f"Identity configuration failed: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    setup_identity_service()
 ```
 
 ### 🌐 **Configure Gateway for External APIs**
 
-```bash
-# Register CRM tool with Gateway
-agentcore configure \
-    --add-gateway \
-    --tool crm-tool \
-    --lambda-arn arn:aws:lambda:region:account:function:crm-lookup
+Configure the Gateway service to handle external API integrations:
+
+```python
+# gateway_config.py
+import boto3
+import json
+
+def setup_gateway_service():
+    """Configure Gateway service for external API integrations"""
+    
+    # Initialize clients
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    lambda_client = boto3.client('lambda')
+    
+    # Gateway configuration
+    gateway_config = {
+        "routingRules": [
+            {
+                "path": "/support/order/*",
+                "method": "POST",
+                "targetType": "lambda",
+                "targetArn": "arn:aws:lambda:us-east-1:123456789012:function:crm-lookup",
+                "timeout": 30,
+                "retryPolicy": {
+                    "maxRetries": 3,
+                    "backoffFactor": 2
+                }
+            },
+            {
+                "path": "/support/general",
+                "method": "POST",
+                "targetType": "agentcore",
+                "targetArn": "arn:aws:bedrock:us-east-1:123456789012:agent-runtime/ABCDEFGHIJ",
+                "rateLimit": {
+                    "requestsPerMinute": 100,
+                    "burstLimit": 20
+                }
+            }
+        ],
+        "authenticationRules": [
+            {
+                "path": "/support/*",
+                "requiredRoles": ["customer", "support_agent"],
+                "tokenValidation": True
+            }
+        ]
+    }
+    
+    try:
+        # Configure gateway service
+        response = agentcore_control.configure_gateway_service(
+            gatewayConfig=gateway_config
+        )
+        
+        print(f"Gateway service configured successfully!")
+        print(f"Gateway Service ARN: {response['gatewayServiceArn']}")
+        print(f"Gateway Endpoint: {response['gatewayEndpoint']}")
+        
+        return response
+        
+    except Exception as e:
+        print(f"Gateway configuration failed: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    setup_gateway_service()
 ```
 
 ### 📊 **Enable Observability**
+
+Set up comprehensive observability for your AgentCore deployment:
+
+```python
+# observability_config.py
+import boto3
+import json
+
+def setup_observability():
+    """Configure observability for AgentCore agents"""
+    
+    # Initialize clients
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    cloudwatch = boto3.client('cloudwatch')
+    
+    # Observability configuration
+    observability_config = {
+        "logging": {
+            "logLevel": "INFO",
+            "logDestination": "cloudwatch",
+            "logGroupName": "/aws/bedrock/agentcore/customer-support",
+            "retentionInDays": 14
+        },
+        "metrics": {
+            "enabled": True,
+            "namespace": "AWS/BedrockAgentCore",
+            "customMetrics": [
+                {
+                    "name": "OrderLookupLatency",
+                    "unit": "Milliseconds",
+                    "description": "Time taken to lookup order information"
+                },
+                {
+                    "name": "TicketCreationSuccess",
+                    "unit": "Count",
+                    "description": "Number of successfully created support tickets"
+                }
+            ]
+        },
+        "tracing": {
+            "enabled": True,
+            "samplingRate": 0.1,
+            "xrayTracingConfig": {
+                "tracingConfig": "Active"
+            }
+        }
+    }
+    
+    try:
+        # Configure observability service
+        response = agentcore_control.configure_observability_service(
+            observabilityConfig=observability_config
+        )
+        
+        # Create custom CloudWatch dashboard
+        dashboard_body = {
+            "widgets": [
+                {
+                    "type": "metric",
+                    "properties": {
+                        "metrics": [
+                            ["AWS/BedrockAgentCore", "InvocationCount"],
+                            ["AWS/BedrockAgentCore", "ErrorRate"],
+                            ["AWS/BedrockAgentCore", "Duration"]
+                        ],
+                        "period": 300,
+                        "stat": "Average",
+                        "region": "us-east-1",
+                        "title": "Agent Performance"
+                    }
+                }
+            ]
+        }
+        
+        cloudwatch.put_dashboard(
+            DashboardName='AgentCore-CustomerSupport',
+            DashboardBody=json.dumps(dashboard_body)
+        )
+        
+        print(f"Observability configured successfully!")
+        print(f"Observability Service ARN: {response['observabilityServiceArn']}")
+        print(f"CloudWatch Dashboard: AgentCore-CustomerSupport")
+        
+        return response
+        
+    except Exception as e:
+        print(f"Observability configuration failed: {str(e)}")
+        return None
+
+if __name__ == "__main__":
+    setup_observability()
+```
 
 ```bash
 # Configure monitoring
@@ -615,33 +1221,284 @@ def lambda_handler(event, context):
 
 ---
 
-## 📊 **Monitoring and Observability**
+## 📊 **Step 7: Performance Monitoring and Optimization**
 
-### 📈 **CloudWatch Metrics**
+### 🔍 **Monitor Agent Performance**
 
-Key metrics to monitor:
+Use CloudWatch and X-Ray to monitor your agent's performance:
+
+```python
+# monitoring.py
+import boto3
+import json
+from datetime import datetime, timedelta
+
+def get_agent_metrics(agent_arn):
+    """Get performance metrics for the AgentCore agent"""
+    
+    # Initialize clients
+    cloudwatch = boto3.client('cloudwatch')
+    
+    # Define time range (last 24 hours)
+    end_time = datetime.utcnow()
+    start_time = end_time - timedelta(hours=24)
+    
+    # Get metrics
+    try:
+        # Invocation count
+        invocation_metrics = cloudwatch.get_metric_statistics(
+            Namespace='AWS/BedrockAgentCore',
+            MetricName='InvocationCount',
+            Dimensions=[
+                {
+                    'Name': 'AgentArn',
+                    'Value': agent_arn
+                }
+            ],
+            StartTime=start_time,
+            EndTime=end_time,
+            Period=3600,  # 1 hour
+            Statistics=['Sum']
+        )
+        
+        # Error rate
+        error_metrics = cloudwatch.get_metric_statistics(
+            Namespace='AWS/BedrockAgentCore',
+            MetricName='ErrorRate',
+            Dimensions=[
+                {
+                    'Name': 'AgentArn',
+                    'Value': agent_arn
+                }
+            ],
+            StartTime=start_time,
+            EndTime=end_time,
+            Period=3600,
+            Statistics=['Average']
+        )
+        
+        # Duration
+        duration_metrics = cloudwatch.get_metric_statistics(
+            Namespace='AWS/BedrockAgentCore',
+            MetricName='Duration',
+            Dimensions=[
+                {
+                    'Name': 'AgentArn',
+                    'Value': agent_arn
+                }
+            ],
+            StartTime=start_time,
+            EndTime=end_time,
+            Period=3600,
+            Statistics=['Average']
+        )
+        
+        return {
+            'invocations': invocation_metrics['Datapoints'],
+            'errors': error_metrics['Datapoints'],
+            'duration': duration_metrics['Datapoints']
+        }
+        
+    except Exception as e:
+        print(f"Error getting metrics: {str(e)}")
+        return None
+
+def create_performance_dashboard(agent_arn):
+    """Create a CloudWatch dashboard for agent performance"""
+    
+    cloudwatch = boto3.client('cloudwatch')
+    
+    dashboard_body = {
+        "widgets": [
+            {
+                "type": "metric",
+                "x": 0,
+                "y": 0,
+                "width": 12,
+                "height": 6,
+                "properties": {
+                    "metrics": [
+                        ["AWS/BedrockAgentCore", "InvocationCount", "AgentArn", agent_arn],
+                        [".", "ErrorRate", ".", "."],
+                        [".", "Duration", ".", "."]
+                    ],
+                    "period": 300,
+                    "stat": "Average",
+                    "region": "us-east-1",
+                    "title": "Agent Performance Overview"
+                }
+            },
+            {
+                "type": "log",
+                "x": 0,
+                "y": 6,
+                "width": 24,
+                "height": 6,
+                "properties": {
+                    "query": f"SOURCE '/aws/bedrock/agentcore/customer-support' | fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 100",
+                    "region": "us-east-1",
+                    "title": "Recent Errors"
+                }
+            }
+        ]
+    }
+    
+    try:
+        cloudwatch.put_dashboard(
+            DashboardName='AgentCore-Performance',
+            DashboardBody=json.dumps(dashboard_body)
+        )
+        
+        print("Performance dashboard created successfully!")
+        return True
+        
+    except Exception as e:
+        print(f"Error creating dashboard: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    # Replace with your actual agent ARN
+    agent_arn = "arn:aws:bedrock:us-east-1:123456789012:agent-runtime/ABCDEFGHIJ"
+    
+    # Get metrics
+    metrics = get_agent_metrics(agent_arn)
+    if metrics:
+        print(f"Agent metrics retrieved successfully!")
+        print(f"Total invocations: {len(metrics['invocations'])}")
+        print(f"Error data points: {len(metrics['errors'])}")
+        print(f"Duration data points: {len(metrics['duration'])}")
+    
+    # Create dashboard
+    create_performance_dashboard(agent_arn)
+```
+
+### � **Performance Optimization**
+
+Optimize your agent's performance based on metrics:
+
+```python
+# optimization.py
+import boto3
+import json
+
+def optimize_agent_performance(agent_arn):
+    """Optimize agent performance based on metrics"""
+    
+    # Initialize clients
+    agentcore_control = boto3.client('bedrock-agentcore-control')
+    cloudwatch = boto3.client('cloudwatch')
+    
+    # Analyze performance metrics
+    metrics = get_agent_metrics(agent_arn)
+    
+    if not metrics:
+        print("Unable to retrieve metrics for optimization")
+        return False
+    
+    # Calculate averages
+    avg_duration = sum(d['Average'] for d in metrics['duration']) / len(metrics['duration']) if metrics['duration'] else 0
+    avg_errors = sum(e['Average'] for e in metrics['errors']) / len(metrics['errors']) if metrics['errors'] else 0
+    
+    print(f"Average duration: {avg_duration:.2f}ms")
+    print(f"Average error rate: {avg_errors:.2%}")
+    
+    # Optimization recommendations
+    optimizations = []
+    
+    # If duration is too high, recommend increasing memory
+    if avg_duration > 5000:  # 5 seconds
+        optimizations.append({
+            "type": "memory_increase",
+            "current": 512,
+            "recommended": 1024,
+            "reason": "High average duration detected"
+        })
+    
+    # If error rate is high, recommend timeout increase
+    if avg_errors > 0.05:  # 5%
+        optimizations.append({
+            "type": "timeout_increase",
+            "current": 300,
+            "recommended": 600,
+            "reason": "High error rate detected"
+        })
+    
+    # Apply optimizations
+    for optimization in optimizations:
+        try:
+            if optimization["type"] == "memory_increase":
+                agentcore_control.update_agent_runtime(
+                    agentRuntimeArn=agent_arn,
+                    runtimeConfig={
+                        "memorySize": optimization["recommended"]
+                    }
+                )
+                print(f"Memory increased to {optimization['recommended']}MB")
+                
+            elif optimization["type"] == "timeout_increase":
+                agentcore_control.update_agent_runtime(
+                    agentRuntimeArn=agent_arn,
+                    runtimeConfig={
+                        "timeout": optimization["recommended"]
+                    }
+                )
+                print(f"Timeout increased to {optimization['recommended']}s")
+                
+        except Exception as e:
+            print(f"Error applying optimization: {str(e)}")
+    
+    return True
+
+if __name__ == "__main__":
+    # Replace with your actual agent ARN
+    agent_arn = "arn:aws:bedrock:us-east-1:123456789012:agent-runtime/ABCDEFGHIJ"
+    optimize_agent_performance(agent_arn)
+```
+
+### 🔧 **Key Performance Metrics to Monitor**
+
 - **Invocation Count** - Number of agent calls
-- **Error Rate** - Failed requests percentage
+- **Error Rate** - Failed requests percentage  
 - **Latency** - Response times (P50, P90, P99)
 - **Memory Usage** - Session memory consumption
 - **Cost** - Per-invocation costs
 
-### 🔍 **Custom Metrics**
+### � **Custom Metrics**
 
 ```python
+# custom_metrics.py
 import boto3
 
-cloudwatch = boto3.client('cloudwatch')
-
 def publish_custom_metric(metric_name, value, unit='Count'):
-    """
-    Publish custom metrics to CloudWatch
-    """
-    cloudwatch.put_metric_data(
-        Namespace='AgentCore/CustomMetrics',
-        MetricData=[
-            {
-                'MetricName': metric_name,
+    """Publish custom metrics to CloudWatch"""
+    
+    cloudwatch = boto3.client('cloudwatch')
+    
+    try:
+        cloudwatch.put_metric_data(
+            Namespace='AgentCore/CustomMetrics',
+            MetricData=[
+                {
+                    'MetricName': metric_name,
+                    'Value': value,
+                    'Unit': unit
+                }
+            ]
+        )
+        
+        print(f"Custom metric {metric_name} published successfully")
+        return True
+        
+    except Exception as e:
+        print(f"Error publishing metric: {str(e)}")
+        return False
+
+# Example usage
+if __name__ == "__main__":
+    # Publish custom metrics
+    publish_custom_metric('OrderLookupLatency', 150.5, 'Milliseconds')
+    publish_custom_metric('TicketCreationSuccess', 1, 'Count')
+```
                 'Value': value,
                 'Unit': unit,
                 'Timestamp': datetime.now()
