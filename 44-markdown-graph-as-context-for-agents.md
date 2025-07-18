@@ -1121,4 +1121,18 @@ This approach won't replace high-performance memory systems for applications whe
 
 The future of agent memory likely lies not in choosing between performance and interpretability, but in sophisticated architectures that deliver both. The dual-layer approach presented here represents one exploration of that synthesis, designed specifically for the collaboration and transparency requirements of real business environments.
 
+### Key Limitations to Address
+
+While the dual-layer architecture offers significant advantages for business applications, several limitations require further exploration and development:
+
+**Scalability Challenges**: As agent memory grows to hundreds of deals or thousands of documents, Git repository size and embedding database performance may degrade. Large-scale deployments need sophisticated sharding strategies, repository archiving mechanisms, and distributed embedding systems to maintain acceptable response times.
+
+**Consistency Management**: Maintaining consistency across markdown documents, embeddings, and Git history becomes increasingly complex as multiple agents and humans modify memory concurrently. The system needs robust conflict resolution mechanisms, automated consistency checking, and clear ownership protocols to prevent data corruption or conflicting interpretations.
+
+**Markdown Editing Complexity**: While human-readable, complex markdown structures can become difficult to maintain programmatically. Agents need sophisticated parsing and editing capabilities to modify structured content without breaking cross-references, table formatting, or document organization. Version control of large, frequently-edited markdown files also presents merge conflict challenges.
+
+**Token Consumption Costs**: The rich context provided by detailed markdown documents can lead to significant token consumption in LLM interactions. The system requires intelligent context filtering, summary generation, and selective information retrieval to balance comprehensiveness with cost efficiency, especially for high-frequency agent operations.
+
+**Security and Access Control**: Sensitive business information in human-readable format creates new security challenges. The system needs granular access controls, secure collaboration mechanisms, and audit trail protection while maintaining the transparency benefits. Balancing openness for collaboration with confidentiality requirements becomes a critical design constraint.
+
 As AI agents become partners rather than tools, their memory systems must be designed for partnership. The dual-layer architecture provides a foundation for that collaboration, enabling humans and AI to work together with shared understanding and mutual transparency.
