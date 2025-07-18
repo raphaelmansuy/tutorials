@@ -21,11 +21,14 @@
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
     "**/node_modules/*/**": true,
-    "**/.hg/store/**": true
+    "**/.hg/store/**": true,
+    "**/target": true
   },
   
   // Memory and performance settings
   "typescript.disableAutomaticTypeAcquisition": true,
   "extensions.autoUpdate": false,
-  "telemetry.telemetryLevel": "off"
+  "telemetry.telemetryLevel": "off",
+  "metals.startMcpServer": true,
+  "chat.mcp.discovery.enabled": false
 }
