@@ -19,6 +19,14 @@ Welcome to your **comprehensive enterprise training ecosystem** for modern cloud
 - **🎯 Accelerated Learning Paths**: 24-hour challenges for rapid, hands-on skill mastery
 - **💼 Business Impact Focus**: Measurable ROI analysis and competitive market insights
 - **🔧 Multi-Framework Support**: Flexible implementation options for maximum adoption
+  
+**Explore Advanced Copilot Agent Workflows:**
+
+For a deep dive into advanced Copilot agent automation, custom chat modes, and "Beast Mode" best practices, see Burke Holland's popular Gist:
+
+[Advanced Copilot Agent Workflow (Beast Mode) – Burke Holland](https://gist.github.com/burkeholland/a232b706994aa2f4b2ddd3d97b11f9a7)
+
+This resource covers step-by-step agent instructions, community tips, and troubleshooting for maximizing Copilot autonomy in VS Code.
 
 **Ready to transform your career?** Whether you're taking your first steps into cloud computing or architecting enterprise-grade AI solutions for Fortune 500 companies—this hub provides your complete learning pathway to success.
 

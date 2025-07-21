@@ -334,6 +334,14 @@ MCP extends agents with external tools and data sources—GA with full spec supp
           "/path/to/data"
         ]
       }
+      "lin": {
+        "command": "uvx",
+        "args": [
+          "mcp-run-python",
+          "--repo",
+          "pydantic-ai/mcp-run-python"
+        ]
+      }
     }
   }
 }
