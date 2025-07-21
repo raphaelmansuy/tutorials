@@ -2,7 +2,6 @@
 
 Welcome to this hands-on, team-optimized guide for leveraging GitHub Copilot in Visual Studio Code (VS Code) 1.102 (June/July 2025). This tutorial is tailored for Python data engineering teams building ETL pipelines, processing data with Pandas/Spark, integrating SQL, and collaborating via GitHub. All steps reflect the latest open-source Copilot Chat, MCP support, and Python-specific enhancements.
 
-
 ## Prerequisites and Setup
 
 1. **Update to VS Code 1.102**: Download from [code.visualstudio.com](https://code.visualstudio.com/updates/v1_102). Key Python features: improved Poetry activation, .venv handling, and bundled Python Environments extension.
@@ -212,6 +211,56 @@ Agent mode gives Copilot maximum freedom to plan, execute, and iterate on comple
 
 Enforce team Python standards (PEP8, docstrings) via repo files—auto-generated from codebase for data engineering consistency.
 
+### Why Use Custom Instructions?
+
+- Ensures code consistency across your team
+- Reduces time spent on code reviews and refactoring
+- Makes Copilot responses more relevant and accurate
+
+### One-Click Generation in VS Code 1.102+
+
+Open Copilot Chat, click the gear icon to "Customize Chat," and use the auto-generate button to scan your codebase and create or update instructions. Copilot will generate markdown instructions with headings and bullet points. Review and massage these to match your team's style. Re-run auto-update as your project evolves.
+
+### Best Practices for Custom Instructions
+
+- Specify naming conventions (PascalCase, snake_case, etc.)
+- Define error handling patterns (try/except, logging)
+- List preferred libraries and frameworks
+- Set guidelines for commit messages and code comments
+- Include rules for specific languages or components (e.g., SQL, ETL pipelines)
+
+### Example: Python Data Engineering Instructions
+
+```markdown
+# Python Data Engineering Standards
+
+- Use snake_case for variables and functions
+- Prefer pandas for data manipulation
+- Always validate input data
+- Log errors using the logging module
+- Write docstrings for all functions
+- Use type hints where possible
+```
+
+### Community Resources
+
+- [awesome-copilot](https://github.com/awesome-copilot) – Reusable instruction templates and prompts
+- VS Code documentation: [Custom Instructions](https://code.visualstudio.com/docs/copilot/custom-instructions)
+
+### Agent Mode Integration
+
+When Copilot operates in agent mode, it references these instructions to:
+
+- Ask clarifying questions before generating code
+- Produce code that matches your style and standards
+- Run terminal commands and create files according to your guidelines
+
+**Tip:** You can always update instructions as your project grows. Copilot will adapt its responses automatically.
+
+### Safety Reminder
+
+**Always verify file changes after each edit, especially when using auto-generated instructions.** Review diffs and test your code before committing.
+
 ### Hands-On Steps (Custom Instructions)
 
 1. **Generate File**: Run "Chat: Generate Instructions"—analyzes your ETL code for tailored `.github/copilot-instructions.md`.
@@ -249,18 +298,26 @@ MCP extends agents with external tools and data sources—GA with full spec supp
       },
       "postgres": {
         "command": "uvx",
-        "args": ["mcp-server-postgres", "--connection-string", "postgresql://user:pass@localhost/db"]
+        "args": [
+          "mcp-server-postgres",
+          "--connection-string",
+          "postgresql://user:pass@localhost/db"
+        ]
       },
       "filesystem": {
         "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/data"]
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "/path/to/data"
+        ]
       }
     }
   }
 }
 ```
 
-3. **Verify Installation**: Command Palette → "MCP: List Servers" or click spanner icon in Copilot Chat
+1. **Verify Installation**: Command Palette → "MCP: List Servers" or click spanner icon in Copilot Chat
 
 ### Tips for MCP Server Setup
 
@@ -270,13 +327,13 @@ MCP extends agents with external tools and data sources—GA with full spec supp
 
 ### Popular MCP Servers for Data Engineering
 
-| Server Type | Use Case | Installation |
-|-------------|----------|--------------|
-| **GitHub** | Project analysis, issue tracking, PR reviews | `npx -y @modelcontextprotocol/server-github` |
-| **PostgreSQL** | Direct DB queries, schema analysis | `uvx mcp-server-postgres` |
-| **Filesystem** | Local data file access, log analysis | `npx -y @modelcontextprotocol/server-filesystem` |
-| **Perplexity** | Research best practices, debugging help | Third-party API integration |
-| **AWS S3** | Cloud data access, bucket operations | `mcp-server-s3` |
+| Server Type    | Use Case                                     | Installation                                     |
+| -------------- | -------------------------------------------- | ------------------------------------------------ |
+| **GitHub**     | Project analysis, issue tracking, PR reviews | `npx -y @modelcontextprotocol/server-github`     |
+| **PostgreSQL** | Direct DB queries, schema analysis           | `uvx mcp-server-postgres`                        |
+| **Filesystem** | Local data file access, log analysis         | `npx -y @modelcontextprotocol/server-filesystem` |
+| **Perplexity** | Research best practices, debugging help      | Third-party API integration                      |
+| **AWS S3**     | Cloud data access, bucket operations         | `mcp-server-s3`                                  |
 
 ### Hands-On Workflow: Pipeline Documentation with MCP
 
@@ -347,24 +404,21 @@ A **devcontainer** lets you define a reproducible development environment for yo
 1. **Create a `.devcontainer` folder** in your project root.
 2. **Add a `devcontainer.json` file** with recommended settings:
 
-    ```json
-    // filepath: .devcontainer/devcontainer.json
-    {
-      "name": "Data Engineering with MCP",
-      "image": "mcr.microsoft.com/vscode/devcontainers/python:3.11",
-      "features": {
-        "ghcr.io/devcontainers/features/node:1": {"version": "18"}
-      },
-      "extensions": [
-        "ms-python.python",
-        "GitHub.copilot-chat"
-      ],
-      "settings": {
-        "github.copilot.chat.experimental.mcp": true
-      },
-      "postCreateCommand": "pip install -r requirements.txt && npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem"
-    }
-    ```
+   ```json
+   // filepath: .devcontainer/devcontainer.json
+   {
+     "name": "Data Engineering with MCP",
+     "image": "mcr.microsoft.com/vscode/devcontainers/python:3.11",
+     "features": {
+       "ghcr.io/devcontainers/features/node:1": { "version": "18" }
+     },
+     "extensions": ["ms-python.python", "GitHub.copilot-chat"],
+     "settings": {
+       "github.copilot.chat.experimental.mcp": true
+     },
+     "postCreateCommand": "pip install -r requirements.txt && npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem"
+   }
+   ```
 
 3. **Open your project in VS Code** and select "Reopen in Container" when prompted.
 4. **Verify MCP servers**: Use `Cmd+Shift+P` → "MCP: List Servers" to check installed servers.
@@ -381,19 +435,19 @@ A **devcontainer** lets you define a reproducible development environment for yo
 
 ## Quick Reference: Configuration Paths
 
-| Aspect                     | Location Path / File                             | Description / Usage                       |
-| -------------------------- | ------------------------------------------------ | ----------------------------------------- |
-| VS Code Extensions         | Extensions View (`Ctrl+Shift+X`)                 | Install/Manage extensions                 |
-| Copilot Chat Settings      | `settings.json` (User/Workspace)                 | General Copilot settings, model selection |
-| MCP Servers (User)         | `mcp.json` (User Profile)                        | Global MCP server config (all workspaces) |
-| MCP Servers (Workspace)    | `.vscode/mcp.json`                               | Project-specific MCP server config        |
-| MCP Servers (Devcontainer) | `.devcontainer/devcontainer.json`                | Team-wide MCP config for containers       |
-| Custom Instructions        | `.github/copilot-instructions.md`                | Team coding standards, auto-generated     |
-| Custom Chat Modes          | `.github/chatmodes/*.chatmode.md`                | Custom chat mode definitions              |
-| Python Extension Settings  | `settings.json`                                  | Python interpreter, linting, formatting   |
-| Jupyter Extension Settings | `settings.json`                                  | Notebook, kernel, and Jupyter config      |
-| Workspace Trust            | Workspace Settings / Command Palette             | Security for terminals, agent actions     |
-| GitHub Policies            | GitHub Enterprise Admin / repo settings          | Data sharing, model access, org policies  |
+| Aspect                     | Location Path / File                    | Description / Usage                       |
+| -------------------------- | --------------------------------------- | ----------------------------------------- |
+| VS Code Extensions         | Extensions View (`Ctrl+Shift+X`)        | Install/Manage extensions                 |
+| Copilot Chat Settings      | `settings.json` (User/Workspace)        | General Copilot settings, model selection |
+| MCP Servers (User)         | `mcp.json` (User Profile)               | Global MCP server config (all workspaces) |
+| MCP Servers (Workspace)    | `.vscode/mcp.json`                      | Project-specific MCP server config        |
+| MCP Servers (Devcontainer) | `.devcontainer/devcontainer.json`       | Team-wide MCP config for containers       |
+| Custom Instructions        | `.github/copilot-instructions.md`       | Team coding standards, auto-generated     |
+| Custom Chat Modes          | `.github/chatmodes/*.chatmode.md`       | Custom chat mode definitions              |
+| Python Extension Settings  | `settings.json`                         | Python interpreter, linting, formatting   |
+| Jupyter Extension Settings | `settings.json`                         | Notebook, kernel, and Jupyter config      |
+| Workspace Trust            | Workspace Settings / Command Palette    | Security for terminals, agent actions     |
+| GitHub Policies            | GitHub Enterprise Admin / repo settings | Data sharing, model access, org policies  |
 
 ---
 
@@ -406,29 +460,10 @@ A **devcontainer** lets you define a reproducible development environment for yo
 
 ---
 
-**For more details:**  
-- [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)  
-- [MCP Servers for Agent Mode Documentation](https://code.visualstudio.com/mcp)  
+**For more details:**
+
+- [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
+- [MCP Servers for Agent Mode Documentation](https://code.visualstudio.com/mcp)
 - [Python Data Science Handbook (Jupyter Notebooks)](https://github.com/jakevdp/PythonDataScienceHandbook)
 
 Empower your team—Copilot as collaborator, not replacement!
-
-
-## Configuration Location Reference
-
-| Aspect                     | Location Path / File                             | Description / Usage                       |
-| -------------------------- | ------------------------------------------------ | ----------------------------------------- |
-| VS Code Extensions         | User/Workspace: Extensions View (`Ctrl+Shift+X`) | Install/Manage extensions                 |
-| Copilot Chat Settings      | `settings.json` (User/Workspace)                 | General Copilot settings, model selection |
-| MCP Servers (User)         | `mcp.json` (User Profile)                        | Global MCP server config (all workspaces) |
-| MCP Servers (Workspace)    | `.vscode/mcp.json`                               | Project-specific MCP server config        |
-| MCP Servers (Devcontainer) | `.devcontainer/devcontainer.json`                | Team-wide MCP config for containers       |
-| Custom Instructions        | `.github/copilot-instructions.md`                | Team coding standards, auto-generated     |
-| Custom Chat Modes          | `.github/chatmodes/*.chatmode.md`                | Custom chat mode definitions              |
-| Python Extension Settings  | `settings.json`                                  | Python interpreter, linting, formatting   |
-| Jupyter Extension Settings | `settings.json`                                  | Notebook, kernel, and Jupyter config      |
-| Workspace Trust            | Workspace Settings / Command Palette             | Security for terminals, agent actions     |
-| GitHub Policies            | GitHub Enterprise Admin / repo settings          | Data sharing, model access, org policies  |
-
-Refer to these paths when configuring each aspect of Copilot, MCP, and extensions.
-
