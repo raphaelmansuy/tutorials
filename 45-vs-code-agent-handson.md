@@ -207,73 +207,71 @@ Agent mode gives Copilot maximum freedom to plan, execute, and iterate on comple
 - Review generated code for security issues
 - Monitor resource usage during execution
 
-## Section 2: Custom Instructions
 
-Enforce team Python standards (PEP8, docstrings) via repo files—auto-generated from codebase for data engineering consistency.
+## Section 2: Instantly Improve Copilot Responses with Custom Instructions
 
-### Why Use Custom Instructions?
+One of the fastest ways to get better, team-aligned AI responses from GitHub Copilot is to provide explicit custom instructions. These instructions guide Copilot to follow your coding standards, preferred technologies, and project requirements—just like onboarding a new team member.
 
-- Ensures code consistency across your team
-- Reduces time spent on code reviews and refactoring
-- Makes Copilot responses more relevant and accurate
+### Why Custom Instructions Matter
 
-### One-Click Generation in VS Code 1.102+
+- Copilot will automatically scan your codebase for context, but custom instructions ensure every response matches your style, even for new files or features.
+- You can break instructions into smaller files for different languages, frameworks, or components (e.g., Python, SQL, ETL pipelines).
+- Instructions are referenced in every chat and especially in agent mode, so Copilot will ask clarifying questions and generate code that fits your standards.
 
-Open Copilot Chat, click the gear icon to "Customize Chat," and use the auto-generate button to scan your codebase and create or update instructions. Copilot will generate markdown instructions with headings and bullet points. Review and massage these to match your team's style. Re-run auto-update as your project evolves.
+### One-Click Auto-Generation in VS Code 1.102+
 
-### Best Practices for Custom Instructions
+VS Code 1.102+ makes it easier than ever to generate or update Copilot instructions:
 
-- Specify naming conventions (PascalCase, snake_case, etc.)
-- Define error handling patterns (try/except, logging)
-- List preferred libraries and frameworks
-- Set guidelines for commit messages and code comments
-- Include rules for specific languages or components (e.g., SQL, ETL pipelines)
+1. **Open Copilot Chat** and click the gear icon to "Customize Chat."
+2. **Tap "Auto-update Instructions"** to scan your workspace and generate or patch `.github/copilot-instructions.md`.
+3. **Review the generated markdown**—it will include headings, bullet points, and merge with any existing rules.
+4. **Massage the instructions** to match your team's style and requirements.
+5. **Re-run auto-update** as your project evolves to keep instructions fresh.
 
-### Example: Python Data Engineering Instructions
+#### Example: Before/After Copilot Responses
 
-```markdown
-# Python Data Engineering Standards
+**Before instructions:**
+> Prompt: "Write a Pandas function to merge datasets."
+> Copilot returns generic code, may not match your naming or error handling style.
 
-- Use snake_case for variables and functions
-- Prefer pandas for data manipulation
-- Always validate input data
-- Log errors using the logging module
-- Write docstrings for all functions
-- Use type hints where possible
-```
+**After instructions:**
+> Prompt: "Write a Pandas function to merge datasets."
+> Copilot returns code using your team's naming conventions, error handling, and docstring format.
+
+### Tips for Iterative Updates
+
+- Break instructions into smaller files for different languages or frameworks (e.g., `.github/copilot-python.md`, `.github/copilot-sql.md`).
+- Use community resources like [awesome-copilot](https://github.com/awesome-copilot) for reusable templates and prompts.
+- Import and customize templates to fit your project.
+
+### Agent Mode Integration
+
+When Copilot operates in agent mode, it references these instructions to:
+- Ask clarifying questions before generating code
+- Produce code that matches your style and standards
+- Run terminal commands and create files according to your guidelines
+
+### Troubleshooting and Best Practices
+
+- If Copilot ignores instructions, use Chat Debug View to see logs and tool usage.
+- Always review diffs and test code before committing, especially with auto-generated instructions.
+
+### Hands-On Steps: Custom Instructions
+
+1. **Generate File**: Use "Chat: Generate Instructions" to analyze your codebase and create `.github/copilot-instructions.md`.
+2. **Apply**: Commit and push. Prompt Copilot and verify adherence in "Used references."
+3. **Team Refine**: Import shared modes from GitHub (e.g., data-eng templates) and update as needed.
+
+### Actionable Tips
+
+- Include rules for error handling in pipelines, SQL best practices, and team-specific standards.
+- Use glob patterns for conditional instructions (e.g., for notebooks or specific folders).
+- Test iteratively; great for standardizing tests and onboarding new team members.
 
 ### Community Resources
 
 - [awesome-copilot](https://github.com/awesome-copilot) – Reusable instruction templates and prompts
 - VS Code documentation: [Custom Instructions](https://code.visualstudio.com/docs/copilot/custom-instructions)
-
-### Agent Mode Integration
-
-When Copilot operates in agent mode, it references these instructions to:
-
-- Ask clarifying questions before generating code
-- Produce code that matches your style and standards
-- Run terminal commands and create files according to your guidelines
-
-**Tip:** You can always update instructions as your project grows. Copilot will adapt its responses automatically.
-
-### Safety Reminder
-
-**Always verify file changes after each edit, especially when using auto-generated instructions.** Review diffs and test your code before committing.
-
-### Hands-On Steps (Custom Instructions)
-
-1. **Generate File**: Run "Chat: Generate Instructions"—analyzes your ETL code for tailored `.github/copilot-instructions.md`.
-2. **Apply**: Commit/push. Prompt: "Write a Pandas function to merge datasets." Verify adherence in "Used references."
-3. **Team Refine**: Import shared modes from GitHub (e.g., data-eng templates).
-
-### Actionable Tips
-
-- **Data Eng Focus**: Include rules for error handling in pipelines, SQL best practices.
-- **Team Sync**: Use glob patterns for conditional instructions (e.g., for notebooks).
-- **Pitfalls**: If ignored, debug with Chat Debug View—logs prompts/tools.
-- **Boost**: Reduces prompt verbosity; ideal for team onboarding.
-- **Community Tip**: "Test iteratively; great for standardizing tests."
 
 ## Section 3: Model Context Protocol (MCP)
 
