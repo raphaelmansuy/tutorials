@@ -270,8 +270,25 @@ When Copilot operates in agent mode, it references these instructions to:
 
 ### Community Resources
 
-- [awesome-copilot](https://github.com/awesome-copilot) – Reusable instruction templates and prompts
+- [awesome-copilot](https://github.com/github/awesome-copilot) – Reusable instruction templates, prompts, and chat modes
 - VS Code documentation: [Custom Instructions](https://code.visualstudio.com/docs/copilot/custom-instructions)
+
+#### How to Use awesome-copilot for Team Onboarding & Standards
+
+The [github/awesome-copilot](https://github.com/github/awesome-copilot) repository provides:
+
+- **Instruction templates**: Ready-made `.md` files for Python, SQL, ETL, and more. Copy to `.github/copilot-instructions.md` or split by language/component.
+- **Prompts**: Curated prompt examples for common tasks (e.g., data validation, error handling, onboarding guides). Import and adapt for your team.
+- **Chat modes**: Custom chat mode definitions for different workflows (e.g., review, refactor, onboarding). Place in `.github/chatmodes/` and select in Copilot Chat.
+
+**Team Workflow Example:**
+1. Browse [awesome-copilot/instructions](https://github.com/github/awesome-copilot/tree/main/instructions) for templates matching your stack.
+2. Copy and customize instruction files to your repo.
+3. Use [awesome-copilot/prompts](https://github.com/github/awesome-copilot/tree/main/prompts) for onboarding, code review, or automation tasks.
+4. Add chat modes from [awesome-copilot/chatmodes](https://github.com/github/awesome-copilot/tree/main/chatmodes) to `.github/chatmodes/` for specialized team workflows.
+5. Share updates with your team and iterate as your standards evolve.
+
+**Pro Tip:** Regularly sync with the awesome-copilot repo for new templates and best practices. This keeps your team instructions fresh and aligned with community standards.
 
 ## Section 3: Model Context Protocol (MCP)
 
