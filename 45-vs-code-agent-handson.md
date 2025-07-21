@@ -186,6 +186,13 @@ Agent mode gives Copilot maximum freedom to plan, execute, and iterate on comple
 ```text
 "Use the PostgreSQL MCP to analyze our sales schema, then implement a complete analytics pipeline with Pandas transformations and automated reporting"
 ```
+**More Advanced Agent Workflows:**
+
+For a deep dive into advanced Copilot agent automation, custom chat modes, and "Beast Mode" best practices, see Burke Holland's popular Gist:
+
+[Advanced Copilot Agent Workflow (Beast Mode) – Burke Holland](https://gist.github.com/burkeholland/a232b706994aa2f4b2ddd3d97b11f9a7)
+
+This resource covers step-by-step agent instructions, community tips, and troubleshooting for maximizing Copilot autonomy in VS Code.
 
 **Infrastructure automation**:
 
