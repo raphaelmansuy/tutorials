@@ -432,7 +432,7 @@ When Copilot operates in agent mode, it references these instructions to:
 
 ### 🌟 Community Resources
 
-- 🎯 [awesome-copilot](https://github.com/github/awesome-copilot) – Reusable instruction templates, prompts, and chat modes
+- 🎯 [awesome-copilot](https://github.com/github/awesome-copilot) – Reusable instruction templates, prompts, and community best practices
 - 📖 VS Code documentation: [Custom Instructions](https://code.visualstudio.com/docs/copilot/custom-instructions)
 
 #### 🚀 How to Use awesome-copilot for Team Onboarding & Standards
@@ -456,6 +456,22 @@ The [github/awesome-copilot](https://github.com/github/awesome-copilot) reposito
 ## 🔌 Section 3: Model Context Protocol (MCP)
 
 MCP extends agents with external tools and data sources—GA with full spec support (prompts, resources, sampling). Perfect for data engineering workflows requiring database access, cloud integrations, and automated documentation. 🛠️
+
+### 🌐 Find MCP Servers Instantly
+
+Looking for ready-to-use MCP servers? Visit [fastmcp.me](https://fastmcp.me/) — a curated directory of public and private MCP servers for data engineering, cloud, databases, and more. You can:
+- Search by category (e.g., PostgreSQL, GitHub, S3, Filesystem)
+- Filter by provider, region, or access type
+- Get setup instructions and connection details for each server
+- Discover new tools and integrations for your workflow
+
+**How to use fastmcp.me:**
+1. Go to [https://fastmcp.me/](https://fastmcp.me/)
+2. Browse or search for the MCP server you need
+3. Copy the connection details and follow the setup instructions in your VS Code or devcontainer
+4. Use the listed servers in your MCP configuration blocks
+
+---
 
 ### 🛠️ Hands-On Steps (MCP)
 
@@ -1052,7 +1068,7 @@ GitHub Copilot offers flexible pricing tiers to accommodate different team sizes
 
 ---
 
-**For more details:**
+## For more details:
 
 - [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
 - [MCP Servers for Agent Mode Documentation](https://code.visualstudio.com/mcp)
